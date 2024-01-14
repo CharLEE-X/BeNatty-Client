@@ -1,7 +1,4 @@
-import io.gitlab.arturbosch.detekt.Detekt
-import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
@@ -68,23 +65,8 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 }
 
-configure<KtlintExtension> {
-    filter {
-        exclude { element -> element.file.path.contains("/build/") }
-    }
-    debug.set(false)
-    outputToConsole.set(true)
-}
-
-detekt {
-    parallel = true
-    config.setFrom(files(rootProject.file("detekt.yml")))
-    autoCorrect = true
-}
-
 tasks {
     withType<KotlinCompile>().configureEach {
-        kotlinOptions.jvmTarget = libs.versions.jvmTarget.get()
         compilerOptions.freeCompilerArgs.add("-Xcontext-receivers")
     }
     withType<Test> {
@@ -93,32 +75,7 @@ tasks {
     }
     withType<Jar> {
         manifest {
-            attributes(
-                mapOf(
-                    "Main-Class" to application.mainClass.get(),
-                ),
-            )
+            attributes(mapOf("Main-Class" to application.mainClass.get()))
         }
-    }
-    withType<Detekt>().configureEach {
-        jvmTarget = libs.versions.jvmTarget.get()
-        parallel = true
-        reports {
-            xml.required.set(false)
-            html.required.set(false)
-            txt.required.set(false)
-            sarif.required.set(false)
-        }
-        exclude { it.file.absolutePath.contains("resources/") }
-        exclude { it.file.absolutePath.contains("build/") }
-        include("**/*.kt")
-
-        dependsOn("ktlintFormat")
-    }
-    withType<DetektCreateBaselineTask>().configureEach {
-        this.jvmTarget = libs.versions.jvmTarget.get()
-        exclude { it.file.absolutePath.contains("resources/") }
-        exclude { it.file.absolutePath.contains("build/") }
-        include("**/*.kt")
     }
 }

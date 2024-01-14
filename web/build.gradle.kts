@@ -1,4 +1,5 @@
 import com.varabyte.kobweb.gradle.application.util.configAsKobwebApplication
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -21,12 +22,20 @@ kobweb {
 kotlin {
     configAsKobwebApplication("nataliashop")
 
-    sourceSets {
-        commonMain.dependencies {
-            implementation(compose.runtime)
+    targets.withType<KotlinNativeTarget> {
+        binaries.all {
+            freeCompilerArgs += listOf("-Xdisable-phases=VerifyBitcode", "-Xexpect-actual-classes")
         }
+    }
 
+    sourceSets {
         jsMain.dependencies {
+            implementation(projects.feature.debug)
+            implementation(projects.feature.root)
+            implementation(projects.feature.router)
+            implementation(projects.feature.login)
+
+            implementation(compose.runtime)
             implementation(compose.html.core)
             implementation(libs.kobweb.core)
             implementation(libs.kobwebx.markdown)

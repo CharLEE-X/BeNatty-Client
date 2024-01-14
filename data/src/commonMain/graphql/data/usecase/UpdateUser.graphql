@@ -1,0 +1,11 @@
+mutation UpdateUser($userUpdateInput: UserUpdateInput, $profileUpdateInput: ProfileUpdateInput) {
+  updateUser(userUpdateInput: $userUpdateInput, profileUpdateInput: $profileUpdateInput) {
+    email
+    id
+    profile {
+      bio
+      pictures
+    }
+    updatedAt
+  }
+}

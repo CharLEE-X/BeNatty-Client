@@ -1,0 +1,9 @@
+mutation Register($authInput: AuthInput!) {
+  register(authInput: $authInput) {
+    token
+    userMinimal {
+      id
+      email
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "378131913214",
+    "project_id": "nataliashop-1b20f",
+    "storage_bucket": "nataliashop-1b20f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:378131913214:android:82c7170f0ee56a012bc8af",
+        "android_client_info": {
+          "package_name": "com.charleex.nataliashop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6m4a6dM9GMjsvXHXo_oWkPAPt5HXQGHc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

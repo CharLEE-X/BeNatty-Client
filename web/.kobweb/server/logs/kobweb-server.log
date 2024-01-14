@@ -1,13 +1,9 @@
-2024-01-14 12:02:17.870 [main] DEBUG ktor.application - Java Home: /Users/adrianwitaszak/Applications/Android Studio.app/Contents/jbr/Contents
-2024-01-14 12:02:17.872 [main] DEBUG ktor.application - Class Loader: jdk.internal.loader.ClassLoaders$AppClassLoader@7aec35a: [file:/Users/adrianwitaszak/CharLEEX/NataliaShop/web/.kobweb/server/server.jar!/ch]
-2024-01-14 12:02:17.884 [main] WARN  ktor.application - API jar specified but does not exist! Please fix conf.yaml. Invalid path: "build/libs/nataliashop.jar"
-2024-01-14 12:02:17.911 [main] INFO  ktor.application - Application started in 0.074 seconds.
-2024-01-14 12:02:17.979 [main] INFO  ktor.application - Responding at http://0.0.0.0:8080
-2024-01-14 12:02:20.952 [eventLoopGroupProxy-4-1] DEBUG ktor.application - Client connected and is requesting kobweb status events.
-2024-01-14 12:04:40.809 [eventLoopGroupProxy-4-4] DEBUG ktor.application - Client connected and is requesting kobweb status events.
-2024-01-14 12:04:40.965 [eventLoopGroupProxy-4-1] DEBUG ktor.application - Stopped sending kobweb status events, probably because client disconnected or server is shutting down. (ChannelWriteException: Cannot write to a channel)
-2024-01-14 12:04:51.170 [eventLoopGroupProxy-4-4] DEBUG ktor.application - Stopped sending kobweb status events, probably because client disconnected or server is shutting down. (ChannelWriteException: Cannot write to a channel)
-2024-01-14 12:11:57.491 [eventLoopGroupProxy-4-5] DEBUG ktor.application - Client connected and is requesting kobweb status events.
-2024-01-14 12:12:01.433 [eventLoopGroupProxy-4-5] DEBUG ktor.application - Stopped sending kobweb status events, probably because client disconnected or server is shutting down. (ChannelWriteException: Cannot write to a channel)
-2024-01-14 12:13:07.831 [eventLoopGroupProxy-4-8] DEBUG ktor.application - Client connected and is requesting kobweb status events.
-2024-01-14 12:14:44.024 [eventLoopGroupProxy-4-8] DEBUG ktor.application - Stopped sending kobweb status events, probably because client disconnected or server is shutting down. (ChannelWriteException: Cannot write to a channel)
+2024-01-14 17:30:13.037 [main] DEBUG ktor.application - Java Home: /Users/adrianwitaszak/.sdkman/candidates/java
+2024-01-14 17:30:13.038 [main] DEBUG ktor.application - Class Loader: jdk.internal.loader.ClassLoaders$AppClassLoader@22d8cfe0: [file:/Users/adrianwitaszak/CharLEEX/NataliaShop/web/.kobweb/server/server.jar!/ch]
+2024-01-14 17:30:13.049 [main] WARN  ktor.application - API jar specified but does not exist! Please fix conf.yaml. Invalid path: "build/libs/nataliashop.jar"
+2024-01-14 17:30:13.076 [main] INFO  ktor.application - Application started in 0.071 seconds.
+2024-01-14 17:30:13.154 [main] INFO  ktor.application - Responding at http://0.0.0.0:8080
+2024-01-14 17:30:17.889 [eventLoopGroupProxy-4-2] DEBUG ktor.application - Client connected and is requesting kobweb status events.
+2024-01-14 17:30:30.426 [eventLoopGroupProxy-4-2] DEBUG ktor.application - Stopped sending kobweb status events, probably because client disconnected or server is shutting down. (ChannelWriteException: Cannot write to a channel)
+2024-01-14 17:30:34.407 [kotlinx.coroutines.DefaultExecutor] INFO  ktor.application - Kobweb server shutting down...
+2024-01-14 17:30:36.486 [kotlinx.coroutines.DefaultExecutor] INFO  ktor.application - Server finished shutting down.
