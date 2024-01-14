@@ -1,31 +1,24 @@
 [versions]
-agp = "8.1.4"
+# CONFIG --------------------------------------------------------------------------------------------------------------
 android-compileSdk = "34"
 android-minSdk = "24"
 android-targetSdk = "34"
-androidx-activityCompose = "1.8.2"
-androidx-appcompat = "1.6.1"
-androidx-constraintlayout = "2.1.4"
-androidx-core-ktx = "1.12.0"
-androidx-espresso-core = "3.5.1"
-androidx-material = "1.10.0"
-androidx-test-junit = "1.1.5"
-compose = "1.5.4"
-compose-compiler = "1.5.6"
-compose-plugin = "1.6.0-alpha01"
-
-
-# NEW --------------
-
+packageName = "com.charleex.nataliashop"
 jvmTarget = "17"
-# --------------
+
+# VERSIONS  -----------------------------------------------------------------------------------------------------------
+agp = "8.1.4"
+androidx-activityCompose = "1.8.2"
 bcrypt = "0.10.2"
+compose = "1.5.11"
+composeGoogle = "1.5.4"
 detekt = "1.23.0"
 expedia = "7.0.2"
 javalin = "4.6.8"
 junit = "5.10.1"
 kermit = "2.0.2"
 kluent = "1.73"
+kobweb = "0.15.4"
 koin = "3.5.0"
 koinKtor = "3.5.1"
 kotlin = "1.9.21"
@@ -42,22 +35,14 @@ shadow = "7.1.2"
 testContainers = "1.19.1"
 
 [libraries]
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
-androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-junit" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
-androidx-material = { group = "com.google.android.material", name = "material", version.ref = "androidx-material" }
-androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
+# ANDROID ----------------------------------------------------------------------------------------------------- ANDROID
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
-compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
-compose-material = { module = "androidx.compose.material:material", version.ref = "compose" }
 
+# COMPOSE ----------------------------------------------------------------------------------------------------- COMPOSE
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "composeGoogle" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "composeGoogle" }
 
-# NEW --------------
-
+# EXPEDIA ----------------------------------------------------------------------------------------------------- EXPEDIA
 expedia-server = { module = "com.expediagroup:graphql-kotlin-server", version.ref = "expedia" }
 expedia-ktor-server = { module = "com.expediagroup:graphql-kotlin-ktor-server", version.ref = "expedia" }
 expedia-federation = { module = "com.expediagroup:graphql-kotlin-federation", version.ref = "expedia" }
@@ -66,12 +51,27 @@ graphql-scalars = "com.graphql-java:graphql-java-extended-scalars:20.2"
 
 javalin-core = { module = "io.javalin:javalin", version.ref = "javalin" }
 
+# KERMIT ------------------------------------------------------------------------------------------------------- KERMIT
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 
+# KOBWEB ------------------------------------------------------------------------------------------------------- KOBWEB
+kobweb-api = { module = "com.varabyte.kobweb:kobweb-api", version.ref = "kobweb" }
+kobweb-core = { module = "com.varabyte.kobweb:kobweb-core ", version.ref = "kobweb" }
+kobweb-silk = { module = "com.varabyte.kobweb:kobweb-silk", version.ref = "kobweb" }
+kobweb-worker = { module = "com.varabyte.kobweb:kobweb-worker", version.ref = "kobweb" }
+kobwebx-markdown = { module = "com.varabyte.kobwebx:kobwebx-markdown", version.ref = "kobweb" }
+silk-foundation = { module = "com.varabyte.kobweb:silk-foundation", version.ref = "kobweb" }
+silk-icons-fa = { module = "com.varabyte.kobwebx:silk-icons-fa", version.ref = "kobweb" }
+silk-icons-mdi = { module = "com.varabyte.kobwebx:silk-icons-mdi", version.ref = "kobweb" }
+
+# KOIN ----------------------------------------------------------------------------------------------------------- KOIN
 koin-ktor = { module = "io.insert-koin:koin-ktor", version.ref = "koinKtor" }
 koin-logger = { module = "io.insert-koin:koin-logger-slf4j", version.ref = "koinKtor" }
 
+# KOTLIN ------------------------------------------------------------------------------------------------------- KOTLIN
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+
+# KTOR-CLIENT --------------------------------------------------------------------------------------------- KTOR-CLIENT
 ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 ktor-client-content = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
@@ -80,6 +80,7 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
 ktor-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
+# KTOR-SERVER --------------------------------------------------------------------------------------------- KTOR-SERVER
 ktor-server-auth = { module = "io.ktor:ktor-server-auth", version.ref = "ktor" }
 ktor-server-auth-jwt = { module = "io.ktor:ktor-server-auth-jwt", version.ref = "ktor" }
 ktor-server-cio = { module = "io.ktor:ktor-server-cio-jvm", version.ref = "ktor" }
@@ -95,7 +96,7 @@ server-bcrypt = { module = "at.favre.lib:bcrypt", version.ref = "bcrypt" }
 server-logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 server-mongodb = { module = "org.mongodb:mongodb-driver-kotlin-coroutine", version.ref = "mongodb" }
 
-# TESTING
+# TESTING ----------------------------------------------------------------------------------------------------- TESTING
 test-kluent = { module = "org.amshove.kluent:kluent", version.ref = "kluent" }
 test-koin = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 test-kotlin-ktor-server = { module = "io.ktor:ktor-server-tests", version.ref = "ktor" }
@@ -109,13 +110,18 @@ test-junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine",
 test-mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 [plugins]
-androidApplication = { id = "com.android.application", version.ref = "agp" }
-androidLibrary = { id = "com.android.library", version.ref = "agp" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
-kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose" }
+kobweb-application = { id = "com.varabyte.kobweb.application", version.ref = "kobweb" }
+kobweb-library = { id = "com.varabyte.kobweb.library", version.ref = "kobweb" }
+kobwebx-markdown = { id = "com.varabyte.kobwebx.markdown", version.ref = "kobweb" }
+kobweb-worker = { id = "com.varabyte.kobweb.worker", version.ref = "kobweb" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ktLint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktLint" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
-kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+

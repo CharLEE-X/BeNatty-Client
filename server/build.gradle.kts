@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
-    alias(libs.plugins.kotlinJvm)
+    alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktor)
     alias(libs.plugins.ktLint)
     alias(libs.plugins.detekt)
@@ -13,7 +13,7 @@ plugins {
     application
 }
 
-group = "com.charleex.nataliashop"
+group = libs.versions.packageName.get()
 version = "1.0.0"
 
 application {
