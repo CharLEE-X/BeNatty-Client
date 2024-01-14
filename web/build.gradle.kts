@@ -4,9 +4,10 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kobweb.application)
+    alias(libs.plugins.kobwebx.markdown)
 }
 
-group = "com.charleex.nataliashop"
+group = libs.versions.packageName.get()
 version = "1.0-SNAPSHOT"
 
 kobweb {
@@ -28,6 +29,7 @@ kotlin {
         jsMain.dependencies {
             implementation(compose.html.core)
             implementation(libs.kobweb.core)
+            implementation(libs.kobwebx.markdown)
             implementation(libs.kobweb.silk)
             implementation(libs.silk.icons.fa)
             implementation(libs.silk.icons.mdi)

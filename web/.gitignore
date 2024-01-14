@@ -1,3 +1,4 @@
 # Kobweb ignores
 .kobweb/conf.yaml
+.kobweb/server/logs
 !.kobweb/conf.yaml
