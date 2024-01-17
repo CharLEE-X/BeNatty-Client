@@ -17,7 +17,7 @@ internal fun PreviewLayout(
 ) {
     MaterialTheme(if (darkTheme) darkColors() else lightColors()) {
         Surface(
-            color = if (darkTheme) Colors.Surface.dark else Colors.Surface.light,
+            color = if (darkTheme) Colors.darkGray else Colors.lightGray,
             modifier = Modifier
                 .fillMaxWidth(),
         ) {

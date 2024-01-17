@@ -34,7 +34,9 @@ kotlin {
             implementation(projects.feature.root)
             implementation(projects.feature.router)
             implementation(projects.feature.login)
+            implementation(projects.components.theme)
 
+            implementation(compose.ui)
             implementation(compose.runtime)
             implementation(compose.html.core)
             implementation(libs.kobweb.core)

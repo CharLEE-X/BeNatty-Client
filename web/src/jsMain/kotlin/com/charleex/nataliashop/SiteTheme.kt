@@ -13,32 +13,85 @@ import com.varabyte.kobweb.silk.theme.colors.palette.color
  *   but just a little.
  */
 class SitePalette(
+    val background: Color,
+    val onBackground: Color,
     val nearBackground: Color,
-    val cobweb: Color,
-    val brand: Brand,
-) {
-    class Brand(
-        val primary: Color = Color.rgb(0x3C83EF),
-        val accent: Color = Color.rgb(0xF3DB5B),
-    )
-}
+    val border: Color,
+    val surface: Color,
+    val onSurface: Color,
+
+    val primary: Color,
+    val primaryLighter: Color,
+    val primaryDarker: Color,
+
+    val secondary: Color,
+    val secondaryDarker: Color,
+    val secondaryLighter: Color,
+
+    val error: Color,
+
+    val neutral50: Color,
+    val neutral100: Color,
+    val neutral200: Color,
+    val neutral300: Color,
+    val neutral400: Color,
+    val neutral500: Color,
+    val neutral600: Color,
+    val neutral700: Color,
+    val neutral800: Color,
+    val neutral900: Color
+)
 
 object SitePalettes {
     val light = SitePalette(
-        nearBackground = Color.rgb(0xF4F6FA),
-        cobweb = Colors.LightGray,
-        brand = SitePalette.Brand(
-            primary = Color.rgb(0x3C83EF),
-            accent = Color.rgb(0xFCBA03),
-        )
+        background = Colors.White,
+        onBackground = Colors.Black,
+        nearBackground = theme.Colors.neutral100.rgb(),
+        border = theme.Colors.neutral300.rgb(),
+        surface = Colors.Gray,
+        onSurface = Colors.Black,
+        primary = theme.Colors.primary.rgb(),
+        primaryLighter = theme.Colors.primary.rgb(),
+        primaryDarker = theme.Colors.primary.rgb(),
+        secondary = theme.Colors.secondary.rgb(),
+        secondaryDarker = theme.Colors.secondary.rgb(),
+        secondaryLighter = theme.Colors.secondary.rgb(),
+        error = theme.Colors.red.rgb(),
+        neutral50 = theme.Colors.neutral50.rgb(),
+        neutral100 = theme.Colors.neutral100.rgb(),
+        neutral200 = theme.Colors.neutral200.rgb(),
+        neutral300 = theme.Colors.neutral300.rgb(),
+        neutral400 = theme.Colors.neutral400.rgb(),
+        neutral500 = theme.Colors.neutral500.rgb(),
+        neutral600 = theme.Colors.neutral600.rgb(),
+        neutral700 = theme.Colors.neutral700.rgb(),
+        neutral800 = theme.Colors.neutral800.rgb(),
+        neutral900 = theme.Colors.neutral900.rgb(),
     )
     val dark = SitePalette(
-        nearBackground = Color.rgb(0x13171F),
-        cobweb = Colors.LightGray.inverted(),
-        brand = SitePalette.Brand(
-            primary = Color.rgb(0x3C83EF),
-            accent = Color.rgb(0xF3DB5B),
-        )
+        background = Colors.Black,
+        onBackground = Colors.White,
+        nearBackground = theme.Colors.neutral900.rgb(),
+        border = theme.Colors.neutral700.rgb(),
+        surface = Colors.DarkGray,
+        onSurface = Colors.White,
+        primaryLighter = theme.Colors.primaryLighter.rgb(),
+        primary = theme.Colors.primary.rgb(),
+        primaryDarker = theme.Colors.primaryDarker.rgb(),
+        secondaryLighter = theme.Colors.secondaryLighter.rgb(),
+        secondary = theme.Colors.secondary.rgb(),
+        secondaryDarker = theme.Colors.secondaryDarker.rgb(),
+        error = theme.Colors.red.rgb(),
+        neutral50 = theme.Colors.neutral900.rgb(),
+        neutral100 = theme.Colors.neutral800.rgb(),
+        neutral200 = theme.Colors.neutral700.rgb(),
+        neutral300 = theme.Colors.neutral600.rgb(),
+        neutral400 = theme.Colors.neutral500.rgb(),
+        neutral500 = theme.Colors.neutral400.rgb(),
+        neutral600 = theme.Colors.neutral300.rgb(),
+        neutral700 = theme.Colors.neutral200.rgb(),
+        neutral800 = theme.Colors.neutral100.rgb(),
+        neutral900 = theme.Colors.neutral50.rgb(),
     )
 }
 
@@ -51,8 +104,10 @@ fun ColorMode.toSitePalette(): SitePalette {
 
 @InitSilk
 fun initTheme(ctx: InitSilkContext) {
-    ctx.theme.palettes.light.background = Color.rgb(0xFAFAFA)
-    ctx.theme.palettes.light.color = Colors.Black
-    ctx.theme.palettes.dark.background = Color.rgb(0x06080B)
-    ctx.theme.palettes.dark.color = Colors.White
+    ctx.theme.palettes.light.background = SitePalettes.light.background
+    ctx.theme.palettes.light.color = SitePalettes.light.onBackground
+    ctx.theme.palettes.dark.background = SitePalettes.dark.background
+    ctx.theme.palettes.dark.color = SitePalettes.dark.onBackground
 }
+
+private fun androidx.compose.ui.graphics.Color.rgb(): Color = Color.rgb(red, green, blue)

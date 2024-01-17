@@ -131,8 +131,8 @@ complexity:
     threshold: 60
   LongParameterList:
     active: false
-    functionThreshold: 6
-    constructorThreshold: 10
+    functionThreshold: 20
+    constructorThreshold: 20
     ignoreDefaultParameters: true
     ignoreDataClasses: true
     ignoreAnnotatedParameter: [ 'Preview', 'Composable' ]
@@ -330,8 +330,9 @@ naming:
   FunctionNaming:
     active: true
     excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**' ]
-    functionPattern: '[a-z][a-zA-Z0-9]*'
+    functionPattern: '[a-zA-Z][a-zA-Z0-9]*'
     excludeClassPattern: '$^'
+    ignoreAnnotated: [ 'Preview', 'Composable' ]
   FunctionParameterNaming:
     active: true
     parameterPattern: '[a-z][A-Za-z0-9]*'

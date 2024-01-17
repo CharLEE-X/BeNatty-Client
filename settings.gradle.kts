@@ -42,4 +42,5 @@ include(
     ":components:notification",
     ":components:pictures",
     ":components:localization",
+    ":components:theme",
 )

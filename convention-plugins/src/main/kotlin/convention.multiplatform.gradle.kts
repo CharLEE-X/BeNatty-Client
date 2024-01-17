@@ -1,6 +1,5 @@
 import extensions.get
 import extensions.libs
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     kotlin("multiplatform")
@@ -24,9 +23,11 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
-    targets.withType<KotlinNativeTarget> {
-        binaries.all {
-            freeCompilerArgs += listOf("-Xexpect-actual-classes")
+    targets.all {
+        compilations.all {
+            kotlinOptions {
+                freeCompilerArgs += listOf("-Xexpect-actual-classes")
+            }
         }
     }
 

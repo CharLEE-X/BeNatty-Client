@@ -54,6 +54,7 @@ kotlin {
             implementation(projects.data)
             implementation(projects.components.core)
             implementation(projects.components.localization)
+            implementation(projects.components.theme)
             implementation(projects.feature.debug)
             implementation(projects.feature.root)
             implementation(projects.feature.router)
