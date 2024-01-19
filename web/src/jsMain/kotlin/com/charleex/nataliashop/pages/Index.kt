@@ -1,50 +1,44 @@
 package com.charleex.nataliashop.pages
 
 import androidx.compose.runtime.Composable
-import com.charleex.nataliashop.HeadlineTextStyle
-import com.charleex.nataliashop.SubheadlineTextStyle
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import com.charleex.nataliashop.components.layouts.PageLayout
-import com.charleex.nataliashop.toSitePalette
+import com.copperleaf.ballast.navigation.browser.BrowserHashNavigationInterceptor
+import com.copperleaf.ballast.navigation.routing.RouterContract
+import com.copperleaf.ballast.navigation.routing.build
+import com.copperleaf.ballast.navigation.routing.currentDestinationOrNull
+import com.copperleaf.ballast.navigation.routing.currentRouteOrNull
+import com.copperleaf.ballast.navigation.routing.directions
+import com.copperleaf.ballast.navigation.routing.pathParameter
+import com.copperleaf.ballast.navigation.routing.renderCurrentDestination
+import com.copperleaf.ballast.navigation.routing.stringPath
 import com.varabyte.kobweb.compose.css.StyleVariable
-import com.varabyte.kobweb.compose.foundation.layout.Box
-import com.varabyte.kobweb.compose.foundation.layout.Column
-import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Color
-import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.boxShadow
-import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
-import com.varabyte.kobweb.compose.ui.modifiers.grid
 import com.varabyte.kobweb.compose.ui.modifiers.gridItem
 import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.setVariable
-import com.varabyte.kobweb.compose.ui.modifiers.textShadow
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
-import com.varabyte.kobweb.core.rememberPageContext
-import com.varabyte.kobweb.silk.components.forms.Button
-import com.varabyte.kobweb.silk.components.layout.breakpoint.displayIfAtLeast
-import com.varabyte.kobweb.silk.components.navigation.Link
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.base
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
-import com.varabyte.kobweb.silk.components.style.toAttrs
 import com.varabyte.kobweb.silk.components.style.toModifier
-import com.varabyte.kobweb.silk.components.text.SpanText
-import com.varabyte.kobweb.silk.theme.colors.ColorMode
-import com.varabyte.kobweb.silk.theme.colors.ColorSchemes
+import feature.router.RouterScreen
+import feature.router.RouterViewModel
 import org.jetbrains.compose.web.css.cssRem
-import org.jetbrains.compose.web.css.fr
-import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.vh
 import org.jetbrains.compose.web.dom.Div
-import org.jetbrains.compose.web.dom.Text
 
 // Container that has a tagline and grid on desktop, and just the tagline on mobile
 val HeroContainerStyle by ComponentStyle {
@@ -81,70 +75,72 @@ private fun GridCell(color: Color, row: Int, column: Int, width: Int? = null, he
 @Page
 @Composable
 fun HomePage() {
-    PageLayout("Home") {
-        Row(HeroContainerStyle.toModifier()) {
-            Box {
-                val sitePalette = ColorMode.current.toSitePalette()
+    val initialRoute = RouterScreen.Home
+    val scope = rememberCoroutineScope()
+    val router = remember(scope) {
+        RouterViewModel(
+            viewModelScope = scope,
+            initialRoute = initialRoute,
+            extraInterceptors = listOf(BrowserHashNavigationInterceptor(initialRoute)),
+        )
+    }
+    val routerState by router.observeStates().collectAsState()
+    val currentDestination = routerState.currentDestinationOrNull
 
-                Column(Modifier.gap(2.cssRem)) {
-                    Div(HeadlineTextStyle.toAttrs()) {
-                        SpanText(
-                            "Use this template as your starting point for ",
-                            Modifier.color(
-                                when (ColorMode.current) {
-                                    ColorMode.LIGHT -> Colors.Black
-                                    ColorMode.DARK -> Colors.White
-                                },
-                            ),
-                        )
-                        SpanText(
-                            "Kobweb",
-                            Modifier
-                                .color(sitePalette.primaryDarker)
-                                // Use a shadow so this light-colored word is more visible in light mode
-                                .textShadow(0.px, 0.px, blurRadius = 0.5.cssRem, color = Colors.Gray),
-                        )
-                    }
-
-                    Div(SubheadlineTextStyle.toAttrs()) {
-                        SpanText("You can read the ")
-                        Link("/about", "About")
-                        SpanText(" page for more information.")
-                    }
-
-                    val ctx = rememberPageContext()
-                    Button(
-                        onClick = {
-                            // Change this click handler with your call-to-action behavior
-                            // here. Link to an order page? Open a calendar UI? Play a movie?
-                            // Up to you!
-                            ctx.router.tryRoutingTo("/about")
+    PageLayout(routerState.currentRouteOrNull?.pageTitle() ?: "") {
+        routerState.renderCurrentDestination(
+            route = { routerScreen: RouterScreen ->
+                when (routerScreen) {
+                    RouterScreen.Home -> Home(
+                        onProductClick = { id ->
+                            router.trySend(
+                                RouterContract.Inputs.GoToDestination(
+                                    RouterScreen.ProductDetails
+                                        .directions()
+                                        .pathParameter("id", id)
+                                        .build()
+                                )
+                            )
                         },
-                        colorScheme = ColorSchemes.Blue,
-                    ) {
-                        Text("This could be your CTA")
+                        onSignOutClick = {
+                            router.trySend(
+                                RouterContract.Inputs.ReplaceTopDestination(RouterScreen.Login.matcher.routeFormat)
+                            )
+                        }
+                    )
+
+                    RouterScreen.Login -> Login(
+                        onLogin = {
+                            router.trySend(
+                                RouterContract.Inputs.GoToDestination(RouterScreen.Home.matcher.routeFormat)
+                            )
+                        }
+                    )
+
+                    RouterScreen.ProductDetails -> {
+                        val id: String by currentDestination!!.stringPath("id")
+                        ProductDetails(
+                            id = id,
+                            onGoBackClick = { router.trySend(RouterContract.Inputs.GoBack()) }
+                        )
                     }
                 }
+            },
+            notFound = { url ->
+                PageNotFound(
+                    url = url,
+                    onGoBackClick = { router.trySend(RouterContract.Inputs.GoBack()) }
+                )
             }
-
-            Div(
-                HomeGridStyle
-                    .toModifier()
-                    .displayIfAtLeast(Breakpoint.MD)
-                    .grid {
-                        rows { repeat(3) { size(1.fr) } }
-                        columns { repeat(5) { size(1.fr) } }
-                    }
-                    .toAttrs(),
-            ) {
-                val sitePalette = ColorMode.current.toSitePalette()
-                GridCell(sitePalette.primaryDarker, 1, 1, 2, 2)
-                GridCell(ColorSchemes.Monochrome._600, 1, 3)
-                GridCell(ColorSchemes.Monochrome._100, 1, 4, width = 2)
-                GridCell(sitePalette.primaryLighter, 2, 3, width = 2)
-                GridCell(ColorSchemes.Monochrome._300, 2, 5)
-                GridCell(ColorSchemes.Monochrome._800, 3, 1, width = 5)
-            }
-        }
+        )
     }
+}
+
+private fun RouterScreen.pageTitle(shopName: String = "Natalia's Shop"): String {
+    val title = when (this) {
+        RouterScreen.Home -> "NatShop"
+        RouterScreen.Login -> "Login"
+        RouterScreen.ProductDetails -> "Product Details"
+    }
+    return "$shopName - $title"
 }

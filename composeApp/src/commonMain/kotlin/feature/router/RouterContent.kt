@@ -31,9 +31,9 @@ import components.BottomSheet
 import components.ModalSheet
 import feature.login.LoginContent
 import feature.profile.ProfileContent
+import feature.router.RouterScreen.Home
 import feature.router.RouterScreen.Login
-import feature.router.RouterScreen.Profile
-import feature.router.RouterScreen.UpdateProfile
+import feature.router.RouterScreen.ProductDetails
 import feature.router.sheets.MenuDrawer
 import feature.updateProfile.UpdateProfileContent
 import theme.safePaddingValues
@@ -44,7 +44,7 @@ internal fun RouterContent(
     snackbarHostState: SnackbarHostState,
     isAuthenticated: Boolean,
     onLogOut: () -> Unit,
-    homeScreen: RouterScreen = Profile,
+    homeScreen: RouterScreen = Home,
     loginScreen: RouterScreen = Login,
 ) {
     val scope = rememberCoroutineScope()
@@ -70,7 +70,7 @@ internal fun RouterContent(
         } else {
             if (routerState.currentRouteOrNull == loginScreen) {
                 println("User is authenticated, redirecting to matcher screen")
-                router.trySend(ReplaceTopDestination(Profile.matcher.routeFormat))
+                router.trySend(ReplaceTopDestination(Home.matcher.routeFormat))
             }
         }
     }
@@ -121,16 +121,15 @@ internal fun RouterContent(
                             onAuthenticated = { router.trySend(ReplaceTopDestination(homeScreen.matcher.routeFormat)) },
                         )
 
-                        Profile -> ProfileContent(
+                        Home -> ProfileContent(
                             goBack = { router.trySend(GoBack()) },
                         )
 
-                        UpdateProfile -> UpdateProfileContent(
+                        ProductDetails -> UpdateProfileContent(
                             onError = onError,
                             onBackClicked = { router.trySend(GoBack()) },
                             isModalShowing = { isModalShowing = it },
-
-                            )
+                        )
                     }
                 },
                 notFound = { router.trySend(GoToDestination(Login.matcher.routeFormat)) },

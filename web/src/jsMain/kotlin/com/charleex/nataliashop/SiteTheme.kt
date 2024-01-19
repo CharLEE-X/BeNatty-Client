@@ -8,10 +8,6 @@ import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import com.varabyte.kobweb.silk.theme.colors.palette.background
 import com.varabyte.kobweb.silk.theme.colors.palette.color
 
-/**
- * @property nearBackground A useful color to apply to a container that should differentiate itself from the background
- *   but just a little.
- */
 class SitePalette(
     val background: Color,
     val onBackground: Color,

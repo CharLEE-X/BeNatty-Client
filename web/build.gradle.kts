@@ -39,11 +39,15 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.runtime)
             implementation(compose.html.core)
+
             implementation(libs.kobweb.core)
             implementation(libs.kobwebx.markdown)
             implementation(libs.kobweb.silk)
             implementation(libs.silk.icons.fa)
             implementation(libs.silk.icons.mdi)
+
+            implementation(libs.ballast.core)
+            implementation(libs.ballast.navigation)
         }
     }
 }

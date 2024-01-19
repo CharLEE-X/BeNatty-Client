@@ -15,9 +15,9 @@ private fun BottomBarPreview() {
     MaterialTheme(lightColors()) {
         BottomBar(
             routes = listOf(
-                RouterScreen.Profile,
+                RouterScreen.Home,
             ),
-            currentRoute = RouterScreen.Profile,
+            currentRoute = RouterScreen.Home,
             onDestinationClick = {},
             show = true,
             modifier = Modifier.fillMaxWidth(),
