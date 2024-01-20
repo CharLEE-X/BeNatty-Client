@@ -33,7 +33,7 @@ import feature.login.LoginContent
 import feature.profile.ProfileContent
 import feature.router.RouterScreen.Home
 import feature.router.RouterScreen.Login
-import feature.router.RouterScreen.ProductDetails
+import feature.router.RouterScreen.Product
 import feature.router.sheets.MenuDrawer
 import feature.updateProfile.UpdateProfileContent
 import theme.safePaddingValues
@@ -125,7 +125,7 @@ internal fun RouterContent(
                             goBack = { router.trySend(GoBack()) },
                         )
 
-                        ProductDetails -> UpdateProfileContent(
+                        Product -> UpdateProfileContent(
                             onError = onError,
                             onBackClicked = { router.trySend(GoBack()) },
                             isModalShowing = { isModalShowing = it },

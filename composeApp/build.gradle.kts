@@ -37,7 +37,7 @@ kotlin {
 
     targets.withType<KotlinNativeTarget> {
         binaries.all {
-            freeCompilerArgs += listOf("-Xdisable-phases=VerifyBitcode", "-Xexpect-actual-classes")
+            freeCompilerArgs += listOf("-Xexpect-actual-classes")
         }
     }
 

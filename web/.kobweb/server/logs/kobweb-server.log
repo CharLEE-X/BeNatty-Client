@@ -1,10 +1,5 @@
-2024-01-19 20:18:15.717 [main] DEBUG ktor.application - Java Home: /Users/adrianwitaszak/.sdkman/candidates/java
-2024-01-19 20:18:15.718 [main] DEBUG ktor.application - Class Loader: jdk.internal.loader.ClassLoaders$AppClassLoader@22d8cfe0: [file:/Users/adrianwitaszak/CharLEEX/NataliaShop/web/.kobweb/server/server.jar!/ch]
-2024-01-19 20:18:15.730 [main] WARN  ktor.application - API jar specified but does not exist! Please fix conf.yaml. Invalid path: "build/libs/nataliashop.jar"
-2024-01-19 20:18:15.761 [main] INFO  ktor.application - Application started in 0.079 seconds.
-2024-01-19 20:18:15.840 [main] INFO  ktor.application - Responding at http://0.0.0.0:8081
-2024-01-19 20:18:21.084 [eventLoopGroupProxy-4-2] DEBUG ktor.application - Client connected and is requesting kobweb status events.
-2024-01-19 20:19:04.220 [eventLoopGroupProxy-4-2] DEBUG ktor.application - Stopped sending kobweb status events, probably because client disconnected or server is shutting down. (ChannelWriteException: Cannot write to a channel)
-2024-01-19 20:19:04.293 [eventLoopGroupProxy-4-1] DEBUG ktor.application - Client connected and is requesting kobweb status events.
-2024-01-19 20:21:37.432 [eventLoopGroupProxy-4-1] DEBUG ktor.application - Stopped sending kobweb status events, probably because client disconnected or server is shutting down. (ChannelWriteException: Cannot write to a channel)
-2024-01-19 20:21:37.482 [eventLoopGroupProxy-4-3] DEBUG ktor.application - Client connected and is requesting kobweb status events.
+2024-01-20 08:57:17.804 [main] DEBUG ktor.application - Java Home: /Users/adrianwitaszak/.sdkman/candidates/java
+2024-01-20 08:57:17.805 [main] DEBUG ktor.application - Class Loader: jdk.internal.loader.ClassLoaders$AppClassLoader@22d8cfe0: [file:/Users/adrianwitaszak/CharLEEX/NataliaShop/web/.kobweb/server/server.jar!/ch]
+2024-01-20 08:57:17.817 [main] WARN  ktor.application - API jar specified but does not exist! Please fix conf.yaml. Invalid path: "build/libs/nataliashop.jar"
+2024-01-20 08:57:17.845 [main] INFO  ktor.application - Application started in 0.072 seconds.
+2024-01-20 08:57:17.914 [main] INFO  ktor.application - Responding at http://0.0.0.0:8080
