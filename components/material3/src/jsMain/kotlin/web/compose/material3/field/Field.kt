@@ -1,52 +1,33 @@
 package web.compose.material3.field
 
 import androidx.compose.runtime.Composable
-import org.jetbrains.compose.web.attributes.AttrsScope
+import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.toAttrs
 import org.jetbrains.compose.web.dom.ElementScope
-import web.compose.material3.InvalidCallException
 import web.compose.material3.MdElement
 import web.compose.material3.MdTagElement
+import web.compose.material3.jsRequire
 
-abstract class MdFieldElement : MdElement()
-
+@Suppress("UnsafeCastFromDynamic")
 @Composable
-fun <TElement : MdFieldElement> MdFieldTagElement(
-    tagName: String,
-    applyAttrs: (AttrsScope<TElement>.() -> Unit)?,
+fun <TElement : MdElement> MdFieldTagElement(
+    name: String,
+    label: String? = null,
+    value: String? = null,
+    errorText: String? = null,
+    isError: Boolean = false,
+    modifier: Modifier = Modifier,
     content: (@Composable ElementScope<TElement>.() -> Unit)?
-) = MdTagElement(
-    tagName = tagName,
-    applyAttrs = {
-        classes("md-field")
-        applyAttrs?.invoke(this)
-    },
-    content = content
-)
-
-fun AttrsScope<MdFieldElement>.error(value: Boolean = true) {
-    if (value) attr("error", "")
+) {
+    MdTagElement(
+        tagName = "md-$name-field",
+        applyAttrs = modifier.toAttrs {
+            classes("md-field")
+            if (label != null) attr("label", label)
+            if (value != null) attr("value", value)
+            if (errorText != null) attr("errorText", errorText)
+            if (isError) attr("error", "")
+        },
+        content = content
+    ).also { jsRequire("@material/web/field/$name-field.js") }
 }
-
-var AttrsScope<MdFieldElement>.errorText: String
-    get() {
-        throw InvalidCallException()
-    }
-    set(value) {
-        this.attr("errorText", value)
-    }
-
-var AttrsScope<MdFieldElement>.label: String
-    get() {
-        throw InvalidCallException()
-    }
-    set(value) {
-        this.attr("label", value)
-    }
-
-var AttrsScope<MdFieldElement>.value: String
-    get() {
-        throw InvalidCallException()
-    }
-    set(value) {
-        this.attr("value", value)
-    }

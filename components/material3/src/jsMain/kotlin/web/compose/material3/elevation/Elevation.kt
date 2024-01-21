@@ -1,29 +1,24 @@
 package web.compose.material3.elevation
 
 import androidx.compose.runtime.Composable
+import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.styleModifier
+import com.varabyte.kobweb.compose.ui.toAttrs
 import org.jetbrains.compose.web.css.CSSStyleVariable
 import org.jetbrains.compose.web.css.StylePropertyNumber
-import org.jetbrains.compose.web.dom.AttrBuilderContext
-import web.compose.material3.MdElement
 import web.compose.material3.MdTagElement
 import web.compose.material3.jsRequire
 
-abstract class ElevationElement : MdElement()
-
-@Composable
-fun Elevation(level: Int) = Elevation { style { mdElevationLevel(level) } }
-
+@Suppress("UnsafeCastFromDynamic")
 @Composable
 fun Elevation(
-    attrs: AttrBuilderContext<ElevationElement>? = null,
+    level: Int
 ) = MdTagElement(
     tagName = "md-elevation",
-    applyAttrs = attrs,
+    applyAttrs = Modifier
+        .styleModifier { mdElevationLevel(level) }
+        .toAttrs(),
     content = null
-).also {
-    webComponentLoader
-}
+).also { jsRequire("@material/web/elevation/elevation.js") }
 
-private val webComponentLoader = jsRequire("@material/web/elevation/elevation.js")
-
-val mdElevationLevel = CSSStyleVariable<StylePropertyNumber>("--md-elevation-level")
+private val mdElevationLevel = CSSStyleVariable<StylePropertyNumber>("--md-elevation-level")

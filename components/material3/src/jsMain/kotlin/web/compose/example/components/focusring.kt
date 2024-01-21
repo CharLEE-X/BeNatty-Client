@@ -26,8 +26,6 @@ import web.compose.extras.text.LargeBody
 import web.compose.extras.text.LargeLabel
 import web.compose.extras.text.LargeTitle
 import web.compose.material3.focusring.FocusRing
-import web.compose.material3.focusring.inward
-import web.compose.material3.focusring.visible
 import web.compose.material3.theming.MdSysColorVariables
 
 private object FocusRingStyleSheet : StyleSheet() {
@@ -65,11 +63,11 @@ fun FocusRingShowcase() {
 
     Div({ tabIndex(2); classes(FocusRingStyleSheet.box) }) {
         LargeLabel("inward")
-        FocusRing({ inward = true })
+        FocusRing(inward = true)
     }
 
     Div({ tabIndex(3); classes(FocusRingStyleSheet.box) }) {
         LargeLabel("visible")
-        FocusRing({ visible = true })
+        FocusRing(visible = true)
     }
 }

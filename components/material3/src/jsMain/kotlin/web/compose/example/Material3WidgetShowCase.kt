@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.attrsModifier
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import org.jetbrains.compose.web.attributes.TextAreaWrap
 import org.jetbrains.compose.web.attributes.rows
@@ -174,18 +175,51 @@ fun Material3WidgetShowCase() {
             South {
                 NavigationBar {
                     NavigationTab({ label = "Home"; onClick { westOpened = !westOpened } }) {
-                        Icon({ slot = "activeIcon" }, "home")
-                        Icon({ slot = "inactiveIcon" }, "home")
+                        Icon(
+                            modifier = Modifier.attrsModifier {
+                                slot = "activeIcon"
+                            },
+                            iconIdentifier = "home"
+                        )
+                        Icon(
+                            modifier = Modifier.attrsModifier {
+                                slot = "inactiveIcon"
+                            },
+                            iconIdentifier = "home"
+                        )
                     }
                     NavigationTab({ label = "Explore" }) {
-                        Icon({ slot = "activeIcon" }, "public")
-                        Icon({ slot = "inactiveIcon" }, "public")
+                        Icon(
+                            modifier = Modifier.attrsModifier {
+                                slot = "activeIcon"
+                            },
+                            iconIdentifier = "public"
+                        )
+                        Icon(
+                            modifier = Modifier.attrsModifier {
+                                slot = "inactiveIcon"
+                            },
+                            iconIdentifier = "public"
+                        )
                     }
                     NavigationTab({ label = "Edit"; onClick { eastOpened = !eastOpened } }) {
-                        Icon({ slot = "activeIcon" }, "edit_note")
-                        Icon({ slot = "inactiveIcon" }, "edit_note")
+                        Icon(
+                            modifier = Modifier.attrsModifier { slot = "activeIcon" },
+                            iconIdentifier = "edit_note"
+                        )
+                        Icon(
+                            modifier = Modifier.attrsModifier { slot = "inactiveIcon" },
+                            iconIdentifier = "edit_note"
+                        )
                     }
-                    Fab { Icon({ slot = "icon" }, "add") }
+                    Fab {
+                        Icon(
+                            modifier = Modifier.attrsModifier {
+                                slot = "icon"
+                            },
+                            iconIdentifier = "add"
+                        )
+                    }
                 }
             }
         }
@@ -284,9 +318,24 @@ fun ShowcaseContent() {
 
                             LargeTitle("Icons")
                             Row {
-                                Icon({ slot = "start" }, "edit")
-                                Icon({ slot = "start" }, "delete")
-                                Icon({ slot = "end" }, "close")
+                                Icon(
+                                    modifier = Modifier.attrsModifier {
+                                        slot = "start"
+                                    },
+                                    iconIdentifier = "edit"
+                                )
+                                Icon(
+                                    modifier = Modifier.attrsModifier {
+                                        slot = "start"
+                                    },
+                                    iconIdentifier = "delete"
+                                )
+                                Icon(
+                                    modifier = Modifier.attrsModifier {
+                                        slot = "end"
+                                    },
+                                    iconIdentifier = "close"
+                                )
                             }
 
                             CheckboxShowcase()

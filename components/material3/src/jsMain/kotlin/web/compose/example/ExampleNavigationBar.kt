@@ -1,6 +1,8 @@
 package web.compose.example
 
 import androidx.compose.runtime.Composable
+import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.attrsModifier
 import web.compose.extras.BottomNavigationBar
 import web.compose.material3.fab.Fab
 import web.compose.material3.icon.Icon
@@ -12,17 +14,48 @@ import web.compose.material3.slot
 fun ExampleNavigationBar() {
     BottomNavigationBar {
         NavigationTab({ label = "Home" }) {
-            Icon({ slot = "activeIcon" }, "home")
-            Icon({ slot = "inactiveIcon" }, "home")
+            Icon(
+                modifier = Modifier.attrsModifier { slot = "activeIcon" },
+                iconIdentifier = "home"
+            )
+            Icon(
+                modifier = Modifier.attrsModifier { slot = "inactiveIcon" },
+                iconIdentifier = "home"
+            )
         }
         NavigationTab({ label = "Explore" }) {
-            Icon({ slot = "activeIcon" }, "public")
-            Icon({ slot = "inactiveIcon" }, "public")
+            Icon(
+                modifier = Modifier.attrsModifier {
+                    slot = "activeIcon"
+                },
+                iconIdentifier = "public"
+            )
+            Icon(
+                modifier = Modifier.attrsModifier { slot = "inactiveIcon" },
+                iconIdentifier = "public"
+            )
         }
         NavigationTab({ label = "Edit" }) {
-            Icon({ slot = "activeIcon" }, "edit_note")
-            Icon({ slot = "inactiveIcon" }, "edit_note")
+            Icon(
+                modifier = Modifier.attrsModifier {
+                    slot = "activeIcon"
+                },
+                iconIdentifier = "edit_note"
+            )
+            Icon(
+                modifier = Modifier.attrsModifier {
+                    slot = "inactiveIcon"
+                },
+                iconIdentifier = "edit_note"
+            )
         }
-        Fab { Icon({ slot = "icon" }, "add") }
+        Fab {
+            Icon(
+                modifier = Modifier.attrsModifier {
+                    slot = "icon"
+                },
+                iconIdentifier = "add"
+            )
+        }
     }
 }

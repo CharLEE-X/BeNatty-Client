@@ -5,7 +5,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import org.jetbrains.compose.web.css.padding
+import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.attrsModifier
+import com.varabyte.kobweb.compose.ui.modifiers.padding
 import org.jetbrains.compose.web.css.px
 import web.compose.extras.text.LargeLabel
 import web.compose.extras.text.LargeTitle
@@ -14,9 +16,6 @@ import web.compose.material3.iconbutton.FilledIconButton
 import web.compose.material3.iconbutton.IconButton
 import web.compose.material3.iconbutton.OutlinedIconButton
 import web.compose.material3.iconbutton.TonalIconButton
-import web.compose.material3.iconbutton.disabled
-import web.compose.material3.iconbutton.selected
-import web.compose.material3.iconbutton.toggle
 import web.compose.material3.slot
 
 @Composable
@@ -28,34 +27,39 @@ fun IconButtonsShowcase() {
 
     LargeLabel("Button clicked: $clickedValue")
 
-    FilledIconButton({
-        onClick { clickedValue = "filled icon button clicked" }
-        style { padding(5.px) }
-    }) { Icon("star") }
-    OutlinedIconButton({
-        onClick { clickedValue = "outlined icon button clicked" }
-        style { padding(5.px) }
-    }) { Icon("login") }
-    TonalIconButton({
-        onClick { clickedValue = "tonal icon button clicked" }
-        style { padding(5.px) }
-    }) { Icon("public") }
-    IconButton({
-        onClick { toggleButtonSelected = !toggleButtonSelected }
-        style { padding(5.px) }
-    }) { Icon("menu") }
-    FilledIconButton({
-        toggle()
-        selected(toggleButtonSelected)
-        style { padding(5.px) }
-    }) {
-        Icon("lock")
-        Icon({ slot = "selectedIcon" }, "lock_open")
+    FilledIconButton(
+        onClick = { clickedValue = "filled icon button clicked" },
+        modifier = Modifier.padding(5.px)
+    ) { Icon(iconIdentifier = "star") }
+    OutlinedIconButton(
+        onClick = { clickedValue = "outlined icon button clicked" },
+        modifier = Modifier.padding(5.px)
+    ) { Icon(iconIdentifier = "login") }
+    TonalIconButton(
+        onClick = { clickedValue = "tonal icon button clicked" },
+        modifier = Modifier.padding(5.px)
+    ) { Icon(iconIdentifier = "public") }
+    IconButton(
+        onClick = { toggleButtonSelected = !toggleButtonSelected },
+        modifier = Modifier.padding(5.px)
+    ) { Icon("menu") }
+    FilledIconButton(
+        toggle = true,
+        selected = toggleButtonSelected,
+        modifier = Modifier.padding(5.px)
+    ) {
+        Icon(iconIdentifier = "lock")
+        Icon(
+            modifier = Modifier.attrsModifier {
+                slot = "selectedIcon"
+            },
+            iconIdentifier = "lock_open"
+        )
     }
-    FilledIconButton({
-        disabled()
-        style { padding(5.px) }
-    }) {
+    FilledIconButton(
+        disabled = true,
+        modifier = Modifier.padding(5.px)
+    ) {
         Icon("star")
     }
 }

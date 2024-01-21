@@ -5,7 +5,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import org.jetbrains.compose.web.css.padding
+import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.padding
 import org.jetbrains.compose.web.css.px
 import web.compose.extras.Row
 import web.compose.extras.text.LargeTitle
@@ -20,24 +21,24 @@ fun BadgeShowcase() {
     LargeTitle("Badges")
 
     Row {
-        TonalIconButton({
-            style { padding(5.px) }
-        }) {
+        TonalIconButton(
+            modifier = Modifier.padding(5.px)
+        ) {
             Icon("public")
             Badge()
         }
 
-        TonalIconButton({
-            onClick { badgeValue++ }
-            style { padding(5.px) }
-        }) {
+        TonalIconButton(
+            onClick = { badgeValue++ },
+            modifier = Modifier.padding(5.px)
+        ) {
             Icon("public")
             Badge(value = badgeValue.toString())
         }
 
-        TonalIconButton({
-            style { padding(5.px) }
-        }) {
+        TonalIconButton(
+            modifier = Modifier.padding(5.px)
+        ) {
             Icon("public")
             Badge(value = "999+")
         }

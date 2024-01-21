@@ -5,6 +5,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.attrsModifier
 import org.jetbrains.compose.web.dom.Text
 import web.compose.extras.text.LargeLabel
 import web.compose.extras.text.LargeTitle
@@ -15,8 +17,6 @@ import web.compose.material3.buttons.OutlinedButton
 import web.compose.material3.buttons.TextButton
 import web.compose.material3.fab.Fab
 import web.compose.material3.fab.FabSize
-import web.compose.material3.fab.label
-import web.compose.material3.fab.size
 import web.compose.material3.icon.Icon
 import web.compose.material3.slot
 
@@ -55,14 +55,37 @@ fun ButtonShowcase() {
     }
 
     LargeTitle("FAB")
-    Fab({ size = FabSize.SMALL; onClick { clickedValue = "Small FAB clicked" } }) {
-        Icon({ slot = "icon" }, "edit")
+    Fab(
+        fabSize = FabSize.SMALL,
+        onClick = { clickedValue = "Small FAB clicked" }
+    ) {
+        Icon(
+            modifier = Modifier.attrsModifier {
+                slot = "icon"
+            },
+            iconIdentifier = "edit"
+        )
     }
-    Fab({ size = FabSize.MEDIUM; onClick { clickedValue = "Medium FAB clicked" } }) {
-        Icon({ slot = "icon" }, "delete")
+    Fab(
+        fabSize = FabSize.MEDIUM,
+        onClick = { clickedValue = "Medium FAB clicked" }
+    ) {
+        Icon(
+            modifier = Modifier.attrsModifier { slot = "icon" },
+            iconIdentifier = "delete"
+        )
     }
-    Fab({ size = FabSize.LARGE; onClick { clickedValue = "Large FAB clicked" } }) {
-        Icon({ slot = "icon" }, "add")
+    Fab(
+        fabSize = FabSize.LARGE,
+        onClick = { clickedValue = "Large FAB clicked" }
+    ) {
+        Icon(
+            modifier = Modifier.attrsModifier { slot = "icon" },
+            iconIdentifier = "add"
+        )
     }
-    Fab({ label = "FAB"; onClick { clickedValue = "FAB with label clicked" } })
+    Fab(
+        label = "FAB",
+        onClick = { clickedValue = "FAB with label clicked" }
+    )
 }

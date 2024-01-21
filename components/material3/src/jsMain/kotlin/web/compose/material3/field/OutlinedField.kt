@@ -1,20 +1,26 @@
 package web.compose.material3.field
 
 import androidx.compose.runtime.Composable
-import org.jetbrains.compose.web.dom.AttrBuilderContext
+import com.varabyte.kobweb.compose.ui.Modifier
 import org.jetbrains.compose.web.dom.ContentBuilder
-import web.compose.material3.jsRequire
+import web.compose.material3.MdElement
 
 @Composable
 fun OutlinedField(
-    attrs: AttrBuilderContext<MdFieldElement>? = null,
-    content: ContentBuilder<MdFieldElement>? = null
-) = MdFieldTagElement(
-    tagName = "md-outlined-field",
-    applyAttrs = attrs,
-    content = content
-).also {
-    webComponentLoader
+    label: String? = null,
+    value: String? = null,
+    errorText: String? = null,
+    isError: Boolean = false,
+    modifier: Modifier = Modifier,
+    content: ContentBuilder<MdElement>? = null
+) {
+    MdFieldTagElement(
+        name = "outlined",
+        label = label,
+        value = value,
+        errorText = errorText,
+        isError = isError,
+        modifier = modifier,
+        content = content
+    )
 }
-
-private val webComponentLoader = jsRequire("@material/web/field/outlined-field.js")

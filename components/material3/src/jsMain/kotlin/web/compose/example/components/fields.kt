@@ -1,16 +1,14 @@
 package web.compose.example.components
 
 import androidx.compose.runtime.Composable
+import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.attrsModifier
 import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
 import web.compose.extras.text.LargeBody
 import web.compose.extras.text.LargeTitle
 import web.compose.material3.field.FilledField
 import web.compose.material3.field.OutlinedField
-import web.compose.material3.field.error
-import web.compose.material3.field.errorText
-import web.compose.material3.field.label
-import web.compose.material3.field.value
 import web.compose.material3.icon.Icon
 import web.compose.material3.slot
 
@@ -18,29 +16,39 @@ import web.compose.material3.slot
 fun FieldsShowcase() {
     LargeTitle("Fields")
 
-    FilledField({
+    FilledField(
         label = "A label"
-    }) {
+    ) {
         LargeBody("Some text")
 
-        Icon({ slot = "start" }, "search")
-        Icon({ slot = "end" }, "event")
+        Icon(
+            modifier = Modifier.attrsModifier {
+                slot = "start"
+            },
+            iconIdentifier = "search"
+        )
+        Icon(
+            modifier = Modifier.attrsModifier {
+                slot = " end "
+            },
+            iconIdentifier = " event "
+        )
         Span({ slot = "supporting-text" }) { Text("Supporting text") }
         Span({ slot = "supporting-text-end" }) { Text("Supporting text end") }
     }
 
-    OutlinedField({
-        label = "An outlined field label"
-        value = "Field value"
-    }) {
+    OutlinedField(
+        label = "An outlined field label",
+        value = "Field value",
+    ) {
         LargeBody("Some text")
     }
-    OutlinedField({
-        error()
-        errorText = "An error occured"
-        label = "An outlined field label"
-        value = "Field value"
-    }) {
+    OutlinedField(
+        value = "Field value",
+        label = "An outlined field label",
+        isError = true,
+        errorText = "An error occurred",
+    ) {
         LargeBody("Some text")
     }
 }

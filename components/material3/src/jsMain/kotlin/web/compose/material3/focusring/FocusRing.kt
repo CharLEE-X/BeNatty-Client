@@ -1,36 +1,22 @@
 package web.compose.material3.focusring
 
 import androidx.compose.runtime.Composable
-import org.jetbrains.compose.web.attributes.AttrsScope
-import org.jetbrains.compose.web.dom.AttrBuilderContext
-import web.compose.material3.InvalidCallException
-import web.compose.material3.MdElement
+import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.toAttrs
 import web.compose.material3.MdTagElement
 import web.compose.material3.jsRequire
 
-abstract class FocusRingElement : MdElement()
-
+@Suppress("UnsafeCastFromDynamic")
 @Composable
 fun FocusRing(
-    attrs: AttrBuilderContext<FocusRingElement>? = null,
+    visible: Boolean? = null,
+    inward: Boolean = false,
+    modifier: Modifier = Modifier,
 ) = MdTagElement(
     tagName = "md-focus-ring",
-    applyAttrs = attrs,
+    applyAttrs = modifier.toAttrs {
+        if (visible != null) attr("visible", "")
+        if (inward) attr("inward", "")
+    },
     content = null
-).also {
-    webComponentLoader
-}
-
-private val webComponentLoader = jsRequire("@material/web/focus/md-focus-ring.js")
-
-var AttrsScope<FocusRingElement>.visible: Boolean
-    get() = throw InvalidCallException()
-    set(value) {
-        if(value) this.attr("visible", "")
-    }
-
-var AttrsScope<FocusRingElement>.inward: Boolean
-    get() = throw InvalidCallException()
-    set(value) {
-        if(value) this.attr("inward", "")
-    }
+).also { jsRequire("@material/web/focus/md-focus-ring.js") }
