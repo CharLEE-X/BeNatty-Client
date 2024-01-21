@@ -13,7 +13,7 @@ kotlin {
             implementation(compose.material)
         }
         jsMain.dependencies {
-            implementation(compose.html.core)
+            implementation(libs.kobweb.silk)
         }
     }
 }

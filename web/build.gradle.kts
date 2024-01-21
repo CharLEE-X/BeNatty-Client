@@ -1,4 +1,5 @@
 import com.varabyte.kobweb.gradle.application.util.configAsKobwebApplication
+import kotlinx.html.link
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -6,13 +7,20 @@ plugins {
     alias(libs.plugins.kobweb.application)
 }
 
-//group = libs.versions.packageName.get()
+group = project.name
 version = "1.0-SNAPSHOT"
 
 kobweb {
     app {
         index {
             description.set("Powered by Kobweb")
+
+            listOf(
+                "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined",
+                "https://fonts.googleapis.com/css?family=Roboto",
+            ).forEach {
+                head.add { link(it, "stylesheet") }
+            }
         }
     }
 }
@@ -27,10 +35,11 @@ kotlin {
             implementation(projects.feature.router)
             implementation(projects.feature.login)
             implementation(projects.components.theme)
+            implementation(projects.components.material3)
 
-            implementation(compose.ui)
             implementation(compose.runtime)
             implementation(compose.html.core)
+            implementation(compose.html.svg)
 
             implementation(libs.kobweb.core)
             implementation(libs.kobweb.silk)

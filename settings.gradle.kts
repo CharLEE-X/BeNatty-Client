@@ -20,6 +20,7 @@ dependencyResolutionManagement {
         maven("https://us-central1-maven.pkg.dev/varabyte-repos/public")
         maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
         maven("https://jitpack.io")
+        mavenLocal()
     }
 }
 
@@ -43,4 +44,5 @@ include(
     ":components:pictures",
     ":components:localization",
     ":components:theme",
+    ":components:material3",
 )
