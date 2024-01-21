@@ -7,10 +7,10 @@ import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
 import web.compose.extras.text.LargeBody
 import web.compose.extras.text.LargeTitle
-import web.compose.material3.field.FilledField
-import web.compose.material3.field.OutlinedField
-import web.compose.material3.icon.Icon
-import web.compose.material3.slot
+import web.compose.material3.common.slot
+import web.compose.material3.component.FilledField
+import web.compose.material3.component.Icon
+import web.compose.material3.component.OutlinedField
 
 @Composable
 fun FieldsShowcase() {

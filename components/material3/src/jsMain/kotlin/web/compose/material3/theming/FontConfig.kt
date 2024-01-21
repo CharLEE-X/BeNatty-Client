@@ -19,7 +19,7 @@ import org.jetbrains.compose.web.css.value
 open class TypeScaleTokens(
     val tokenBase: String
 ) {
-    inner open class Role(
+    open inner class Role(
         tokenName: String
     ) {
         val font = CSSStyleVariable<StylePropertyString>("$tokenBase-$tokenName-font")
@@ -45,7 +45,6 @@ object MdRefTypeFaceTokens {
 }
 
 object MdSysTypeScaleTokens : TypeScaleTokens("md-sys-typescale") {
-
     object displayLarge : Role("display-large")
     object displayMedium : Role("display-medium")
     object displaySmall : Role("display-small")

@@ -72,50 +72,30 @@ import web.compose.extras.text.SmallDisplay
 import web.compose.extras.text.SmallHeadline
 import web.compose.extras.text.SmallLabel
 import web.compose.extras.text.SmallTitle
-import web.compose.material3.buttons.OutlinedButton
-import web.compose.material3.disabled
-import web.compose.material3.fab.Fab
-import web.compose.material3.field.FilledField
-import web.compose.material3.field.OutlinedField
-import web.compose.material3.icon.Icon
-import web.compose.material3.navigationbar.NavigationBar
-import web.compose.material3.navigationdrawer.ModalNavigationDrawer
-import web.compose.material3.navigationdrawer.NavigationDrawer
-import web.compose.material3.navigationdrawer.opened
-import web.compose.material3.navigationtab.NavigationTab
-import web.compose.material3.navigationtab.label
-import web.compose.material3.onChange
-import web.compose.material3.radio.Radio
-import web.compose.material3.radio.checked
-import web.compose.material3.radio.name
-import web.compose.material3.radio.value
-import web.compose.material3.select.FilledSelect
-import web.compose.material3.select.OutlinedSelect
-import web.compose.material3.select.SelectOption
-import web.compose.material3.select.headline
-import web.compose.material3.select.label
-import web.compose.material3.select.onChange
-import web.compose.material3.select.supportingText
-import web.compose.material3.select.value
-import web.compose.material3.slider.Slider
-import web.compose.material3.slider.max
-import web.compose.material3.slider.min
-import web.compose.material3.slider.step
-import web.compose.material3.slider.value
-import web.compose.material3.slider.withLabel
-import web.compose.material3.slot
-import web.compose.material3.switch.Switch
-import web.compose.material3.switch.selected
-import web.compose.material3.tabs.PrimaryTab
-import web.compose.material3.tabs.Tabs
-import web.compose.material3.tabs.activeTabIndex
-import web.compose.material3.tabs.onChange
-import web.compose.material3.themes.defaultColorScheme
-import web.compose.material3.themes.defaultDarkColorScheme
-import web.compose.material3.themes.defaultFontScheme
+import web.compose.material3.common.slot
+import web.compose.material3.component.Fab
+import web.compose.material3.component.FilledField
+import web.compose.material3.component.FilledSelect
+import web.compose.material3.component.Icon
+import web.compose.material3.component.ModalNavigationDrawer
+import web.compose.material3.component.NavigationBar
+import web.compose.material3.component.NavigationDrawer
+import web.compose.material3.component.NavigationTab
+import web.compose.material3.component.OutlinedButton
+import web.compose.material3.component.OutlinedField
+import web.compose.material3.component.OutlinedSelect
+import web.compose.material3.component.PrimaryTab
+import web.compose.material3.component.Radio
+import web.compose.material3.component.SelectOption
+import web.compose.material3.component.Slider
+import web.compose.material3.component.Switch
+import web.compose.material3.component.Tabs
 import web.compose.material3.theming.MaterialTheme
 import web.compose.material3.theming.MdSysTypeScaleTokens
 import web.compose.material3.theming.TypeScaleTokens.Companion.applyStyle
+import web.compose.material3.theming.defaultColorScheme
+import web.compose.material3.theming.defaultDarkColorScheme
+import web.compose.material3.theming.defaultFontScheme
 
 @Composable
 fun Material3WidgetShowCase() {
@@ -140,16 +120,16 @@ fun Material3WidgetShowCase() {
                     }
                 }) {
                     Text("Switch theme")
-                    Switch({
-                        selected(currentColorScheme != lightColorScheme)
-                        onClick {
+                    Switch(
+                        selected = currentColorScheme != lightColorScheme,
+                        onClick = {
                             currentColorScheme =
                                 if (currentColorScheme == lightColorScheme)
                                     darkColorScheme
                                 else
                                     lightColorScheme
-                        }
-                    })
+                        },
+                    )
                 }
             }
             West {
@@ -174,7 +154,10 @@ fun Material3WidgetShowCase() {
             }
             South {
                 NavigationBar {
-                    NavigationTab({ label = "Home"; onClick { westOpened = !westOpened } }) {
+                    NavigationTab(
+                        label = "Home",
+                        onClick = { westOpened = !westOpened }
+                    ) {
                         Icon(
                             modifier = Modifier.attrsModifier {
                                 slot = "activeIcon"
@@ -188,7 +171,7 @@ fun Material3WidgetShowCase() {
                             iconIdentifier = "home"
                         )
                     }
-                    NavigationTab({ label = "Explore" }) {
+                    NavigationTab(label = "Explore") {
                         Icon(
                             modifier = Modifier.attrsModifier {
                                 slot = "activeIcon"
@@ -202,7 +185,10 @@ fun Material3WidgetShowCase() {
                             iconIdentifier = "public"
                         )
                     }
-                    NavigationTab({ label = "Edit"; onClick { eastOpened = !eastOpened } }) {
+                    NavigationTab(
+                        label = "Edit",
+                        onClick = { eastOpened = !eastOpened }
+                    ) {
                         Icon(
                             modifier = Modifier.attrsModifier { slot = "activeIcon" },
                             iconIdentifier = "edit_note"
@@ -228,15 +214,15 @@ fun Material3WidgetShowCase() {
 
 @Composable
 fun ShowcaseContent() {
-
     var activeTab by remember { mutableStateOf(0) }
-    Tabs({
-        activeTabIndex = activeTab
-        onChange {
+
+    Tabs(
+        activeTabIndex = activeTab,
+        onChange = {
             console.info(it)
             activeTab = it.target.asDynamic().activeTabIndex
         }
-    }) {
+    ) {
         PrimaryTab {
             Icon("check_circle")
             Text("Stable widgets")
@@ -343,62 +329,62 @@ fun ShowcaseContent() {
                             SwitchShowcase()
 
                             LargeTitle("Slider")
-                            var sliderValue by remember { mutableStateOf(0L) }
-                            Slider({
-                                min = 100
-                                max = 200
-                                step = 2
-                                value = sliderValue
-                                withLabel()
-                                onChange { sliderValue = it.currentTarget.asDynamic().value }
-                            }) { }
-                            Slider({
-                                min = 100
-                                max = 200
-                                step = 2
-                                value = sliderValue
-                                withLabel()
-                                disabled()
-                            }) { }
+                            var sliderValue by remember { mutableStateOf(0f) }
+                            Slider(
+                                min = 100f,
+                                max = 200f,
+                                step = 2f,
+                                value = sliderValue,
+                                withLabel = true,
+                                onChange = { sliderValue = it },
+                            )
+                            Slider(
+                                min = 100f,
+                                max = 200f,
+                                step = 2f,
+                                value = sliderValue,
+                                withLabel = true,
+                                disabled = true,
+                            )
 
                             LargeTitle("Radio")
                             var radioValue by remember { mutableStateOf<String?>(null) }
                             val radioGroupName = "radio-group"
                             Label(null, { style { display(Flex); alignItems(AlignItems.Center) } }) {
-                                Radio({
-                                    name = radioGroupName
-                                    value = "o1"
-                                    checked(radioValue == "o1")
-                                    onChange { radioValue = "o1" }
-                                })
+                                Radio(
+                                    name = radioGroupName,
+                                    value = "o1",
+                                    checked = radioValue == "o1",
+                                    onChange = { radioValue = "o1" }
+                                )
                                 LargeLabel("Option 1", inline = true)
                             }
                             Label(null, { style { display(Flex); alignItems(AlignItems.Center) } }) {
-                                Radio({
-                                    name = radioGroupName
-                                    value = "o2"
-                                    checked(radioValue == "o2")
-                                    onChange { radioValue = "o2" }
-                                })
+                                Radio(
+                                    name = radioGroupName,
+                                    value = "o2",
+                                    checked = radioValue == "o2",
+                                    onChange = { radioValue = "o2" }
+                                )
                                 LargeLabel("Option 2", inline = true)
                             }
                             Label(null, { style { display(Flex); alignItems(AlignItems.Center) } }) {
-                                Radio({
-                                    name = radioGroupName
-                                    value = "o3"
-                                    checked(radioValue == "o3")
-                                    onChange { radioValue = "o3" }
-                                })
+                                Radio(
+                                    name = radioGroupName,
+                                    value = "o3",
+                                    checked = radioValue == "o3",
+                                    onChange = { radioValue = "o3" }
+                                )
                                 LargeLabel("Option 3", inline = true)
                             }
                             Label(null, { style { display(Flex); alignItems(AlignItems.Center) } }) {
-                                Radio({
-                                    name = radioGroupName
-                                    value = "o4"
-                                    disabled()
-                                    checked(radioValue == "o4")
-                                    onChange { radioValue = "o4" }
-                                })
+                                Radio(
+                                    name = radioGroupName,
+                                    value = "o4",
+                                    disabled = true,
+                                    checked = radioValue == "o4",
+                                    onChange = { radioValue = "o4" },
+                                )
                                 LargeLabel("Option 4", inline = true)
                             }
                             LargeBody("Radio button selected: $radioValue")
@@ -406,30 +392,48 @@ fun ShowcaseContent() {
                             LargeTitle("Select")
                             var selectedValue by remember { mutableStateOf("") }
 
-                            FilledSelect({
-                                label = "Select label"
-                                supportingText = "Selected value $selectedValue"
-                                onChange {
+                            FilledSelect(
+                                label = "Select label",
+                                supportingText = "Selected value $selectedValue",
+                                onChange = {
                                     selectedValue = it.currentTarget?.asDynamic()?.value ?: ""
                                 }
-                            }) {
-                                SelectOption { }
-                                SelectOption({ value = "MD1"; headline = "Material Design 1" })
-                                SelectOption({ value = "MD2"; headline = "Material Design 2" })
-                                SelectOption({ value = "MD3"; headline = "Material Design 3" })
+                            ) {
+                                SelectOption()
+                                SelectOption(
+                                    value = "MD1",
+                                    headline = "Material Design 1"
+                                )
+                                SelectOption(
+                                    value = "MD2",
+                                    headline = "Material Design 2"
+                                )
+                                SelectOption(
+                                    value = "MD3",
+                                    headline = "Material Design 3"
+                                )
                             }
 
-                            OutlinedSelect({
-                                label = "Select label"
-                                supportingText = "Selected value $selectedValue"
-                                onChange {
+                            OutlinedSelect(
+                                label = "Select label",
+                                supportingText = "Selected value $selectedValue",
+                                onChange = {
                                     selectedValue = it.currentTarget?.asDynamic()?.value ?: ""
                                 }
-                            }) {
-                                SelectOption { }
-                                SelectOption({ value = "MD1"; headline = "Material Design 1" })
-                                SelectOption({ value = "MD2"; headline = "Material Design 2" })
-                                SelectOption({ value = "MD3"; headline = "Material Design 3" })
+                            ) {
+                                SelectOption()
+                                SelectOption(
+                                    value = "MD1",
+                                    headline = "Material Design 1"
+                                )
+                                SelectOption(
+                                    value = "MD2",
+                                    headline = "Material Design 2"
+                                )
+                                SelectOption(
+                                    value = "MD3",
+                                    headline = "Material Design 3"
+                                )
                             }
                         }
 
@@ -452,7 +456,7 @@ fun ShowcaseContent() {
                         Text("${if (opened) "close" else "open"} drawer")
                     }
 
-                    NavigationDrawer({ opened(opened) }) {
+                    NavigationDrawer(opened = opened) {
                         LargeBody("Navigation drawer")
                     }
                 }
@@ -469,7 +473,9 @@ fun ShowcaseContent() {
                         Text("${if (opened) "close" else "open"} drawer")
                     }
 
-                    ModalNavigationDrawer({ opened(opened) }) {
+                    ModalNavigationDrawer(
+                        opened = opened
+                    ) {
                         LargeBody("Modal navigation drawer")
                     }
                 }

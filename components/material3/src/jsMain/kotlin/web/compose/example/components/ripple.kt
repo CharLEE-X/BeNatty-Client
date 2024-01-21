@@ -25,8 +25,7 @@ import org.jetbrains.compose.web.dom.Div
 import web.compose.extras.text.LargeBody
 import web.compose.extras.text.LargeLabel
 import web.compose.extras.text.LargeTitle
-import web.compose.material3.ripple.Ripple
-import web.compose.material3.ripple.disabled
+import web.compose.material3.component.Ripple
 import web.compose.material3.theming.MdSysColorVariables
 
 private object RippleStyleSheet : StyleSheet() {
@@ -64,6 +63,6 @@ fun RippleShowcase() {
 
     Div({ classes(RippleStyleSheet.box) }) {
         LargeLabel("disabled")
-        Ripple({ disabled = true })
+        Ripple(disabled = true)
     }
 }

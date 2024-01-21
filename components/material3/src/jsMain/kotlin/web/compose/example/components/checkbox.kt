@@ -14,7 +14,7 @@ import org.jetbrains.compose.web.css.display
 import org.jetbrains.compose.web.dom.Label
 import web.compose.extras.text.LargeLabel
 import web.compose.extras.text.LargeTitle
-import web.compose.material3.checkbox.Checkbox
+import web.compose.material3.component.Checkbox
 
 @Composable
 fun CheckboxShowcase() {

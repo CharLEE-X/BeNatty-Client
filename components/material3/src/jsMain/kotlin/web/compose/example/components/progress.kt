@@ -10,8 +10,8 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import kotlinx.coroutines.delay
 import web.compose.extras.text.LargeTitle
-import web.compose.material3.progress.CircularProgress
-import web.compose.material3.progress.LinearProgress
+import web.compose.material3.component.CircularProgress
+import web.compose.material3.component.LinearProgress
 import kotlin.time.Duration.Companion.seconds
 
 @Composable

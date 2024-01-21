@@ -10,9 +10,9 @@ import com.varabyte.kobweb.compose.ui.modifiers.padding
 import org.jetbrains.compose.web.css.px
 import web.compose.extras.Row
 import web.compose.extras.text.LargeTitle
-import web.compose.material3.badge.Badge
-import web.compose.material3.icon.Icon
-import web.compose.material3.iconbutton.TonalIconButton
+import web.compose.material3.component.Badge
+import web.compose.material3.component.Icon
+import web.compose.material3.component.TonalIconButton
 
 @Composable
 fun BadgeShowcase() {

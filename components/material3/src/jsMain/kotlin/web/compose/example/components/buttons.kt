@@ -7,18 +7,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.attrsModifier
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiHome
 import org.jetbrains.compose.web.dom.Text
 import web.compose.extras.text.LargeLabel
 import web.compose.extras.text.LargeTitle
-import web.compose.material3.buttons.ElevatedButton
-import web.compose.material3.buttons.FilledButton
-import web.compose.material3.buttons.FilledTonalButton
-import web.compose.material3.buttons.OutlinedButton
-import web.compose.material3.buttons.TextButton
-import web.compose.material3.fab.Fab
-import web.compose.material3.fab.FabSize
-import web.compose.material3.icon.Icon
-import web.compose.material3.slot
+import web.compose.material3.common.slot
+import web.compose.material3.component.ElevatedButton
+import web.compose.material3.component.Fab
+import web.compose.material3.component.FabSize
+import web.compose.material3.component.FilledButton
+import web.compose.material3.component.FilledTonalButton
+import web.compose.material3.component.Icon
+import web.compose.material3.component.OutlinedButton
+import web.compose.material3.component.TextButton
 
 @Composable
 fun ButtonShowcase() {
@@ -39,6 +40,9 @@ fun ButtonShowcase() {
         Text("Outlined Button")
     }
     ElevatedButton(
+        trailingIcon = {
+            MdiHome()
+        },
         onClick = { clickedValue = "elevated button clicked" }
     ) {
         Text("Elevated Button")

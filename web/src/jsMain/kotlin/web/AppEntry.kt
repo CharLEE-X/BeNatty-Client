@@ -15,8 +15,8 @@ import com.varabyte.kobweb.silk.init.InitSilkContext
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import kotlinx.browser.localStorage
 import org.jetbrains.compose.web.css.vh
-import web.compose.material3.themes.defaultFontScheme
 import web.compose.material3.theming.MaterialTheme
+import web.compose.material3.theming.defaultFontScheme
 import web.theme.alternativeDarkColorScheme
 import web.theme.greenishColorScheme
 

@@ -17,7 +17,7 @@ import org.jetbrains.compose.web.dom.Li
 import org.jetbrains.compose.web.dom.Ul
 import web.compose.extras.text.LargeLabel
 import web.compose.extras.text.LargeTitle
-import web.compose.material3.divider.Divider
+import web.compose.material3.component.Divider
 import web.compose.material3.theming.MdSysColorVariables
 
 object DividerStyleSheet : StyleSheet() {

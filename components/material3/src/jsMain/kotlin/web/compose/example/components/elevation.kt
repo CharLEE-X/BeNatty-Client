@@ -20,7 +20,7 @@ import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.Div
 import web.compose.extras.text.LargeBody
 import web.compose.extras.text.LargeTitle
-import web.compose.material3.elevation.Elevation
+import web.compose.material3.component.Elevation
 import web.compose.material3.theming.MdSysColorVariables
 
 private object ElevationStyleSheet : StyleSheet() {

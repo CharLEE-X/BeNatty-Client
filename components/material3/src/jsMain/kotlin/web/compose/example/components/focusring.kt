@@ -25,7 +25,7 @@ import org.jetbrains.compose.web.dom.Div
 import web.compose.extras.text.LargeBody
 import web.compose.extras.text.LargeLabel
 import web.compose.extras.text.LargeTitle
-import web.compose.material3.focusring.FocusRing
+import web.compose.material3.component.FocusRing
 import web.compose.material3.theming.MdSysColorVariables
 
 private object FocusRingStyleSheet : StyleSheet() {

@@ -4,16 +4,15 @@ import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.attrsModifier
 import web.compose.extras.BottomNavigationBar
-import web.compose.material3.fab.Fab
-import web.compose.material3.icon.Icon
-import web.compose.material3.navigationtab.NavigationTab
-import web.compose.material3.navigationtab.label
-import web.compose.material3.slot
+import web.compose.material3.common.slot
+import web.compose.material3.component.Fab
+import web.compose.material3.component.Icon
+import web.compose.material3.component.NavigationTab
 
 @Composable
 fun ExampleNavigationBar() {
     BottomNavigationBar {
-        NavigationTab({ label = "Home" }) {
+        NavigationTab(label = "Home") {
             Icon(
                 modifier = Modifier.attrsModifier { slot = "activeIcon" },
                 iconIdentifier = "home"
@@ -23,7 +22,7 @@ fun ExampleNavigationBar() {
                 iconIdentifier = "home"
             )
         }
-        NavigationTab({ label = "Explore" }) {
+        NavigationTab(label = "Explore") {
             Icon(
                 modifier = Modifier.attrsModifier {
                     slot = "activeIcon"
@@ -35,7 +34,7 @@ fun ExampleNavigationBar() {
                 iconIdentifier = "public"
             )
         }
-        NavigationTab({ label = "Edit" }) {
+        NavigationTab(label = "Edit") {
             Icon(
                 modifier = Modifier.attrsModifier {
                     slot = "activeIcon"

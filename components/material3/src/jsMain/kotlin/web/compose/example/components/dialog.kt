@@ -7,8 +7,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import org.jetbrains.compose.web.dom.Text
 import web.compose.extras.text.LargeTitle
-import web.compose.material3.buttons.OutlinedButton
-import web.compose.material3.dialog.Dialog
+import web.compose.material3.component.Dialog
+import web.compose.material3.component.OutlinedButton
 
 @Composable
 fun DialogShowcase() {

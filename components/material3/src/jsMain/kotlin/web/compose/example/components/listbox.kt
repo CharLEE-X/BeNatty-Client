@@ -9,8 +9,8 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import web.compose.extras.text.LargeLabel
 import web.compose.extras.text.LargeTitle
-import web.compose.material3.list.List
-import web.compose.material3.list.ListItem
+import web.compose.material3.component.List
+import web.compose.material3.component.ListItem
 
 data class ListDataItem(
     val name: String, val organisation: String
