@@ -5,12 +5,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import web.compose.extras.text.LargeLabel
 import web.compose.extras.text.LargeTitle
 import web.compose.material3.list.List
 import web.compose.material3.list.ListItem
-import web.compose.material3.list.headline
-import web.compose.material3.list.supportingText
 
 data class ListDataItem(
     val name: String, val organisation: String
@@ -31,13 +31,13 @@ fun ListboxShowcase() {
 
     List {
         listData.forEach { listDateItem ->
-            ListItem({
-                headline = listDateItem.name
-                supportingText = listDateItem.organisation
-                onClick {
+            ListItem(
+                headline = listDateItem.name,
+                supportingText = listDateItem.organisation,
+                modifier = Modifier.onClick {
                     selectedListItemValue = listDateItem.name
                 }
-            })
+            )
         }
     }
 }
