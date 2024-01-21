@@ -48,6 +48,7 @@ import web.compose.example.components.FieldsShowcase
 import web.compose.example.components.FocusRingShowcase
 import web.compose.example.components.IconButtonsShowcase
 import web.compose.example.components.ListboxShowcase
+import web.compose.example.components.MenuShowcase
 import web.compose.example.components.RippleShowcase
 import web.compose.example.components.SwitchShowcase
 import web.compose.example.components.TextFieldShowcase
@@ -271,6 +272,9 @@ fun ShowcaseContent() {
                         }
                         Column({ style { flex(1) } }) {
                             RippleShowcase()
+                        }
+                        Column({ style { flex(1) } }) {
+                            MenuShowcase()
                         }
                     }
                 }

@@ -13,11 +13,13 @@ import web.compose.material3.common.jsRequire
 fun List(
     modifier: Modifier = Modifier,
     content: ContentBuilder<MdElement>? = null
-) = MdTagElement(
-    tagName = "md-list",
-    applyAttrs = modifier.toAttrs(),
-    content = content
-).also { jsRequire("@material/web/list/list.js") }
+) {
+    MdTagElement(
+        tagName = "md-list",
+        applyAttrs = modifier.toAttrs(),
+        content = content
+    ).also { jsRequire("@material/web/list/list.js") }
+}
 
 @Suppress("UnsafeCastFromDynamic")
 @Composable
@@ -26,11 +28,13 @@ fun ListItem(
     supportingText: String? = null,
     modifier: Modifier = Modifier,
     content: ContentBuilder<MdElement>? = null
-) = MdTagElement(
-    tagName = "md-list-item",
-    applyAttrs = modifier.toAttrs {
-        headline?.let { attr("headline", it) }
-        supportingText?.let { attr("supportingText", it) }
-    },
-    content = content
-).also { jsRequire("@material/web/list/list-item.js") }
+) {
+    MdTagElement(
+        tagName = "md-list-item",
+        applyAttrs = modifier.toAttrs {
+            headline?.let { attr("headline", it) }
+            supportingText?.let { attr("supportingText", it) }
+        },
+        content = content
+    ).also { jsRequire("@material/web/list/list-item.js") }
+}

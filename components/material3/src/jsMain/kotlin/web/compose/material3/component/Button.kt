@@ -6,7 +6,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.disabled
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.compose.ui.toAttrs
@@ -32,10 +31,10 @@ fun MdButtonTagElement(
                 onClick(evt)
                 evt.stopPropagation()
             }
-            .disabled(disabled)
             .toAttrs {
                 classes("md-button")
                 trailingIcon?.let { attr("hasIcon", "") }
+                if (disabled) attr("disabled", "")
             },
     ) {
         Row(
