@@ -11,6 +11,8 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
+            implementation(projects.components.core)
+
             implementation(libs.coroutines.core)
             implementation(libs.koin.core)
             implementation(libs.kermit)

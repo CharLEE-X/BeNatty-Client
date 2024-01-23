@@ -3,7 +3,7 @@ services:
   mongo-container:
     # Match version in tests
     image: mongo:4.0.28
-    container_name: mongo-nataliashop
+    container_name: mongo-natshop
     expose:
       - "27017"
     ports:

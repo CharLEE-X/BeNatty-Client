@@ -20,8 +20,11 @@ kotlin {
 
     sourceSets {
         jsMain.dependencies {
+            implementation(projects.components.theme)
+
             implementation(compose.html.core)
             implementation(compose.runtime)
+            implementation(libs.kobweb.silk)
             implementation(libs.silk.foundation)
             implementation(libs.silk.icons.mdi)
             api(npm("@material/web", "v1.1.1"))

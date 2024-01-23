@@ -2,23 +2,29 @@ package web
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.ScrollBehavior
+import com.varabyte.kobweb.compose.foundation.layout.Box
+import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.minHeight
 import com.varabyte.kobweb.compose.ui.modifiers.scrollBehavior
+import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.core.App
 import com.varabyte.kobweb.silk.SilkApp
-import com.varabyte.kobweb.silk.components.layout.Surface
-import com.varabyte.kobweb.silk.components.style.common.SmoothColorStyle
-import com.varabyte.kobweb.silk.components.style.toModifier
+import com.varabyte.kobweb.silk.components.style.common.SmoothColorTransitionDurationVar
 import com.varabyte.kobweb.silk.init.InitSilk
 import com.varabyte.kobweb.silk.init.InitSilkContext
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import feature.root.rootModule
 import kotlinx.browser.localStorage
+import org.jetbrains.compose.web.css.value
 import org.jetbrains.compose.web.css.vh
+import org.koin.core.context.startKoin
+import theme.appDarkColorScheme
+import theme.appLightColorScheme
+import theme.defaultFontScheme
 import web.compose.material3.theming.MaterialTheme
-import web.compose.material3.theming.defaultFontScheme
-import web.theme.alternativeDarkColorScheme
-import web.theme.greenishColorScheme
 
 private const val COLOR_MODE_KEY = "nataliashop:colorMode"
 
@@ -37,16 +43,22 @@ fun AppEntry(content: @Composable () -> Unit) {
             localStorage.setItem(COLOR_MODE_KEY, colorMode.name)
         }
 
+        startKoin {
+            modules(rootModule)
+        }
+
         val colorScheme = when (colorMode) {
-            ColorMode.LIGHT -> greenishColorScheme
-            ColorMode.DARK -> alternativeDarkColorScheme
+            ColorMode.LIGHT -> appLightColorScheme
+            ColorMode.DARK -> appDarkColorScheme
         }
 
         MaterialTheme(colorScheme, defaultFontScheme) {
-            Surface(
-                SmoothColorStyle.toModifier()
+            Box(
+                modifier = Modifier
                     .minHeight(100.vh)
                     .scrollBehavior(ScrollBehavior.Smooth)
+                    .backgroundColor(theme.MaterialTheme.colors.mdSysColorBackground.value())
+                    .transition(CSSTransition("background-color", SmoothColorTransitionDurationVar.value()))
             ) {
                 content()
             }

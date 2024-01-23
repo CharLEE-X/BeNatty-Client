@@ -10,9 +10,8 @@ import io.ktor.server.application.Application
 import io.ktor.server.cio.CIO
 import io.ktor.server.engine.embeddedServer
 
-private val port = (System.getenv("PORT") ?: "8080").toInt()
+private val port = (System.getenv("PORT") ?: "8081").toInt()
 private val mongoUri: String = System.getenv("MONGO_URI")
-//    ?: "mongodb+srv://wigalabs:V1Y3vUIoUIZgqfE0@nataliashop.txqih4c.mongodb.net/?retryWrites=true&w=majority"
     ?: "mongodb://localhost:27017"
 
 fun main() {

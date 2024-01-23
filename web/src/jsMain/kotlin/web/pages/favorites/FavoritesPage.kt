@@ -1,19 +1,23 @@
 package web.pages.favorites
 
 import androidx.compose.runtime.Composable
-import com.varabyte.kobweb.compose.foundation.layout.Box
-import com.varabyte.kobweb.compose.ui.Alignment
-import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
-import com.varabyte.kobweb.silk.components.text.SpanText
+import theme.appDarkColorScheme
+import theme.appLightColorScheme
+import web.compose.example.Material3WidgetShowCase
 
 @Composable
-fun FavoritesPage() {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        SpanText("FavoritesPage")
-    }
+fun FavoritesPage(
+    onError: suspend (String) -> Unit,
+) {
+//    Box(
+//        contentAlignment = Alignment.Center,
+//        modifier = Modifier.fillMaxSize()
+//    ) {
+//        SpanText("FavoritesPage")
+//    }
+
+    Material3WidgetShowCase(
+        lightScheme = appLightColorScheme,
+        darkScheme = appDarkColorScheme,
+    )
 }

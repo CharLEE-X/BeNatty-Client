@@ -5,9 +5,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.attrsModifier
+import com.varabyte.kobweb.compose.ui.modifiers.flex
+import com.varabyte.kobweb.compose.ui.modifiers.gap
+import com.varabyte.kobweb.compose.ui.modifiers.justifyContent
 import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.toAttrs
 import org.jetbrains.compose.web.attributes.TextAreaWrap
 import org.jetbrains.compose.web.attributes.rows
 import org.jetbrains.compose.web.attributes.wrap
@@ -23,7 +29,7 @@ import org.jetbrains.compose.web.css.border
 import org.jetbrains.compose.web.css.borderRadius
 import org.jetbrains.compose.web.css.boxSizing
 import org.jetbrains.compose.web.css.display
-import org.jetbrains.compose.web.css.flex
+import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.gap
 import org.jetbrains.compose.web.css.justifyContent
 import org.jetbrains.compose.web.css.outline
@@ -38,8 +44,16 @@ import org.jetbrains.compose.web.dom.Span
 import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.dom.TextArea
 import org.w3c.files.File
+import theme.MaterialTheme
+import theme.SysColorScheme
+import theme.TypeScaleTokens.Companion.applyStyle
+import theme.appDarkColorScheme
+import theme.appLightColorScheme
+import theme.defaultFontScheme
+import theme.roleStyle
 import web.compose.example.components.BadgeShowcase
 import web.compose.example.components.ButtonShowcase
+import web.compose.example.components.CardShowcase
 import web.compose.example.components.CheckboxShowcase
 import web.compose.example.components.DialogShowcase
 import web.compose.example.components.DividerShowcase
@@ -52,8 +66,6 @@ import web.compose.example.components.MenuShowcase
 import web.compose.example.components.RippleShowcase
 import web.compose.example.components.SwitchShowcase
 import web.compose.example.components.TextFieldShowcase
-import web.compose.extras.Column
-import web.compose.extras.Row
 import web.compose.extras.fileupload.FilledFileInput
 import web.compose.extras.fileupload.OutlinedFileDragDropArea
 import web.compose.extras.layout.BorderLayout
@@ -92,17 +104,13 @@ import web.compose.material3.component.Slider
 import web.compose.material3.component.Switch
 import web.compose.material3.component.Tabs
 import web.compose.material3.theming.MaterialTheme
-import web.compose.material3.theming.MdSysTypeScaleTokens
-import web.compose.material3.theming.TypeScaleTokens.Companion.applyStyle
-import web.compose.material3.theming.defaultColorScheme
-import web.compose.material3.theming.defaultDarkColorScheme
-import web.compose.material3.theming.defaultFontScheme
 
 @Composable
-fun Material3WidgetShowCase() {
-    val lightColorScheme = defaultColorScheme
-    val darkColorScheme = defaultDarkColorScheme
-    var currentColorScheme by remember { mutableStateOf(lightColorScheme) }
+fun Material3WidgetShowCase(
+    lightScheme: SysColorScheme = appLightColorScheme,
+    darkScheme: SysColorScheme = appDarkColorScheme,
+) {
+    var currentColorScheme by remember { mutableStateOf(lightScheme) }
 
     MaterialTheme(currentColorScheme, defaultFontScheme) {
 
@@ -122,13 +130,13 @@ fun Material3WidgetShowCase() {
                 }) {
                     Text("Switch theme")
                     Switch(
-                        selected = currentColorScheme != lightColorScheme,
+                        selected = currentColorScheme != lightScheme,
                         onClick = {
                             currentColorScheme =
-                                if (currentColorScheme == lightColorScheme)
-                                    darkColorScheme
+                                if (currentColorScheme == lightScheme)
+                                    darkScheme
                                 else
-                                    lightColorScheme
+                                    lightScheme
                         },
                     )
                 }
@@ -260,20 +268,20 @@ fun ShowcaseContent() {
                     }
 
                     Row {
-                        Column({ style { flex(1) } }) {
+                        Column(modifier = Modifier.flex(1)) {
                             DividerShowcase()
                         }
-                        Column({ style { flex(1) } }) {
+                        Column(modifier = Modifier.flex(1)) {
                             ElevationShowcase()
                         }
 
-                        Column({ style { flex(1) } }) {
+                        Column(modifier = Modifier.flex(1)) {
                             FocusRingShowcase()
                         }
-                        Column({ style { flex(1) } }) {
+                        Column(modifier = Modifier.flex(1)) {
                             RippleShowcase()
                         }
-                        Column({ style { flex(1) } }) {
+                        Column(modifier = Modifier.flex(1)) {
                             MenuShowcase()
                         }
                     }
@@ -281,169 +289,167 @@ fun ShowcaseContent() {
             }
 
             1 -> WidgetGroup("Beta widgets") {
-                Column {
-                    Row {
-                        Column {
-                            FieldsShowcase()
-                        }
+                Row {
+                    Column {
+                        FieldsShowcase()
+                    }
 
-                        Column {
-                            ButtonShowcase()
-                        }
+                    Column {
+                        ButtonShowcase()
+                    }
 
-                        Column {
-                            IconButtonsShowcase()
-                        }
+                    Column {
+                        IconButtonsShowcase()
+                    }
 
-                        Column {
-                            DialogShowcase()
-                        }
+                    Column {
+                        DialogShowcase()
+                    }
 
-                        Column {
-                            TextFieldShowcase()
-                        }
+                    Column {
+                        TextFieldShowcase()
+                    }
 
-                        Column {
-                            LargeTitle("Misc ")
+                    Column {
+                        LargeTitle("Misc ")
 
-                            LargeTitle("Icons")
-                            Row {
-                                Icon(
-                                    modifier = Modifier.attrsModifier {
-                                        slot = "start"
-                                    },
-                                    iconIdentifier = "edit"
-                                )
-                                Icon(
-                                    modifier = Modifier.attrsModifier {
-                                        slot = "start"
-                                    },
-                                    iconIdentifier = "delete"
-                                )
-                                Icon(
-                                    modifier = Modifier.attrsModifier {
-                                        slot = "end"
-                                    },
-                                    iconIdentifier = "close"
-                                )
-                            }
-
-                            CheckboxShowcase()
-
-                            SwitchShowcase()
-
-                            LargeTitle("Slider")
-                            var sliderValue by remember { mutableStateOf(0f) }
-                            Slider(
-                                min = 100f,
-                                max = 200f,
-                                step = 2f,
-                                value = sliderValue,
-                                withLabel = true,
-                                onChange = { sliderValue = it },
+                        LargeTitle("Icons")
+                        Row {
+                            Icon(
+                                modifier = Modifier.attrsModifier {
+                                    slot = "start"
+                                },
+                                iconIdentifier = "edit"
                             )
-                            Slider(
-                                min = 100f,
-                                max = 200f,
-                                step = 2f,
-                                value = sliderValue,
-                                withLabel = true,
+                            Icon(
+                                modifier = Modifier.attrsModifier {
+                                    slot = "start"
+                                },
+                                iconIdentifier = "delete"
+                            )
+                            Icon(
+                                modifier = Modifier.attrsModifier {
+                                    slot = "end"
+                                },
+                                iconIdentifier = "close"
+                            )
+                        }
+
+                        CheckboxShowcase()
+
+                        SwitchShowcase()
+
+                        LargeTitle("Slider")
+                        var sliderValue by remember { mutableStateOf(0f) }
+                        Slider(
+                            min = 100f,
+                            max = 200f,
+                            step = 2f,
+                            value = sliderValue,
+                            withLabel = true,
+                            onChange = { sliderValue = it },
+                        )
+                        Slider(
+                            min = 100f,
+                            max = 200f,
+                            step = 2f,
+                            value = sliderValue,
+                            withLabel = true,
+                            disabled = true,
+                        )
+
+                        LargeTitle("Radio")
+                        var radioValue by remember { mutableStateOf<String?>(null) }
+                        val radioGroupName = "radio-group"
+                        Label(null, { style { display(Flex); alignItems(AlignItems.Center) } }) {
+                            Radio(
+                                name = radioGroupName,
+                                value = "o1",
+                                checked = radioValue == "o1",
+                                onChange = { radioValue = "o1" }
+                            )
+                            LargeLabel("Option 1", inline = true)
+                        }
+                        Label(null, { style { display(Flex); alignItems(AlignItems.Center) } }) {
+                            Radio(
+                                name = radioGroupName,
+                                value = "o2",
+                                checked = radioValue == "o2",
+                                onChange = { radioValue = "o2" }
+                            )
+                            LargeLabel("Option 2", inline = true)
+                        }
+                        Label(null, { style { display(Flex); alignItems(AlignItems.Center) } }) {
+                            Radio(
+                                name = radioGroupName,
+                                value = "o3",
+                                checked = radioValue == "o3",
+                                onChange = { radioValue = "o3" }
+                            )
+                            LargeLabel("Option 3", inline = true)
+                        }
+                        Label(null, { style { display(Flex); alignItems(AlignItems.Center) } }) {
+                            Radio(
+                                name = radioGroupName,
+                                value = "o4",
                                 disabled = true,
+                                checked = radioValue == "o4",
+                                onChange = { radioValue = "o4" },
                             )
+                            LargeLabel("Option 4", inline = true)
+                        }
+                        LargeBody("Radio button selected: $radioValue")
 
-                            LargeTitle("Radio")
-                            var radioValue by remember { mutableStateOf<String?>(null) }
-                            val radioGroupName = "radio-group"
-                            Label(null, { style { display(Flex); alignItems(AlignItems.Center) } }) {
-                                Radio(
-                                    name = radioGroupName,
-                                    value = "o1",
-                                    checked = radioValue == "o1",
-                                    onChange = { radioValue = "o1" }
-                                )
-                                LargeLabel("Option 1", inline = true)
-                            }
-                            Label(null, { style { display(Flex); alignItems(AlignItems.Center) } }) {
-                                Radio(
-                                    name = radioGroupName,
-                                    value = "o2",
-                                    checked = radioValue == "o2",
-                                    onChange = { radioValue = "o2" }
-                                )
-                                LargeLabel("Option 2", inline = true)
-                            }
-                            Label(null, { style { display(Flex); alignItems(AlignItems.Center) } }) {
-                                Radio(
-                                    name = radioGroupName,
-                                    value = "o3",
-                                    checked = radioValue == "o3",
-                                    onChange = { radioValue = "o3" }
-                                )
-                                LargeLabel("Option 3", inline = true)
-                            }
-                            Label(null, { style { display(Flex); alignItems(AlignItems.Center) } }) {
-                                Radio(
-                                    name = radioGroupName,
-                                    value = "o4",
-                                    disabled = true,
-                                    checked = radioValue == "o4",
-                                    onChange = { radioValue = "o4" },
-                                )
-                                LargeLabel("Option 4", inline = true)
-                            }
-                            LargeBody("Radio button selected: $radioValue")
+                        LargeTitle("Select")
+                        var selectedValue by remember { mutableStateOf("") }
 
-                            LargeTitle("Select")
-                            var selectedValue by remember { mutableStateOf("") }
-
-                            FilledSelect(
-                                label = "Select label",
-                                supportingText = "Selected value $selectedValue",
-                                onChange = {
-                                    selectedValue = it.currentTarget?.asDynamic()?.value ?: ""
-                                }
-                            ) {
-                                SelectOption()
-                                SelectOption(
-                                    value = "MD1",
-                                    headline = "Material Design 1"
-                                )
-                                SelectOption(
-                                    value = "MD2",
-                                    headline = "Material Design 2"
-                                )
-                                SelectOption(
-                                    value = "MD3",
-                                    headline = "Material Design 3"
-                                )
+                        FilledSelect(
+                            label = "Select label",
+                            supportingText = "Selected value $selectedValue",
+                            onChange = {
+                                selectedValue = it.currentTarget?.asDynamic()?.value ?: ""
                             }
-
-                            OutlinedSelect(
-                                label = "Select label",
-                                supportingText = "Selected value $selectedValue",
-                                onChange = {
-                                    selectedValue = it.currentTarget?.asDynamic()?.value ?: ""
-                                }
-                            ) {
-                                SelectOption()
-                                SelectOption(
-                                    value = "MD1",
-                                    headline = "Material Design 1"
-                                )
-                                SelectOption(
-                                    value = "MD2",
-                                    headline = "Material Design 2"
-                                )
-                                SelectOption(
-                                    value = "MD3",
-                                    headline = "Material Design 3"
-                                )
-                            }
+                        ) {
+                            SelectOption()
+                            SelectOption(
+                                value = "MD1",
+                                headline = "Material Design 1"
+                            )
+                            SelectOption(
+                                value = "MD2",
+                                headline = "Material Design 2"
+                            )
+                            SelectOption(
+                                value = "MD3",
+                                headline = "Material Design 3"
+                            )
                         }
 
-                        Column {
-                            ListboxShowcase()
+                        OutlinedSelect(
+                            label = "Select label",
+                            supportingText = "Selected value $selectedValue",
+                            onChange = {
+                                selectedValue = it.currentTarget?.asDynamic()?.value ?: ""
+                            }
+                        ) {
+                            SelectOption()
+                            SelectOption(
+                                value = "MD1",
+                                headline = "Material Design 1"
+                            )
+                            SelectOption(
+                                value = "MD2",
+                                headline = "Material Design 2"
+                            )
+                            SelectOption(
+                                value = "MD3",
+                                headline = "Material Design 3"
+                            )
                         }
+                    }
+
+                    Column {
+                        ListboxShowcase()
                     }
                 }
             }
@@ -478,7 +484,7 @@ fun ShowcaseContent() {
                     }
 
                     ModalNavigationDrawer(
-                        opened = opened
+                        opened = opened,
                     ) {
                         LargeBody("Modal navigation drawer")
                     }
@@ -487,13 +493,19 @@ fun ShowcaseContent() {
                 Column {
                     BadgeShowcase()
                 }
+
+                Column(
+                    modifier = Modifier.gap(1.em)
+                ) {
+                    CardShowcase()
+                }
             }
 
             3 -> WidgetGroup("Extra widgets") {
                 Column {
                     LargeTitle("Typography")
 
-                    Row({ style { justifyContent(SpaceEvenly) } }) {
+                    Row(modifier = Modifier.justifyContent(SpaceEvenly)) {
                         Column {
                             LargeDisplay("Large Display")
                             LargeHeadline("Large Headline")
@@ -530,7 +542,7 @@ fun ShowcaseContent() {
                                 boxSizing("border-box")
                                 border { style = LineStyle.None }
                                 width(100.percent)
-                                applyStyle(MdSysTypeScaleTokens.bodyLarge)
+                                applyStyle(MaterialTheme.typography.bodyLarge)
                             }
                             wrap(TextAreaWrap.Off)
                             rows(5)
@@ -540,19 +552,20 @@ fun ShowcaseContent() {
                     }
 
                     OutlinedField {
-                        TextArea(attrs = {
-                            defaultValue("Some Default Text")
-                            style {
-                                outline("none")
-                                background("transparent")
-                                boxSizing("border-box")
-                                border { style = LineStyle.None }
-                                width(100.percent)
-                                applyStyle(MdSysTypeScaleTokens.bodyLarge)
+                        TextArea(attrs = Modifier
+                            .roleStyle(MaterialTheme.typography.bodyLarge)
+                            .toAttrs {
+                                defaultValue("Some Default Text")
+                                style {
+                                    outline("none")
+                                    background("transparent")
+                                    boxSizing("border-box")
+                                    border { style = LineStyle.None }
+                                    width(100.percent)
+                                }
+                                wrap(TextAreaWrap.Off)
+                                rows(5)
                             }
-                            wrap(TextAreaWrap.Off)
-                            rows(5)
-                        }
                         )
                         Span({ slot = "supporting-text" }) { Text("Some longer supporting text") }
                     }

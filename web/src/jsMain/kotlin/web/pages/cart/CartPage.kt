@@ -13,6 +13,7 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 fun CartPage(
     goBack: () -> Unit,
     goToCheckout: () -> Unit,
+    onError: suspend (String) -> Unit,
 ) {
     Box(
         contentAlignment = Alignment.Center,

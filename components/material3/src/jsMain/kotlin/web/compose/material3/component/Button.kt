@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.web.events.SyntheticMouseEvent
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Row
+import com.varabyte.kobweb.compose.foundation.layout.RowScope
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
@@ -22,7 +23,7 @@ fun MdButtonTagElement(
     trailingIcon: @Composable (() -> Unit)? = null,
     disabled: Boolean = false,
     modifier: Modifier,
-    content: @Composable () -> Unit
+    content: @Composable RowScope.() -> Unit
 ) {
     MdTagElement(
         tagName = "md-$name-button",
@@ -60,7 +61,7 @@ fun ElevatedButton(
     trailingIcon: @Composable (() -> Unit)? = null,
     disabled: Boolean = false,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable RowScope.() -> Unit
 ) {
     MdButtonTagElement(
         name = "elevated",
@@ -80,7 +81,7 @@ fun FilledButton(
     trailingIcon: @Composable (() -> Unit)? = null,
     disabled: Boolean = false,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable RowScope.() -> Unit
 ) {
     MdButtonTagElement(
         name = "filled",
@@ -100,7 +101,7 @@ fun OutlinedButton(
     trailingIcon: @Composable (() -> Unit)? = null,
     disabled: Boolean = false,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable RowScope.() -> Unit
 ) {
     MdButtonTagElement(
         name = "outlined",
@@ -120,7 +121,7 @@ fun TextButton(
     trailingIcon: @Composable (() -> Unit)? = null,
     disabled: Boolean = false,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable RowScope.() -> Unit
 ) {
     MdButtonTagElement(
         name = "text",
@@ -140,7 +141,7 @@ fun FilledTonalButton(
     trailingIcon: @Composable (() -> Unit)? = null,
     disabled: Boolean = false,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable RowScope.() -> Unit
 ) {
     MdButtonTagElement(
         name = "filled-tonal",

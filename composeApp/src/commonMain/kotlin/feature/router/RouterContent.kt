@@ -130,6 +130,19 @@ internal fun RouterContent(
                             onBackClicked = { router.trySend(GoBack()) },
                             isModalShowing = { isModalShowing = it },
                         )
+
+                        RouterScreen.Catalogue -> TODO()
+                        RouterScreen.Cart -> TODO()
+                        RouterScreen.Checkout -> TODO()
+                        RouterScreen.Order -> TODO()
+                        RouterScreen.Payment -> TODO()
+                        RouterScreen.Profile -> TODO()
+                        RouterScreen.Settings -> TODO()
+                        RouterScreen.About -> TODO()
+                        RouterScreen.Contact -> TODO()
+                        RouterScreen.Help -> TODO()
+                        RouterScreen.Favorites -> TODO()
+                        RouterScreen.Blog -> TODO()
                     }
                 },
                 notFound = { router.trySend(GoToDestination(Login.matcher.routeFormat)) },

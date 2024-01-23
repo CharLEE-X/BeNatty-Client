@@ -5,9 +5,9 @@ import org.jetbrains.compose.web.dom.ContentBuilder
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Span
 import org.w3c.dom.HTMLElement
-import web.compose.material3.theming.MdSysTypeScaleTokens
-import web.compose.material3.theming.TypeScaleTokens
-import web.compose.material3.theming.TypeScaleTokens.Companion.applyStyle
+import theme.MaterialTheme
+import theme.TypeScaleTokens
+import theme.TypeScaleTokens.Companion.applyStyle
 
 @Composable
 fun Text(
@@ -47,58 +47,59 @@ fun Text(
 }
 
 @Composable
-fun LargeDisplay(value: String, inline: Boolean = false) = Text(MdSysTypeScaleTokens.displayLarge, inline, value)
+fun LargeDisplay(value: String, inline: Boolean = false) = Text(MaterialTheme.typography.displayLarge, inline, value)
 
 @Composable
-fun MediumDisplay(value: String, inline: Boolean = false) = Text(MdSysTypeScaleTokens.displayMedium, inline, value)
+fun MediumDisplay(value: String, inline: Boolean = false) = Text(MaterialTheme.typography.displayMedium, inline, value)
 
 @Composable
-fun SmallDisplay(value: String, inline: Boolean = false) = Text(MdSysTypeScaleTokens.displaySmall, inline, value)
+fun SmallDisplay(value: String, inline: Boolean = false) = Text(MaterialTheme.typography.displaySmall, inline, value)
 
 @Composable
-fun LargeHeadline(value: String, inline: Boolean = false) = Text(MdSysTypeScaleTokens.headlineLarge, inline, value)
+fun LargeHeadline(value: String, inline: Boolean = false) = Text(MaterialTheme.typography.headlineLarge, inline, value)
 
 @Composable
-fun MediumHeadline(value: String, inline: Boolean = false) = Text(MdSysTypeScaleTokens.headlineMedium, inline, value)
+fun MediumHeadline(value: String, inline: Boolean = false) =
+    Text(MaterialTheme.typography.headlineMedium, inline, value)
 
 @Composable
-fun SmallHeadline(value: String, inline: Boolean = false) = Text(MdSysTypeScaleTokens.headlineSmall, inline, value)
+fun SmallHeadline(value: String, inline: Boolean = false) = Text(MaterialTheme.typography.headlineSmall, inline, value)
 
 @Composable
-fun LargeTitle(value: String, inline: Boolean = false) = Text(MdSysTypeScaleTokens.titleLarge, inline, value)
+fun LargeTitle(value: String, inline: Boolean = false) = Text(MaterialTheme.typography.titleLarge, inline, value)
 
 @Composable
-fun MediumTitle(value: String, inline: Boolean = false) = Text(MdSysTypeScaleTokens.titleMedium, inline, value)
+fun MediumTitle(value: String, inline: Boolean = false) = Text(MaterialTheme.typography.titleMedium, inline, value)
 
 @Composable
-fun SmallTitle(value: String, inline: Boolean = false) = Text(MdSysTypeScaleTokens.titleSmall, inline, value)
+fun SmallTitle(value: String, inline: Boolean = false) = Text(MaterialTheme.typography.titleSmall, inline, value)
 
 @Composable
-fun LargeBody(value: String, inline: Boolean = false) = Text(MdSysTypeScaleTokens.bodyLarge, inline, value)
+fun LargeBody(value: String, inline: Boolean = false) = Text(MaterialTheme.typography.bodyLarge, inline, value)
 
 @Composable
 fun LargeBody(inline: Boolean = false, content: ContentBuilder<HTMLElement>) =
-    Text(MdSysTypeScaleTokens.bodyLarge, inline, content)
+    Text(MaterialTheme.typography.bodyLarge, inline, content)
 
 @Composable
-fun MediumBody(value: String, inline: Boolean = false) = Text(MdSysTypeScaleTokens.bodyMedium, inline, value)
+fun MediumBody(value: String, inline: Boolean = false) = Text(MaterialTheme.typography.bodyMedium, inline, value)
 
 @Composable
 fun MediumBody(inline: Boolean = false, content: ContentBuilder<HTMLElement>) =
-    Text(MdSysTypeScaleTokens.bodyMedium, inline, content)
+    Text(MaterialTheme.typography.bodyMedium, inline, content)
 
 @Composable
-fun SmallBody(value: String, inline: Boolean = false) = Text(MdSysTypeScaleTokens.bodySmall, inline, value)
+fun SmallBody(value: String, inline: Boolean = false) = Text(MaterialTheme.typography.bodySmall, inline, value)
 
 @Composable
 fun SmallBody(inline: Boolean = false, content: ContentBuilder<HTMLElement>) =
-    Text(MdSysTypeScaleTokens.bodySmall, inline, content)
+    Text(MaterialTheme.typography.bodySmall, inline, content)
 
 @Composable
-fun LargeLabel(value: String, inline: Boolean = false) = Text(MdSysTypeScaleTokens.labelLarge, inline, value)
+fun LargeLabel(value: String, inline: Boolean = false) = Text(MaterialTheme.typography.labelLarge, inline, value)
 
 @Composable
-fun MediumLabel(value: String, inline: Boolean = false) = Text(MdSysTypeScaleTokens.labelMedium, inline, value)
+fun MediumLabel(value: String, inline: Boolean = false) = Text(MaterialTheme.typography.labelMedium, inline, value)
 
 @Composable
-fun SmallLabel(value: String, inline: Boolean = false) = Text(MdSysTypeScaleTokens.labelSmall, inline, value)
+fun SmallLabel(value: String, inline: Boolean = false) = Text(MaterialTheme.typography.labelSmall, inline, value)

@@ -11,13 +11,13 @@ import web.compose.material3.common.jsRequire
 @Suppress("UnsafeCastFromDynamic")
 @Composable
 fun ModalNavigationDrawer(
-    opened: Boolean? = null,
+    opened: Boolean = false,
     modifier: Modifier = Modifier,
     content: ContentBuilder<NavigationDrawerElement>? = null
 ) = MdTagElement(
     tagName = "md-navigation-drawer-modal",
     applyAttrs = modifier.toAttrs {
-        opened?.let { attr("opened", "") }
+        if (opened) attr("opened", "")
     },
     content = content
 ).also { jsRequire("@material/web/labs/navigationdrawer/navigation-drawer-modal.js") }
@@ -27,14 +27,16 @@ abstract class NavigationDrawerElement : MdElement()
 @Suppress("UnsafeCastFromDynamic")
 @Composable
 fun NavigationDrawer(
-    opened: Boolean? = null,
+    opened: Boolean = false,
     pivot: Pivot? = null,
     modifier: Modifier = Modifier,
     content: ContentBuilder<NavigationDrawerElement>? = null
 ) = MdTagElement(
     tagName = "md-navigation-drawer",
     applyAttrs = modifier.toAttrs {
-        opened?.let { attr("opened", "") }
+        if (opened) {
+            attr("opened", "")
+        }
         pivot?.let { attr("pivot", it.value) }
     },
     content = content,

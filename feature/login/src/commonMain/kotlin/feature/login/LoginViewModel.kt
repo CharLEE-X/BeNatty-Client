@@ -13,6 +13,8 @@ class LoginViewModel(
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
     onAuthenticated: () -> Unit,
+    gotoPrivacyPolicy: () -> Unit,
+    gotoTnC: () -> Unit,
 ) : BasicViewModel<
     LoginContract.Inputs,
     LoginContract.Events,
@@ -38,9 +40,14 @@ class LoginViewModel(
     eventHandler = LoginEventHandler(
         onError = onError,
         onAuthenticated = onAuthenticated,
+        gotoPrivacyPolicy = gotoPrivacyPolicy,
+        gotoTnC = gotoTnC,
     ),
     coroutineScope = scope,
 ) {
+        init {
+            trySend(LoginContract.Inputs.ChangeScreenState(LoginContract.ScreenState.LOGIN))
+        }
     companion object {
         private val TAG = LoginViewModel::class.simpleName!!
     }

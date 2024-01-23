@@ -63,6 +63,8 @@ import util.autofill
 internal fun LoginContent(
     onError: suspend (String) -> Unit,
     onAuthenticated: () -> Unit,
+    gotoPrivacyPolicy: () -> Unit,
+    gotoTnC: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -70,6 +72,8 @@ internal fun LoginContent(
             scope = scope,
             onAuthenticated = onAuthenticated,
             onError = onError,
+            gotoPrivacyPolicy = gotoPrivacyPolicy,
+            gotoTnC = gotoTnC,
         )
     }
     val state by vm.observeStates().collectAsState()
@@ -84,14 +88,6 @@ internal fun LoginContent(
         LoginContract.ScreenState.LOGIN -> getString(Strings.Login.LoginButton)
         LoginContract.ScreenState.REGISTER -> getString(Strings.Login.RegisterButton)
         LoginContract.ScreenState.FORGOT_PASSWORD -> getString(Strings.Login.SendButton)
-    }
-
-    val onSendAction: () -> Unit = {
-        when (state.screenState) {
-            LoginContract.ScreenState.LOGIN -> vm.trySend(LoginContract.Inputs.Login)
-            LoginContract.ScreenState.REGISTER -> vm.trySend(LoginContract.Inputs.Register)
-            LoginContract.ScreenState.FORGOT_PASSWORD -> vm.trySend(LoginContract.Inputs.ForgotPassword)
-        }
     }
 
     AppTheme {
@@ -119,8 +115,8 @@ internal fun LoginContent(
             )
             Spacer(modifier = Modifier.weight(1f))
             TextField(
-                value = state.login,
-                onValueChange = { vm.trySend(LoginContract.Inputs.SetLogin(it)) },
+                value = state.email,
+                onValueChange = { vm.trySend(LoginContract.Inputs.SetEmail(it)) },
                 label = {
                     Text(
                         text = getString(Strings.Login.EmailLabel),
@@ -152,7 +148,7 @@ internal fun LoginContent(
                     },
                 ),
                 keyboardActions = KeyboardActions(
-                    onSend = { onSendAction() },
+                    onSend = { vm.trySend(LoginContract.Inputs.OnLoginRegisterActionButtonClick) },
                     onNext = { focusManager.moveFocus(FocusDirection.Down) },
                 ),
                 modifier = Modifier
@@ -162,7 +158,7 @@ internal fun LoginContent(
                     .autofill(
                         autofillTypes = listOf(AutofillType.EmailAddress),
                         onFill = {
-                            vm.trySend(LoginContract.Inputs.SetLogin(it))
+                            vm.trySend(LoginContract.Inputs.SetEmail(it))
                             wasAutoFilled = true
                             focusManager.moveFocus(FocusDirection.Down)
                         },
@@ -194,7 +190,7 @@ internal fun LoginContent(
                         unfocusedLabelColor = MaterialTheme.colors.onBackground.copy(alpha = 0.3f),
                     ),
                     keyboardActions = KeyboardActions(
-                        onSend = { onSendAction() },
+                        onSend = { vm.trySend(LoginContract.Inputs.OnLoginRegisterActionButtonClick) },
                         onNext = { focusManager.moveFocus(FocusDirection.Down) },
                     ),
                     visualTransformation = if (state.isPasswordVisible) {
@@ -245,7 +241,7 @@ internal fun LoginContent(
                         unfocusedLabelColor = MaterialTheme.colors.onBackground.copy(alpha = 0.3f),
                     ),
                     keyboardActions = KeyboardActions(
-                        onSend = { onSendAction() },
+                        onSend = { vm.trySend(LoginContract.Inputs.OnLoginRegisterActionButtonClick) },
                     ),
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.None,
@@ -299,13 +295,7 @@ internal fun LoginContent(
                     }
                 }
                 Button(
-                    onClick = {
-                        when (state.screenState) {
-                            LoginContract.ScreenState.LOGIN -> vm.trySend(LoginContract.Inputs.Login)
-                            LoginContract.ScreenState.REGISTER -> vm.trySend(LoginContract.Inputs.Register)
-                            LoginContract.ScreenState.FORGOT_PASSWORD -> vm.trySend(LoginContract.Inputs.ForgotPassword)
-                        }
-                    },
+                    onClick = { vm.trySend(LoginContract.Inputs.OnLoginRegisterActionButtonClick) },
                     shape = AbsoluteRoundedCornerShape(100),
                     modifier = Modifier
                         .height(48.dp)

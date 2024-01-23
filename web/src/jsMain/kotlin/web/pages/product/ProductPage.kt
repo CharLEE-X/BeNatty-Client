@@ -12,6 +12,7 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 @Composable
 fun ProductPage(
     id: String,
+    onError: suspend (String) -> Unit,
     onGoBackClick: () -> Unit,
 ) {
     Box(

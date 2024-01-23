@@ -12,7 +12,7 @@ import web.compose.material3.common.MdTagElement
 import web.compose.material3.common.jsRequire
 
 @Composable
-fun <TElement : MdElement> MdIconButtonTagElement(
+private fun <TElement : MdElement> MdIconButtonTagElement(
     tagName: String,
     toggle: Boolean? = null,
     selected: Boolean? = null,

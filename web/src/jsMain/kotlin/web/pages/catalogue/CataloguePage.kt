@@ -12,6 +12,7 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 @Composable
 fun CataloguePage(
     onProductClick: (String) -> Unit,
+    onError: suspend (String) -> Unit,
 ) {
     Box(
         contentAlignment = Alignment.Center,

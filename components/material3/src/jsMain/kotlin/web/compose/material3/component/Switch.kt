@@ -3,7 +3,6 @@ package web.compose.material3.component
 import androidx.compose.runtime.Composable
 import androidx.compose.web.events.SyntheticMouseEvent
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.disabled
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.toAttrs
 import web.compose.material3.common.MdTagElement
@@ -22,11 +21,11 @@ fun Switch(
     tagName = "md-switch",
     applyAttrs = modifier
         .onClick(onClick)
-        .disabled(disabled)
         .toAttrs {
             if (selected) attr("selected", "")
             if (icons) attr("icons", "")
             if (showOnlySelectedIcon) attr("showOnlySelectedIcon", "")
+            if (disabled) attr("disabled", "")
         },
     content = null
 ).also { jsRequire("@material/web/switch/switch.js") }

@@ -20,7 +20,7 @@ import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.Div
 import org.w3c.dom.asList
 import org.w3c.files.File
-import web.compose.material3.theming.MdSysColorVariables
+import theme.MaterialTheme
 
 object DragDropAreaStyleSheet : StyleSheet() {
     init {
@@ -28,7 +28,7 @@ object DragDropAreaStyleSheet : StyleSheet() {
             overflow("hidden")
             border {
                 style(LineStyle.Solid)
-                color(MdSysColorVariables.mdSysColorOutline.value(Color("#79747E")))
+                color(MaterialTheme.colors.mdSysColorOutline.value(Color("#79747E")))
                 width(1.px)
             }
             borderRadius(CSSStyleVariable<CSSNumeric>("md-outlined-button-container-shape").value(4.px))
@@ -36,7 +36,7 @@ object DragDropAreaStyleSheet : StyleSheet() {
         className("dragdroparea") + hover style {
             border {
                 style(LineStyle.Dashed)
-                color(MdSysColorVariables.mdSysColorOutline.value(Color("#79747E")))
+                color(MaterialTheme.colors.mdSysColorOutline.value(Color("#79747E")))
                 width(1.px)
             }
             borderRadius(CSSStyleVariable<CSSNumeric>("md-outlined-button-container-shape").value(4.px))

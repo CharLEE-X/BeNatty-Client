@@ -15,20 +15,20 @@ import org.jetbrains.compose.web.css.value
 import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.Li
 import org.jetbrains.compose.web.dom.Ul
+import theme.MaterialTheme
 import web.compose.extras.text.LargeLabel
 import web.compose.extras.text.LargeTitle
 import web.compose.material3.component.Divider
-import web.compose.material3.theming.MdSysColorVariables
 
 object DividerStyleSheet : StyleSheet() {
     val list by style {
-        border(1.px, LineStyle.Solid, MdSysColorVariables.mdSysColorOutline.value())
+        border(1.px, LineStyle.Solid, MaterialTheme.colors.mdSysColorOutline.value())
         margin(0.px)
         padding(0.px)
         width(200.px)
     }
     val listItem by style {
-        color(MdSysColorVariables.mdSysColorOnBackground.value())
+        color(MaterialTheme.colors.mdSysColorOnBackground.value())
         fontFamily("system-ui")
         listStyle("none")
         margin(16.px)

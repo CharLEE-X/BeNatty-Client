@@ -1,4 +1,4 @@
-package web.compose.material3.theming
+package theme
 
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.CSSNumeric
@@ -9,12 +9,31 @@ import org.jetbrains.compose.web.css.CSSUnitValueTyped
 import org.jetbrains.compose.web.css.StylePropertyString
 import org.jetbrains.compose.web.css.StyleScope
 import org.jetbrains.compose.web.css.StyleSheet
+import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.fontFamily
 import org.jetbrains.compose.web.css.fontSize
 import org.jetbrains.compose.web.css.fontWeight
 import org.jetbrains.compose.web.css.letterSpacing
 import org.jetbrains.compose.web.css.lineHeight
 import org.jetbrains.compose.web.css.value
+
+val defaultFontScheme = SysFontScheme(
+    displayLarge = FontConfig("Roboto", 57.sp, 64.sp, (-0.25 / 57).cssRem, "400"),
+    displayMedium = FontConfig("Roboto", 45.sp, 52.sp, 0.cssRem, "400"),
+    displaySmall = FontConfig("Roboto", 36.sp, 44.sp, 0.cssRem, "400"),
+    headlineLarge = FontConfig("Roboto", 32.sp, 40.sp, 0.cssRem, "400"),
+    headlineMedium = FontConfig("Roboto", 28.sp, 36.sp, 0.cssRem, "400"),
+    headlineSmall = FontConfig("Roboto", 24.sp, 32.sp, 0.cssRem, "400"),
+    titleLarge = FontConfig("Roboto", 22.sp, 28.sp, 0.cssRem, "400"),
+    titleMedium = FontConfig("Roboto", 16.sp, 24.sp, (0.15 / 16).cssRem, "500"),
+    titleSmall = FontConfig("Roboto", 14.sp, 20.sp, (0.1 / 14).cssRem, "500"),
+    bodyLarge = FontConfig("Roboto", 16.sp, 24.sp, (0.5 / 16).cssRem, "400"),
+    bodyMedium = FontConfig("Roboto", 14.sp, 20.sp, (0.25 / 14).cssRem, "400"),
+    bodySmall = FontConfig("Roboto", 12.sp, 16.sp, (0.4 / 12).cssRem, "400"),
+    labelLarge = FontConfig("Roboto", 14.sp, 20.sp, (0.1 / 14).cssRem, "500"),
+    labelMedium = FontConfig("Roboto", 12.sp, 16.sp, (0.5 / 12).cssRem, "500"),
+    labelSmall = FontConfig("Roboto", 11.sp, 16.sp, (0.5 / 11).cssRem, "500"),
+)
 
 open class TypeScaleTokens(
     val tokenBase: String
@@ -42,25 +61,6 @@ open class TypeScaleTokens(
 
 object MdRefTypeFaceTokens {
     val mdRefTypeFaceBrand = CSSStyleVariable<CSSColorValue>("md-ref-typeface-brand")
-}
-
-object MdSysTypeScaleTokens : TypeScaleTokens("md-sys-typescale") {
-    object displayLarge : Role("display-large")
-    object displayMedium : Role("display-medium")
-    object displaySmall : Role("display-small")
-    object headlineLarge : Role("headline-large")
-    object headlineMedium : Role("headline-medium")
-    object headlineSmall : Role("headline-small")
-    object titleLarge : Role("title-large")
-    object titleMedium : Role("title-medium")
-    object titleSmall : Role("title-small")
-    object bodyLarge : Role("body-large")
-    object bodyMedium : Role("body-medium")
-    object bodySmall : Role("body-small")
-    object labelLarge : Role("label-large")
-    object labelMedium : Role("label-medium")
-    object labelSmall : Role("label-small")
-
 }
 
 data class FontConfig(
@@ -102,25 +102,25 @@ data class SysFontScheme(
 
     fun asStyleSheet(): StyleSheet = StyleSheet().apply {
         universal style {
-            configureTokenValues(MdSysTypeScaleTokens.displayLarge, displayLarge)
-            configureTokenValues(MdSysTypeScaleTokens.displayMedium, displayMedium)
-            configureTokenValues(MdSysTypeScaleTokens.displaySmall, displaySmall)
+            configureTokenValues(MaterialTheme.typography.displayLarge, displayLarge)
+            configureTokenValues(MaterialTheme.typography.displayMedium, displayMedium)
+            configureTokenValues(MaterialTheme.typography.displaySmall, displaySmall)
 
-            configureTokenValues(MdSysTypeScaleTokens.headlineLarge, headlineLarge)
-            configureTokenValues(MdSysTypeScaleTokens.headlineMedium, headlineMedium)
-            configureTokenValues(MdSysTypeScaleTokens.headlineSmall, headlineSmall)
+            configureTokenValues(MaterialTheme.typography.headlineLarge, headlineLarge)
+            configureTokenValues(MaterialTheme.typography.headlineMedium, headlineMedium)
+            configureTokenValues(MaterialTheme.typography.headlineSmall, headlineSmall)
 
-            configureTokenValues(MdSysTypeScaleTokens.titleLarge, titleLarge)
-            configureTokenValues(MdSysTypeScaleTokens.titleMedium, titleMedium)
-            configureTokenValues(MdSysTypeScaleTokens.titleSmall, titleSmall)
+            configureTokenValues(MaterialTheme.typography.titleLarge, titleLarge)
+            configureTokenValues(MaterialTheme.typography.titleMedium, titleMedium)
+            configureTokenValues(MaterialTheme.typography.titleSmall, titleSmall)
 
-            configureTokenValues(MdSysTypeScaleTokens.bodyLarge, bodyLarge)
-            configureTokenValues(MdSysTypeScaleTokens.bodyMedium, bodyMedium)
-            configureTokenValues(MdSysTypeScaleTokens.bodySmall, bodySmall)
+            configureTokenValues(MaterialTheme.typography.bodyLarge, bodyLarge)
+            configureTokenValues(MaterialTheme.typography.bodyMedium, bodyMedium)
+            configureTokenValues(MaterialTheme.typography.bodySmall, bodySmall)
 
-            configureTokenValues(MdSysTypeScaleTokens.labelLarge, labelLarge)
-            configureTokenValues(MdSysTypeScaleTokens.labelMedium, labelMedium)
-            configureTokenValues(MdSysTypeScaleTokens.labelSmall, labelSmall)
+            configureTokenValues(MaterialTheme.typography.labelLarge, labelLarge)
+            configureTokenValues(MaterialTheme.typography.labelMedium, labelMedium)
+            configureTokenValues(MaterialTheme.typography.labelSmall, labelSmall)
         }
     }
 }

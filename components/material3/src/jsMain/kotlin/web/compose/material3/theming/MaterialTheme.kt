@@ -6,12 +6,15 @@ import org.jetbrains.compose.web.css.Style
 import org.jetbrains.compose.web.css.StyleSheet
 import org.jetbrains.compose.web.css.backgroundColor
 import org.jetbrains.compose.web.css.value
+import theme.SysColorScheme
+import theme.SysFontScheme
 
 @Composable
 fun MaterialTheme(
     colorScheme: SysColorScheme? = null,
-    fontScheme: SysFontScheme?= null,
-    content: @Composable () -> Unit) {
+    fontScheme: SysFontScheme? = null,
+    content: @Composable () -> Unit
+) {
     if (colorScheme != null) {
         Style(colorScheme.asStylesheet())
     } else {
@@ -24,10 +27,10 @@ fun MaterialTheme(
     content()
 }
 
-private object defaultBackground: StyleSheet() {
+private object defaultBackground : StyleSheet() {
     init {
         root style {
-            backgroundColor(MdSysColorVariables.mdSysColorSurfaceContainerLowest.value(Color("#FFFFFF")))
+            backgroundColor(theme.MaterialTheme.colors.mdSysColorSurfaceContainerLowest.value(Color("#FFFFFF")))
         }
     }
 }

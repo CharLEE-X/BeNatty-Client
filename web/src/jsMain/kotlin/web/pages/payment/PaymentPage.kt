@@ -8,7 +8,9 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.silk.components.text.SpanText
 
 @Composable
-fun PaymentPage() {
+fun PaymentPage(
+    onError: suspend (String) -> Unit,
+) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier

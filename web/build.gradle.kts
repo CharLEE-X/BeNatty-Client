@@ -48,6 +48,8 @@ kotlin {
 
             implementation(libs.ballast.core)
             implementation(libs.ballast.navigation)
+
+            implementation(libs.koin.core)
         }
     }
 }

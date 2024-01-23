@@ -1,109 +1,95 @@
 package theme
 
+import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Color
-import com.varabyte.kobweb.compose.ui.graphics.Colors
+import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.silk.init.InitSilk
 import com.varabyte.kobweb.silk.init.InitSilkContext
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import com.varabyte.kobweb.silk.theme.colors.palette.background
 import com.varabyte.kobweb.silk.theme.colors.palette.color
+import org.jetbrains.compose.web.css.CSSStyleVariable
+import theme.TypeScaleTokens.Companion.applyStyle
 
-class SitePalette(
-    val background: Color,
-    val onBackground: Color,
-    val nearBackground: Color,
-    val border: Color,
-    val surface: Color,
-    val onSurface: Color,
-
-    val primary: Color,
-    val primaryLighter: Color,
-    val primaryDarker: Color,
-
-    val secondary: Color,
-    val secondaryDarker: Color,
-    val secondaryLighter: Color,
-
-    val error: Color,
-
-    val neutral50: Color,
-    val neutral100: Color,
-    val neutral200: Color,
-    val neutral300: Color,
-    val neutral400: Color,
-    val neutral500: Color,
-    val neutral600: Color,
-    val neutral700: Color,
-    val neutral800: Color,
-    val neutral900: Color
-)
-
-object SitePalettes {
-    val light = SitePalette(
-        background = Colors.White,
-        onBackground = Colors.Black,
-        nearBackground = theme.Colors.neutral100.rgb(),
-        border = theme.Colors.neutral300.rgb(),
-        surface = Colors.Gray,
-        onSurface = Colors.Black,
-        primary = theme.Colors.primary.rgb(),
-        primaryLighter = theme.Colors.primary.rgb(),
-        primaryDarker = theme.Colors.primary.rgb(),
-        secondary = theme.Colors.secondary.rgb(),
-        secondaryDarker = theme.Colors.secondary.rgb(),
-        secondaryLighter = theme.Colors.secondary.rgb(),
-        error = theme.Colors.red.rgb(),
-        neutral50 = theme.Colors.neutral50.rgb(),
-        neutral100 = theme.Colors.neutral100.rgb(),
-        neutral200 = theme.Colors.neutral200.rgb(),
-        neutral300 = theme.Colors.neutral300.rgb(),
-        neutral400 = theme.Colors.neutral400.rgb(),
-        neutral500 = theme.Colors.neutral500.rgb(),
-        neutral600 = theme.Colors.neutral600.rgb(),
-        neutral700 = theme.Colors.neutral700.rgb(),
-        neutral800 = theme.Colors.neutral800.rgb(),
-        neutral900 = theme.Colors.neutral900.rgb(),
-    )
-    val dark = SitePalette(
-        background = Colors.Black,
-        onBackground = Colors.White,
-        nearBackground = theme.Colors.neutral900.rgb(),
-        border = theme.Colors.neutral700.rgb(),
-        surface = Colors.DarkGray,
-        onSurface = Colors.White,
-        primaryLighter = theme.Colors.primaryLighter.rgb(),
-        primary = theme.Colors.primary.rgb(),
-        primaryDarker = theme.Colors.primaryDarker.rgb(),
-        secondaryLighter = theme.Colors.secondaryLighter.rgb(),
-        secondary = theme.Colors.secondary.rgb(),
-        secondaryDarker = theme.Colors.secondaryDarker.rgb(),
-        error = theme.Colors.red.rgb(),
-        neutral50 = theme.Colors.neutral900.rgb(),
-        neutral100 = theme.Colors.neutral800.rgb(),
-        neutral200 = theme.Colors.neutral700.rgb(),
-        neutral300 = theme.Colors.neutral600.rgb(),
-        neutral400 = theme.Colors.neutral500.rgb(),
-        neutral500 = theme.Colors.neutral400.rgb(),
-        neutral600 = theme.Colors.neutral300.rgb(),
-        neutral700 = theme.Colors.neutral200.rgb(),
-        neutral800 = theme.Colors.neutral100.rgb(),
-        neutral900 = theme.Colors.neutral50.rgb(),
-    )
-}
-
-fun ColorMode.toSitePalette(): SitePalette {
+fun ColorMode.toColors(): SysColorScheme {
     return when (this) {
-        ColorMode.LIGHT -> SitePalettes.light
-        ColorMode.DARK -> SitePalettes.dark
+        ColorMode.LIGHT -> appLightColorScheme
+        ColorMode.DARK -> appDarkColorScheme
     }
 }
 
 @InitSilk
 fun initTheme(ctx: InitSilkContext) {
-    ctx.theme.palettes.light.background = SitePalettes.light.background
-    ctx.theme.palettes.light.color = SitePalettes.light.onBackground
-    ctx.theme.palettes.dark.background = SitePalettes.dark.background
-    ctx.theme.palettes.dark.color = SitePalettes.dark.onBackground
+    ctx.theme.palettes.light.background = appLightColorScheme.sysColorBackground
+    ctx.theme.palettes.light.color = appLightColorScheme.sysColorOnBackground
+    ctx.theme.palettes.dark.background = appDarkColorScheme.sysColorBackground
+    ctx.theme.palettes.dark.color = appDarkColorScheme.sysColorOnBackground
 }
 
-private fun androidx.compose.ui.graphics.Color.rgb(): Color = Color.rgb(red, green, blue)
+fun Modifier.roleStyle(role: TypeScaleTokens.Role): Modifier = Modifier.styleModifier {
+    this.applyStyle(role)
+}
+
+object MaterialTheme {
+    @Suppress("ClassName")
+    object colors {
+        val mdSysColorPrimary = CSSStyleVariable<Color>("md-sys-color-primary")
+        val mdSysColorPrimaryContainer = CSSStyleVariable<Color>("md-sys-color-primary-container")
+        val mdSysColorOnPrimary = CSSStyleVariable<Color>("md-sys-color-on-primary")
+        val mdSysColorOnPrimaryContainer = CSSStyleVariable<Color>("md-sys-color-on-primary-container")
+        val mdSysColorSecondary = CSSStyleVariable<Color>("md-sys-color-secondary")
+        val mdSysColorSecondaryContainer = CSSStyleVariable<Color>("md-sys-color-secondary-container")
+        val mdSysColorOnSecondary = CSSStyleVariable<Color>("md-sys-color-on-secondary")
+        val mdSysColorOnSecondaryContainer = CSSStyleVariable<Color>("md-sys-color-on-secondary-container")
+        val mdSysColorTertiary = CSSStyleVariable<Color>("md-sys-color-tertiary")
+        val mdSysColorTertiaryContainer = CSSStyleVariable<Color>("md-sys-color-tertiary-container")
+        val mdSysColorOnTertiary = CSSStyleVariable<Color>("md-sys-color-on-tertiary")
+        val mdSysColorOnTertiaryContainer = CSSStyleVariable<Color>("md-sys-color-on-tertiary-container")
+        val mdSysColorError = CSSStyleVariable<Color>("md-sys-color-error")
+        val mdSysColorErrorContainer = CSSStyleVariable<Color>("md-sys-color-error-container")
+        val mdSysColorOnError = CSSStyleVariable<Color>("md-sys-color-on-error")
+        val mdSysColorOnErrorContainer = CSSStyleVariable<Color>("md-sys-color-on-error-container")
+        val mdSysColorOutline = CSSStyleVariable<Color>("md-sys-color-outline")
+        val mdSysColorBackground = CSSStyleVariable<Color>("md-sys-color-background")
+        val mdSysColorOnBackground = CSSStyleVariable<Color>("md-sys-color-on-background")
+        val mdSysColorSurface = CSSStyleVariable<Color>("md-sys-color-surface")
+        val mdSysColorOnSurface = CSSStyleVariable<Color>("md-sys-color-on-surface")
+        val mdSysColorSurfaceDim = CSSStyleVariable<Color>("md-sys-color-surface-dim")
+        val mdSysColorSurfaceBright = CSSStyleVariable<Color>("md-sys-color-surface-bright")
+        val mdSysColorSurfaceContainerLowest = CSSStyleVariable<Color>("md-sys-color-surface-container-lowest")
+        val mdSysColorSurfaceContainerLow = CSSStyleVariable<Color>("md-sys-color-surface-container-low")
+        val mdSysColorSurfaceContainer = CSSStyleVariable<Color>("md-sys-color-surface-container")
+        val mdSysColorSurfaceContainerHigh = CSSStyleVariable<Color>("md-sys-color-surface-container-high")
+        val mdSysColorSurfaceContainerHighest = CSSStyleVariable<Color>("md-sys-color-surface-container-highest")
+        val mdSysColorSurfaceVariant = CSSStyleVariable<Color>("md-sys-color-surface-variant")
+        val mdSysColorOnSurfaceVariant = CSSStyleVariable<Color>("md-sys-color-on-surface-variant")
+        val mdSysColorInverseSurface = CSSStyleVariable<Color>("md-sys-color-inverse-surface")
+        val mdSysColorInverseOnSurface = CSSStyleVariable<Color>("md-sys-color-inverse-on-surface")
+        val mdSysColorInversePrimary = CSSStyleVariable<Color>("md-sys-color-inverse-primary")
+        val mdSysColorShadow = CSSStyleVariable<Color>("md-sys-color-shadow")
+        val mdSysColorSurfaceTint = CSSStyleVariable<Color>("md-sys-color-surface-tint")
+        val mdSysColorOutlineVariant = CSSStyleVariable<Color>("md-sys-color-outline-variant")
+        val mdSysColorScrim = CSSStyleVariable<Color>("md-sys-color-scrim")
+    }
+
+    @Suppress("ClassName")
+    object typography : TypeScaleTokens("md-sys-typescale") {
+        object displayLarge : Role("display-large")
+        object displayMedium : Role("display-medium")
+        object displaySmall : Role("display-small")
+        object headlineLarge : Role("headline-large")
+        object headlineMedium : Role("headline-medium")
+        object headlineSmall : Role("headline-small")
+        object titleLarge : Role("title-large")
+        object titleMedium : Role("title-medium")
+        object titleSmall : Role("title-small")
+        object bodyLarge : Role("body-large")
+        object bodyMedium : Role("body-medium")
+        object bodySmall : Role("body-small")
+        object labelLarge : Role("label-large")
+        object labelMedium : Role("label-medium")
+        object labelSmall : Role("label-small")
+
+    }
+
+}

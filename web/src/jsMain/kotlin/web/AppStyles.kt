@@ -1,4 +1,4 @@
-package web.theme
+package web
 
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.ui.Modifier

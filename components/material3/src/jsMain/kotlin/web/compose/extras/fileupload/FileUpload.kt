@@ -1,6 +1,7 @@
 package web.compose.extras.fileupload
 
 import androidx.compose.runtime.Composable
+import com.varabyte.kobweb.compose.foundation.layout.RowScope
 import kotlinx.browser.document
 import org.jetbrains.compose.web.attributes.multiple
 import org.jetbrains.compose.web.css.DisplayStyle.Companion.None
@@ -14,7 +15,7 @@ import web.compose.material3.component.FilledButton
 @Composable
 fun FilledFileInput(
     onFilesSelected: ((List<File>?) -> Unit)? = null,
-    content: @Composable () -> Unit
+    content: @Composable RowScope.() -> Unit
 ) {
     FileInput {
         id("fileInputElement")

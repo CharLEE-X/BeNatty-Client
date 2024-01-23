@@ -4,6 +4,8 @@ import co.touchlab.kermit.Logger.Companion.withTag
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.cache.normalized.api.MemoryCacheFactory
 import com.apollographql.apollo3.cache.normalized.api.NormalizedCacheFactory
+import core.Platform
+import core.currentPlatform
 import data.BuildKonfig
 import data.NormalizedCacheType
 import data.SettingsType
@@ -28,11 +30,16 @@ internal val apolloModule = module {
         )
     }
     single<ApolloClient> {
+        val normalizedCacheFactory = if (currentPlatform == Platform.JS) {
+            get<NormalizedCacheFactory>(named(NormalizedCacheType.MEMORY))
+        } else {
+            get<NormalizedCacheFactory>(named(NormalizedCacheType.BOTH))
+        }
         ApolloProviderImpl(
             baseUrlGraphQl = BuildKonfig.serverUrlGraphQl,
             baseUrlSubscriptions = BuildKonfig.serverUrlSubscriptions,
             authorizationInterceptor = get(),
-            normalizedCacheFactory = get(named(NormalizedCacheType.BOTH)),
+            normalizedCacheFactory = normalizedCacheFactory,
             dispatcher = Dispatchers.Default,
         ).provide()
     }

@@ -10,9 +10,10 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.ui)
             implementation(compose.runtime)
-            implementation(compose.material)
+            implementation(compose.material3)
         }
         jsMain.dependencies {
+            implementation(compose.html.core)
             implementation(libs.kobweb.silk)
         }
     }
