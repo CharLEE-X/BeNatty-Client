@@ -72,8 +72,8 @@ internal fun LoginContent(
             scope = scope,
             onAuthenticated = onAuthenticated,
             onError = onError,
-            gotoPrivacyPolicy = gotoPrivacyPolicy,
-            gotoTnC = gotoTnC,
+            goToPrivacyPolicy = gotoPrivacyPolicy,
+            goToTnC = gotoTnC,
         )
     }
     val state by vm.observeStates().collectAsState()
@@ -85,9 +85,9 @@ internal fun LoginContent(
     var wasAutoFilled by remember { mutableStateOf(false) }
 
     val buttonText = when (state.screenState) {
-        LoginContract.ScreenState.LOGIN -> getString(Strings.Login.LoginButton)
-        LoginContract.ScreenState.REGISTER -> getString(Strings.Login.RegisterButton)
-        LoginContract.ScreenState.FORGOT_PASSWORD -> getString(Strings.Login.SendButton)
+        LoginContract.ScreenState.LOGIN -> getString(Strings.Auth.LoginButton)
+        LoginContract.ScreenState.REGISTER -> getString(Strings.Auth.RegisterButton)
+        LoginContract.ScreenState.FORGOT_PASSWORD -> getString(Strings.Auth.SendButton)
     }
 
     AppTheme {
@@ -104,7 +104,7 @@ internal fun LoginContent(
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = getString(Strings.Login.WelcomeMessage),
+                text = getString(Strings.Auth.WelcomeMessage),
                 style = MaterialTheme.typography.h4,
                 color = MaterialTheme.colors.onBackground,
             )
@@ -119,7 +119,7 @@ internal fun LoginContent(
                 onValueChange = { vm.trySend(LoginContract.Inputs.SetEmail(it)) },
                 label = {
                     Text(
-                        text = getString(Strings.Login.EmailLabel),
+                        text = getString(Strings.Auth.EmailLabel),
                         color = MaterialTheme.colors.background.copy(alpha = 0.3f),
                     )
                 },
@@ -148,7 +148,7 @@ internal fun LoginContent(
                     },
                 ),
                 keyboardActions = KeyboardActions(
-                    onSend = { vm.trySend(LoginContract.Inputs.OnLoginRegisterActionButtonClick) },
+                    onSend = { vm.trySend(LoginContract.Inputs.OnLoginClick) },
                     onNext = { focusManager.moveFocus(FocusDirection.Down) },
                 ),
                 modifier = Modifier
@@ -171,7 +171,7 @@ internal fun LoginContent(
                     onValueChange = { vm.trySend(LoginContract.Inputs.SetPassword(it)) },
                     label = {
                         Text(
-                            text = getString(Strings.Login.PasswordLabel),
+                            text = getString(Strings.Auth.PasswordLabel),
                             color = MaterialTheme.colors.background.copy(alpha = 0.3f),
                         )
                     },
@@ -190,7 +190,7 @@ internal fun LoginContent(
                         unfocusedLabelColor = MaterialTheme.colors.onBackground.copy(alpha = 0.3f),
                     ),
                     keyboardActions = KeyboardActions(
-                        onSend = { vm.trySend(LoginContract.Inputs.OnLoginRegisterActionButtonClick) },
+                        onSend = { vm.trySend(LoginContract.Inputs.OnLoginClick) },
                         onNext = { focusManager.moveFocus(FocusDirection.Down) },
                     ),
                     visualTransformation = if (state.isPasswordVisible) {
@@ -231,7 +231,7 @@ internal fun LoginContent(
                     onValueChange = { vm.trySend(LoginContract.Inputs.SetRepeatPassword(it)) },
                     label = {
                         Text(
-                            text = getString(Strings.Login.ConfirmPasswordLabel),
+                            text = getString(Strings.Auth.ConfirmPasswordLabel),
                             color = MaterialTheme.colors.background.copy(alpha = 0.3f),
                         )
                     },
@@ -241,7 +241,7 @@ internal fun LoginContent(
                         unfocusedLabelColor = MaterialTheme.colors.onBackground.copy(alpha = 0.3f),
                     ),
                     keyboardActions = KeyboardActions(
-                        onSend = { vm.trySend(LoginContract.Inputs.OnLoginRegisterActionButtonClick) },
+                        onSend = { vm.trySend(LoginContract.Inputs.OnLoginClick) },
                     ),
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.None,
@@ -281,7 +281,7 @@ internal fun LoginContent(
                     Spacer(modifier = Modifier.weight(1f))
                     AnimatedVisibility(state.screenState == LoginContract.ScreenState.LOGIN) {
                         Text(
-                            text = getString(Strings.Login.ForgotPasswordLabel),
+                            text = getString(Strings.Auth.ForgotPasswordLabel),
                             style = MaterialTheme.typography.body1,
                             modifier = Modifier
                                 .clickable {
@@ -295,7 +295,7 @@ internal fun LoginContent(
                     }
                 }
                 Button(
-                    onClick = { vm.trySend(LoginContract.Inputs.OnLoginRegisterActionButtonClick) },
+                    onClick = { vm.trySend(LoginContract.Inputs.OnLoginClick) },
                     shape = AbsoluteRoundedCornerShape(100),
                     modifier = Modifier
                         .height(48.dp)
@@ -317,7 +317,7 @@ internal fun LoginContent(
             Row {
                 AnimatedVisibility(visible = state.screenState == LoginContract.ScreenState.LOGIN) {
                     Text(
-                        text = getString(Strings.Login.DontHaveAnAccount),
+                        text = getString(Strings.Auth.DontHaveAnAccount),
                         color = MaterialTheme.colors.onBackground,
                         modifier = Modifier
                             .weight(1f)
@@ -329,7 +329,7 @@ internal fun LoginContent(
                 }
                 AnimatedVisibility(visible = state.screenState != LoginContract.ScreenState.LOGIN) {
                     Text(
-                        text = getString(Strings.Login.GoBackToLoginButton),
+                        text = getString(Strings.Auth.GoBackToLoginButton),
                         color = MaterialTheme.colors.onBackground,
                         modifier = Modifier
                             .weight(1f)

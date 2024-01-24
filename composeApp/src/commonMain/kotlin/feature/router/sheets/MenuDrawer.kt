@@ -182,7 +182,7 @@ private fun ClearCacheAndLogOutSection(vm: DebugViewModel, onLogOut: () -> Unit)
                 onClick = onLogOut,
                 modifier = Modifier.weight(1f),
             ) {
-                Text(text = getString(Strings.Login.LogoutButton))
+                Text(text = getString(Strings.Auth.LogoutButton))
             }
         }
     }

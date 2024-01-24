@@ -30,12 +30,16 @@ kotlin {
 
     sourceSets {
         jsMain.dependencies {
+            implementation(projects.components.theme)
+            implementation(projects.components.material3)
+
             implementation(projects.feature.debug)
             implementation(projects.feature.root)
             implementation(projects.feature.router)
-            implementation(projects.feature.login)
-            implementation(projects.components.theme)
-            implementation(projects.components.material3)
+            implementation(projects.feature.auth.login)
+            implementation(projects.feature.auth.register)
+            implementation(projects.feature.auth.forgotPassword)
+            implementation(projects.feature.auth.updatePassword)
 
             implementation(compose.runtime)
             implementation(compose.html.core)

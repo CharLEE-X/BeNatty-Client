@@ -1,4 +1,4 @@
-rootProject.name = "NataliaShop"
+rootProject.name = "natalia-shop"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -26,8 +26,6 @@ dependencyResolutionManagement {
 
 includeBuild("convention-plugins")
 include(
-    ":server",
-
     ":web",
     ":composeApp",
 
@@ -35,7 +33,10 @@ include(
 
     ":feature:root",
     ":feature:router",
-    ":feature:login",
+    ":feature:auth:login",
+    ":feature:auth:register",
+    ":feature:auth:forgot-password",
+    ":feature:auth:update-password",
     ":feature:debug",
 
     ":components:core",

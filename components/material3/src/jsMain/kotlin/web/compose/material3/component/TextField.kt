@@ -1,7 +1,6 @@
 package web.compose.material3.component
 
 import androidx.compose.runtime.Composable
-import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.styleModifier
@@ -10,6 +9,8 @@ import org.jetbrains.compose.web.dom.Span
 import web.compose.material3.common.MdTagElement
 import web.compose.material3.common.jsRequire
 import web.compose.material3.common.slot
+
+// https://github.com/material-components/material-web/blob/main/docs/components/text-field.md
 
 @Composable
 fun MdTextFieldTagElement(
@@ -63,22 +64,22 @@ fun MdTextFieldTagElement(
                 attr("type", type.value)
                 label?.let { attr("label", it) }
                 placeholder?.let { attr("placeholder", it) }
-                if (hasLeadingIcon) attr("hasLeadingIcon", "")
-                if (hasTrailingIcon) attr("hasTrailingIcon", "")
+                if (hasLeadingIcon) attr("has-leading-icon", "")
+                if (hasTrailingIcon) attr("has-trailing-icon", "")
                 if (required) attr("required", "")
                 if (error) attr("error", "")
-                errorText?.let { attr("errorText", it) }
-                prefixText?.let { attr("prefixText", it) }
-                suffixText?.let { attr("suffixText", it) }
+                errorText?.let { attr("error-text", it) }
+                prefixText?.let { attr("prefix-text", it) }
+                suffixText?.let { attr("suffix-text", it) }
                 if (disabled) attr("disabled", "")
-                supportingText?.let { attr("supportingText", it) }
-                textDirection?.let { attr("textDirection", it) }
+                supportingText?.let { attr("supporting-text", it) }
+                textDirection?.let { attr("text-direction", it) }
                 rows?.let { attr("rows", it.toString()) }
                 cols?.let { attr("cols", it.toString()) }
                 max?.let { attr("max", it) }
-                maxLength?.let { attr("maxLength", it.toString()) }
+                maxLength?.let { attr("max-length", it.toString()) }
                 min?.let { attr("min", it) }
-                minLength?.let { attr("minLength", it.toString()) }
+                minLength?.let { attr("min-length", it.toString()) }
                 pattern?.let { attr("pattern", it) }
                 if (readOnly) attr("readOnly", "")
                 if (multiple) attr("multiple", "")
@@ -90,24 +91,12 @@ fun MdTextFieldTagElement(
                 }
             },
     ) {
-        com.varabyte.kobweb.compose.foundation.layout.Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            leadingIcon?.let {
-                Span({ slot = "leading-icon" }) { it() }
-            }
-
-        inputTextColor?.let {
-            Span(
-                Modifier.styleModifier {
-                    property("--md-outlined-text-field-input-text-color", it.toString())
-                }.toAttrs()
-            ) { content() }
-        } ?: content()
+        leadingIcon?.let {
+            Span({ slot = "leading-icon" }) { it() }
+        }
 
         trailingIcon?.let {
             Span({ slot = "trailing-icon" }) { it() }
-        }
         }
     }
 }

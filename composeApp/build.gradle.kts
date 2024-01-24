@@ -52,13 +52,18 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.data)
+
             implementation(projects.components.core)
             implementation(projects.components.localization)
             implementation(projects.components.theme)
+
             implementation(projects.feature.debug)
             implementation(projects.feature.root)
             implementation(projects.feature.router)
-            implementation(projects.feature.login)
+            implementation(projects.feature.auth.login)
+            implementation(projects.feature.auth.register)
+            implementation(projects.feature.auth.forgotPassword)
+            implementation(projects.feature.auth.updatePassword)
 
             implementation(compose.ui)
             implementation(compose.foundation)

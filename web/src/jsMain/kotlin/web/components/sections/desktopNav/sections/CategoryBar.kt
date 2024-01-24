@@ -11,12 +11,12 @@ import com.varabyte.kobweb.compose.ui.modifiers.width
 import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.Text
+import web.Category
+import web.CategoryFilter
 import web.compose.material3.component.FilledButton
 import web.compose.material3.component.TextButton
 import web.compose.material3.component.labs.SegmentedButton
 import web.compose.material3.component.labs.SegmentedButtonSet
-import web.pages.Category
-import web.pages.CategoryFilter
 
 @Composable
 fun CategoryBar(

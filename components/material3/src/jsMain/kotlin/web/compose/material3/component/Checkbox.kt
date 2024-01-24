@@ -14,8 +14,9 @@ import web.compose.material3.common.jsRequire
 @Composable
 fun Checkbox(
     modifier: Modifier = Modifier,
-    value: Boolean,
+    value: Boolean? = null,
     onClick: (SyntheticMouseEvent) -> Unit = {},
+    checked: Boolean = false,
     indeterminate: Boolean? = null,
     content: ContentBuilder<MdElement>? = null
 ) = MdTagElement(
@@ -23,7 +24,8 @@ fun Checkbox(
     applyAttrs = modifier
         .onClick { onClick(it) }
         .toAttrs {
-            attr("value", value.toString())
+            value?.let { attr("value", it.toString()) }
+            if (checked) { attr("checked", "") }
             indeterminate?.let { attr("indeterminate", "") }
         },
     content = content

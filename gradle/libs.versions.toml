@@ -13,7 +13,6 @@ androidx-activityCompose = "1.8.2"
 androidxCore = "1.12.0"
 apollo = "4.0.0-beta.2"
 ballast = "4.0.0"
-bcrypt = "0.10.2"
 buildkonfig = "0.15.0"
 coil = "2.5.0"
 compose = "1.5.11"
@@ -21,13 +20,9 @@ composeGoogle = "1.5.4"
 coroutines = "1.7.3"
 datetime = "0.5.0"
 detekt = "1.23.0"
-expedia = "7.0.2"
 google-services = "4.4.0"
-javalin = "4.6.8"
-junit = "5.10.1"
 kamelImage = "0.8.3"
 kermit = "2.0.2"
-kluent = "1.73"
 kmpnotifier = "0.1.9"
 kobweb = "0.15.4"
 koin = "3.5.0"
@@ -40,21 +35,14 @@ kover = "0.7.4"
 ksp = "1.9.21-1.0.15"
 ktLint = "11.6.1"
 ktor = "2.3.7"
-libPhoneNumber = "8.13.26"
-logback = "1.4.14"
-mail = "1.4"
 maps-compose = "2.15.0"
 maps-secrets = "2.0.1"
-mockk = "1.13.8"
-mongodb = "4.11.1"
 mockative = "2.0.1"
 multiplatformSettings = "1.1.0"
 pagingComposeCommon = "3.3.0-alpha02-0.4.0"
 playServices = "21.0.1"
 playServicesMaps = "18.2.0"
 security = "1.1.0-alpha06"
-shadow = "7.1.2"
-testContainers = "1.19.1"
 turbine = "1.0.0"
 uuid = "0.8.2"
 
@@ -89,14 +77,6 @@ compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview"
 
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 
-expedia-server = { module = "com.expediagroup:graphql-kotlin-server", version.ref = "expedia" }
-expedia-ktor-server = { module = "com.expediagroup:graphql-kotlin-ktor-server", version.ref = "expedia" }
-expedia-federation = { module = "com.expediagroup:graphql-kotlin-federation", version.ref = "expedia" }
-
-graphql-scalars = "com.graphql-java:graphql-java-extended-scalars:20.2"
-
-javalin-core = { module = "io.javalin:javalin", version.ref = "javalin" }
-
 kamel-image = { module = "media.kamel:kamel-image", version.ref = "kamelImage" }
 
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
@@ -111,7 +91,6 @@ silk-icons-mdi = { module = "com.varabyte.kobwebx:silk-icons-mdi", version.ref =
 koin-androidxCompose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose" }
-koin-ktor = { module = "io.insert-koin:koin-ktor", version.ref = "koinKtor" }
 koin-logger = { module = "io.insert-koin:koin-logger-slf4j", version.ref = "koinKtor" }
 
 kotlin-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
@@ -129,42 +108,17 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
 ktor-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
-ktor-server-auth = { module = "io.ktor:ktor-server-auth", version.ref = "ktor" }
-ktor-server-auth-jwt = { module = "io.ktor:ktor-server-auth-jwt", version.ref = "ktor" }
-ktor-server-cio = { module = "io.ktor:ktor-server-cio-jvm", version.ref = "ktor" }
-ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
-ktor-server-cors = { module = "io.ktor:ktor-server-cors", version.ref = "ktor" }
-ktor-server-logging = { module = "io.ktor:ktor-server-call-logging-jvm", version.ref = "ktor" }
-ktor-server-websocket = { module = "io.ktor:ktor-server-websockets", version.ref = "ktor" }
-
 multiplatformSettings-common = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
 
 paging-compose-common = { module = "app.cash.paging:paging-compose-common", version.ref = "pagingComposeCommon" }
 
-server-bcrypt = { module = "at.favre.lib:bcrypt", version.ref = "bcrypt" }
-server-logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
-server-mongodb = { module = "org.mongodb:mongodb-driver-kotlin-coroutine", version.ref = "mongodb" }
-
-validator-libPhoneNumber = { module = "com.googlecode.libphonenumber:libphonenumber", version.ref = "libPhoneNumber" }
-validator-mail = { module = "javax.mail:mail", version.ref = "mail" }
-
-test-kluent = { module = "org.amshove.kluent:kluent", version.ref = "kluent" }
 test-koin = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 test-kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
-test-kotlin-ktor-server = { module = "io.ktor:ktor-server-tests", version.ref = "ktor" }
-test-kotlin-ktor-serverHost = { module = "io.ktor:ktor-server-test-host", version.ref = "ktor" }
-test-testContainers-mongo = { module = "org.testcontainers:mongodb", version.ref = "testContainers" }
-test-testContainers-junit = { module = "org.testcontainers:junit-jupiter", version.ref = "testContainers" }
 test-kotlin-koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 test-kotlin-mockative = { module = "io.mockative:mockative", version.ref = "mockative" }
 test-kotlin-mockativeProcessor = { module = "io.mockative:mockative-processor", version.ref = "mockative" }
 test-kotlin-multiplatformSettings = { module = "com.russhwolf:multiplatform-settings-test", version.ref = "multiplatformSettings" }
 test-kotlin-turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
-
-test-junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
-test-junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
-test-junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
-test-mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -175,14 +129,10 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 kobweb-application = { id = "com.varabyte.kobweb.application", version.ref = "kobweb" }
 kobwebx-markdown = { id = "com.varabyte.kobwebx.markdown", version.ref = "kobweb" }
-kotlin-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 ktLint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktLint" }
-ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 maps-secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "maps-secrets" }
-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }

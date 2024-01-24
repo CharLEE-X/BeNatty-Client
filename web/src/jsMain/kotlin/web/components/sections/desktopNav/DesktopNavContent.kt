@@ -23,11 +23,11 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
+import web.Category
+import web.CategoryFilter
 import web.components.sections.desktopNav.sections.CategoryBar
 import web.components.sections.desktopNav.sections.LogoSearchButtonsSection
 import web.components.sections.desktopNav.sections.PromoSpace
-import web.pages.Category
-import web.pages.CategoryFilter
 
 @Composable
 fun DesktopNav(

@@ -11,6 +11,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.core.Page
 import feature.root.RootContract
 import feature.root.RootViewModel
+import web.RouterContent
 
 @Suppress("unused")
 @Page

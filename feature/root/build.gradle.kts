@@ -9,6 +9,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.data)
             implementation(projects.components.notification)
+            implementation(projects.components.localization)
 
             implementation(libs.ballast.core)
             implementation(libs.koin.core)
