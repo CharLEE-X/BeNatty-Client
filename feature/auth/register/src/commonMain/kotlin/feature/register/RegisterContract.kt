@@ -23,7 +23,7 @@ object RegisterContract : KoinComponent {
 
         val newsletterChecked: Boolean = true,
 
-        val isButtonDisabled: Boolean = false,
+        val isButtonDisabled: Boolean = true,
 
         val strings: Strings = Strings()
     )
@@ -38,7 +38,6 @@ object RegisterContract : KoinComponent {
         data object TogglePasswordVisibility : Inputs
         data object ToggleRepeatPasswordVisibility : Inputs
         data object ToggleNewsletterChecked : Inputs
-        data object DisableButton : Inputs
 
         data object OnGoogleClick : Inputs
         data object OnFacebookClick : Inputs

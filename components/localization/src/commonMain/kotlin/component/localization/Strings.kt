@@ -15,6 +15,10 @@ sealed interface Strings {
     data object AddFilter : Strings
     data object Logo : Strings
 
+    data object Unknown : Strings
+    data object Save : Strings
+    data object Add : Strings
+
     sealed interface Auth : Strings {
         data object Login : Auth
         data object SignUp : Auth
@@ -26,16 +30,16 @@ sealed interface Strings {
         data object ForgotPassword : Auth
         data object DontHaveAccount : Auth
 
-        data object SignUpWithGoogle: Auth
-        data object SignUpWithFacebook: Auth
-        data object FullName: Auth
-        data object RepeatPassword: Auth
-        data object Newsletter: Auth
-        data object AlreadyHaveAnAccount: Auth
-        data object PrivacyPolicy: Auth
-        data object And: Auth
-        data object TermsOfService: Auth
-        data object BySigningUpAgree: Auth
+        data object SignUpWithGoogle : Auth
+        data object SignUpWithFacebook : Auth
+        data object FullName : Auth
+        data object RepeatPassword : Auth
+        data object Newsletter : Auth
+        data object AlreadyHaveAnAccount : Auth
+        data object PrivacyPolicy : Auth
+        data object And : Auth
+        data object TermsOfService : Auth
+        data object BySigningUpAgree : Auth
 
         data object ForgotPasswordDescription : Auth
         data object GetResetLink : Auth
@@ -47,7 +51,17 @@ sealed interface Strings {
         data object BackTo : Auth
     }
 
-    data object Unknown : Strings
-    data object Save : Strings
-    data object Add : Strings
+    sealed interface Account : Strings {
+        data object Phone : Account
+        data object PersonalDetails : Account
+        data object Profile : Account
+        data object OldPassword : Account
+        data object NewPassword : Account
+        data object Address : Account
+        data object AdditionalInformation : Account
+        data object PostalCode : Account
+        data object City : Account
+        data object State : Account
+        data object Country : Account
+    }
 }

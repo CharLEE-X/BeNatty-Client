@@ -49,10 +49,6 @@ class RegisterViewModel(
     ),
     coroutineScope = scope,
 ) {
-    init {
-        trySend(RegisterContract.Inputs.DisableButton)
-    }
-
     companion object {
         private val TAG = this::class.simpleName!!
     }

@@ -49,10 +49,6 @@ class LoginViewModel(
     ),
     coroutineScope = scope,
 ) {
-    init {
-        trySend(LoginContract.Inputs.DisableButton)
-    }
-
     companion object {
         private val TAG = this::class.simpleName!!
     }

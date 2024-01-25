@@ -8,6 +8,7 @@ object UpdatePasswordContract : KoinComponent {
         val showPassword: Boolean = false,
         val showError: Boolean = false,
         val errorMessage: String = "",
+
         val screenState: ScreenState = ScreenState.Updating,
 
         val strings: Strings = Strings(),

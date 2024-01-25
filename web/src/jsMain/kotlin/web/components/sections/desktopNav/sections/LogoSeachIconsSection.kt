@@ -41,16 +41,15 @@ import web.components.sections.desktopNav.DesktopNavContract
 import web.components.sections.desktopNav.DesktopNavViewModel
 import web.components.sections.desktopNav.label
 import web.compose.material3.component.IconButton
-import web.compose.material3.component.Menu
-import web.compose.material3.component.MenuItem
 import web.compose.material3.component.OutlinedTextField
 import web.compose.material3.component.TextButton
 import web.compose.material3.component.TextFieldType
+import web.compose.material3.component.labs.Menu
+import web.compose.material3.component.labs.MenuItem
 
 @Composable
 fun LogoSearchButtonsSection(
     vm: DesktopNavViewModel,
-    state: DesktopNavContract.State,
     isAuthenticated: Boolean,
     modifier: Modifier,
     searchValue: String,
@@ -100,7 +99,7 @@ fun LogoSearchButtonsSection(
                         .margin(right = 0.25.em)
                         .id(accountMenuAnchor)
                 ) {
-                    SpanText(state.accountLoginButtonText)
+                    SpanText(if (!isAuthenticated) DesktopNavContract.Strings.login else "Account")
                 }
                 Menu(
                     anchor = accountMenuAnchor,

@@ -5,6 +5,9 @@ import com.copperleaf.ballast.navigation.routing.RouteAnnotation
 import com.copperleaf.ballast.navigation.routing.RouteMatcher
 
 private const val ADMIN = "/admin"
+private const val ACCOUNT = "/account"
+private const val ABOUT = "/about"
+private const val CONTACT = "/contact"
 private const val HOME = "/home"
 private const val LOGIN = "/login"
 private const val REGISTER = "/register"
@@ -19,6 +22,11 @@ private const val PAYMENT = "/payment"
 private const val PROFILE = "/profile"
 private const val SETTINGS = "/settings"
 private const val FAVORITES = "/favorites"
+private const val WISHLIST = "/wishlist"
+private const val RETURNS = "/returns"
+private const val HELP = "/help"
+private const val PRIVACY_POLICY = "/privacy-policy"
+private const val TERMS_AND_CONDITIONS = "/terms-and-conditions"
 private const val BLOG = "/blog"
 private const val ID = "/{id}"
 
@@ -27,25 +35,33 @@ enum class RouterScreen(
     override val annotations: Set<RouteAnnotation> = emptySet(),
 ) : Route {
     Home(HOME),
+
+    // Auth
     Login(LOGIN),
     Register(REGISTER),
     ForgotPassword(FORGOT_PASSWORD),
     UpdateEmail(UPDATE_EMAIL),
+
+    // Account
+    Order(ACCOUNT + ORDER),
+    Profile(ACCOUNT + PROFILE),
+    Wishlist(ACCOUNT + WISHLIST),
+    Returns(ACCOUNT + RETURNS),
+
+    // Product
     Product(PRODUCT + ID),
     Catalogue(CATALOGUE),
     Cart(CART),
     Checkout(CHECKOUT),
-    Order(ORDER),
     Payment(PAYMENT),
-    Profile(PROFILE),
     Settings(SETTINGS),
-    About("/about"),
-    Contact("/contact"),
-    Help("/help"),
+    About(ABOUT),
+    Contact(CONTACT),
+    Help(HELP),
     Favorites(FAVORITES),
     Blog(BLOG),
-    PrivacyPolicy("/privacy-policy"),
-    TC("/terms-and-conditions")
+    PrivacyPolicy(PRIVACY_POLICY),
+    TC(TERMS_AND_CONDITIONS),
     ;
 
     override val matcher: RouteMatcher = RouteMatcher.create(routeFormat)

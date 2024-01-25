@@ -86,7 +86,6 @@ fun DesktopNav(
         )
         LogoSearchButtonsSection(
             vm = vm,
-            state = state,
             isAuthenticated = isAuthenticated,
             searchValue = searchValue,
             onSearchValueChanged = onSearchValueChanged,

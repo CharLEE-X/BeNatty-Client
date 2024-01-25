@@ -16,9 +16,9 @@ import org.jetbrains.compose.web.dom.Text
 import web.compose.extras.text.LargeBody
 import web.compose.extras.text.LargeTitle
 import web.compose.material3.component.FilledButton
-import web.compose.material3.component.Menu
-import web.compose.material3.component.MenuItem
-import web.compose.material3.component.SubMenu
+import web.compose.material3.component.labs.Menu
+import web.compose.material3.component.labs.MenuItem
+import web.compose.material3.component.labs.SubMenu
 
 @Composable
 fun MenuShowcase() {

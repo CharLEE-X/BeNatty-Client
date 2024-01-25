@@ -121,7 +121,7 @@ private fun FieldsSection(
         type = TextFieldType.TEXT,
         leadingIcon = { MdiEmail() },
         trailingIcon = { state.emailError?.let { MdiError() } },
-        error = state.isEmailError,
+        error = state.emailError != null,
         errorText = state.emailError,
         modifier = Modifier
             .fillMaxWidth()
@@ -150,7 +150,7 @@ private fun FieldsSection(
                 if (state.isPasswordVisible) MdiVisibilityOff(modifier) else MdiVisibilityOff(modifier)
             }
         },
-        error = state.isPasswordError,
+        error = state.passwordError != null,
         errorText = state.passwordError,
         modifier = Modifier
             .fillMaxWidth()

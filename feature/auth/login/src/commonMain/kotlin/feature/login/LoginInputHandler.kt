@@ -31,7 +31,6 @@ internal class LoginInputHandler :
         LoginContract.Inputs.OnLoginClick -> handleOnLoginClick()
         LoginContract.Inputs.OnForgotPasswordClick -> postEvent(LoginContract.Events.GoToForgotPassword)
         LoginContract.Inputs.OnDontHaveAccountClick -> postEvent(LoginContract.Events.GoToSignUp)
-        LoginContract.Inputs.DisableButton -> updateState { it.copy(isButtonDisabled = true) }
     }
 
     private suspend fun LoginInputScope.handleSetPassword(password: String) {
@@ -39,7 +38,6 @@ internal class LoginInputHandler :
             updateState {
                 it.copy(
                     password = password,
-                    isPasswordError = true,
                     passwordError = error,
                     isButtonDisabled = true,
                 )
@@ -48,9 +46,8 @@ internal class LoginInputHandler :
             updateState {
                 it.copy(
                     password = password,
-                    isPasswordError = false,
                     passwordError = null,
-                    isButtonDisabled = it.isEmailError,
+                    isButtonDisabled = it.emailError != null,
                 )
             }
         }
@@ -61,7 +58,6 @@ internal class LoginInputHandler :
             updateState {
                 it.copy(
                     email = email,
-                    isEmailError = true,
                     emailError = error,
                     isButtonDisabled = true,
                 )
@@ -70,26 +66,34 @@ internal class LoginInputHandler :
             updateState {
                 it.copy(
                     email = email,
-                    isEmailError = false,
                     emailError = null,
-                    isButtonDisabled = it.isPasswordError,
+                    isButtonDisabled = it.passwordError != null,
                 )
             }
         }
     }
 
-    private fun LoginInputScope.handleOnGoogleClick() {
-        noOp()
+    private suspend fun LoginInputScope.handleOnGoogleClick() {
+        loginDefaultUser()
     }
 
-    private fun LoginInputScope.handleOnFacebookClick() {
-        noOp()
+    private suspend fun LoginInputScope.handleOnFacebookClick() {
+        loginDefaultUser()
     }
 
     private suspend fun LoginInputScope.handleOnLoginClick() {
         val state = getCurrentState()
         sideJob("handleLogin") {
             authService.login(state.email, state.password).fold(
+                onSuccess = { postEvent(LoginContract.Events.OnAuthenticated) },
+                onFailure = { postEvent(LoginContract.Events.OnError(it.message ?: "Login failed")) },
+            )
+        }
+    }
+
+    private suspend fun LoginInputScope.loginDefaultUser() {
+        sideJob("handleLogin") {
+            authService.login("test@test.com", "P@ss1234").fold(
                 onSuccess = { postEvent(LoginContract.Events.OnAuthenticated) },
                 onFailure = { postEvent(LoginContract.Events.OnError(it.message ?: "Login failed")) },
             )

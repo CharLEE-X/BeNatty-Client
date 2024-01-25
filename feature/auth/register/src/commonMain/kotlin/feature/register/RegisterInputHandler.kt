@@ -32,13 +32,20 @@ internal class RegisterInputHandler :
         RegisterContract.Inputs.ToggleRepeatPasswordVisibility ->
             updateState { it.copy(isRepeatPasswordVisible = !it.isRepeatPasswordVisible) }
 
-        RegisterContract.Inputs.OnGoogleClick -> noOp()
-        RegisterContract.Inputs.OnFacebookClick -> noOp()
+        RegisterContract.Inputs.OnGoogleClick -> handleOnGoogleClick()
+        RegisterContract.Inputs.OnFacebookClick -> handleOnFacebookClick()
         RegisterContract.Inputs.OnRegisterClick -> handleRegisterClick()
         RegisterContract.Inputs.OnAlreadyHaveAccountClick -> postEvent(RegisterContract.Events.GoToLogin)
         RegisterContract.Inputs.OnPrivacyPolicyClick -> postEvent(RegisterContract.Events.GoToPrivacyPolicy)
         RegisterContract.Inputs.OnTnCClick -> postEvent(RegisterContract.Events.GoToTnC)
-        RegisterContract.Inputs.DisableButton -> updateState { it.copy(isButtonDisabled = true) }
+    }
+
+    private suspend fun RegisterInputScope.handleOnFacebookClick() {
+        registerDefaultUser()
+    }
+
+    private suspend fun RegisterInputScope.handleOnGoogleClick() {
+        registerDefaultUser()
     }
 
     private suspend fun RegisterInputScope.handleSetRepeatPassword(repeatPassword: String) {
@@ -55,7 +62,7 @@ internal class RegisterInputHandler :
                 repeatPassword = repeatPassword,
                 repeatPasswordError = null,
                 isButtonDisabled = it.emailError != null || it.nameError != null || it.passwordError != null ||
-                it.email.isEmpty() || it.name.isEmpty() || it.password.isEmpty() || it.repeatPassword.isEmpty(),
+                    it.email.isEmpty() || it.name.isEmpty() || it.password.isEmpty() || it.repeatPassword.isEmpty(),
             )
         }
     }
@@ -99,7 +106,7 @@ internal class RegisterInputHandler :
     }
 
     private suspend fun RegisterInputScope.handleSetName(name: String) {
-        inputValidator.validateName(name)?.let { error ->
+        inputValidator.validateText(name, 2)?.let { error ->
             updateState {
                 it.copy(
                     name = name,
@@ -126,6 +133,15 @@ internal class RegisterInputHandler :
                 onFailure = { postEvent(RegisterContract.Events.OnError(it.message ?: "Registration failed")) },
             )
             postInput(RegisterContract.Inputs.SetIsLoading(false))
+        }
+    }
+
+    private suspend fun RegisterInputScope.registerDefaultUser() {
+        sideJob("handleLogin") {
+            authService.register("test@test.com", "P@ss1234").fold(
+                onSuccess = { postEvent(RegisterContract.Events.OnAuthenticated) },
+                onFailure = { postEvent(RegisterContract.Events.OnError(it.message ?: "Login failed")) },
+            )
         }
     }
 }

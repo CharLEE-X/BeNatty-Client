@@ -2,7 +2,7 @@ plugins {
     id("convention.multiplatform")
 }
 
-group = FEATURE + project.name
+group = FEATURE + AUTH + project.name
 
 kotlin {
     sourceSets {

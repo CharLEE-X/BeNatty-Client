@@ -1,17 +1,20 @@
-package web.compose.material3.component
+package web.compose.material3.component.labs
 
 import androidx.compose.runtime.Composable
 import androidx.compose.web.events.SyntheticEvent
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.position
+import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.dom.ContentBuilder
+import org.jetbrains.compose.web.dom.Span
 import org.w3c.dom.events.EventTarget
 import web.compose.material3.common.MdElement
 import web.compose.material3.common.MdTagElement
 import web.compose.material3.common.jsRequire
+import web.compose.material3.common.slot
 
 @Suppress("UnsafeCastFromDynamic")
 @Composable
@@ -41,6 +44,9 @@ fun Menu(
         tagName = "md-menu",
         applyAttrs = modifier
             .position(position)
+            .onClick { evt ->
+                evt.stopPropagation()
+            }
             .toAttrs {
                 anchor?.let { attr("anchor", it) }
                 if (quick) attr("quick", "")
@@ -85,6 +91,8 @@ fun MenuItem(
     selected: Boolean = false,
     disabled: Boolean = false,
     keepOpen: Boolean = false,
+    supportingText: @Composable (() -> Unit)? = null,
+    trailingSupportingText: @Composable (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     content: ContentBuilder<MdElement>?
 ) {
@@ -92,17 +100,26 @@ fun MenuItem(
         tagName = "md-menu-item",
         applyAttrs = modifier
             .onClick { evt ->
-                println("Evt: $evt")
                 onCLick(evt)
                 evt.stopPropagation()
+            }
+            .styleModifier {
+                property("--md-menu-item-selected-container-color", "#b2ff59")
             }
             .toAttrs {
                 if (keepOpen) attr("keepOpen", "")
                 if (selected) attr("selected", "")
                 if (disabled) attr("disabled", "")
             },
-        content = content
-    ).also { jsRequire("@material/web/menu/menu-item.js") }
+    ) {
+        supportingText?.let {
+            Span({ slot = "supporting-text" }) { it() }
+        }
+        trailingSupportingText?.let {
+            Span({ slot = "trailing-supporting-text" }) { it() }
+        }
+        content?.invoke(this)
+    }.also { jsRequire("@material/web/menu/menu-item.js") }
 }
 
 @Suppress("UnsafeCastFromDynamic")

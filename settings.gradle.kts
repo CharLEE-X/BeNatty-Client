@@ -31,14 +31,6 @@ include(
 
     ":data",
 
-    ":feature:root",
-    ":feature:router",
-    ":feature:auth:login",
-    ":feature:auth:register",
-    ":feature:auth:forgot-password",
-    ":feature:auth:update-password",
-    ":feature:debug",
-
     ":components:core",
     ":components:location",
     ":components:notification",
@@ -46,4 +38,16 @@ include(
     ":components:localization",
     ":components:theme",
     ":components:material3",
+
+    ":feature:root",
+    ":feature:router",
+    ":feature:auth:login",
+    ":feature:auth:register",
+    ":feature:auth:forgot-password",
+    ":feature:auth:update-password",
+    ":feature:debug",
+    ":feature:account:profile",
+    ":feature:account:orders",
+    ":feature:account:returns",
+    ":feature:account:wishlist",
 )

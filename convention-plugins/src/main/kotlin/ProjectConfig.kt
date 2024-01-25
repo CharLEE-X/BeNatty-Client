@@ -28,4 +28,6 @@ object ProjectConfig {
 }
 
 const val FEATURE = "feature."
+const val AUTH = "auth."
+const val ACCOUNT = "account."
 const val COMPONENTS = "components."

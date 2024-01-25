@@ -60,4 +60,16 @@ internal fun englishLanguage(
     Strings.Auth.OpenGmail -> "Open Gmail"
     Strings.Auth.OpenOutlook -> "Open Outlook"
     Strings.Auth.BackTo -> "Back to"
+
+    Strings.Account.Phone -> "Phone number"
+    Strings.Account.PersonalDetails -> "Personal details"
+    Strings.Account.Profile -> "Profile"
+    Strings.Account.OldPassword -> "Old password"
+    Strings.Account.NewPassword -> "New password"
+    Strings.Account.Address -> "Address"
+    Strings.Account.AdditionalInformation -> "Additional information (e.g.Company)"
+    Strings.Account.PostalCode -> "Postal code"
+    Strings.Account.City -> "City"
+    Strings.Account.State -> "State"
+    Strings.Account.Country -> "Country"
 }

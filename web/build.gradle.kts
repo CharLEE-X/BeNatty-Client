@@ -40,6 +40,10 @@ kotlin {
             implementation(projects.feature.auth.register)
             implementation(projects.feature.auth.forgotPassword)
             implementation(projects.feature.auth.updatePassword)
+            implementation(projects.feature.account.profile)
+            implementation(projects.feature.account.orders)
+            implementation(projects.feature.account.returns)
+            implementation(projects.feature.account.wishlist)
 
             implementation(compose.runtime)
             implementation(compose.html.core)

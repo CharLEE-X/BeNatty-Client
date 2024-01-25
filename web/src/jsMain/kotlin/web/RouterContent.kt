@@ -26,6 +26,10 @@ import web.components.sections.Footer
 import web.components.sections.desktopNav.DesktopNav
 import web.pages.PageNotFoundPage
 import web.pages.about.AboutPage
+import web.pages.account.order.OrderPage
+import web.pages.account.profile.ProfilePage
+import web.pages.account.returns.ReturnsPage
+import web.pages.account.wishlist.WishlistPage
 import web.pages.auth.ForgotPasswordPage
 import web.pages.auth.LoginPage
 import web.pages.auth.RegisterPage
@@ -38,10 +42,8 @@ import web.pages.contact.ContactPage
 import web.pages.favorites.FavoritesPage
 import web.pages.help.HelpPage
 import web.pages.home.HomeContent
-import web.pages.order.OrderPage
 import web.pages.payment.PaymentPage
 import web.pages.product.ProductPage
-import web.pages.profile.ProfilePage
 import web.pages.settings.SettingsPage
 
 @Composable
@@ -309,6 +311,18 @@ fun RouterContent(
                         )
                     }
 
+                    RouterScreen.Wishlist -> {
+                        WishlistPage(
+                            onError = onError,
+                        )
+                    }
+
+                    RouterScreen.Returns -> {
+                        ReturnsPage(
+                            onError = onError,
+                        )
+                    }
+
                     RouterScreen.Settings -> {
                         SettingsPage(
                             onError = onError,
@@ -382,6 +396,8 @@ private fun RouterScreen.pageTitle(shopName: String = "Natalia's Shop"): String 
         RouterScreen.UpdateEmail -> "Update Email"
         RouterScreen.PrivacyPolicy -> "Privacy Policy"
         RouterScreen.TC -> "Terms and Conditions"
+        RouterScreen.Wishlist -> "Wishlist"
+        RouterScreen.Returns -> "Returns"
     }
     return "$shopName - $title"
 }

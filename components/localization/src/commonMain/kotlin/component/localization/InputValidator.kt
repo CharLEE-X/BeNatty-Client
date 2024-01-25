@@ -4,7 +4,8 @@ interface InputValidator {
     fun validateEmail(email: String): String?
     fun validatePassword(password: String): String?
     fun validateRepeatPassword(password: String, repeatPassword: String): String?
-    fun validateName(name: String): String?
+    fun validateText(text: String, length: Int): String?
+    fun validatePhone(phone: String): String?
 }
 
 internal class InputValidatorImpl : InputValidator {
@@ -32,10 +33,18 @@ internal class InputValidatorImpl : InputValidator {
         }
     }
 
-    override fun validateName(name: String): String? {
+    override fun validateText(text: String, length: Int): String? {
         return when {
-            name.isBlank() -> "Name cannot be empty"
-            name.length < 2 -> "Name must be at least 2 characters"
+            text.isBlank() -> "Cannot be empty"
+            text.length < length -> "Must be at least $length characters"
+            else -> null
+        }
+    }
+
+    override fun validatePhone(phone: String): String? {
+        return when {
+            phone.isBlank() -> "Phone cannot be empty"
+            phone.length < 8 -> "Phone must be at least 8 characters"
             else -> null
         }
     }
