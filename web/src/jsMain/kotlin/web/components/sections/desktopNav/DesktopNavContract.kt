@@ -1,5 +1,6 @@
 package web.components.sections.desktopNav
 
+import component.localization.getString
 import org.koin.core.component.KoinComponent
 
 object DesktopNavContract : KoinComponent {
@@ -22,23 +23,23 @@ object DesktopNavContract : KoinComponent {
     }
 
     object Strings {
-        val promoText = "Free shipping on orders over £50"
-        val helpAndFaq = "Help & FAQ"
-        val currencyEnUs = "EN, $"
-        val search = "Search"
-        val login = "Login"
-        val orders = "Orders"
-        val returns = "Returns"
-        val wishlist = "Wishlist"
-        val account = "Account"
-        val logout = "Log out"
+        val promoText = getString(component.localization.Strings.Navigation.PromoText)
+        val helpAndFaq = getString(component.localization.Strings.Navigation.HelpAndFaq)
+        val currencyEnUs = getString(component.localization.Strings.Navigation.CurrencyEnUs)
+        val search = getString(component.localization.Strings.Navigation.Search)
+        val login = getString(component.localization.Strings.Navigation.Login)
+        val orders = getString(component.localization.Strings.Navigation.Orders)
+        val returns = getString(component.localization.Strings.Navigation.Returns)
+        val wishlist = getString(component.localization.Strings.Navigation.Wishlist)
+        val profile = getString(component.localization.Strings.Navigation.Profile)
+        val logout = getString(component.localization.Strings.Navigation.Logout)
     }
 
     enum class AccountMenuItem {
         ORDERS,
         RETURNS,
         WISHLIST,
-        ACCOUNT,
+        PROFILE,
         LOGOUT,
     }
 }
@@ -48,7 +49,7 @@ fun DesktopNavContract.AccountMenuItem.label(): String {
         DesktopNavContract.AccountMenuItem.ORDERS -> DesktopNavContract.Strings.orders
         DesktopNavContract.AccountMenuItem.RETURNS -> DesktopNavContract.Strings.returns
         DesktopNavContract.AccountMenuItem.WISHLIST -> DesktopNavContract.Strings.wishlist
-        DesktopNavContract.AccountMenuItem.ACCOUNT -> DesktopNavContract.Strings.account
+        DesktopNavContract.AccountMenuItem.PROFILE -> DesktopNavContract.Strings.profile
         DesktopNavContract.AccountMenuItem.LOGOUT -> DesktopNavContract.Strings.logout
     }
 }

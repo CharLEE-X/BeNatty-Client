@@ -11,10 +11,13 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.account.returns.ReturnsViewModel
+import web.components.layouts.AccountLayout
+import web.components.sections.desktopNav.DesktopNavContract
 
 @Composable
 fun ReturnsPage(
     onError: suspend (String) -> Unit,
+    onMenuItemClicked: (DesktopNavContract.AccountMenuItem) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -25,11 +28,16 @@ fun ReturnsPage(
     }
     val state by vm.observeStates().collectAsState()
 
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .fillMaxSize()
+    AccountLayout(
+        item = DesktopNavContract.AccountMenuItem.PROFILE,
+        onMenuItemClicked = onMenuItemClicked,
     ) {
-        SpanText("ReturnsPage")
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            SpanText("ReturnsPage")
+        }
     }
 }

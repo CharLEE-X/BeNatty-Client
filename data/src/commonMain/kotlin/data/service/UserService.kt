@@ -4,7 +4,7 @@ import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
-import com.apollographql.apollo3.cache.normalized.watch
+import data.CheckPasswordMatchQuery
 import data.GetUserProfileQuery
 import data.UpdateUserMutation
 import data.type.AddressUpdateInput
@@ -12,11 +12,9 @@ import data.type.PersonalDetailsUpdateInput
 import data.type.UserUpdateInput
 import data.utils.handle
 import data.utils.skipIfNull
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 interface UserService {
-    suspend fun getUser(): Flow<Result<GetUserProfileQuery.Data>>
+    suspend fun getUserProfile(): Result<GetUserProfileQuery.Data>
 
     suspend fun updateUser(
         email: String? = null,
@@ -30,14 +28,15 @@ interface UserService {
         state: String? = null,
         country: String? = null,
     ): Result<UpdateUserMutation.Data>
+
+    suspend fun checkPasswordMatch(oldPassword: String, newPassword: String): Result<CheckPasswordMatchQuery.Data>
 }
 
 internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserService {
-    override suspend fun getUser(): Flow<Result<GetUserProfileQuery.Data>> {
+    override suspend fun getUserProfile(): Result<GetUserProfileQuery.Data> {
         return apolloClient.query(GetUserProfileQuery())
-            .fetchPolicy(FetchPolicy.CacheAndNetwork)
-            .watch()
-            .map { it.handle() }
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .handle()
     }
 
     override suspend fun updateUser(
@@ -94,6 +93,15 @@ internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserSer
             UpdateUserMutation(optionalUserUpdateInput, personalDetailsUpdateInput, addressUpdateInput)
         )
             .fetchPolicy(FetchPolicy.CacheOnly)
+            .handle()
+    }
+
+    override suspend fun checkPasswordMatch(
+        oldPassword: String,
+        newPassword: String
+    ): Result<CheckPasswordMatchQuery.Data> {
+        return apolloClient.query(CheckPasswordMatchQuery(oldPassword, newPassword))
+            .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }
 }

@@ -55,6 +55,9 @@ object ProfileContract : KoinComponent {
     )
 
     sealed interface Inputs {
+        data object GetUserProfile : Inputs
+        data class SetUserProfile(val user: GetUserProfileQuery.GetUser) : Inputs
+
         data class SetFullName(val fullName: String) : Inputs
         data class SetEmail(val email: String) : Inputs
         data class SetPhone(val phone: String) : Inputs
@@ -91,7 +94,7 @@ object ProfileContract : KoinComponent {
         val newPassword: String = getString(component.localization.Strings.Account.NewPassword),
         val address: String = getString(component.localization.Strings.Account.Address),
         val additionalInformation: String = getString(component.localization.Strings.Account.AdditionalInformation),
-        val postalCode: String = getString(component.localization.Strings.Account.PostalCode),
+        val postcode: String = getString(component.localization.Strings.Account.PostalCode),
         val city: String = getString(component.localization.Strings.Account.City),
         val state: String = getString(component.localization.Strings.Account.State),
         val country: String = getString(component.localization.Strings.Account.Country),

@@ -72,4 +72,15 @@ internal fun englishLanguage(
     Strings.Account.City -> "City"
     Strings.Account.State -> "State"
     Strings.Account.Country -> "Country"
+
+    Strings.Navigation.PromoText -> "Free shipping on orders over £50"
+    Strings.Navigation.HelpAndFaq -> "Help & FAQ"
+    Strings.Navigation.CurrencyEnUs -> "EN, $"
+    Strings.Navigation.Search -> "Search"
+    Strings.Navigation.Login -> "Login"
+    Strings.Navigation.Orders -> "Orders"
+    Strings.Navigation.Returns -> "Returns"
+    Strings.Navigation.Wishlist -> "Wishlist"
+    Strings.Navigation.Profile -> "Profile"
+    Strings.Navigation.Logout -> "Log out"
 }

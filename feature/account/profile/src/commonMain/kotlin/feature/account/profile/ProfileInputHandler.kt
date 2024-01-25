@@ -3,6 +3,7 @@ package feature.account.profile
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
+import data.GetUserProfileQuery
 import data.service.UserService
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -19,6 +20,9 @@ internal class ProfileInputHandler :
     override suspend fun InputHandlerScope<ProfileContract.Inputs, ProfileContract.Events, ProfileContract.State>.handleInput(
         input: ProfileContract.Inputs,
     ) = when (input) {
+        ProfileContract.Inputs.GetUserProfile -> handleGetUserProfile()
+        is ProfileContract.Inputs.SetUserProfile -> updateState { it.copy(originalUser = input.user) }
+
         is ProfileContract.Inputs.SetFullName -> handleSetFullName(input.fullName)
         is ProfileContract.Inputs.SetEmail -> handleSetEmail(input.email)
         is ProfileContract.Inputs.SetPhone -> handleSetPhone(input.phone)
@@ -41,6 +45,36 @@ internal class ProfileInputHandler :
         ProfileContract.Inputs.SaveAddress -> handleSaveAddress()
         is ProfileContract.Inputs.SetAddressButton ->
             updateState { it.copy(isSaveAddressButtonDisabled = input.isDisabled) }
+    }
+
+    private suspend fun ProfileInputScope.handleGetUserProfile() {
+        sideJob("handleGetUserProfile") {
+            userService.getUserProfile().fold(
+                onSuccess = {
+                    postInput(ProfileContract.Inputs.SetUserProfile(it.getUser))
+
+                    postInput(ProfileContract.Inputs.SetEmail(it.getUser.email))
+                    postInput(ProfileContract.Inputs.SetFullName(it.getUser.details.name))
+                    it.getUser.details.phone?.let { postInput(ProfileContract.Inputs.SetPhone(it)) }
+                    postInput(ProfileContract.Inputs.SetPersonalDetailsButton(isDisabled = true))
+
+                    postInput(ProfileContract.Inputs.SetPasswordButton(isDisabled = true))
+
+                    it.getUser.address.address?.let { postInput(ProfileContract.Inputs.SetAddress(it)) }
+                    it.getUser.address.additionalInfo?.let {
+                        postInput(ProfileContract.Inputs.SetAdditionalInformation(it))
+                    }
+                    it.getUser.address.postcode?.let { postInput(ProfileContract.Inputs.SetPostcode(it)) }
+                    it.getUser.address.city?.let { postInput(ProfileContract.Inputs.SetCity(it)) }
+                    it.getUser.address.state?.let { postInput(ProfileContract.Inputs.SetState(it)) }
+                    it.getUser.address.country?.let { postInput(ProfileContract.Inputs.SetCountry(it)) }
+                    postInput(ProfileContract.Inputs.SetAddressButton(isDisabled = true))
+                },
+                onFailure = {
+                    postEvent(ProfileContract.Events.OnError(it.message ?: "Error while getting user profile"))
+                },
+            )
+        }
     }
 
     private suspend fun ProfileInputScope.handleSetFullName(fullName: String) {
@@ -105,7 +139,18 @@ internal class ProfileInputHandler :
                     email = if (email != originalUser.email) email else null,
                     phone = if (phone != originalUser.details.phone) phone else null,
                 ).fold(
-                    onSuccess = {
+                    onSuccess = { data ->
+                        postInput(
+                            ProfileContract.Inputs.SetUserProfile(
+                                user = this@with.originalUser.copy(
+                                    email = data.updateUser.email,
+                                    details = GetUserProfileQuery.Details(
+                                        name = data.updateUser.details.name,
+                                        phone = data.updateUser.details.phone,
+                                    ),
+                                )
+                            )
+                        )
                         postInput(ProfileContract.Inputs.SetPersonalDetailsButton(isDisabled = true))
                     },
                     onFailure = {
@@ -145,24 +190,40 @@ internal class ProfileInputHandler :
                     isSavePasswordButtonDisabled = true,
                 )
             }
-        } ?: updateState {
-            it.copy(
-                oldPassword = oldPassword,
-                oldPasswordError = null,
-                isSavePasswordButtonDisabled = it.newPasswordError != null,
-            )
+        } ?: run {
+            if (oldPassword == getCurrentState().newPassword) {
+                updateState {
+                    it.copy(
+                        oldPassword = oldPassword,
+                        oldPasswordError = "Old password and new password cannot be the same",
+                        isSavePasswordButtonDisabled = true,
+                    )
+                }
+            } else {
+                updateState {
+                    it.copy(
+                        oldPassword = oldPassword,
+                        oldPasswordError = null,
+                        isSavePasswordButtonDisabled = it.newPasswordError != null,
+                    )
+                }
+            }
         }
     }
 
     private suspend fun ProfileInputScope.handleSavePassword() {
         with(getCurrentState()) {
             sideJob("handleSavePassword") {
-                userService.updateUser(password = newPassword).fold(
+                userService.checkPasswordMatch(oldPassword = oldPassword, newPassword = newPassword).fold(
                     onSuccess = {
-                        postInput(ProfileContract.Inputs.SetPasswordButton(isDisabled = true))
+                        if (it.checkPasswordMatch) {
+                            postInput(ProfileContract.Inputs.SetPasswordButton(isDisabled = true))
+                        } else {
+                            postEvent(ProfileContract.Events.OnError("Old password does not match"))
+                        }
                     },
                     onFailure = {
-                        postEvent(ProfileContract.Events.OnError(it.message ?: "Error while updating password"))
+                        postEvent(ProfileContract.Events.OnError(it.message ?: "Error while checking password match"))
                     },
                 )
             }
@@ -283,7 +344,23 @@ internal class ProfileInputHandler :
                     state = if (state != originalUser.address.state) state else null,
                     country = if (country != originalUser.address.country) country else null,
                 ).fold(
-                    onSuccess = { postInput(ProfileContract.Inputs.SetAddressButton(isDisabled = true)) },
+                    onSuccess = { data ->
+                        postInput(
+                            ProfileContract.Inputs.SetUserProfile(
+                                user = this@with.originalUser.copy(
+                                    address = GetUserProfileQuery.Address(
+                                        address = data.updateUser.address.address,
+                                        additionalInfo = data.updateUser.address.additionalInfo,
+                                        postcode = data.updateUser.address.postcode,
+                                        city = data.updateUser.address.city,
+                                        state = data.updateUser.address.state,
+                                        country = data.updateUser.address.country,
+                                    )
+                                )
+                            )
+                        )
+                        postInput(ProfileContract.Inputs.SetAddressButton(isDisabled = true))
+                    },
                     onFailure = {
                         postEvent(ProfileContract.Events.OnError(it.message ?: "Error while updating address"))
                     },

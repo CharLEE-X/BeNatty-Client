@@ -64,4 +64,17 @@ sealed interface Strings {
         data object State : Account
         data object Country : Account
     }
+
+    sealed interface Navigation: Strings {
+        data object PromoText : Navigation
+        data object HelpAndFaq : Navigation
+        data object CurrencyEnUs : Navigation
+        data object Search : Navigation
+        data object Login : Navigation
+        data object Orders : Navigation
+        data object Returns : Navigation
+        data object Wishlist : Navigation
+        data object Profile : Navigation
+        data object Logout : Navigation
+    }
 }

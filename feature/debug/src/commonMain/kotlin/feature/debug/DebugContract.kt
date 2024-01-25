@@ -42,9 +42,9 @@ object DebugContract {
         data object OnClearCacheClick : Inputs
         data class SetGenerateUsersTarget(val target: String) : Inputs
         data class SetUndoCount(val count: String) : Inputs
-        data object GenerateUsers : Inputs
-        data object DeleteAllUsers : Inputs
-        data object DeleteGeneratedUsers : Inputs
+//        data object GenerateUsers : Inputs
+//        data object DeleteAllUsers : Inputs
+//        data object DeleteGeneratedUsers : Inputs
         data class SetIsPremium(val isPremium: Boolean) : Inputs
 
         data object OpenAppSettings : Inputs

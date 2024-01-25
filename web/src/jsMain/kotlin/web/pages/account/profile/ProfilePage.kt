@@ -3,16 +3,16 @@ package web.pages.account.profile
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
+import com.varabyte.kobweb.compose.ui.modifiers.margin
+import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiBusiness
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEmail
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiError
@@ -28,9 +28,12 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.account.profile.ProfileContract
 import feature.account.profile.ProfileViewModel
 import org.jetbrains.compose.web.css.em
+import org.jetbrains.compose.web.css.px
 import theme.MaterialTheme
 import theme.TypeScaleTokens
 import theme.roleStyle
+import web.components.layouts.AccountLayout
+import web.components.sections.desktopNav.DesktopNavContract
 import web.compose.material3.component.Divider
 import web.compose.material3.component.FilledButton
 import web.compose.material3.component.OutlinedTextField
@@ -39,6 +42,7 @@ import web.compose.material3.component.TextFieldType
 @Composable
 fun ProfilePage(
     onError: suspend (String) -> Unit,
+    onMenuItemClicked: (DesktopNavContract.AccountMenuItem) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -49,22 +53,27 @@ fun ProfilePage(
     }
     val state by vm.observeStates().collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .gap(1.em)
+    AccountLayout(
+        item = DesktopNavContract.AccountMenuItem.PROFILE,
+        onMenuItemClicked = onMenuItemClicked,
     ) {
-        Header(
-            text = state.strings.profile,
-            style = MaterialTheme.typography.displaySmall,
-        )
-        Divider()
-        PersonalDetails(vm, state)
-        Divider()
-        Password(vm, state)
-        Divider()
-        Address(vm, state)
-        Divider()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .gap(1.em)
+        ) {
+            Header(
+                text = state.strings.profile,
+                style = MaterialTheme.typography.displaySmall,
+            )
+            Divider(modifier = Modifier.margin(top = 2.em, bottom = 1.em))
+            PersonalDetails(vm, state)
+            Divider(modifier = Modifier.margin(topBottom = 1.em))
+            Password(vm, state)
+            Divider(modifier = Modifier.margin(topBottom = 1.em))
+            Address(vm, state)
+            Divider(modifier = Modifier.margin(top = 1.em))
+        }
     }
 }
 
@@ -74,16 +83,18 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
         text = state.strings.address,
     )
     CommonTextfield(
+        value = state.address,
+        onValueChange = { vm.trySend(ProfileContract.Inputs.SetAddress(it)) },
         label = state.strings.address,
         errorMsg = state.addressError,
-        onValueChange = { vm.trySend(ProfileContract.Inputs.SetAddress(it)) },
         icon = { MdiHome() },
         modifier = Modifier.fillMaxWidth(),
     )
     CommonTextfield(
-        label = state.additionalInformation,
-        errorMsg = state.additionalInformationError,
+        value = state.additionalInformation,
         onValueChange = { vm.trySend(ProfileContract.Inputs.SetAdditionalInformation(it)) },
+        label = state.strings.additionalInformation,
+        errorMsg = state.additionalInformationError,
         icon = { MdiBusiness() },
         modifier = Modifier.fillMaxWidth(),
     )
@@ -93,16 +104,18 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
             .gap(1.em),
     ) {
         CommonTextfield(
-            label = state.postcode,
-            errorMsg = state.postcodeError,
+            value = state.postcode,
             onValueChange = { vm.trySend(ProfileContract.Inputs.SetPostcode(it)) },
+            label = state.strings.postcode,
+            errorMsg = state.postcodeError,
             icon = { MdiLocalPostOffice() },
             modifier = Modifier.weight(1f),
         )
         CommonTextfield(
-            label = state.city,
-            errorMsg = state.cityError,
+            value = state.city,
             onValueChange = { vm.trySend(ProfileContract.Inputs.SetCity(it)) },
+            label = state.strings.city,
+            errorMsg = state.cityError,
             icon = { MdiLocationCity() },
             modifier = Modifier.weight(1f)
         )
@@ -113,23 +126,26 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
             .gap(1.em),
     ) {
         CommonTextfield(
-            label = state.state,
-            errorMsg = state.stateError,
+            value = state.state,
             onValueChange = { vm.trySend(ProfileContract.Inputs.SetState(it)) },
+            label = state.strings.state,
+            errorMsg = state.stateError,
             icon = { MdiGite() },
             modifier = Modifier.weight(1f),
         )
         CommonTextfield(
-            label = state.country,
-            errorMsg = state.countryError,
+            value = state.country,
             onValueChange = { vm.trySend(ProfileContract.Inputs.SetCountry(it)) },
+            label = state.strings.country,
+            errorMsg = state.countryError,
             icon = { MdiFlag() },
             modifier = Modifier.weight(1f)
         )
     }
     SaveButton(
-        state = state,
-        onClick = { vm.trySend(ProfileContract.Inputs.SavePassword) },
+        text = state.strings.save,
+        disabled = state.isSaveAddressButtonDisabled,
+        onClick = { vm.trySend(ProfileContract.Inputs.SaveAddress) },
     )
 }
 
@@ -139,21 +155,24 @@ fun Password(vm: ProfileViewModel, state: ProfileContract.State) {
         text = state.strings.oldPassword,
     )
     CommonTextfield(
-        label = state.oldPassword,
-        errorMsg = state.oldPasswordError,
+        value = state.oldPassword,
         onValueChange = { vm.trySend(ProfileContract.Inputs.SetOldPassword(it)) },
+        label = state.strings.oldPassword,
+        errorMsg = state.oldPasswordError,
         icon = { MdiPassword() },
         modifier = Modifier.fillMaxWidth(),
     )
     CommonTextfield(
-        label = state.newPassword,
-        errorMsg = state.newPasswordError,
+        value = state.newPassword,
         onValueChange = { vm.trySend(ProfileContract.Inputs.SetNewPassword(it)) },
+        label = state.strings.newPassword,
+        errorMsg = state.newPasswordError,
         icon = { MdiPassword() },
         modifier = Modifier.fillMaxWidth(),
     )
     SaveButton(
-        state = state,
+        text = state.strings.save,
+        disabled = state.isSavePasswordButtonDisabled,
         onClick = { vm.trySend(ProfileContract.Inputs.SavePassword) },
     )
 }
@@ -164,30 +183,34 @@ private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) 
         text = state.strings.personalDetails,
     )
     CommonTextfield(
-        label = state.fullName,
-        errorMsg = state.fullNameError,
+        value = state.fullName,
         onValueChange = { vm.trySend(ProfileContract.Inputs.SetFullName(it)) },
+        label = state.strings.fullName,
+        errorMsg = state.fullNameError,
         icon = { MdiPerson() },
         modifier = Modifier.fillMaxWidth(),
     )
     CommonTextfield(
-        label = state.email,
-        errorMsg = state.emailError,
+        value = state.email,
         onValueChange = { vm.trySend(ProfileContract.Inputs.SetEmail(it)) },
+        label = state.strings.email,
+        errorMsg = state.emailError,
         icon = { MdiEmail() },
         type = TextFieldType.EMAIL,
         modifier = Modifier.fillMaxWidth(),
     )
     CommonTextfield(
-        label = state.phone,
-        errorMsg = state.phoneError,
+        value = state.phone,
         onValueChange = { vm.trySend(ProfileContract.Inputs.SetPhone(it)) },
+        label = state.strings.phone,
+        errorMsg = state.phoneError,
         icon = { MdiPhone() },
-        type = TextFieldType.NUMBER,
+        type = TextFieldType.TEXT,
         modifier = Modifier.fillMaxWidth(),
     )
     SaveButton(
-        state = state,
+        text = state.strings.save,
+        disabled = state.isSavePersonalDetailsButtonDisabled,
         onClick = { vm.trySend(ProfileContract.Inputs.SavePersonalDetails) },
     )
 }
@@ -196,36 +219,44 @@ private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) 
 private fun Header(text: String, style: TypeScaleTokens.Role = MaterialTheme.typography.headlineLarge) {
     SpanText(
         text = text,
-        modifier = Modifier.roleStyle(style)
+        modifier = Modifier
+            .roleStyle(style)
     )
 }
 
 @Composable
-private fun SaveButton(state: ProfileContract.State, onClick: () -> Unit) {
+private fun SaveButton(
+    text: String,
+    disabled: Boolean,
+    onClick: () -> Unit,
+) {
     FilledButton(
+        disabled = disabled,
         onClick = { onClick() },
+        modifier = Modifier
+            .margin(top = 1.em)
+            .width(200.px)
     ) {
-        SpanText(text = state.strings.save)
+        SpanText(
+            text = text,
+            modifier = Modifier.margin(0.5.em)
+        )
     }
 }
 
 @Composable
 private fun CommonTextfield(
     modifier: Modifier,
-    label: String,
+    value: String,
     onValueChange: (String) -> Unit,
+    label: String,
     errorMsg: String?,
     type: TextFieldType = TextFieldType.TEXT,
     icon: @Composable () -> Unit,
 ) {
-    var value by remember { mutableStateOf("") }
-
     OutlinedTextField(
         value = value,
-        onInput = {
-            value = it
-            onValueChange(it)
-        },
+        onInput = { onValueChange(it) },
         label = label,
         type = type,
         leadingIcon = { icon() },

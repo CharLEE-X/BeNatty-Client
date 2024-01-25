@@ -31,7 +31,7 @@ internal class DesktopNavInputHandler :
                 postEvent(DesktopNavContract.Events.GoToWishlist)
             }
 
-            DesktopNavContract.AccountMenuItem.ACCOUNT -> {
+            DesktopNavContract.AccountMenuItem.PROFILE -> {
                 postEvent(DesktopNavContract.Events.GoToAccount)
             }
 

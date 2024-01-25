@@ -32,6 +32,7 @@ kotlin {
         jsMain.dependencies {
             implementation(projects.components.theme)
             implementation(projects.components.material3)
+            implementation(projects.components.localization)
 
             implementation(projects.feature.debug)
             implementation(projects.feature.root)

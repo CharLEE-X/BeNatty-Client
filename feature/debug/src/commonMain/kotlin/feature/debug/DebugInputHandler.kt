@@ -39,9 +39,9 @@ internal class DebugInputHandler : KoinComponent,
         is DebugContract.Inputs.SetGenerateUsersTarget ->
             updateState { it.copy(generateUsersTarget = input.target.toInt()) }
 
-        DebugContract.Inputs.GenerateUsers -> handleGenerateUsers()
-        DebugContract.Inputs.DeleteAllUsers -> deleteAllUsers()
-        DebugContract.Inputs.DeleteGeneratedUsers -> deleteGenerateUsers()
+//        DebugContract.Inputs.GenerateUsers -> handleGenerateUsers()
+//        DebugContract.Inputs.DeleteAllUsers -> deleteAllUsers()
+//        DebugContract.Inputs.DeleteGeneratedUsers -> deleteGenerateUsers()
         DebugContract.Inputs.OnClearCacheClick -> handleCacheClear()
         is DebugContract.Inputs.SetIsPremium -> updateState { it.copy(isPremium = input.isPremium) }
         is DebugContract.Inputs.SetUndoCount -> updateState { it.copy(undoCount = input.count.toInt()) }
@@ -216,37 +216,37 @@ internal class DebugInputHandler : KoinComponent,
             )
         }
     }
-
-    private suspend fun DebugInputScope.handleGenerateUsers() {
-        val state = getCurrentState()
-        sideJob("GenerateUsers") {
-            postInput(DebugContract.Inputs.SetIsLoading(true))
-            debugService.generateUsers(state.generateUsersTarget).fold(
-                onSuccess = {
-                    val inserted = it.debugGenerateUsers.inserted
-                    postEvent(DebugContract.Events.OnGenerateUsersSuccess("Generated $inserted users"))
-                },
-                onFailure = { postEvent(DebugContract.Events.OnError(it.message ?: "Error generating users")) },
-            )
-            postInput(DebugContract.Inputs.SetIsLoading(false))
-        }
-    }
-
-    private suspend fun DebugInputScope.deleteAllUsers() {
-        sideJob("DeleteAllUsers") {
-            debugService.deleteAllUsers().fold(
-                onSuccess = { postEvent(DebugContract.Events.OnDeleteUsersSuccess("Deleted all users")) },
-                onFailure = { postEvent(DebugContract.Events.OnError(it.message ?: "Error deleting users")) },
-            )
-        }
-    }
-
-    private suspend fun DebugInputScope.deleteGenerateUsers() {
-        sideJob("DeleteGeneratedUsers") {
-            debugService.deleteGeneratedUsers().fold(
-                onSuccess = { postEvent(DebugContract.Events.OnError("Deleted generated users")) },
-                onFailure = { postEvent(DebugContract.Events.OnError(it.message ?: "Error deleting users")) },
-            )
-        }
-    }
+//
+//    private suspend fun DebugInputScope.handleGenerateUsers() {
+//        val state = getCurrentState()
+//        sideJob("GenerateUsers") {
+//            postInput(DebugContract.Inputs.SetIsLoading(true))
+//            debugService.generateUsers(state.generateUsersTarget).fold(
+//                onSuccess = {
+//                    val inserted = it.debugGenerateUsers.inserted
+//                    postEvent(DebugContract.Events.OnGenerateUsersSuccess("Generated $inserted users"))
+//                },
+//                onFailure = { postEvent(DebugContract.Events.OnError(it.message ?: "Error generating users")) },
+//            )
+//            postInput(DebugContract.Inputs.SetIsLoading(false))
+//        }
+//    }
+//
+//    private suspend fun DebugInputScope.deleteAllUsers() {
+//        sideJob("DeleteAllUsers") {
+//            debugService.deleteAllUsers().fold(
+//                onSuccess = { postEvent(DebugContract.Events.OnDeleteUsersSuccess("Deleted all users")) },
+//                onFailure = { postEvent(DebugContract.Events.OnError(it.message ?: "Error deleting users")) },
+//            )
+//        }
+//    }
+//
+//    private suspend fun DebugInputScope.deleteGenerateUsers() {
+//        sideJob("DeleteGeneratedUsers") {
+//            debugService.deleteGeneratedUsers().fold(
+//                onSuccess = { postEvent(DebugContract.Events.OnError("Deleted generated users")) },
+//                onFailure = { postEvent(DebugContract.Events.OnError(it.message ?: "Error deleting users")) },
+//            )
+//        }
+//    }
 }

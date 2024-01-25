@@ -24,6 +24,7 @@ import feature.router.RouterViewModel
 import web.components.layouts.PageLayout
 import web.components.sections.Footer
 import web.components.sections.desktopNav.DesktopNav
+import web.components.sections.desktopNav.DesktopNavContract
 import web.pages.PageNotFoundPage
 import web.pages.about.AboutPage
 import web.pages.account.order.OrderPage
@@ -302,24 +303,28 @@ fun RouterContent(
                     RouterScreen.Order -> {
                         OrderPage(
                             onError = onError,
+                            onMenuItemClicked = { router.route(it) },
                         )
                     }
 
                     RouterScreen.Profile -> {
                         ProfilePage(
                             onError = onError,
+                            onMenuItemClicked = { router.route(it) },
                         )
                     }
 
                     RouterScreen.Wishlist -> {
                         WishlistPage(
                             onError = onError,
+                            onMenuItemClicked = { router.route(it) },
                         )
                     }
 
                     RouterScreen.Returns -> {
                         ReturnsPage(
                             onError = onError,
+                            onMenuItemClicked = { router.route(it) },
                         )
                     }
 
@@ -370,6 +375,30 @@ fun RouterContent(
                 )
             }
         )
+    }
+}
+
+private fun RouterViewModel.route(item: DesktopNavContract.AccountMenuItem) {
+    when (item) {
+        DesktopNavContract.AccountMenuItem.PROFILE -> {
+            trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Profile.matcher.routeFormat))
+        }
+
+        DesktopNavContract.AccountMenuItem.ORDERS -> {
+            trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Order.matcher.routeFormat))
+        }
+
+        DesktopNavContract.AccountMenuItem.RETURNS -> {
+            trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Returns.matcher.routeFormat))
+        }
+
+        DesktopNavContract.AccountMenuItem.WISHLIST -> {
+            trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Wishlist.matcher.routeFormat))
+        }
+
+        else -> {
+            // no-op
+        }
     }
 }
 

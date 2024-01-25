@@ -39,6 +39,10 @@ class ProfileViewModel(
     ),
     coroutineScope = scope,
 ) {
+    init {
+        trySend(ProfileContract.Inputs.GetUserProfile)
+    }
+
     companion object {
         private val TAG = this::class.simpleName!!
     }
