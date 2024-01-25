@@ -1,5 +1,5 @@
-mutation Login($authInput: AuthInput!) {
-  login(authInput: $authInput) {
+mutation Login($loginInput: LoginInput!) {
+  login(loginInput: $loginInput) {
     token
     userMinimal {
       id

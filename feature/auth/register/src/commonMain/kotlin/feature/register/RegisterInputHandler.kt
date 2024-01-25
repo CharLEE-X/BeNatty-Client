@@ -128,7 +128,7 @@ internal class RegisterInputHandler :
         val state = getCurrentState()
         sideJob("handleRegistration") {
             postInput(RegisterContract.Inputs.SetIsLoading(true))
-            authService.register(state.email, state.password).fold(
+            authService.register(state.email, state.password, state.name).fold(
                 onSuccess = { postEvent(RegisterContract.Events.OnAuthenticated) },
                 onFailure = { postEvent(RegisterContract.Events.OnError(it.message ?: "Registration failed")) },
             )
@@ -138,7 +138,7 @@ internal class RegisterInputHandler :
 
     private suspend fun RegisterInputScope.registerDefaultUser() {
         sideJob("handleLogin") {
-            authService.register("test@test.com", "P@ss1234").fold(
+            authService.register("test@test.com", "P@ss1234", "Adrian").fold(
                 onSuccess = { postEvent(RegisterContract.Events.OnAuthenticated) },
                 onFailure = { postEvent(RegisterContract.Events.OnError(it.message ?: "Login failed")) },
             )

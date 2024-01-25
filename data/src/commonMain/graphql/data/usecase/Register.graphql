@@ -1,5 +1,5 @@
-mutation Register($authInput: AuthInput!) {
-  register(authInput: $authInput) {
+mutation Register($registerInput: RegisterInput!) {
+  register(registerInput: $registerInput) {
     token
     userMinimal {
       id

@@ -55,8 +55,9 @@ apollo {
         generateFragmentImplementations.set(true)
 
         introspection {
+            println("serverUrlGraphQl: $serverUrlGraphQl")
             endpointUrl.set(serverUrlGraphQl)
-            schemaFile.set(file("src/commonMain/graphql/$packageName/schema.json"))
+            schemaFile.set(file("src/commonMain/graphql/${packageName.get()}/schema.json"))
         }
     }
 }

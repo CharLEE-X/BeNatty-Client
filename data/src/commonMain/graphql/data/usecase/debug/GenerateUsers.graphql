@@ -1,7 +1,0 @@
-query GenerateUsers($target: Int!) {
-  debugGenerateUsers(target: $target) {
-    before
-    after
-    inserted
-  }
-}

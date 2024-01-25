@@ -8,7 +8,8 @@ import com.russhwolf.settings.nullableString
 import data.ForgotPasswordQuery
 import data.LoginMutation
 import data.RegisterMutation
-import data.type.AuthInput
+import data.type.LoginInput
+import data.type.RegisterInput
 import data.utils.handle
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
@@ -21,7 +22,7 @@ import kotlinx.coroutines.isActive
 interface AuthService {
     var userId: String?
     suspend fun login(email: String, password: String): Result<LoginMutation.Data>
-    suspend fun register(email: String, password: String): Result<RegisterMutation.Data>
+    suspend fun register(email: String, password: String, name: String): Result<RegisterMutation.Data>
     suspend fun forgotPassword(email: String): Result<ForgotPasswordQuery.Data>
     suspend fun signOut()
     fun checkAuth(): Boolean
@@ -37,14 +38,14 @@ internal class AuthServiceImpl(
     private var token by settings.nullableString()
 
     override suspend fun login(email: String, password: String): Result<LoginMutation.Data> {
-        val authInput = AuthInput(email = email, password = password)
+        val authInput = LoginInput(email = email, password = password)
         return apolloClient.mutation(LoginMutation(authInput)).handle {
             saveData(it.login.userMinimal.id.toString(), it.login.token)
         }
     }
 
-    override suspend fun register(email: String, password: String): Result<RegisterMutation.Data> {
-        val authInput = AuthInput(email = email, password = password)
+    override suspend fun register(email: String, password: String, name: String): Result<RegisterMutation.Data> {
+        val authInput = RegisterInput(email = email, password = password, name = name)
         return apolloClient.mutation(RegisterMutation(authInput)).handle {
             saveData(it.register.userMinimal.id.toString(), it.register.token)
         }

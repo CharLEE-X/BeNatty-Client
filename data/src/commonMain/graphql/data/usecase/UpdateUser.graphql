@@ -1,11 +1,30 @@
-mutation UpdateUser($userUpdateInput: UserUpdateInput, $profileUpdateInput: ProfileUpdateInput) {
-  updateUser(userUpdateInput: $userUpdateInput, profileUpdateInput: $profileUpdateInput) {
-    email
+mutation UpdateUser(
+  $userUpdateInput: UserUpdateInput,
+  $personalDetailsUpdateInput: PersonalDetailsUpdateInput,
+  $addressUpdateInput: AddressUpdateInput
+) {
+  updateUser(
+    userUpdateInput: $userUpdateInput,
+    personalDetailsUpdateInput: $personalDetailsUpdateInput,
+    addressUpdateInput: $addressUpdateInput
+  ) {
     id
-    profile {
-      bio
-      pictures
+    email
+    details {
+      name
+      phone
     }
+    address {
+      address
+      additionalInfo
+      postcode
+      city
+      state
+      country
+    }
+    wishlist
+    emailVerified
+    recentlyViewed
     updatedAt
   }
 }

@@ -1,10 +1,28 @@
 package feature.account.profile
 
 import component.localization.getString
+import data.GetUserProfileQuery
 import org.koin.core.component.KoinComponent
 
 object ProfileContract : KoinComponent {
     data class State(
+        val originalUser: GetUserProfileQuery.GetUser = GetUserProfileQuery.GetUser(
+            id = "",
+            email = "",
+            details = GetUserProfileQuery.Details(
+                name = "",
+                phone = "",
+            ),
+            address = GetUserProfileQuery.Address(
+                address = "",
+                additionalInfo = "",
+                postcode = "",
+                city = "",
+                state = "",
+                country = "",
+            ),
+            __typename = "",
+        ),
         val fullName: String = "",
         val fullNameError: String? = null,
         val email: String = "",
@@ -41,10 +59,12 @@ object ProfileContract : KoinComponent {
         data class SetEmail(val email: String) : Inputs
         data class SetPhone(val phone: String) : Inputs
         data object SavePersonalDetails : Inputs
+        data class SetPersonalDetailsButton(val isDisabled: Boolean) : Inputs
 
         data class SetOldPassword(val oldPassword: String) : Inputs
         data class SetNewPassword(val newPassword: String) : Inputs
         data object SavePassword : Inputs
+        data class SetPasswordButton(val isDisabled: Boolean) : Inputs
 
         data class SetAddress(val address: String) : Inputs
         data class SetAdditionalInformation(val additionalInformation: String) : Inputs
@@ -53,6 +73,7 @@ object ProfileContract : KoinComponent {
         data class SetState(val state: String) : Inputs
         data class SetCountry(val country: String) : Inputs
         data object SaveAddress : Inputs
+        data class SetAddressButton(val isDisabled: Boolean) : Inputs
     }
 
     sealed interface Events {

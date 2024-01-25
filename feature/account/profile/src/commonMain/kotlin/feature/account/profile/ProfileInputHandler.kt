@@ -23,10 +23,14 @@ internal class ProfileInputHandler :
         is ProfileContract.Inputs.SetEmail -> handleSetEmail(input.email)
         is ProfileContract.Inputs.SetPhone -> handleSetPhone(input.phone)
         ProfileContract.Inputs.SavePersonalDetails -> handleSavePersonalDetails()
+        is ProfileContract.Inputs.SetPersonalDetailsButton ->
+            updateState { it.copy(isSavePersonalDetailsButtonDisabled = input.isDisabled) }
 
         is ProfileContract.Inputs.SetOldPassword -> handleSetOldPassword(input.oldPassword)
         is ProfileContract.Inputs.SetNewPassword -> handleSetNewPassword(input.newPassword)
         ProfileContract.Inputs.SavePassword -> handleSavePassword()
+        is ProfileContract.Inputs.SetPasswordButton ->
+            updateState { it.copy(isSavePasswordButtonDisabled = input.isDisabled) }
 
         is ProfileContract.Inputs.SetAddress -> handleSetAddress(input.address)
         is ProfileContract.Inputs.SetCity -> handleSetCity(input.city)
@@ -35,6 +39,8 @@ internal class ProfileInputHandler :
         is ProfileContract.Inputs.SetPostcode -> handleSetPostcode(input.postcode)
         is ProfileContract.Inputs.SetState -> handleSetState(input.state)
         ProfileContract.Inputs.SaveAddress -> handleSaveAddress()
+        is ProfileContract.Inputs.SetAddressButton ->
+            updateState { it.copy(isSaveAddressButtonDisabled = input.isDisabled) }
     }
 
     private suspend fun ProfileInputScope.handleSetFullName(fullName: String) {
@@ -92,7 +98,24 @@ internal class ProfileInputHandler :
     }
 
     private suspend fun ProfileInputScope.handleSavePersonalDetails() {
-        updateState { it.copy(isSavePersonalDetailsButtonDisabled = true) }
+        with(getCurrentState()) {
+            sideJob("handleSavePersonalDetails") {
+                userService.updateUser(
+                    name = if (fullName != originalUser.details.name) fullName else null,
+                    email = if (email != originalUser.email) email else null,
+                    phone = if (phone != originalUser.details.phone) phone else null,
+                ).fold(
+                    onSuccess = {
+                        postInput(ProfileContract.Inputs.SetPersonalDetailsButton(isDisabled = true))
+                    },
+                    onFailure = {
+                        postEvent(
+                            ProfileContract.Events.OnError(it.message ?: "Error while updating personal details")
+                        )
+                    },
+                )
+            }
+        }
     }
 
     private suspend fun ProfileInputScope.handleSetNewPassword(newPassword: String) {
@@ -132,10 +155,17 @@ internal class ProfileInputHandler :
     }
 
     private suspend fun ProfileInputScope.handleSavePassword() {
-        updateState {
-            it.copy(
-                isSavePasswordButtonDisabled = true,
-            )
+        with(getCurrentState()) {
+            sideJob("handleSavePassword") {
+                userService.updateUser(password = newPassword).fold(
+                    onSuccess = {
+                        postInput(ProfileContract.Inputs.SetPasswordButton(isDisabled = true))
+                    },
+                    onFailure = {
+                        postEvent(ProfileContract.Events.OnError(it.message ?: "Error while updating password"))
+                    },
+                )
+            }
         }
     }
 
@@ -243,6 +273,22 @@ internal class ProfileInputHandler :
     }
 
     private suspend fun ProfileInputScope.handleSaveAddress() {
-        updateState { it.copy(isSaveAddressButtonDisabled = true) }
+        with(getCurrentState()) {
+            sideJob("handleSaveAddress") {
+                userService.updateUser(
+                    address = if (address != originalUser.address.address) address else null,
+                    additionalInfo = if (additionalInformation != originalUser.address.additionalInfo) additionalInformation else null,
+                    city = if (city != originalUser.address.city) city else null,
+                    postcode = if (postcode != originalUser.address.postcode) postcode else null,
+                    state = if (state != originalUser.address.state) state else null,
+                    country = if (country != originalUser.address.country) country else null,
+                ).fold(
+                    onSuccess = { postInput(ProfileContract.Inputs.SetAddressButton(isDisabled = true)) },
+                    onFailure = {
+                        postEvent(ProfileContract.Events.OnError(it.message ?: "Error while updating address"))
+                    },
+                )
+            }
+        }
     }
 }
