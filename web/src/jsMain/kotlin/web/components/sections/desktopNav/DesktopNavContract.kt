@@ -23,16 +23,16 @@ object DesktopNavContract : KoinComponent {
     }
 
     object Strings {
-        val promoText = getString(component.localization.Strings.Navigation.PromoText)
-        val helpAndFaq = getString(component.localization.Strings.Navigation.HelpAndFaq)
-        val currencyEnUs = getString(component.localization.Strings.Navigation.CurrencyEnUs)
-        val search = getString(component.localization.Strings.Navigation.Search)
-        val login = getString(component.localization.Strings.Navigation.Login)
-        val orders = getString(component.localization.Strings.Navigation.Orders)
-        val returns = getString(component.localization.Strings.Navigation.Returns)
-        val wishlist = getString(component.localization.Strings.Navigation.Wishlist)
-        val profile = getString(component.localization.Strings.Navigation.Profile)
-        val logout = getString(component.localization.Strings.Navigation.Logout)
+        val promoText = getString(component.localization.Strings.PromoText)
+        val helpAndFaq = getString(component.localization.Strings.HelpAndFaq)
+        val currencyEnUs = getString(component.localization.Strings.CurrencyEnUs)
+        val search = getString(component.localization.Strings.Search)
+        val login = getString(component.localization.Strings.Login)
+        val orders = getString(component.localization.Strings.Orders)
+        val returns = getString(component.localization.Strings.Returns)
+        val wishlist = getString(component.localization.Strings.Wishlist)
+        val profile = getString(component.localization.Strings.Profile)
+        val logout = getString(component.localization.Strings.Logout)
     }
 
     enum class AccountMenuItem {

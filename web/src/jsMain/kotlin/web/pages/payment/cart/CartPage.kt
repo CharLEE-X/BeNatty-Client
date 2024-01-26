@@ -1,4 +1,4 @@
-package web.pages.checkout
+package web.pages.payment.cart
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -10,9 +10,9 @@ import com.varabyte.kobweb.silk.components.forms.Button
 import com.varabyte.kobweb.silk.components.text.SpanText
 
 @Composable
-fun CheckoutPage(
+fun CartPage(
     goBack: () -> Unit,
-    goToPayment: () -> Unit,
+    goToCheckout: () -> Unit,
     onError: suspend (String) -> Unit,
 ) {
     Box(
@@ -23,16 +23,16 @@ fun CheckoutPage(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            SpanText("Checkout")
+            SpanText("Cart")
             Button(
                 onClick = { goBack() }
             ) {
                 SpanText("Go Back")
             }
             Button(
-                onClick = { goToPayment() }
+                onClick = { goToCheckout() }
             ) {
-                SpanText("Go net to payment")
+                SpanText("Go Next")
             }
         }
     }

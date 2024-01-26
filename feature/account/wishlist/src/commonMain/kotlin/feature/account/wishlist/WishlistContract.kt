@@ -6,7 +6,7 @@ import org.koin.core.component.KoinComponent
 object WishlistContract : KoinComponent {
     data class State(
         val strings: Strings = Strings(
-            signUp = getString(component.localization.Strings.Auth.SignUp),
+            signUp = getString(component.localization.Strings.SignUp),
         )
     )
 

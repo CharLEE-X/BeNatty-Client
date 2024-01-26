@@ -8,6 +8,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.coroutines.core)
+            implementation(libs.kotlin.datetime)
         }
 
         androidMain.dependencies {

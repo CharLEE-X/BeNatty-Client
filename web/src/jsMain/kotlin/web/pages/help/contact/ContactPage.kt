@@ -1,4 +1,4 @@
-package web.pages.about
+package web.pages.help.contact
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -8,7 +8,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.silk.components.text.SpanText
 
 @Composable
-fun AboutPage(
+fun ContactPage(
     onError: suspend (String) -> Unit,
 ) {
     Box(
@@ -16,6 +16,6 @@ fun AboutPage(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        SpanText("About")
+        SpanText("ContactPage")
     }
 }

@@ -34,12 +34,12 @@ object ForgotPasswordContract : KoinComponent {
     }
 
     data class Strings(
-        val forgotPassword: String = getString(component.localization.Strings.Auth.ForgotPassword),
-        val forgotPasswordDescription: String = getString(component.localization.Strings.Auth.ForgotPasswordDescription),
-        val email: String = getString(component.localization.Strings.Auth.Email),
-        val getResetLink: String = getString(component.localization.Strings.Auth.GetResetLink),
-        val backTo: String = getString(component.localization.Strings.Auth.BackTo),
-        val login: String = getString(component.localization.Strings.Auth.Login),
+        val forgotPassword: String = getString(component.localization.Strings.ForgotPassword),
+        val forgotPasswordDescription: String = getString(component.localization.Strings.ForgotPasswordDescription),
+        val email: String = getString(component.localization.Strings.Email),
+        val getResetLink: String = getString(component.localization.Strings.GetResetLink),
+        val backTo: String = getString(component.localization.Strings.BackTo),
+        val login: String = getString(component.localization.Strings.Login),
         val checkEmail: String = "Check your email",
         val checkEmailDescription: String = "We have sent a password reset link to",
         val openGmail: String = "Open Gmail",

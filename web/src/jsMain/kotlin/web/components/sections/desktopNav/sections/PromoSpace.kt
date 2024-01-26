@@ -6,15 +6,12 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontSize
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.padding
-import com.varabyte.kobweb.silk.components.graphics.Image
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiArrowDropDown
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiLocalShipping
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.CSSColorValue
@@ -24,6 +21,7 @@ import org.jetbrains.compose.web.css.px
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.sections.desktopNav.DesktopNavContract
+import web.components.widgets.CurrencyDropdown
 
 @Composable
 fun PromoSpace(
@@ -72,25 +70,12 @@ fun PromoSpace(
                         .roleStyle(MaterialTheme.typography.labelLarge)
                 )
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .gap(6.px)
-                        .onClick { onCurrentAndLanguageClick() },
-                ) {
-                    Image(
-                        src = currentLanguageImageUrl,
-                        alt = DesktopNavContract.Strings.currencyEnUs,
-                        width = 16,
-                        height = 16,
-                        modifier = Modifier.borderRadius(50.percent),
-                    )
-                    SpanText(
-                        text = DesktopNavContract.Strings.currencyEnUs,
-                        modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
-                    )
-                    MdiArrowDropDown()
-                }
+                CurrencyDropdown(
+                    countryText = DesktopNavContract.Strings.currencyEnUs,
+                    countryImageUrl = currentLanguageImageUrl,
+                    countryImageAlt = DesktopNavContract.Strings.currencyEnUs,
+                    onClick = onCurrentAndLanguageClick
+                )
             }
         }
     }

@@ -116,7 +116,7 @@ fun DesktopNav(
 }
 
 @Composable
-private fun RoundedBgSeparator(
+fun RoundedBgSeparator(
     height: CSSSizeValue<CSSUnit.em> = 2.em,
     fromColor: CSSColorValue,
     toColor: CSSColorValue,

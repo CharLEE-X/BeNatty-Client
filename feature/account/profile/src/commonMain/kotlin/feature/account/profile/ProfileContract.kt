@@ -84,19 +84,19 @@ object ProfileContract : KoinComponent {
     }
 
     data class Strings(
-        val fullName: String = getString(component.localization.Strings.Auth.FullName),
-        val email: String = getString(component.localization.Strings.Auth.Email),
-        val phone: String = getString(component.localization.Strings.Account.Phone),
+        val fullName: String = getString(component.localization.Strings.FullName),
+        val email: String = getString(component.localization.Strings.Email),
+        val phone: String = getString(component.localization.Strings.Phone),
         val save: String = getString(component.localization.Strings.Save),
-        val personalDetails: String = getString(component.localization.Strings.Account.PersonalDetails),
-        val profile: String = getString(component.localization.Strings.Account.Profile),
-        val oldPassword: String = getString(component.localization.Strings.Account.OldPassword),
-        val newPassword: String = getString(component.localization.Strings.Account.NewPassword),
-        val address: String = getString(component.localization.Strings.Account.Address),
-        val additionalInformation: String = getString(component.localization.Strings.Account.AdditionalInformation),
-        val postcode: String = getString(component.localization.Strings.Account.PostalCode),
-        val city: String = getString(component.localization.Strings.Account.City),
-        val state: String = getString(component.localization.Strings.Account.State),
-        val country: String = getString(component.localization.Strings.Account.Country),
+        val personalDetails: String = getString(component.localization.Strings.PersonalDetails),
+        val profile: String = getString(component.localization.Strings.Profile),
+        val oldPassword: String = getString(component.localization.Strings.OldPassword),
+        val newPassword: String = getString(component.localization.Strings.NewPassword),
+        val address: String = getString(component.localization.Strings.Address),
+        val additionalInformation: String = getString(component.localization.Strings.AdditionalInformation),
+        val postcode: String = getString(component.localization.Strings.PostalCode),
+        val city: String = getString(component.localization.Strings.City),
+        val state: String = getString(component.localization.Strings.State),
+        val country: String = getString(component.localization.Strings.Country),
     )
 }

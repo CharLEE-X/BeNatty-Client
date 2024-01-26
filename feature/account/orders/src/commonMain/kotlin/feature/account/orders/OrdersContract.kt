@@ -16,6 +16,6 @@ object OrdersContract {
     }
 
     data class Strings(
-        val fullName: String = getString(component.localization.Strings.Auth.FullName),
+        val fullName: String = getString(component.localization.Strings.FullName),
     )
 }

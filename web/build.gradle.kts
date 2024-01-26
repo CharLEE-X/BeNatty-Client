@@ -30,6 +30,7 @@ kotlin {
 
     sourceSets {
         jsMain.dependencies {
+            implementation(projects.components.core)
             implementation(projects.components.theme)
             implementation(projects.components.material3)
             implementation(projects.components.localization)
@@ -59,6 +60,8 @@ kotlin {
             implementation(libs.ballast.navigation)
 
             implementation(libs.koin.core)
+            implementation(libs.kotlin.datetime)
+            implementation(npm("@js-joda/timezone", "2.3.0"))
         }
     }
 }

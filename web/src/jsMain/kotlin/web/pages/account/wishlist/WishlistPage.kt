@@ -29,7 +29,7 @@ fun WishlistPage(
     val state by vm.observeStates().collectAsState()
 
     AccountLayout(
-        item = DesktopNavContract.AccountMenuItem.PROFILE,
+        item = DesktopNavContract.AccountMenuItem.WISHLIST,
         onMenuItemClicked = onMenuItemClicked,
     ) {
         Box(

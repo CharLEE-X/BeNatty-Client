@@ -16,17 +16,15 @@ import com.copperleaf.ballast.navigation.routing.directions
 import com.copperleaf.ballast.navigation.routing.pathParameter
 import com.copperleaf.ballast.navigation.routing.renderCurrentDestination
 import com.copperleaf.ballast.navigation.routing.stringPath
-import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
-import com.varabyte.kobweb.compose.ui.modifiers.gridRow
 import feature.router.RouterScreen
 import feature.router.RouterViewModel
 import web.components.layouts.PageLayout
-import web.components.sections.Footer
 import web.components.sections.desktopNav.DesktopNav
 import web.components.sections.desktopNav.DesktopNavContract
+import web.components.sections.footer.Footer
 import web.pages.PageNotFoundPage
-import web.pages.about.AboutPage
+import web.pages.account.TrackOrderPage
+import web.pages.account.favorites.FavoritesPage
 import web.pages.account.order.OrderPage
 import web.pages.account.profile.ProfilePage
 import web.pages.account.returns.ReturnsPage
@@ -36,15 +34,22 @@ import web.pages.auth.LoginPage
 import web.pages.auth.RegisterPage
 import web.pages.auth.UpdatePasswordPage
 import web.pages.blog.BlogPage
-import web.pages.cart.CartPage
-import web.pages.catalogue.CataloguePage
-import web.pages.checkout.CheckoutPage
-import web.pages.contact.ContactPage
-import web.pages.favorites.FavoritesPage
-import web.pages.help.HelpPage
+import web.pages.help.AccessibilityPage
+import web.pages.help.CareerPage
+import web.pages.help.CyberSecurityPage
+import web.pages.help.HelpAndFAQPage
+import web.pages.help.PressPage
+import web.pages.help.PrivacyPolicyPage
+import web.pages.help.ShippingPage
+import web.pages.help.TermsOfServicePage
+import web.pages.help.about.AboutPage
+import web.pages.help.contact.ContactPage
 import web.pages.home.HomeContent
 import web.pages.payment.PaymentPage
+import web.pages.payment.cart.CartPage
+import web.pages.payment.checkout.CheckoutPage
 import web.pages.product.ProductPage
+import web.pages.product.catalogue.CataloguePage
 import web.pages.settings.SettingsPage
 
 @Composable
@@ -126,7 +131,7 @@ fun RouterContent(
                     onHelpAndFaqUrlClick = {
                         currentCategory = null
                         currentCategoryFilter = null
-                        router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Help.matcher.routeFormat))
+                        router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.HelpAndFAQ.matcher.routeFormat))
                     },
                     onCurrencyAndLanguageClick = {
                         // TODO: Show lang and currency chooser
@@ -165,7 +170,45 @@ fun RouterContent(
                 routerState.currentRouteOrNull?.matcher != RouterScreen.Login.matcher ||
                 routerState.currentRouteOrNull?.matcher != RouterScreen.Register.matcher
             ) {
-                Footer(modifier = Modifier.fillMaxWidth().gridRow(2))
+                Footer(
+                    onError = onError,
+                    goToAboutUs = {
+                        router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.About.matcher.routeFormat))
+                    },
+                    goToAccessibility = {
+                        router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Accessibility.matcher.routeFormat))
+                    },
+                    goToCareer = {
+                        router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Career.matcher.routeFormat))
+                    },
+                    goToContactUs = {
+                        router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Contact.matcher.routeFormat))
+                    },
+                    goToCyberSecurity = {
+                        router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.CyberSecurity.matcher.routeFormat))
+                    },
+                    goToFAQs = {
+                        router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.HelpAndFAQ.matcher.routeFormat))
+                    },
+                    goToPress = {
+                        router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Press.matcher.routeFormat))
+                    },
+                    goToPrivacyPolicy = {
+                        router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.PrivacyPolicy.matcher.routeFormat))
+                    },
+                    goToReturns = {
+                        router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Returns.matcher.routeFormat))
+                    },
+                    goToShipping = {
+                        router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Shipping.matcher.routeFormat))
+                    },
+                    goToTermsOfService = {
+                        router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.TC.matcher.routeFormat))
+                    },
+                    goToTrackOrder = {
+                        router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.TrackOrder.matcher.routeFormat))
+                    },
+                )
             }
         },
     ) {
@@ -346,8 +389,8 @@ fun RouterContent(
                         )
                     }
 
-                    RouterScreen.Help -> {
-                        HelpPage(
+                    RouterScreen.HelpAndFAQ -> {
+                        HelpAndFAQPage(
                             onError = onError,
                         )
                     }
@@ -364,8 +407,14 @@ fun RouterContent(
                         )
                     }
 
-                    RouterScreen.PrivacyPolicy -> TODO()
-                    RouterScreen.TC -> TODO()
+                    RouterScreen.PrivacyPolicy -> PrivacyPolicyPage()
+                    RouterScreen.TC -> TermsOfServicePage()
+                    RouterScreen.TrackOrder -> TrackOrderPage()
+                    RouterScreen.Shipping -> ShippingPage()
+                    RouterScreen.Career -> CareerPage()
+                    RouterScreen.CyberSecurity -> CyberSecurityPage()
+                    RouterScreen.Accessibility -> AccessibilityPage()
+                    RouterScreen.Press -> PressPage()
                 }
             },
             notFound = { url ->
@@ -417,7 +466,7 @@ private fun RouterScreen.pageTitle(shopName: String = "Natalia's Shop"): String 
         RouterScreen.Settings -> "Settings"
         RouterScreen.About -> "About"
         RouterScreen.Contact -> "Contact"
-        RouterScreen.Help -> "Help"
+        RouterScreen.HelpAndFAQ -> "Help"
         RouterScreen.Favorites -> "Favorites"
         RouterScreen.Blog -> "Blog"
         RouterScreen.Register -> "Register"
@@ -427,6 +476,12 @@ private fun RouterScreen.pageTitle(shopName: String = "Natalia's Shop"): String 
         RouterScreen.TC -> "Terms and Conditions"
         RouterScreen.Wishlist -> "Wishlist"
         RouterScreen.Returns -> "Returns"
+        RouterScreen.TrackOrder -> "Track Order"
+        RouterScreen.Shipping -> "Shipping"
+        RouterScreen.Career -> "Career"
+        RouterScreen.CyberSecurity -> "Cyber Security"
+        RouterScreen.Accessibility -> "Accessibility"
+        RouterScreen.Press -> "Press"
     }
     return "$shopName - $title"
 }

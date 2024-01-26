@@ -29,7 +29,7 @@ fun ReturnsPage(
     val state by vm.observeStates().collectAsState()
 
     AccountLayout(
-        item = DesktopNavContract.AccountMenuItem.PROFILE,
+        item = DesktopNavContract.AccountMenuItem.RETURNS,
         onMenuItemClicked = onMenuItemClicked,
     ) {
         Box(

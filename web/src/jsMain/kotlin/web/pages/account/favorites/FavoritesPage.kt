@@ -1,4 +1,4 @@
-package web.pages.favorites
+package web.pages.account.favorites
 
 import androidx.compose.runtime.Composable
 import theme.appDarkColorScheme

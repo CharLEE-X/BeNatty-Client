@@ -32,7 +32,7 @@ fun OrderPage(
     val state by vm.observeStates().collectAsState()
 
     AccountLayout(
-        item = DesktopNavContract.AccountMenuItem.PROFILE,
+        item = DesktopNavContract.AccountMenuItem.ORDERS,
         onMenuItemClicked = onMenuItemClicked,
     ) {
         Column(

@@ -8,14 +8,12 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.silk.components.text.SpanText
 
 @Composable
-fun HelpPage(
-    onError: suspend (String) -> Unit,
-) {
+fun CareerPage() {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
     ) {
-        SpanText("HelpPage")
+        SpanText("CareerPage")
     }
 }

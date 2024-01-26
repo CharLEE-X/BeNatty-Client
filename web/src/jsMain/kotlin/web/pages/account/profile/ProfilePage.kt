@@ -72,7 +72,6 @@ fun ProfilePage(
             Password(vm, state)
             Divider(modifier = Modifier.margin(topBottom = 1.em))
             Address(vm, state)
-            Divider(modifier = Modifier.margin(top = 1.em))
         }
     }
 }
