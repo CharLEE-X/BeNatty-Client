@@ -3,8 +3,10 @@ package feature.account.profile
 import com.copperleaf.ballast.BallastViewModelConfiguration
 import com.copperleaf.ballast.build
 import com.copperleaf.ballast.core.BasicViewModel
+import com.copperleaf.ballast.core.LoggingInterceptor
 import com.copperleaf.ballast.core.PrintlnLogger
 import com.copperleaf.ballast.dispatchers
+import com.copperleaf.ballast.plusAssign
 import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +21,7 @@ class ProfileViewModel(
     >(
     config = BallastViewModelConfiguration.Builder()
         .apply {
-//            this += LoggingInterceptor()
+            this += LoggingInterceptor()
             logger = { PrintlnLogger() }
         }
         .withViewModel(

@@ -4,8 +4,8 @@ interface InputValidator {
     fun validateEmail(email: String): String?
     fun validatePassword(password: String): String?
     fun validateRepeatPassword(password: String, repeatPassword: String): String?
-    fun validateText(text: String, length: Int): String?
-    fun validatePhone(phone: String): String?
+    fun validateText(text: String, length: Int = 2): String?
+    fun validatePhone(phone: String, length: Int = 8): String?
 }
 
 internal class InputValidatorImpl : InputValidator {
@@ -41,10 +41,10 @@ internal class InputValidatorImpl : InputValidator {
         }
     }
 
-    override fun validatePhone(phone: String): String? {
+    override fun validatePhone(phone: String, length: Int): String? {
         return when {
             phone.isBlank() -> "Phone cannot be empty"
-            phone.length < 8 -> "Phone must be at least 8 characters"
+            phone.length < length -> "Phone must be at least 8 characters"
             else -> null
         }
     }

@@ -344,7 +344,7 @@ fun RouterContent(
                     }
 
                     RouterScreen.Order -> AccountLayout(
-                        item = DesktopNavContract.AccountMenuItem.PROFILE,
+                        item = DesktopNavContract.AccountMenuItem.ORDERS,
                         onMenuItemClicked = { router.route(it) },
                     ) {
                         OrderPage(onError = onError)
@@ -358,14 +358,14 @@ fun RouterContent(
                     }
 
                     RouterScreen.Wishlist -> AccountLayout(
-                        item = DesktopNavContract.AccountMenuItem.PROFILE,
+                        item = DesktopNavContract.AccountMenuItem.WISHLIST,
                         onMenuItemClicked = { router.route(it) },
                     ) {
                         WishlistPage(onError = onError)
                     }
 
                     RouterScreen.Returns -> AccountLayout(
-                        item = DesktopNavContract.AccountMenuItem.PROFILE,
+                        item = DesktopNavContract.AccountMenuItem.RETURNS,
                         onMenuItemClicked = { router.route(it) },
                     ) {
                         ReturnsPage(onError = onError)

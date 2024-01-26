@@ -5,6 +5,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
+import org.jetbrains.compose.web.attributes.AutoComplete
 import org.jetbrains.compose.web.dom.Span
 import web.compose.material3.common.MdTagElement
 import web.compose.material3.common.jsRequire
@@ -27,6 +28,7 @@ fun MdTextFieldTagElement(
     hasLeadingIcon: Boolean,
     hasTrailingIcon: Boolean,
     type: TextFieldType,
+    autoComplete: AutoComplete?,
     required: Boolean,
     disabled: Boolean,
     error: Boolean,
@@ -45,9 +47,7 @@ fun MdTextFieldTagElement(
     readOnly: Boolean,
     multiple: Boolean,
     step: String?,
-    autocomplete: String?,
     modifier: Modifier,
-    content: @Composable () -> Unit
 ) {
     MdTagElement(
         tagName = tagName,
@@ -84,7 +84,7 @@ fun MdTextFieldTagElement(
                 if (readOnly) attr("readOnly", "")
                 if (multiple) attr("multiple", "")
                 step?.let { attr("step", it) }
-                autocomplete?.let { attr("autocomplete", it) }
+                autoComplete?.let { attr("autocomplete", it.toString()) }
 
                 addEventListener("input") {
                     onInput(it.nativeEvent.target.asDynamic().value.unsafeCast<String>())
@@ -123,6 +123,7 @@ fun FilledTextField(
     outlineColor: Color.Rgb? = null,
     inputTextColor: Color.Rgb? = null,
     type: TextFieldType = TextFieldType.TEXT,
+    autoComplete: AutoComplete = AutoComplete.off,
     required: Boolean = false,
     disabled: Boolean = false,
     error: Boolean = false,
@@ -161,6 +162,7 @@ fun FilledTextField(
         outlineColor = outlineColor,
         inputTextColor = inputTextColor,
         type = type,
+        autoComplete = autoComplete,
         required = required,
         disabled = disabled,
         error = error,
@@ -179,9 +181,7 @@ fun FilledTextField(
         readOnly = readOnly,
         multiple = multiple,
         step = step,
-        autocomplete = autocomplete,
         modifier = modifier,
-        content = content
     ).also { jsRequire("@material/web/textfield/filled-text-field.js") }
 }
 
@@ -200,6 +200,7 @@ fun OutlinedTextField(
     outlineColor: Color.Rgb? = null,
     inputTextColor: Color.Rgb? = null,
     type: TextFieldType = TextFieldType.TEXT,
+    autoComplete: AutoComplete = AutoComplete.off,
     required: Boolean = false,
     disabled: Boolean = false,
     error: Boolean = false,
@@ -218,9 +219,7 @@ fun OutlinedTextField(
     readOnly: Boolean = false,
     multiple: Boolean = false,
     step: String? = null,
-    autocomplete: String? = null,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit = {}
 ) {
     MdTextFieldTagElement(
         tagName = "md-outlined-text-field",
@@ -236,6 +235,7 @@ fun OutlinedTextField(
         outlineColor = outlineColor,
         inputTextColor = inputTextColor,
         type = type,
+        autoComplete = autoComplete,
         required = required,
         disabled = disabled,
         error = error,
@@ -254,8 +254,6 @@ fun OutlinedTextField(
         readOnly = readOnly,
         multiple = multiple,
         step = step,
-        autocomplete = autocomplete,
         modifier = modifier,
-        content = content
     ).also { jsRequire("@material/web/textfield/outlined-text-field.js") }
 }
