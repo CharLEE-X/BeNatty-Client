@@ -17,7 +17,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
@@ -43,8 +42,8 @@ fun AccountLayout(
     content: @Composable () -> Unit,
 ) {
     Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
+        contentAlignment = Alignment.TopCenter,
+        modifier = Modifier.fillMaxWidth()
     ) {
         Row(
             modifier = Modifier
@@ -56,7 +55,14 @@ fun AccountLayout(
                 onMenuItemClicked = onMenuItemClicked,
                 modifier = Modifier.width(15.em)
             )
-            content()
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .gap(1.em)
+                    .padding(top = 0.5.em)
+            ) {
+                content()
+            }
         }
     }
 }

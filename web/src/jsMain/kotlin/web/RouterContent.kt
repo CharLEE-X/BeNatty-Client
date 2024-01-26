@@ -18,13 +18,13 @@ import com.copperleaf.ballast.navigation.routing.renderCurrentDestination
 import com.copperleaf.ballast.navigation.routing.stringPath
 import feature.router.RouterScreen
 import feature.router.RouterViewModel
+import web.components.layouts.AccountLayout
 import web.components.layouts.PageLayout
 import web.components.sections.desktopNav.DesktopNav
 import web.components.sections.desktopNav.DesktopNavContract
 import web.components.sections.footer.Footer
 import web.pages.PageNotFoundPage
 import web.pages.account.TrackOrderPage
-import web.pages.account.favorites.FavoritesPage
 import web.pages.account.order.OrderPage
 import web.pages.account.profile.ProfilePage
 import web.pages.account.returns.ReturnsPage
@@ -121,7 +121,7 @@ fun RouterContent(
                     onFavoritesClick = {
 //                    currentCategory = null
 //                    currentCategoryFilter = null
-                        router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Favorites.matcher.routeFormat))
+                        router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Wishlist.matcher.routeFormat))
                     },
                     onBasketClick = {
                         currentCategory = null
@@ -154,7 +154,7 @@ fun RouterContent(
                     goToWishlist = {
                         currentCategory = null
                         currentCategoryFilter = null
-                        router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Favorites.matcher.routeFormat))
+                        router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Wishlist.matcher.routeFormat))
                     },
                     logOut = {
                         currentCategory = null
@@ -343,32 +343,32 @@ fun RouterContent(
                         )
                     }
 
-                    RouterScreen.Order -> {
-                        OrderPage(
-                            onError = onError,
-                            onMenuItemClicked = { router.route(it) },
-                        )
+                    RouterScreen.Order -> AccountLayout(
+                        item = DesktopNavContract.AccountMenuItem.PROFILE,
+                        onMenuItemClicked = { router.route(it) },
+                    ) {
+                        OrderPage(onError = onError)
                     }
 
-                    RouterScreen.Profile -> {
-                        ProfilePage(
-                            onError = onError,
-                            onMenuItemClicked = { router.route(it) },
-                        )
+                    RouterScreen.Profile -> AccountLayout(
+                        item = DesktopNavContract.AccountMenuItem.PROFILE,
+                        onMenuItemClicked = { router.route(it) },
+                    ) {
+                        ProfilePage(onError = onError)
                     }
 
-                    RouterScreen.Wishlist -> {
-                        WishlistPage(
-                            onError = onError,
-                            onMenuItemClicked = { router.route(it) },
-                        )
+                    RouterScreen.Wishlist -> AccountLayout(
+                        item = DesktopNavContract.AccountMenuItem.PROFILE,
+                        onMenuItemClicked = { router.route(it) },
+                    ) {
+                        WishlistPage(onError = onError)
                     }
 
-                    RouterScreen.Returns -> {
-                        ReturnsPage(
-                            onError = onError,
-                            onMenuItemClicked = { router.route(it) },
-                        )
+                    RouterScreen.Returns -> AccountLayout(
+                        item = DesktopNavContract.AccountMenuItem.PROFILE,
+                        onMenuItemClicked = { router.route(it) },
+                    ) {
+                        ReturnsPage(onError = onError)
                     }
 
                     RouterScreen.Settings -> {
@@ -391,12 +391,6 @@ fun RouterContent(
 
                     RouterScreen.HelpAndFAQ -> {
                         HelpAndFAQPage(
-                            onError = onError,
-                        )
-                    }
-
-                    RouterScreen.Favorites -> {
-                        FavoritesPage(
                             onError = onError,
                         )
                     }
@@ -467,7 +461,6 @@ private fun RouterScreen.pageTitle(shopName: String = "Natalia's Shop"): String 
         RouterScreen.About -> "About"
         RouterScreen.Contact -> "Contact"
         RouterScreen.HelpAndFAQ -> "Help"
-        RouterScreen.Favorites -> "Favorites"
         RouterScreen.Blog -> "Blog"
         RouterScreen.Register -> "Register"
         RouterScreen.ForgotPassword -> "Forgot Password"

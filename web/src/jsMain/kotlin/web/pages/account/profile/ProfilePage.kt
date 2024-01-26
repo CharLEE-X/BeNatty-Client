@@ -5,10 +5,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
@@ -29,11 +27,8 @@ import feature.account.profile.ProfileContract
 import feature.account.profile.ProfileViewModel
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
-import theme.MaterialTheme
-import theme.TypeScaleTokens
-import theme.roleStyle
-import web.components.layouts.AccountLayout
-import web.components.sections.desktopNav.DesktopNavContract
+import web.components.widgets.PageHeader
+import web.components.widgets.SectionHeader
 import web.compose.material3.component.Divider
 import web.compose.material3.component.FilledButton
 import web.compose.material3.component.OutlinedTextField
@@ -42,7 +37,6 @@ import web.compose.material3.component.TextFieldType
 @Composable
 fun ProfilePage(
     onError: suspend (String) -> Unit,
-    onMenuItemClicked: (DesktopNavContract.AccountMenuItem) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -53,32 +47,17 @@ fun ProfilePage(
     }
     val state by vm.observeStates().collectAsState()
 
-    AccountLayout(
-        item = DesktopNavContract.AccountMenuItem.PROFILE,
-        onMenuItemClicked = onMenuItemClicked,
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .gap(1.em)
-        ) {
-            Header(
-                text = state.strings.profile,
-                style = MaterialTheme.typography.displaySmall,
-            )
-            Divider(modifier = Modifier.margin(top = 2.em, bottom = 1.em))
-            PersonalDetails(vm, state)
-            Divider(modifier = Modifier.margin(topBottom = 1.em))
-            Password(vm, state)
-            Divider(modifier = Modifier.margin(topBottom = 1.em))
-            Address(vm, state)
-        }
-    }
+    PageHeader(state.strings.profile)
+    PersonalDetails(vm, state)
+    Divider(modifier = Modifier.margin(topBottom = 1.em))
+    Password(vm, state)
+    Divider(modifier = Modifier.margin(topBottom = 1.em))
+    Address(vm, state)
 }
 
 @Composable
 private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
-    Header(
+    SectionHeader(
         text = state.strings.address,
     )
     CommonTextfield(
@@ -150,7 +129,7 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
 
 @Composable
 fun Password(vm: ProfileViewModel, state: ProfileContract.State) {
-    Header(
+    SectionHeader(
         text = state.strings.oldPassword,
     )
     CommonTextfield(
@@ -178,7 +157,7 @@ fun Password(vm: ProfileViewModel, state: ProfileContract.State) {
 
 @Composable
 private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) {
-    Header(
+    SectionHeader(
         text = state.strings.personalDetails,
     )
     CommonTextfield(
@@ -211,15 +190,6 @@ private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) 
         text = state.strings.save,
         disabled = state.isSavePersonalDetailsButtonDisabled,
         onClick = { vm.trySend(ProfileContract.Inputs.SavePersonalDetails) },
-    )
-}
-
-@Composable
-private fun Header(text: String, style: TypeScaleTokens.Role = MaterialTheme.typography.headlineLarge) {
-    SpanText(
-        text = text,
-        modifier = Modifier
-            .roleStyle(style)
     )
 }
 

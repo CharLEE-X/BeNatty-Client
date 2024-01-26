@@ -21,7 +21,6 @@ private const val ORDER = "/order"
 private const val PAYMENT = "/payment"
 private const val PROFILE = "/profile"
 private const val SETTINGS = "/settings"
-private const val FAVORITES = "/favorites"
 private const val WISHLIST = "/wishlist"
 private const val RETURNS = "/returns"
 private const val HELP = "/help"
@@ -54,7 +53,6 @@ enum class RouterScreen(
     Profile(ACCOUNT + PROFILE),
     Wishlist(ACCOUNT + WISHLIST),
     Returns(ACCOUNT + RETURNS),
-    Favorites(ACCOUNT + FAVORITES),
 
     // Help
     HelpAndFAQ(HELP),
