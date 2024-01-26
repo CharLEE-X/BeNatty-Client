@@ -15,7 +15,12 @@ import web.components.sections.footer.FooterViewModel
 import web.compose.material3.component.TextButton
 
 @Composable
-fun FooterAboutUs(vm: FooterViewModel, state: FooterContract.State, modifier: Modifier = Modifier) {
+fun FooterAboutUs(
+    vm: FooterViewModel,
+    state: FooterContract.State,
+    modifier: Modifier = Modifier,
+    onGoToAdminDashboard: () -> Unit,
+) {
     Column(
         modifier = modifier
     ) {
@@ -45,6 +50,11 @@ fun FooterAboutUs(vm: FooterViewModel, state: FooterContract.State, modifier: Mo
             onClick = { vm.trySend(FooterContract.Inputs.OnPressClick) },
         ) {
             SpanText(state.strings.press)
+        }
+        TextButton(
+            onClick = { onGoToAdminDashboard() },
+        ) {
+            SpanText("Admin")
         }
     }
 }

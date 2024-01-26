@@ -9,18 +9,14 @@ import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
-import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.id
 import com.varabyte.kobweb.compose.ui.modifiers.margin
-import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onKeyDown
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.MoonIcon
 import com.varabyte.kobweb.silk.components.icons.SunIcon
 import com.varabyte.kobweb.silk.components.icons.fa.FaMagnifyingGlass
@@ -32,14 +28,13 @@ import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
-import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.Position
-import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.dom.Span
 import web.components.sections.desktopNav.DesktopNavContract
 import web.components.sections.desktopNav.DesktopNavViewModel
 import web.components.sections.desktopNav.label
+import web.components.widgets.Logo
 import web.compose.material3.component.IconButton
 import web.compose.material3.component.OutlinedTextField
 import web.compose.material3.component.TextButton
@@ -56,8 +51,8 @@ fun LogoSearchButtonsSection(
     onSearchValueChanged: (String) -> Unit,
     onLogoClick: () -> Unit,
     onLoginClick: () -> Unit,
-    onFavoritesClick: () -> Unit,
-    onBasketClick: () -> Unit,
+    onWishlistClick: () -> Unit,
+    onCartClick: () -> Unit,
 ) {
     var colorMode by ColorMode.currentState
     var showAccountMenu by remember { mutableStateOf(false) }
@@ -67,13 +62,8 @@ fun LogoSearchButtonsSection(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.gap(1.em),
     ) {
-        Image(
-            src = "/logo.png",
-            description = "",
-            modifier = Modifier
-                .height(4.cssRem)
-                .display(DisplayStyle.Block)
-                .onClick { onLogoClick() },
+        Logo(
+            onClick = { onLogoClick() },
         )
         SearchBar(
             value = searchValue,
@@ -119,13 +109,13 @@ fun LogoSearchButtonsSection(
             }
 
             IconButton(
-                onClick = { onFavoritesClick() },
+                onClick = { onWishlistClick() },
             ) {
                 MdiFavorite()
             }
 
             IconButton(
-                onClick = { onBasketClick() },
+                onClick = { onCartClick() },
             ) {
                 MdiShoppingBasket()
             }

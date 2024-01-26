@@ -6,7 +6,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import localization.BuildKonfig
 
-
 internal fun englishLanguage(
     key: Strings,
     appName: String = BuildKonfig.appName,
@@ -69,11 +68,9 @@ internal fun englishLanguage(
     Strings.HelpAndFaq -> "Help & FAQ"
     Strings.CurrencyEnUs -> "EN, $"
     Strings.Search -> "Search"
-    Strings.Login -> "Login"
     Strings.Orders -> "Orders"
     Strings.Returns -> "Returns"
     Strings.Wishlist -> "Wishlist"
-    Strings.Profile -> "Profile"
     Strings.Logout -> "Log out"
     Strings.Subscribe -> "Subscribe to be first to know about our special offers"
     Strings.Accessibility -> "Accessibility"
@@ -90,4 +87,8 @@ internal fun englishLanguage(
     Strings.Shipping -> "Shipping"
     Strings.TrackOrder -> "Track Order"
     Strings.Help -> "Help"
+    Strings.Users -> "Users"
+    Strings.Dashboard -> "Dashboard"
+    Strings.Stats -> "Stats"
+    Strings.Products -> "Products"
 }

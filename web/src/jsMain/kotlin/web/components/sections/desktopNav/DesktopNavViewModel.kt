@@ -11,7 +11,7 @@ class DesktopNavViewModel(
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
     goToOrders: () -> Unit,
-    goToAccount: () -> Unit,
+    goToProfile: () -> Unit,
     goToReturns: () -> Unit,
     goToWishlist: () -> Unit,
     logOut: () -> Unit,
@@ -34,7 +34,7 @@ class DesktopNavViewModel(
     eventHandler = DesktopNavEventHandler(
         onError = onError,
         goToOrders = goToOrders,
-        goToAccount = goToAccount,
+        goToAccount = goToProfile,
         goToReturns = goToReturns,
         goToWishlist = goToWishlist,
         logOut = logOut,

@@ -15,6 +15,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.transition
+import com.varabyte.kobweb.compose.ui.modifiers.translateX
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiBusiness
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEmail
@@ -255,17 +256,17 @@ private fun CommonTextfield(
     shake: Boolean = false,
     icon: @Composable () -> Unit,
 ) {
-    var margin by remember { mutableStateOf(0.em) }
+    var translateX by remember { mutableStateOf(0.em) }
 
     LaunchedEffect(shake) {
         if (shake) {
-            margin = 0.5.em
+            translateX = 0.5.em
             delay(SHAKE_ANIM_DURATION / 4)
-            margin = (-0.5).em
+            translateX = (-0.5).em
             delay(SHAKE_ANIM_DURATION / 4)
-            margin = 0.5.em
+            translateX = 0.5.em
             delay(SHAKE_ANIM_DURATION / 4)
-            margin = 0.em
+            translateX = 0.em
         }
     }
 
@@ -281,7 +282,7 @@ private fun CommonTextfield(
         required = required,
         autoComplete = autoComplete,
         modifier = modifier
-            .margin(left = margin)
-            .transition(CSSTransition("margin", SHAKE_ANIM_DURATION.inWholeSeconds.s))
+            .translateX(translateX)
+            .transition(CSSTransition("translate", SHAKE_ANIM_DURATION.inWholeSeconds.s))
     )
 }

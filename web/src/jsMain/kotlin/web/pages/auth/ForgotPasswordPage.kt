@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -25,6 +26,8 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiError
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.forgotpassword.ForgotPasswordContract
 import feature.forgotpassword.ForgotPasswordViewModel
+import feature.router.RouterScreen
+import feature.router.RouterViewModel
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import theme.MaterialTheme
@@ -38,13 +41,15 @@ import web.compose.material3.component.TextFieldType
 
 @Composable
 fun ForgotPasswordPage(
-    goToLogin: () -> Unit,
+    router: RouterViewModel,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
         ForgotPasswordViewModel(
             scope = scope,
-            goToLogin = goToLogin,
+            goToLogin = {
+                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Login.matcher.routeFormat))
+            },
         )
     }
     val state by vm.observeStates().collectAsState()

@@ -4,7 +4,6 @@ import com.copperleaf.ballast.navigation.routing.Route
 import com.copperleaf.ballast.navigation.routing.RouteAnnotation
 import com.copperleaf.ballast.navigation.routing.RouteMatcher
 
-private const val ADMIN = "/admin"
 private const val ACCOUNT = "/account"
 private const val ABOUT = "/about"
 private const val CONTACT = "/contact"
@@ -35,11 +34,23 @@ private const val CAREER = "/career"
 private const val ID = "/{id}"
 private const val ACCESSIBILITY = "/accessibility"
 
+const val ADMIN = "/admin"
+private const val DASHBOARD = "/dashboard"
+private const val USERS = "/users"
+private const val PRODUCTS = "/products"
+private const val ORDERS = "/orders"
+
 enum class RouterScreen(
     routeFormat: String,
     override val annotations: Set<RouteAnnotation> = emptySet(),
 ) : Route {
     Home(HOME),
+
+    // Admin
+    AdminDashboard(ADMIN + DASHBOARD),
+    AdminUsers(ADMIN + USERS),
+    AdminProducts(ADMIN + PRODUCTS),
+    AdminOrders(ADMIN + ORDERS),
 
     // Auth
     Login(LOGIN),
@@ -87,3 +98,41 @@ val bottomBarRoutes = listOf(
     RouterScreen.Home,
     RouterScreen.Product,
 )
+
+fun RouterScreen.pageTitle(shopName: String = "Natalia's Shop"): String {
+    // TODO: Localize
+    val title = when (this) {
+        RouterScreen.Home -> "NatShop"
+        RouterScreen.Login -> "Login"
+        RouterScreen.Product -> "Product"
+        RouterScreen.Catalogue -> "Catalogue"
+        RouterScreen.Cart -> "Cart"
+        RouterScreen.Checkout -> "Checkout"
+        RouterScreen.Payment -> "Payment"
+        RouterScreen.Order -> "Order"
+        RouterScreen.Profile -> "Profile"
+        RouterScreen.Settings -> "Settings"
+        RouterScreen.About -> "About"
+        RouterScreen.Contact -> "Contact"
+        RouterScreen.HelpAndFAQ -> "Help"
+        RouterScreen.Blog -> "Blog"
+        RouterScreen.Register -> "Register"
+        RouterScreen.ForgotPassword -> "Forgot Password"
+        RouterScreen.UpdateEmail -> "Update Email"
+        RouterScreen.PrivacyPolicy -> "Privacy Policy"
+        RouterScreen.TC -> "Terms and Conditions"
+        RouterScreen.Wishlist -> "Wishlist"
+        RouterScreen.Returns -> "Returns"
+        RouterScreen.TrackOrder -> "Track Order"
+        RouterScreen.Shipping -> "Shipping"
+        RouterScreen.Career -> "Career"
+        RouterScreen.CyberSecurity -> "Cyber Security"
+        RouterScreen.Accessibility -> "Accessibility"
+        RouterScreen.Press -> "Press"
+        RouterScreen.AdminDashboard -> "Admin Dashboard"
+        RouterScreen.AdminUsers -> "Admin Users"
+        RouterScreen.AdminProducts -> "Admin Products"
+        RouterScreen.AdminOrders -> "Admin Orders"
+    }
+    return "$shopName - $title"
+}

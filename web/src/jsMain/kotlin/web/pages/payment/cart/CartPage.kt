@@ -1,6 +1,7 @@
 package web.pages.payment.cart
 
 import androidx.compose.runtime.Composable
+import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -8,13 +9,21 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.silk.components.forms.Button
 import com.varabyte.kobweb.silk.components.text.SpanText
+import feature.router.RouterScreen
+import feature.router.RouterViewModel
 
 @Composable
 fun CartPage(
-    goBack: () -> Unit,
-    goToCheckout: () -> Unit,
+    router: RouterViewModel,
     onError: suspend (String) -> Unit,
 ) {
+
+    val goBack = { router.trySend(RouterContract.Inputs.GoBack()) }
+    val goToCheckout = {
+        router.trySend(
+            RouterContract.Inputs.GoToDestination(RouterScreen.Checkout.matcher.routeFormat)
+        )
+    }
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier

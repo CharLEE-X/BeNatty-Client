@@ -15,6 +15,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.layout.Surface
 import com.varabyte.kobweb.silk.components.text.SpanText
+import feature.router.RouterViewModel
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
@@ -24,8 +25,7 @@ import web.compose.material3.component.labs.FilledCard
 
 @Composable
 fun HomeContent(
-    onProductClick: (String) -> Unit,
-    onSignOutClick: () -> Unit,
+    router: RouterViewModel,
     onError: suspend (String) -> Unit,
 ) {
     Box(

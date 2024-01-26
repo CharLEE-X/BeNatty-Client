@@ -1,0 +1,7 @@
+query GetStats {
+  getStats {
+    totalOrders
+    totalProducts
+    totalUsers
+  }
+}

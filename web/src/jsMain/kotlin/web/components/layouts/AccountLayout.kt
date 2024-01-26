@@ -82,12 +82,12 @@ private fun MenuItems(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         items.forEach { item ->
-            AccountItem(
-                item = item,
+            SideNavItem(
+                label = item.label(),
                 isCurrent = currentItem == item,
                 onMenuItemClicked = {
-                    currentItem = it
-                    onMenuItemClicked(it)
+                    currentItem = item
+                    onMenuItemClicked(item)
                 }
             )
         }
@@ -95,10 +95,10 @@ private fun MenuItems(
 }
 
 @Composable
-private fun AccountItem(
-    item: DesktopNavContract.AccountMenuItem,
+fun SideNavItem(
+    label: String,
     isCurrent: Boolean,
-    onMenuItemClicked: (DesktopNavContract.AccountMenuItem) -> Unit
+    onMenuItemClicked: () -> Unit
 ) {
     var hovered by remember { mutableStateOf(false) }
     val bgColor = when {
@@ -112,12 +112,11 @@ private fun AccountItem(
     }
 
     Box(
+        contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxWidth()
             .backgroundColor(bgColor)
-            .onClick {
-                onMenuItemClicked(item)
-            }
+            .onClick { onMenuItemClicked() }
             .onMouseEnter { hovered = true }
             .onMouseLeave { hovered = false }
             .borderRadius(3.em)
@@ -125,7 +124,7 @@ private fun AccountItem(
             .cursor(Cursor.Pointer)
     ) {
         SpanText(
-            text = item.label(),
+            text = label,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(0.5.em)

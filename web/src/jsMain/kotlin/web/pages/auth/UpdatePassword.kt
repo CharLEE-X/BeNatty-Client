@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
@@ -19,6 +20,8 @@ import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibilityOff
 import com.varabyte.kobweb.silk.components.text.SpanText
+import feature.router.RouterScreen
+import feature.router.RouterViewModel
 import feature.updatepassword.UpdatePasswordContract
 import feature.updatepassword.UpdatePasswordViewModel
 import org.jetbrains.compose.web.css.em
@@ -32,15 +35,17 @@ import web.compose.material3.component.TextFieldType
 
 @Composable
 fun UpdatePasswordPage(
+    router: RouterViewModel,
     onError: suspend (String) -> Unit,
-    goToLogin: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
         UpdatePasswordViewModel(
             scope = scope,
             onError = onError,
-            goToLogin = goToLogin
+            goToLogin = {
+                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Login.matcher.routeFormat))
+            },
         )
     }
     val state by vm.observeStates().collectAsState()

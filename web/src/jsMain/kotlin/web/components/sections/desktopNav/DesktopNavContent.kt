@@ -5,6 +5,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
@@ -16,6 +17,8 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.translateY
+import feature.router.RouterScreen
+import feature.router.RouterViewModel
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.CSSSizeValue
 import org.jetbrains.compose.web.css.CSSUnit
@@ -31,6 +34,7 @@ import web.components.sections.desktopNav.sections.PromoSpace
 
 @Composable
 fun DesktopNav(
+    router: RouterViewModel,
     onError: (String) -> Unit,
     isAuthenticated: Boolean,
     currentLanguageImageUrl: String,
@@ -41,16 +45,7 @@ fun DesktopNav(
     currentCategoryFilter: CategoryFilter?,
     onCategoryClick: (Category) -> Unit,
     onCategoryFilterClick: (CategoryFilter) -> Unit,
-    onLogoClick: () -> Unit,
-    onLoginClick: () -> Unit,
-    onFavoritesClick: () -> Unit,
-    onBasketClick: () -> Unit,
-    onHelpAndFaqUrlClick: () -> Unit,
     onCurrencyAndLanguageClick: () -> Unit,
-    goToAccount: () -> Unit,
-    goToOrders: () -> Unit,
-    goToReturns: () -> Unit,
-    goToWishlist: () -> Unit,
     logOut: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -58,10 +53,10 @@ fun DesktopNav(
         DesktopNavViewModel(
             scope = scope,
             onError = onError,
-            goToOrders = goToOrders,
-            goToAccount = goToAccount,
-            goToReturns = goToReturns,
-            goToWishlist = goToWishlist,
+            goToOrders = { router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Order.matcher.routeFormat)) },
+            goToProfile = { router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Profile.matcher.routeFormat)) },
+            goToReturns = { router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Returns.matcher.routeFormat)) },
+            goToWishlist = { router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Wishlist.matcher.routeFormat)) },
             logOut = logOut,
         )
     }
@@ -75,7 +70,9 @@ fun DesktopNav(
     ) {
         PromoSpace(
             currentLanguageImageUrl = currentLanguageImageUrl,
-            onHelpAndFaqClick = onHelpAndFaqUrlClick,
+            onHelpAndFaqClick = {
+                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.HelpAndFAQ.matcher.routeFormat))
+            },
             onCurrentAndLanguageClick = onCurrencyAndLanguageClick,
             bgColor = MaterialTheme.colors.mdSysColorSecondaryContainer.value(),
             contentColor = MaterialTheme.colors.mdSysColorOnSecondaryContainer.value(),
@@ -89,10 +86,18 @@ fun DesktopNav(
             isAuthenticated = isAuthenticated,
             searchValue = searchValue,
             onSearchValueChanged = onSearchValueChanged,
-            onLogoClick = onLogoClick,
-            onLoginClick = onLoginClick,
-            onFavoritesClick = onFavoritesClick,
-            onBasketClick = onBasketClick,
+            onLogoClick = {
+                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Home.matcher.routeFormat))
+            },
+            onLoginClick = {
+                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Login.matcher.routeFormat))
+            },
+            onWishlistClick = {
+                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Wishlist.matcher.routeFormat))
+            },
+            onCartClick = {
+                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Cart.matcher.routeFormat))
+            },
             modifier = Modifier
                 .fillMaxWidth(70.percent)
                 .translateY((-1).em),

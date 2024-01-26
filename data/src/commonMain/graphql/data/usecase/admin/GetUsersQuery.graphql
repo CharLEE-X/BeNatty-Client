@@ -1,0 +1,14 @@
+query GetUsersPage($pageInput: PageInput!) {
+  getUsersPage(pageInput: $pageInput) {
+    info {
+      count
+      next
+      pages
+      prev
+    }
+    users {
+      email
+      id
+    }
+  }
+}

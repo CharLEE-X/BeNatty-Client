@@ -2,10 +2,14 @@ package data
 
 import co.touchlab.kermit.Logger.Companion.withTag
 import data.apollo.apolloModule
+import data.service.AdminService
+import data.service.AdminServiceImpl
 import data.service.AuthService
 import data.service.AuthServiceImpl
 import data.service.DebugService
 import data.service.DebugServiceImpl
+import data.service.ProductService
+import data.service.ProductServiceImpl
 import data.service.UserService
 import data.service.UserServiceImpl
 import org.koin.core.module.Module
@@ -32,6 +36,16 @@ val dataModule = module {
     }
     single<UserService> {
         UserServiceImpl(
+            apolloClient = get(),
+        )
+    }
+    single<ProductService> {
+        ProductServiceImpl(
+            apolloClient = get(),
+        )
+    }
+    single<AdminService> {
+        AdminServiceImpl(
             apolloClient = get(),
         )
     }

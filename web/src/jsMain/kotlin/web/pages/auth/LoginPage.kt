@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -29,6 +30,8 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibilityOff
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.login.LoginContract
 import feature.login.LoginViewModel
+import feature.router.RouterScreen
+import feature.router.RouterViewModel
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
@@ -45,23 +48,35 @@ import web.pages.auth.components.SocialButtonsLoginSection
 
 @Composable
 fun LoginPage(
-    onAuthenticated: () -> Unit,
+    router: RouterViewModel,
     onError: suspend (String) -> Unit,
-    goToRegister: () -> Unit,
-    goToPrivacyPolicy: () -> Unit,
-    goToTnC: () -> Unit,
-    goToForgotPassword: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
         LoginViewModel(
             scope = scope,
             onError = onError,
-            goToRegister = goToRegister,
-            onAuthenticated = onAuthenticated,
-            goToPrivacyPolicy = goToPrivacyPolicy,
-            goToTnC = goToTnC,
-            goToForgotPassword = goToForgotPassword,
+            onAuthenticated = {
+                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Home.matcher.routeFormat))
+            },
+            goToRegister = {
+                router.trySend(
+                    RouterContract.Inputs.GoToDestination(RouterScreen.Register.matcher.routeFormat)
+                )
+            },
+            goToPrivacyPolicy = {
+                router.trySend(
+                    RouterContract.Inputs.GoToDestination(RouterScreen.PrivacyPolicy.matcher.routeFormat)
+                )
+            },
+            goToTnC = {
+                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.TC.matcher.routeFormat))
+            },
+            goToForgotPassword = {
+                router.trySend(
+                    RouterContract.Inputs.GoToDestination(RouterScreen.ForgotPassword.matcher.routeFormat)
+                )
+            },
         )
     }
     val state by vm.observeStates().collectAsState()

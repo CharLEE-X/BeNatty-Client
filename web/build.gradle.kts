@@ -30,6 +30,7 @@ kotlin {
 
     sourceSets {
         jsMain.dependencies {
+            implementation(projects.data)
             implementation(projects.components.core)
             implementation(projects.components.theme)
             implementation(projects.components.material3)
@@ -38,14 +39,21 @@ kotlin {
             implementation(projects.feature.debug)
             implementation(projects.feature.root)
             implementation(projects.feature.router)
+
             implementation(projects.feature.auth.login)
             implementation(projects.feature.auth.register)
             implementation(projects.feature.auth.forgotPassword)
             implementation(projects.feature.auth.updatePassword)
+
             implementation(projects.feature.account.profile)
             implementation(projects.feature.account.orders)
             implementation(projects.feature.account.returns)
             implementation(projects.feature.account.wishlist)
+
+            implementation(projects.feature.admin.dashboard)
+            implementation(projects.feature.admin.users)
+            implementation(projects.feature.admin.products)
+            implementation(projects.feature.admin.orders)
 
             implementation(compose.runtime)
             implementation(compose.html.core)
