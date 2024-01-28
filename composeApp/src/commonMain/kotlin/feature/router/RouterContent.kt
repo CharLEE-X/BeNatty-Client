@@ -141,7 +141,6 @@ internal fun RouterContent(
                         RouterScreen.About -> TODO()
                         RouterScreen.Contact -> TODO()
                         RouterScreen.HelpAndFAQ -> TODO()
-                        RouterScreen.Favorites -> TODO()
                         RouterScreen.Blog -> TODO()
                     }
                 },

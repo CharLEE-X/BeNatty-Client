@@ -1,0 +1,19 @@
+query UserGetById($id: ObjectId!) {
+  getUserById(id: $id) {
+    id
+    email
+    role
+    details {
+      name
+      phone
+    }
+    address {
+      address
+      additionalInfo
+      postcode
+      city
+      state
+      country
+    }
+  }
+}

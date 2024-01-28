@@ -1,0 +1,3 @@
+mutation DeleteUserById($deleteUserId: ObjectId!) {
+  deleteUser(id: $deleteUserId)
+}

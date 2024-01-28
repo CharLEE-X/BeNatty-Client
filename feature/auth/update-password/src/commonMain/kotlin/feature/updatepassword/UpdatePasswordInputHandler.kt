@@ -2,6 +2,7 @@ package feature.updatepassword
 
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
+import data.service.AuthService
 import data.service.UserService
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -12,6 +13,7 @@ internal class UpdatePasswordInputHandler :
     KoinComponent,
     InputHandler<UpdatePasswordContract.Inputs, UpdatePasswordContract.Events, UpdatePasswordContract.State> {
 
+    private val authService by inject<AuthService>()
     private val userService by inject<UserService>()
 
     override suspend fun InputHandlerScope<UpdatePasswordContract.Inputs, UpdatePasswordContract.Events, UpdatePasswordContract.State>.handleInput(
@@ -33,18 +35,20 @@ internal class UpdatePasswordInputHandler :
         val state = getCurrentState()
         sideJob("handleOnChangePasswordClick") {
             if (validatePassword(state.password)) {
-                userService.updateUser(password = state.password).fold(
-                    onSuccess = {
-                        postInput(
-                            UpdatePasswordContract.Inputs.SetScreenState(UpdatePasswordContract.ScreenState.Success)
-                        )
-                    },
-                    onFailure = {
-                        postInput(
-                            UpdatePasswordContract.Inputs.ShowError(it.message ?: "Error while updating password")
-                        )
-                    },
-                )
+                authService.userId?.let { userId ->
+                    userService.update(userId, password = state.password).fold(
+                        onSuccess = {
+                            postInput(
+                                UpdatePasswordContract.Inputs.SetScreenState(UpdatePasswordContract.ScreenState.Success)
+                            )
+                        },
+                        onFailure = {
+                            postInput(
+                                UpdatePasswordContract.Inputs.ShowError(it.message ?: "Error while updating password")
+                            )
+                        },
+                    )
+                } ?: postEvent(UpdatePasswordContract.Events.GoToLogin)
             } else {
                 postInput(UpdatePasswordContract.Inputs.ShowError("Password must be at least 8 characters long"))
             }

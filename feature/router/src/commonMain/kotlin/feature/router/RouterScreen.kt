@@ -36,9 +36,9 @@ private const val ACCESSIBILITY = "/accessibility"
 
 const val ADMIN = "/admin"
 private const val DASHBOARD = "/dashboard"
-private const val USERS = "/users"
-private const val PRODUCTS = "/products"
-private const val ORDERS = "/orders"
+private const val USER = "/user"
+private const val LIST = "/list"
+private const val PAGE = "/page"
 
 enum class RouterScreen(
     routeFormat: String,
@@ -48,9 +48,13 @@ enum class RouterScreen(
 
     // Admin
     AdminDashboard(ADMIN + DASHBOARD),
-    AdminUsers(ADMIN + USERS),
-    AdminProducts(ADMIN + PRODUCTS),
-    AdminOrders(ADMIN + ORDERS),
+    AdminUserList(ADMIN + USER + LIST),
+    AdminUserPageNew(ADMIN + USER + PAGE),
+    AdminUserPageExisting(ADMIN + USER + PAGE + ID),
+    AdminProductList(ADMIN + PRODUCT + LIST),
+    AdminProductPage(ADMIN + PRODUCT + PAGE + ID),
+    AdminOrderList(ADMIN + ORDER + LIST),
+    AdminOrderPage(ADMIN + ORDER + PAGE + ID),
 
     // Auth
     Login(LOGIN),
@@ -100,7 +104,6 @@ val bottomBarRoutes = listOf(
 )
 
 fun RouterScreen.pageTitle(shopName: String = "Natalia's Shop"): String {
-    // TODO: Localize
     val title = when (this) {
         RouterScreen.Home -> "NatShop"
         RouterScreen.Login -> "Login"
@@ -130,9 +133,13 @@ fun RouterScreen.pageTitle(shopName: String = "Natalia's Shop"): String {
         RouterScreen.Accessibility -> "Accessibility"
         RouterScreen.Press -> "Press"
         RouterScreen.AdminDashboard -> "Admin Dashboard"
-        RouterScreen.AdminUsers -> "Admin Users"
-        RouterScreen.AdminProducts -> "Admin Products"
-        RouterScreen.AdminOrders -> "Admin Orders"
+        RouterScreen.AdminUserList -> "Admin Users"
+        RouterScreen.AdminUserPageNew -> "Admin User Create"
+        RouterScreen.AdminUserPageExisting -> "Admin User details"
+        RouterScreen.AdminProductList -> "Admin Products"
+        RouterScreen.AdminProductPage -> "Admin Product"
+        RouterScreen.AdminOrderList -> "Admin Orders"
+        RouterScreen.AdminOrderPage -> "Admin Order"
     }
     return "$shopName - $title"
 }

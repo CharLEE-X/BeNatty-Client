@@ -1,0 +1,8 @@
+mutation ProductCreate($name: String!) {
+  createProduct(name: $name) {
+    id
+    common {
+      name
+    }
+  }
+}

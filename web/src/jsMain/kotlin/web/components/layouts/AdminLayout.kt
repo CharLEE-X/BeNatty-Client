@@ -86,7 +86,7 @@ private fun AdminSideBar(
             Logo(
                 onClick = {
                     router.trySend(
-                        RouterContract.Inputs.GoToDestination(RouterScreen.AdminDashboard.matcher.routeFormat)
+                        RouterContract.Inputs.GoToDestination(RouterScreen.Home.matcher.routeFormat)
                     )
                 },
             )
@@ -108,15 +108,15 @@ private fun AdminSideBar(
                         )
 
                         AdminNavDest.Users -> router.trySend(
-                            RouterContract.Inputs.GoToDestination(RouterScreen.AdminUsers.matcher.routeFormat)
+                            RouterContract.Inputs.GoToDestination(RouterScreen.AdminUserList.matcher.routeFormat)
                         )
 
                         AdminNavDest.Products -> router.trySend(
-                            RouterContract.Inputs.GoToDestination(RouterScreen.AdminProducts.matcher.routeFormat)
+                            RouterContract.Inputs.GoToDestination(RouterScreen.AdminProductList.matcher.routeFormat)
                         )
 
                         AdminNavDest.Orders -> router.trySend(
-                            RouterContract.Inputs.GoToDestination(RouterScreen.AdminOrders.matcher.routeFormat)
+                            RouterContract.Inputs.GoToDestination(RouterScreen.AdminOrderList.matcher.routeFormat)
                         )
                     }
                 }

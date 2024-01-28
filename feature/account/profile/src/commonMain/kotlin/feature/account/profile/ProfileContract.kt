@@ -1,19 +1,19 @@
 package feature.account.profile
 
 import component.localization.getString
-import data.GetUserProfileQuery
+import data.UserGetQuery
 import org.koin.core.component.KoinComponent
 
 object ProfileContract : KoinComponent {
     data class State(
-        val originalUser: GetUserProfileQuery.GetUser = GetUserProfileQuery.GetUser(
+        val originalUser: UserGetQuery.GetUser = UserGetQuery.GetUser(
             id = "",
             email = "",
-            details = GetUserProfileQuery.Details(
+            details = UserGetQuery.Details(
                 name = "",
                 phone = "",
             ),
-            address = GetUserProfileQuery.Address(
+            address = UserGetQuery.Address(
                 address = "",
                 additionalInfo = "",
                 postcode = "",
@@ -81,7 +81,7 @@ object ProfileContract : KoinComponent {
 
     sealed interface Inputs {
         data object GetUserProfile : Inputs
-        data class SetUserProfile(val user: GetUserProfileQuery.GetUser) : Inputs
+        data class SetUserProfile(val user: UserGetQuery.GetUser) : Inputs
 
         data class SetFullName(val fullName: String) : Inputs
         data class SetFullNameShake(val shake: Boolean) : Inputs
@@ -133,5 +133,6 @@ object ProfileContract : KoinComponent {
         val city: String = getString(component.localization.Strings.City),
         val state: String = getString(component.localization.Strings.State),
         val country: String = getString(component.localization.Strings.Country),
+        val password: String = getString(component.localization.Strings.Password),
     )
 }

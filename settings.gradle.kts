@@ -50,8 +50,12 @@ include(
     ":feature:account:orders",
     ":feature:account:returns",
     ":feature:account:wishlist",
+
     ":feature:admin:dashboard",
-    ":feature:admin:users",
-    ":feature:admin:products",
-    ":feature:admin:orders",
+    ":feature:admin:user:page",
+    ":feature:admin:user:list",
+    ":feature:admin:product:page",
+    ":feature:admin:product:list",
+    ":feature:admin:order:list",
+    ":feature:admin:order:page",
 )

@@ -7,7 +7,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import com.copperleaf.ballast.navigation.browser.BrowserHashNavigationInterceptor
 import com.copperleaf.ballast.navigation.routing.RouterContract
+import com.copperleaf.ballast.navigation.routing.build
 import com.copperleaf.ballast.navigation.routing.currentDestinationOrNull
+import com.copperleaf.ballast.navigation.routing.directions
+import com.copperleaf.ballast.navigation.routing.pathParameter
 import com.copperleaf.ballast.navigation.routing.renderCurrentDestination
 import com.copperleaf.ballast.navigation.routing.stringPath
 import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
@@ -24,8 +27,11 @@ import web.pages.account.profile.ProfilePage
 import web.pages.account.returns.ReturnsPage
 import web.pages.account.wishlist.WishlistPage
 import web.pages.admin.dashboard.AdminDashboardPage
-import web.pages.admin.orders.AdminOrdersPage
-import web.pages.admin.products.AdminProductsPage
+import web.pages.admin.orders.AdminOrderListPage
+import web.pages.admin.orders.AdminOrderPagePage
+import web.pages.admin.products.AdminProductListPage
+import web.pages.admin.products.AdminProductPagePage
+import web.pages.admin.users.AdminUserPagePage
 import web.pages.admin.users.AdminUsersPage
 import web.pages.auth.ForgotPasswordPage
 import web.pages.auth.LoginPage
@@ -261,20 +267,81 @@ fun RouterContent(
                     )
                 }
 
-                RouterScreen.AdminUsers -> AdminLayout("Admin Users", router) {
+                RouterScreen.AdminUserList -> AdminLayout("Admin Users", router) {
                     AdminUsersPage(
                         onError = onError,
+                        onUserClick = { id ->
+                            router.trySend(
+                                RouterContract.Inputs.GoToDestination(
+                                    RouterScreen.AdminUserPageExisting.directions()
+                                        .pathParameter("id", id)
+                                        .build()
+                                )
+                            )
+                        },
+                        goToCreateUser = {
+                            router.trySend(
+                                RouterContract.Inputs.GoToDestination(
+                                    RouterScreen.AdminUserPageExisting.matcher.routeFormat
+                                )
+                            )
+                        },
                     )
                 }
 
-                RouterScreen.AdminProducts -> AdminLayout("Admin Products", router) {
-                    AdminProductsPage(
+                RouterScreen.AdminUserPageNew -> {
+                    AdminLayout("Create user", router) {
+                        AdminUserPagePage(
+                            userId = null,
+                            onError = onError,
+                            goToUserList = {
+                                router.trySend(
+                                    RouterContract.Inputs.GoToDestination(
+                                        RouterScreen.AdminUserList.matcher.routeFormat
+                                    )
+                                )
+                            },
+                        )
+                    }
+                }
+
+                RouterScreen.AdminUserPageExisting -> {
+                    val id by stringPath()
+                    AdminLayout("User details", router) {
+                        AdminUserPagePage(
+                            userId = id,
+                            onError = onError,
+                            goToUserList = {
+                                router.trySend(
+                                    RouterContract.Inputs.GoToDestination(
+                                        RouterScreen.AdminUserList.matcher.routeFormat
+                                    )
+                                )
+                            },
+                        )
+                    }
+                }
+
+                RouterScreen.AdminProductList -> AdminLayout("Admin Product List", router) {
+                    AdminProductListPage(
                         onError = onError,
                     )
                 }
 
-                RouterScreen.AdminOrders -> AdminLayout("Admin Orders", router) {
-                    AdminOrdersPage(
+                RouterScreen.AdminProductPage -> AdminLayout("Admin Product Page", router) {
+                    AdminProductPagePage(
+                        onError = onError,
+                    )
+                }
+
+                RouterScreen.AdminOrderList -> AdminLayout("Admin Order List", router) {
+                    AdminOrderListPage(
+                        onError = onError,
+                    )
+                }
+
+                RouterScreen.AdminOrderPage -> AdminLayout("Admin Order Page", router) {
+                    AdminOrderPagePage(
                         onError = onError,
                     )
                 }

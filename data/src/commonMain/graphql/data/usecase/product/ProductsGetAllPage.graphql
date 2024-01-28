@@ -1,0 +1,14 @@
+query ProductsGetAllPage($pageInput: PageInput!) {
+  getAllProductsPage(pageInput: $pageInput) {
+    info {
+      count
+      next
+      pages
+      prev
+    }
+    products {
+      id
+      name
+    }
+  }
+}

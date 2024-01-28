@@ -6,8 +6,6 @@ import org.jetbrains.compose.web.css.backgroundColor
 import org.jetbrains.compose.web.css.color
 import org.jetbrains.compose.web.css.value
 
-//TODO: Palette: https://github.com/material-components/material-web/blob/main/tokens/v0_172/_md-ref-palette.scss
-
 data class SysColorScheme(
     val sysColorPrimary: Color,
     val sysColorPrimaryContainer: Color,

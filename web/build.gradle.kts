@@ -30,31 +30,35 @@ kotlin {
 
     sourceSets {
         jsMain.dependencies {
-            implementation(projects.data)
-            implementation(projects.components.core)
-            implementation(projects.components.theme)
-            implementation(projects.components.material3)
-            implementation(projects.components.localization)
+            with(projects) {
+                implementation(data)
+                implementation(components.core)
+                implementation(components.theme)
+                implementation(components.material3)
+                implementation(components.localization)
 
-            implementation(projects.feature.debug)
-            implementation(projects.feature.root)
-            implementation(projects.feature.router)
+                implementation(feature.debug)
+                implementation(feature.root)
+                implementation(feature.router)
 
-            implementation(projects.feature.auth.login)
-            implementation(projects.feature.auth.register)
-            implementation(projects.feature.auth.forgotPassword)
-            implementation(projects.feature.auth.updatePassword)
+                implementation(feature.auth.login)
+                implementation(feature.auth.register)
+                implementation(feature.auth.forgotPassword)
+                implementation(feature.auth.updatePassword)
 
-            implementation(projects.feature.account.profile)
-            implementation(projects.feature.account.orders)
-            implementation(projects.feature.account.returns)
-            implementation(projects.feature.account.wishlist)
+                implementation(feature.account.profile)
+                implementation(feature.account.orders)
+                implementation(feature.account.returns)
+                implementation(feature.account.wishlist)
 
-            implementation(projects.feature.admin.dashboard)
-            implementation(projects.feature.admin.users)
-            implementation(projects.feature.admin.products)
-            implementation(projects.feature.admin.orders)
-
+                implementation(feature.admin.dashboard)
+                implementation(feature.admin.user.page)
+                implementation(feature.admin.user.list)
+                implementation(feature.admin.product.page)
+                implementation(feature.admin.product.list)
+                implementation(feature.admin.order.page)
+                implementation(feature.admin.order.list)
+            }
             implementation(compose.runtime)
             implementation(compose.html.core)
             implementation(compose.html.svg)

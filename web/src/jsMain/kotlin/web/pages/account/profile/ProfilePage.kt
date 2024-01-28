@@ -1,25 +1,17 @@
 package web.pages.account.profile
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
-import com.varabyte.kobweb.compose.ui.modifiers.transition
-import com.varabyte.kobweb.compose.ui.modifiers.translateX
-import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiBusiness
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEmail
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiError
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiFlag
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiGite
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiHome
@@ -28,20 +20,15 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiLocationCity
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPassword
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPhone
-import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.account.profile.ProfileContract
 import feature.account.profile.ProfileViewModel
-import feature.account.profile.SHAKE_ANIM_DURATION
-import kotlinx.coroutines.delay
 import org.jetbrains.compose.web.attributes.AutoComplete
 import org.jetbrains.compose.web.css.em
-import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.s
+import web.components.widgets.CommonTextfield
 import web.components.widgets.PageHeader
+import web.components.widgets.SaveButton
 import web.components.widgets.SectionHeader
 import web.compose.material3.component.Divider
-import web.compose.material3.component.FilledButton
-import web.compose.material3.component.OutlinedTextField
 import web.compose.material3.component.TextFieldType
 
 @Composable
@@ -113,7 +100,7 @@ private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) 
 @Composable
 fun Password(vm: ProfileViewModel, state: ProfileContract.State) {
     SectionHeader(
-        text = state.strings.oldPassword,
+        text = state.strings.password,
     )
     CommonTextfield(
         value = state.oldPassword,
@@ -220,69 +207,5 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
         text = state.strings.save,
         disabled = state.isSaveAddressButtonDisabled,
         onClick = { vm.trySend(ProfileContract.Inputs.SaveAddress) },
-    )
-}
-
-@Composable
-private fun SaveButton(
-    text: String,
-    disabled: Boolean,
-    onClick: () -> Unit,
-) {
-    FilledButton(
-        disabled = disabled,
-        onClick = { onClick() },
-        modifier = Modifier
-            .margin(top = 1.em)
-            .width(200.px)
-    ) {
-        SpanText(
-            text = text,
-            modifier = Modifier.margin(0.5.em)
-        )
-    }
-}
-
-@Composable
-private fun CommonTextfield(
-    modifier: Modifier,
-    value: String,
-    onValueChange: (String) -> Unit,
-    label: String,
-    errorMsg: String?,
-    type: TextFieldType = TextFieldType.TEXT,
-    autoComplete: AutoComplete = AutoComplete.off,
-    required: Boolean = false,
-    shake: Boolean = false,
-    icon: @Composable () -> Unit,
-) {
-    var translateX by remember { mutableStateOf(0.em) }
-
-    LaunchedEffect(shake) {
-        if (shake) {
-            translateX = 0.5.em
-            delay(SHAKE_ANIM_DURATION / 4)
-            translateX = (-0.5).em
-            delay(SHAKE_ANIM_DURATION / 4)
-            translateX = 0.5.em
-            delay(SHAKE_ANIM_DURATION / 4)
-            translateX = 0.em
-        }
-    }
-
-    OutlinedTextField(
-        value = value,
-        onInput = { onValueChange(it) },
-        label = label,
-        type = type,
-        leadingIcon = { icon() },
-        trailingIcon = { errorMsg?.let { MdiError() } },
-        error = errorMsg != null,
-        errorText = errorMsg,
-        required = required,
-        autoComplete = autoComplete,
-        modifier = modifier
-            .translateX(translateX)
-            .transition(CSSTransition("translate", SHAKE_ANIM_DURATION.inWholeSeconds.s))
     )
 }

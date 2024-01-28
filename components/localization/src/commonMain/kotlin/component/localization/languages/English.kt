@@ -91,4 +91,10 @@ internal fun englishLanguage(
     Strings.Dashboard -> "Dashboard"
     Strings.Stats -> "Stats"
     Strings.Products -> "Products"
+    Strings.Edit -> "Edit"
+    Strings.Cancel -> "Cancel"
+    Strings.NewUser -> "New user"
+    Strings.Delete -> "Delete"
+    Strings.ResetPassword -> "Reset password"
+    Strings.Role -> "Role"
 }

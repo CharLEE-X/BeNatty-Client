@@ -6,6 +6,7 @@ import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
 import org.jetbrains.compose.web.attributes.AutoComplete
+import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.dom.Span
 import web.compose.material3.common.MdTagElement
 import web.compose.material3.common.jsRequire
@@ -23,8 +24,8 @@ fun MdTextFieldTagElement(
     leadingIcon: (@Composable () -> Unit)?,
     trailingIcon: (@Composable () -> Unit)?,
     containerShape: String?,
-    outlineColor: Color.Rgb?,
-    inputTextColor: Color.Rgb? = null,
+    outlineColor: CSSColorValue?,
+    inputTextColor: CSSColorValue? = null,
     hasLeadingIcon: Boolean,
     hasTrailingIcon: Boolean,
     type: TextFieldType,
@@ -106,8 +107,10 @@ enum class TextFieldType(val value: String) {
     NUMBER("number"),
     PASSWORD("password"),
     SEARCH("search"),
+    TEL("tel"),
     TEXT("text"),
-    URL("url")
+    URL("url"),
+    TEXTAREA("textarea"),
 }
 
 @Suppress("UnsafeCastFromDynamic")
@@ -144,9 +147,7 @@ fun FilledTextField(
     readOnly: Boolean = false,
     multiple: Boolean = false,
     step: String? = null,
-    autocomplete: String? = null,
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit = {}
 ) {
     MdTextFieldTagElement(
         tagName = "md-filled-text-field",
@@ -197,8 +198,8 @@ fun OutlinedTextField(
     hasLeadingIcon: Boolean = false,
     hasTrailingIcon: Boolean = false,
     containerShape: String? = null,
-    outlineColor: Color.Rgb? = null,
-    inputTextColor: Color.Rgb? = null,
+    outlineColor: CSSColorValue? = null,
+    inputTextColor: CSSColorValue? = null,
     type: TextFieldType = TextFieldType.TEXT,
     autoComplete: AutoComplete = AutoComplete.off,
     required: Boolean = false,

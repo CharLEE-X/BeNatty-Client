@@ -5,11 +5,18 @@ import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.watch
-import data.CheckPasswordMatchQuery
-import data.GetUserProfileQuery
-import data.UpdateUserMutation
-import data.type.AddressUpdateInput
-import data.type.PersonalDetailsUpdateInput
+import data.CreateUserMutation
+import data.DeleteUserByIdMutation
+import data.UserCheckPasswordMatchQuery
+import data.UserGetByIdQuery
+import data.UserGetQuery
+import data.UserUpdateMutation
+import data.UsersGetAllPageQuery
+import data.type.AddressInput
+import data.type.CreateUserInput
+import data.type.PageInput
+import data.type.PersonalDetailsInput
+import data.type.Role
 import data.type.UserUpdateInput
 import data.utils.handle
 import data.utils.skipIfNull
@@ -17,11 +24,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 interface UserService {
-    suspend fun getUserProfile(): Flow<Result<GetUserProfileQuery.Data>>
+    suspend fun create(input: CreateUserInput): Result<CreateUserMutation.Data>
+    suspend fun get(): Flow<Result<UserGetQuery.Data>>
+    suspend fun getById(id: String): Flow<Result<UserGetByIdQuery.Data>>
+    suspend fun getAllAsPage(page: Int, size: Int): Result<UsersGetAllPageQuery.Data>
+    suspend fun deleteById(id: String): Result<DeleteUserByIdMutation.Data>
 
-    suspend fun updateUser(
+    suspend fun update(
+        id: String,
         email: String? = null,
         password: String? = null,
+        role: Role? = null,
         name: String? = null,
         phone: String? = null,
         address: String? = null,
@@ -30,22 +43,51 @@ interface UserService {
         city: String? = null,
         state: String? = null,
         country: String? = null,
-    ): Result<UpdateUserMutation.Data>
+    ): Result<UserUpdateMutation.Data>
 
-    suspend fun checkPasswordMatch(oldPassword: String, newPassword: String): Result<CheckPasswordMatchQuery.Data>
+    suspend fun checkPasswordMatch(oldPassword: String, newPassword: String): Result<UserCheckPasswordMatchQuery.Data>
 }
 
 internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserService {
-    override suspend fun getUserProfile(): Flow<Result<GetUserProfileQuery.Data>> {
-        return apolloClient.query(GetUserProfileQuery())
+
+    override suspend fun create(input: CreateUserInput): Result<CreateUserMutation.Data> {
+        return apolloClient.mutation(CreateUserMutation(input))
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .handle()
+    }
+
+    override suspend fun get(): Flow<Result<UserGetQuery.Data>> {
+        return apolloClient.query(UserGetQuery())
             .fetchPolicy(FetchPolicy.CacheAndNetwork)
             .watch()
             .map { it.handle() }
     }
 
-    override suspend fun updateUser(
+    override suspend fun getById(id: String): Flow<Result<UserGetByIdQuery.Data>> {
+        return apolloClient.query(UserGetByIdQuery(id))
+            .fetchPolicy(FetchPolicy.CacheAndNetwork)
+            .watch()
+            .map { it.handle() }
+    }
+
+    override suspend fun getAllAsPage(page: Int, size: Int): Result<UsersGetAllPageQuery.Data> {
+        val pageInput = PageInput(page, size)
+        return apolloClient.query(UsersGetAllPageQuery(pageInput))
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .handle()
+    }
+
+    override suspend fun deleteById(id: String): Result<DeleteUserByIdMutation.Data> {
+        return apolloClient.mutation(DeleteUserByIdMutation(id))
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .handle()
+    }
+
+    override suspend fun update(
+        id: String,
         email: String?,
         password: String?,
+        role: Role?,
         name: String?,
         phone: String?,
         address: String?,
@@ -54,35 +96,25 @@ internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserSer
         city: String?,
         state: String?,
         country: String?,
-    ): Result<UpdateUserMutation.Data> {
-        val optionalUserUpdateInput = if (email == null && password == null) {
+    ): Result<UserUpdateMutation.Data> {
+        val detailsInput = if (name == null && phone == null) {
             Optional.absent()
         } else {
             Optional.present(
-                UserUpdateInput(
-                    email = email.skipIfNull(),
-                    password = password.skipIfNull(),
-                )
-            )
-        }
-        val personalDetailsUpdateInput = if (name == null && phone == null) {
-            Optional.absent()
-        } else {
-            Optional.present(
-                PersonalDetailsUpdateInput(
+                PersonalDetailsInput(
                     name = name.skipIfNull(),
                     phone = phone.skipIfNull(),
                 )
             )
         }
-        val addressUpdateInput = if (
+        val addressInput = if (
             address == null && additionalInfo == null && postcode == null &&
             city == null && state == null && country == null
         ) {
             Optional.absent()
         } else {
             Optional.present(
-                AddressUpdateInput(
+                AddressInput(
                     address = address.skipIfNull(),
                     additionalInfo = additionalInfo.skipIfNull(),
                     postcode = postcode.skipIfNull(),
@@ -92,19 +124,25 @@ internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserSer
                 )
             )
         }
-
-        return apolloClient.mutation(
-            UpdateUserMutation(optionalUserUpdateInput, personalDetailsUpdateInput, addressUpdateInput)
+        val input = UserUpdateInput(
+            id = id,
+            email = email.skipIfNull(),
+            password = password.skipIfNull(),
+            role = role.skipIfNull(),
+            details = detailsInput,
+            address = addressInput,
         )
-            .fetchPolicy(FetchPolicy.CacheOnly)
+
+        return apolloClient.mutation(UserUpdateMutation(input))
+            .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }
 
     override suspend fun checkPasswordMatch(
         oldPassword: String,
         newPassword: String
-    ): Result<CheckPasswordMatchQuery.Data> {
-        return apolloClient.query(CheckPasswordMatchQuery(oldPassword, newPassword))
+    ): Result<UserCheckPasswordMatchQuery.Data> {
+        return apolloClient.query(UserCheckPasswordMatchQuery(oldPassword, newPassword))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }

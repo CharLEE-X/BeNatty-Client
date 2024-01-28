@@ -1,0 +1,18 @@
+query UserGet {
+  getUser {
+    id
+    email
+    details {
+      name
+      phone
+    }
+    address {
+      address
+      additionalInfo
+      postcode
+      city
+      state
+      country
+    }
+  }
+}

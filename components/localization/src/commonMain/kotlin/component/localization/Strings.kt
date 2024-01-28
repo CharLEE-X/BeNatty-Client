@@ -86,4 +86,10 @@ enum class Strings {
     Dashboard,
     Stats,
     Products,
+    Edit,
+    Cancel,
+    NewUser,
+    Delete,
+    ResetPassword,
+    Role,
 }

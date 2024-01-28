@@ -10,7 +10,6 @@ object FooterContract : KoinComponent {
         val email: String = "",
         val emailError: String? = null,
 
-        // TODO: Expand lang feature
         val languageImageUrl: String = "https://m.media-amazon.com/images/I/61msrRHflnL._AC_SL1500_.jpg",
 
         val year: Int = currentYear(),

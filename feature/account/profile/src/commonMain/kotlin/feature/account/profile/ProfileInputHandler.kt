@@ -3,7 +3,8 @@ package feature.account.profile
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
-import data.GetUserProfileQuery
+import data.UserGetQuery
+import data.service.AuthService
 import data.service.UserService
 import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
@@ -18,6 +19,7 @@ internal class ProfileInputHandler :
     KoinComponent,
     InputHandler<ProfileContract.Inputs, ProfileContract.Events, ProfileContract.State> {
 
+    private val authService: AuthService by inject()
     private val userService: UserService by inject()
     private val inputValidator: InputValidator by inject()
 
@@ -138,31 +140,36 @@ internal class ProfileInputHandler :
                 }
             } else {
                 sideJob("handleSavePersonalDetails") {
-                    userService.updateUser(
-                        name = if (fullName != originalUser.details.name) fullName else null,
-                        email = if (email != originalUser.email) email else null,
-                        phone = if (phone != originalUser.details.phone) phone else null,
-                    ).fold(
-                        onSuccess = { data ->
-                            postInput(
-                                ProfileContract.Inputs.SetUserProfile(
-                                    user = this@with.originalUser.copy(
-                                        email = data.updateUser.email,
-                                        details = GetUserProfileQuery.Details(
-                                            name = data.updateUser.details.name,
-                                            phone = data.updateUser.details.phone,
-                                        ),
+                    authService.userId?.let { id ->
+                        userService.update(
+                            id = id,
+                            name = if (fullName != originalUser.details.name) fullName else null,
+                            email = if (email != originalUser.email) email else null,
+                            phone = if (phone != originalUser.details.phone) phone else null,
+                        ).fold(
+                            onSuccess = { data ->
+                                postInput(
+                                    ProfileContract.Inputs.SetUserProfile(
+                                        user = this@with.originalUser.copy(
+                                            email = data.updateUser.email,
+                                            details = UserGetQuery.Details(
+                                                name = data.updateUser.details.name,
+                                                phone = data.updateUser.details.phone,
+                                            ),
+                                        )
                                     )
                                 )
-                            )
-                            postInput(ProfileContract.Inputs.SetPersonalDetailsButtonDisabled(isDisabled = true))
-                        },
-                        onFailure = {
-                            postEvent(
-                                ProfileContract.Events.OnError(it.message ?: "Error while updating personal details")
-                            )
-                        },
-                    )
+                                postInput(ProfileContract.Inputs.SetPersonalDetailsButtonDisabled(isDisabled = true))
+                            },
+                            onFailure = {
+                                postEvent(
+                                    ProfileContract.Events.OnError(
+                                        it.message ?: "Error while updating personal details"
+                                    )
+                                )
+                            },
+                        )
+                    }
                 }
             }
         }
@@ -384,35 +391,38 @@ internal class ProfileInputHandler :
                 }
             } else {
                 sideJob("handleSaveAddress") {
-                    userService.updateUser(
-                        address = if (address != originalUser.address.address) address else null,
-                        additionalInfo = if (additionalInformation != originalUser.address.additionalInfo) additionalInformation else null,
-                        city = if (city != originalUser.address.city) city else null,
-                        postcode = if (postcode != originalUser.address.postcode) postcode else null,
-                        state = if (state != originalUser.address.state) state else null,
-                        country = if (country != originalUser.address.country) country else null,
-                    ).fold(
-                        onSuccess = { data ->
-                            postInput(
-                                ProfileContract.Inputs.SetUserProfile(
-                                    user = this@with.originalUser.copy(
-                                        address = GetUserProfileQuery.Address(
-                                            address = data.updateUser.address.address,
-                                            additionalInfo = data.updateUser.address.additionalInfo,
-                                            postcode = data.updateUser.address.postcode,
-                                            city = data.updateUser.address.city,
-                                            state = data.updateUser.address.state,
-                                            country = data.updateUser.address.country,
+                    authService.userId?.let { id ->
+                        userService.update(
+                            id = id,
+                            address = if (address != originalUser.address.address) address else null,
+                            additionalInfo = if (additionalInformation != originalUser.address.additionalInfo) additionalInformation else null,
+                            city = if (city != originalUser.address.city) city else null,
+                            postcode = if (postcode != originalUser.address.postcode) postcode else null,
+                            state = if (state != originalUser.address.state) state else null,
+                            country = if (country != originalUser.address.country) country else null,
+                        ).fold(
+                            onSuccess = { data ->
+                                postInput(
+                                    ProfileContract.Inputs.SetUserProfile(
+                                        user = this@with.originalUser.copy(
+                                            address = UserGetQuery.Address(
+                                                address = data.updateUser.address.address,
+                                                additionalInfo = data.updateUser.address.additionalInfo,
+                                                postcode = data.updateUser.address.postcode,
+                                                city = data.updateUser.address.city,
+                                                state = data.updateUser.address.state,
+                                                country = data.updateUser.address.country,
+                                            )
                                         )
                                     )
                                 )
-                            )
-                            postInput(ProfileContract.Inputs.SetAddressButtonDisabled(isDisabled = true))
-                        },
-                        onFailure = {
-                            postEvent(ProfileContract.Events.OnError(it.message ?: "Error while updating address"))
-                        },
-                    )
+                                postInput(ProfileContract.Inputs.SetAddressButtonDisabled(isDisabled = true))
+                            },
+                            onFailure = {
+                                postEvent(ProfileContract.Events.OnError(it.message ?: "Error while updating address"))
+                            },
+                        )
+                    }
                 }
             }
         }
@@ -420,7 +430,7 @@ internal class ProfileInputHandler :
 
     private suspend fun ProfileInputScope.handleGetUserProfile() {
         sideJob("handleGetUserProfile") {
-            userService.getUserProfile().collect {
+            userService.get().collect {
                 it.fold(
                     onSuccess = {
                         postInput(ProfileContract.Inputs.SetUserProfile(it.getUser))

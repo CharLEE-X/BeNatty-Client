@@ -2,7 +2,7 @@ plugins {
     id("convention.multiplatform")
 }
 
-group = FEATURE + AUTH + project.name
+group = FEATURE + AUTH + project.name.replace("-", "")
 
 kotlin {
     sourceSets {
