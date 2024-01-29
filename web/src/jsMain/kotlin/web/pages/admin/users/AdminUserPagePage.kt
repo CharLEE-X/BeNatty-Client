@@ -7,9 +7,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import com.varabyte.kobweb.browser.dom.ElementTarget
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.graphics.Colors
+import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
@@ -17,9 +20,11 @@ import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiAdd
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiBusiness
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiCancel
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiCheck
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEdit
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEmail
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiError
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiFlag
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiGite
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiHome
@@ -27,6 +32,7 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiLocalPostOffice
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiLocationCity
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPhone
+import com.varabyte.kobweb.silk.components.overlay.Tooltip
 import com.varabyte.kobweb.silk.components.text.SpanText
 import data.type.Role
 import feature.admin.user.page.AdminUserPageContract
@@ -126,19 +132,32 @@ private fun PersonalDetails(vm: AdminUserPageViewModel, state: AdminUserPageCont
         isEditing = state.isPersonalDetailsEditing,
         modifier = Modifier.fillMaxWidth(),
     )
-    CommonTextfield(
-        value = state.email,
-        onValueChange = { vm.trySend(AdminUserPageContract.Inputs.SetEmail(it)) },
-        label = state.strings.email,
-        errorMsg = state.emailError,
-        icon = { MdiEmail() },
-        type = TextFieldType.TEXT,
-        required = true,
-        autoComplete = AutoComplete.email,
-        shake = state.shakeEmail,
-        isEditing = state.isPersonalDetailsEditing,
-        modifier = Modifier.fillMaxWidth(),
-    )
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .gap(1.em),
+    ) {
+        CommonTextfield(
+            value = state.email,
+            onValueChange = { vm.trySend(AdminUserPageContract.Inputs.SetEmail(it)) },
+            label = state.strings.email,
+            errorMsg = state.emailError,
+            icon = { MdiEmail() },
+            type = TextFieldType.TEXT,
+            required = true,
+            autoComplete = AutoComplete.email,
+            shake = state.shakeEmail,
+            isEditing = state.isPersonalDetailsEditing,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        val modifier = Modifier.color(if (state.emailVerified) Colors.Green else Colors.Red)
+        if (state.emailVerified) MdiCheck(modifier) else MdiError(modifier)
+        Tooltip(
+            target = ElementTarget.PreviousSibling,
+            text = if (state.emailVerified) state.strings.verified else state.strings.notVerified,
+        )
+    }
     CommonTextfield(
         value = state.phone,
         onValueChange = { vm.trySend(AdminUserPageContract.Inputs.SetPhone(it)) },

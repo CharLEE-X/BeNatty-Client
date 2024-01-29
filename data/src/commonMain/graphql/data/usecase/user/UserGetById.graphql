@@ -3,6 +3,7 @@ query UserGetById($id: ObjectId!) {
     id
     email
     role
+    emailVerified
     details {
       name
       phone

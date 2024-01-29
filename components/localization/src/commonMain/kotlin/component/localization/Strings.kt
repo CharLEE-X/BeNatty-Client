@@ -92,4 +92,6 @@ enum class Strings {
     Delete,
     ResetPassword,
     Role,
+    Verified,
+    NotVerified,
 }

@@ -83,6 +83,7 @@ internal class AdminUserPageInputHandler :
             updateState { it.copy(isSaveRoleButtonDisabled = input.isDisabled) }
 
         AdminUserPageContract.Inputs.SaveRole -> handleSaveRole()
+        is AdminUserPageContract.Inputs.SetIsEmailVerified -> updateState { it.copy(emailVerified = input.isVerified) }
     }
 
     private suspend fun InputScope.handleSaveRole() {
@@ -524,6 +525,7 @@ internal class AdminUserPageInputHandler :
                         postInput(AdminUserPageContract.Inputs.SetUserProfile(data.getUserById))
 
                         postInput(AdminUserPageContract.Inputs.SetEmail(data.getUserById.email))
+                        postInput(AdminUserPageContract.Inputs.SetIsEmailVerified(data.getUserById.emailVerified))
                         postInput(AdminUserPageContract.Inputs.SetFullName(data.getUserById.details.name))
                         data.getUserById.details.phone?.let { postInput(AdminUserPageContract.Inputs.SetPhone(it)) }
                         postInput(AdminUserPageContract.Inputs.SetPersonalDetailsButtonDisabled(isDisabled = true))

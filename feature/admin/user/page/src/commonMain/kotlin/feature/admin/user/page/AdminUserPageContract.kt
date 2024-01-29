@@ -11,6 +11,7 @@ object AdminUserPageContract {
             id = "",
             email = "",
             role = Role.USER,
+            emailVerified = false,
             details = UserGetByIdQuery.Details(
                 name = "",
                 phone = "",
@@ -38,6 +39,8 @@ object AdminUserPageContract {
         val email: String = "",
         val emailError: String? = null,
         val shakeEmail: Boolean = false,
+
+        val emailVerified: Boolean = false,
 
         val phone: String = "",
         val phoneError: String? = null,
@@ -97,6 +100,7 @@ object AdminUserPageContract {
         data class SetFullName(val fullName: String) : Inputs
         data class SetFullNameShake(val shake: Boolean) : Inputs
         data class SetEmail(val email: String) : Inputs
+        data class SetIsEmailVerified(val isVerified: Boolean) : Inputs
         data class SetEmailShake(val shake: Boolean) : Inputs
         data class SetPhone(val phone: String) : Inputs
         data class SetPhoneShake(val shake: Boolean) : Inputs
@@ -155,6 +159,8 @@ object AdminUserPageContract {
         val password: String = getString(component.localization.Strings.Password),
         val resetPassword: String = getString(component.localization.Strings.ResetPassword),
         val role: String = getString(component.localization.Strings.Role),
+        val verified: String = getString(component.localization.Strings.Verified),
+        val notVerified: String = getString(component.localization.Strings.NotVerified),
     )
 
     sealed interface ScreenState {

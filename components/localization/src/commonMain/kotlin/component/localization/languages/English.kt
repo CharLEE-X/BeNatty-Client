@@ -97,4 +97,6 @@ internal fun englishLanguage(
     Strings.Delete -> "Delete"
     Strings.ResetPassword -> "Reset password"
     Strings.Role -> "Role"
+    Strings.Verified -> "Verified"
+    Strings.NotVerified -> "Not verified"
 }
