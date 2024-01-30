@@ -325,13 +325,42 @@ fun RouterContent(
                 RouterScreen.AdminProductList -> AdminLayout("Admin Product List", router) {
                     AdminProductListPage(
                         onError = onError,
+                        goToCreateProduct = {
+                            router.trySend(
+                                RouterContract.Inputs.GoToDestination(
+                                    RouterScreen.AdminProductPageNew.matcher.routeFormat
+                                )
+                            )
+                        },
+                        onProductClick = { id ->
+                            router.trySend(
+                                RouterContract.Inputs.GoToDestination(
+                                    RouterScreen.AdminProductPageExisting.directions()
+                                        .pathParameter("id", id)
+                                        .build()
+                                )
+                            )
+                        },
                     )
                 }
 
-                RouterScreen.AdminProductPage -> AdminLayout("Admin Product Page", router) {
+                RouterScreen.AdminProductPageNew -> AdminLayout("Create Product", router) {
                     AdminProductPagePage(
+                        productId = null,
                         onError = onError,
+                        goToProductList = { router.trySend(RouterContract.Inputs.GoBack()) },
                     )
+                }
+
+                RouterScreen.AdminProductPageExisting -> {
+                    val id: String by stringPath()
+                    AdminLayout("Edit Product", router) {
+                        AdminProductPagePage(
+                            productId = id,
+                            onError = onError,
+                            goToProductList = { router.trySend(RouterContract.Inputs.GoBack()) },
+                        )
+                    }
                 }
 
                 RouterScreen.AdminOrderList -> AdminLayout("Admin Order List", router) {

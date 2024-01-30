@@ -52,7 +52,8 @@ enum class RouterScreen(
     AdminUserPageNew(ADMIN + USER + PAGE),
     AdminUserPageExisting(ADMIN + USER + PAGE + ID),
     AdminProductList(ADMIN + PRODUCT + LIST),
-    AdminProductPage(ADMIN + PRODUCT + PAGE + ID),
+    AdminProductPageNew(ADMIN + PRODUCT + PAGE),
+    AdminProductPageExisting(ADMIN + PRODUCT + PAGE + ID),
     AdminOrderList(ADMIN + ORDER + LIST),
     AdminOrderPage(ADMIN + ORDER + PAGE + ID),
 
@@ -137,9 +138,10 @@ fun RouterScreen.pageTitle(shopName: String = "Natalia's Shop"): String {
         RouterScreen.AdminUserPageNew -> "Admin User Create"
         RouterScreen.AdminUserPageExisting -> "Admin User details"
         RouterScreen.AdminProductList -> "Admin Products"
-        RouterScreen.AdminProductPage -> "Admin Product"
+        RouterScreen.AdminProductPageNew -> "Admin Product"
         RouterScreen.AdminOrderList -> "Admin Orders"
         RouterScreen.AdminOrderPage -> "Admin Order"
+        RouterScreen.AdminProductPageExisting -> "Admin Product details"
     }
     return "$shopName - $title"
 }

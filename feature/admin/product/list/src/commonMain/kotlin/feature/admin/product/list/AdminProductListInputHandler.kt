@@ -24,7 +24,7 @@ internal class AdminProductListInputHandler :
 
     private suspend fun InputScope.handleGetProductsPage(page: Int) {
         sideJob("handleGetProductsPage") {
-            productService.getProductsPage(page, 10).fold(
+            productService.getAllAsPage(page, 10).fold(
                 onSuccess = {
                     postInput(
                         AdminProductListContract.Inputs.SetProductsPage(

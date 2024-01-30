@@ -101,4 +101,9 @@ enum class Strings {
     UpdatedAt,
     Never,
     Registered,
+    NewProduct,
+    Details,
+    Name,
+    Create,
+    ShortDescription,
 }

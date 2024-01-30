@@ -3,10 +3,8 @@ package web.pages.admin.users
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.browser.dom.ElementTarget
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
@@ -17,13 +15,8 @@ import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
-import com.varabyte.kobweb.compose.ui.modifiers.width
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiAdd
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiBusiness
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiCancel
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiCheck
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiEdit
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEmail
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiError
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiFlag
@@ -41,13 +34,12 @@ import feature.admin.user.page.AdminUserPageContract
 import feature.admin.user.page.AdminUserPageViewModel
 import org.jetbrains.compose.web.attributes.AutoComplete
 import org.jetbrains.compose.web.css.em
-import org.jetbrains.compose.web.css.px
 import web.components.widgets.CommonTextfield
+import web.components.widgets.EditCancelButton
 import web.components.widgets.PageHeader
 import web.components.widgets.SaveButton
 import web.components.widgets.SectionHeader
 import web.compose.material3.component.Divider
-import web.compose.material3.component.FilledButton
 import web.compose.material3.component.FilledTonalButton
 import web.compose.material3.component.Radio
 import web.compose.material3.component.TextFieldType
@@ -68,38 +60,13 @@ fun AdminUserPagePage(
         )
     }
     val state by vm.observeStates().collectAsState()
-    var showDeleteConfirmation by remember { mutableStateOf(false) }
 
     PageHeader("User: ${state.id}") {
-        if (!showDeleteConfirmation) {
-            FilledButton(
-                onClick = { showDeleteConfirmation = true },
-                leadingIcon = { MdiAdd() },
-            ) {
-                SpanText(text = state.strings.delete)
-            }
-        } else {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.gap(1.em)
-            ) {
-                FilledTonalButton(
-                    onClick = {
-                        vm.trySend(AdminUserPageContract.Inputs.DeleteUser)
-                        showDeleteConfirmation = false
-                    },
-                    leadingIcon = { MdiDelete() },
-                ) {
-                    SpanText(text = state.strings.delete)
-                }
-                FilledButton(
-                    onClick = { showDeleteConfirmation = false },
-                    leadingIcon = { MdiCancel() },
-                ) {
-                    SpanText(text = state.strings.cancel)
-                }
-            }
-        }
+        DeleteButtonWithConfirmation(
+            deleteText = state.strings.delete,
+            cancelText = state.strings.cancel,
+            onDelete = { vm.trySend(AdminUserPageContract.Inputs.DeleteUser) },
+        )
     }
     PersonalDetails(vm, state)
     Divider(modifier = Modifier.margin(topBottom = 1.em))
@@ -354,23 +321,5 @@ fun OtherInfo(vm: AdminUserPageViewModel, state: AdminUserPageContract.State) {
             SpanText(text = millisToTime(state.createdAt))
             SpanText(text = millisToTime(state.updatedAt))
         }
-    }
-}
-
-@Composable
-private fun EditCancelButton(
-    isEditing: Boolean,
-    editText: String,
-    cancelText: String,
-    edit: () -> Unit,
-    cancel: () -> Unit,
-    width: Int = 150,
-) {
-    FilledButton(
-        onClick = { if (isEditing) cancel() else edit() },
-        leadingIcon = { if (isEditing) MdiCancel() else MdiEdit() },
-        modifier = Modifier.width(width.px),
-    ) {
-        SpanText(if (isEditing) cancelText else editText)
     }
 }

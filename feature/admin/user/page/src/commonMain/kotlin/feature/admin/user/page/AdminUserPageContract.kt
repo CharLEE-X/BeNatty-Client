@@ -8,7 +8,7 @@ import data.type.Role
 object AdminUserPageContract {
     data class State(
         val isLoading: Boolean = false,
-        val originalUser: UserGetByIdQuery.GetUserById = UserGetByIdQuery.GetUserById(
+        val original: UserGetByIdQuery.GetUserById = UserGetByIdQuery.GetUserById(
             id = "",
             email = "",
             role = Role.USER,
@@ -155,10 +155,17 @@ object AdminUserPageContract {
     }
 
     data class Strings(
+        val save: String = getString(component.localization.Strings.Save),
+        val edit: String = getString(component.localization.Strings.Edit),
+        val cancel: String = getString(component.localization.Strings.Cancel),
+        val delete: String = getString(component.localization.Strings.Delete),
+        val createdBy: String = getString(component.localization.Strings.CreatedBy),
+        val createdAt: String = getString(component.localization.Strings.CreatedAt),
+        val updatedAt: String = getString(component.localization.Strings.UpdatedAt),
+        val never: String = getString(component.localization.Strings.Never),
         val fullName: String = getString(component.localization.Strings.FullName),
         val email: String = getString(component.localization.Strings.Email),
         val phone: String = getString(component.localization.Strings.Phone),
-        val save: String = getString(component.localization.Strings.Save),
         val personalDetails: String = getString(component.localization.Strings.PersonalDetails),
         val profile: String = getString(component.localization.Strings.Profile),
         val oldPassword: String = getString(component.localization.Strings.OldPassword),
@@ -169,9 +176,6 @@ object AdminUserPageContract {
         val city: String = getString(component.localization.Strings.City),
         val state: String = getString(component.localization.Strings.State),
         val country: String = getString(component.localization.Strings.Country),
-        val edit: String = getString(component.localization.Strings.Edit),
-        val cancel: String = getString(component.localization.Strings.Cancel),
-        val delete: String = getString(component.localization.Strings.Delete),
         val password: String = getString(component.localization.Strings.Password),
         val resetPassword: String = getString(component.localization.Strings.ResetPassword),
         val role: String = getString(component.localization.Strings.Role),
@@ -180,10 +184,6 @@ object AdminUserPageContract {
         val otherInfo: String = getString(component.localization.Strings.OtherInfo),
         val wishlist: String = getString(component.localization.Strings.Wishlist),
         val lastActive: String = getString(component.localization.Strings.LastActive),
-        val createdBy: String = getString(component.localization.Strings.CreatedBy),
-        val createdAt: String = getString(component.localization.Strings.CreatedAt),
-        val updatedAt: String = getString(component.localization.Strings.UpdatedAt),
-        val never: String = getString(component.localization.Strings.Never),
         val registered: String = getString(component.localization.Strings.Registered),
     )
 

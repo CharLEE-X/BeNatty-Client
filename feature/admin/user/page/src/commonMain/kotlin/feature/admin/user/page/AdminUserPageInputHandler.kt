@@ -34,13 +34,10 @@ internal class AdminUserPageInputHandler :
         is AdminUserPageContract.Inputs.SetId -> updateState { it.copy(id = input.id) }
 
         is AdminUserPageContract.Inputs.GetUserById -> handleGetUserById(input.id)
-        is AdminUserPageContract.Inputs.SetUserProfile -> updateState { it.copy(originalUser = input.user) }
+        is AdminUserPageContract.Inputs.SetUserProfile -> updateState { it.copy(original = input.user) }
 
         is AdminUserPageContract.Inputs.SetFullName -> handleSetFullName(input.fullName)
-        is AdminUserPageContract.Inputs.SetFullNameShake -> {
-            println("full name shaking ${input.shake}")
-            updateState { it.copy(shakeFullName = input.shake) }
-        }
+        is AdminUserPageContract.Inputs.SetFullNameShake -> updateState { it.copy(shakeFullName = input.shake) }
 
         is AdminUserPageContract.Inputs.SetEmail -> handleSetEmail(input.email)
         is AdminUserPageContract.Inputs.SetEmailShake -> updateState { it.copy(shakeEmail = input.shake) }
@@ -102,7 +99,7 @@ internal class AdminUserPageInputHandler :
                     onSuccess = { data ->
                         postInput(
                             AdminUserPageContract.Inputs.SetUserProfile(
-                                user = state.originalUser.copy(role = data.updateUser.role)
+                                user = state.original.copy(role = data.updateUser.role)
                             )
                         )
                         postInput(AdminUserPageContract.Inputs.SetRoleButtonDisabled(isDisabled = true))
@@ -123,7 +120,7 @@ internal class AdminUserPageInputHandler :
         updateState {
             it.copy(
                 role = role,
-                isSaveRoleButtonDisabled = role == it.originalUser.role,
+                isSaveRoleButtonDisabled = role == it.original.role,
             )
         }
     }
@@ -162,17 +159,17 @@ internal class AdminUserPageInputHandler :
             it.copy(
                 isAddressEditing = false,
                 isSaveAddressButtonDisabled = true,
-                address = it.originalUser.address.address ?: "",
+                address = it.original.address.address ?: "",
                 addressError = null,
-                additionalInformation = it.originalUser.address.additionalInfo ?: "",
+                additionalInformation = it.original.address.additionalInfo ?: "",
                 additionalInformationError = null,
-                postcode = it.originalUser.address.postcode ?: "",
+                postcode = it.original.address.postcode ?: "",
                 postcodeError = null,
-                city = it.originalUser.address.city ?: "",
+                city = it.original.address.city ?: "",
                 cityError = null,
-                state = it.originalUser.address.state ?: "",
+                state = it.original.address.state ?: "",
                 stateError = null,
-                country = it.originalUser.address.country ?: "",
+                country = it.original.address.country ?: "",
                 countryError = null,
             )
         }
@@ -204,10 +201,10 @@ internal class AdminUserPageInputHandler :
                 onSuccess = { data ->
                     postInput(
                         AdminUserPageContract.Inputs.SetUserProfile(
-                            user = state.originalUser.copy(
+                            user = state.original.copy(
                                 id = data.createUser.id,
                                 email = data.createUser.email,
-                                details = state.originalUser.details.copy(
+                                details = state.original.details.copy(
                                     name = state.fullName,
                                 ),
                             )
@@ -229,9 +226,9 @@ internal class AdminUserPageInputHandler :
     private suspend fun InputScope.handleSetFullName(value: String) {
         with(value) {
             updateState {
-                val hasChanged = value != it.originalUser.details.name ||
-                    it.email != it.originalUser.email ||
-                    it.phone != it.originalUser.details.phone
+                val hasChanged = value != it.original.details.name ||
+                    it.email != it.original.email ||
+                    it.phone != it.original.details.phone
                 it.copy(
                     fullName = this,
                     fullNameError = if (it.isSavePersonalDetailsButtonDisabled) null else {
@@ -246,9 +243,9 @@ internal class AdminUserPageInputHandler :
     private suspend fun InputScope.handleSetEmail(value: String) {
         with(value) {
             updateState {
-                val hasChanged = it.fullName != it.originalUser.details.name ||
-                    value != it.originalUser.email ||
-                    it.phone != it.originalUser.details.phone
+                val hasChanged = it.fullName != it.original.details.name ||
+                    value != it.original.email ||
+                    it.phone != it.original.details.phone
                 it.copy(
                     email = this,
                     emailError = if (it.isSavePersonalDetailsButtonDisabled) null else {
@@ -263,9 +260,9 @@ internal class AdminUserPageInputHandler :
     private suspend fun InputScope.handleSetPhone(value: String) {
         with(value) {
             updateState {
-                val hasChanged = it.fullName != it.originalUser.details.name ||
-                    it.email != it.originalUser.email ||
-                    value != it.originalUser.details.phone
+                val hasChanged = it.fullName != it.original.details.name ||
+                    it.email != it.original.email ||
+                    value != it.original.details.phone
                 it.copy(
                     phone = this,
                     phoneError = if (it.isSavePersonalDetailsButtonDisabled) null else {
@@ -290,7 +287,6 @@ internal class AdminUserPageInputHandler :
                     if (isEmailError) postInput(AdminUserPageContract.Inputs.SetEmailShake(shake = true))
                     if (isPhoneError) postInput(AdminUserPageContract.Inputs.SetPhoneShake(shake = true))
 
-                    println("delay")
                     delay(SHAKE_ANIM_DURATION)
 
                     if (isFullNameError) postInput(AdminUserPageContract.Inputs.SetFullNameShake(shake = false))
@@ -302,14 +298,14 @@ internal class AdminUserPageInputHandler :
                     sideJob("handleSavePersonalDetails") {
                         userService.update(
                             id = id,
-                            name = if (fullName != originalUser.details.name) fullName else null,
-                            email = if (email != originalUser.email) email else null,
-                            phone = if (phone != originalUser.details.phone) phone else null,
+                            name = if (fullName != original.details.name) fullName else null,
+                            email = if (email != original.email) email else null,
+                            phone = if (phone != original.details.phone) phone else null,
                         ).fold(
                             onSuccess = { data ->
                                 postInput(
                                     AdminUserPageContract.Inputs.SetUserProfile(
-                                        user = this@with.originalUser.copy(
+                                        user = this@with.original.copy(
                                             email = data.updateUser.email,
                                             details = UserGetByIdQuery.Details(
                                                 name = data.updateUser.details.name,
@@ -319,6 +315,7 @@ internal class AdminUserPageInputHandler :
                                     )
                                 )
                                 postInput(AdminUserPageContract.Inputs.SetPersonalDetailsButtonDisabled(isDisabled = true))
+                                postInput(AdminUserPageContract.Inputs.SetPersonalDetailsNotEditable)
                             },
                             onFailure = {
                                 postEvent(
@@ -337,12 +334,12 @@ internal class AdminUserPageInputHandler :
     private suspend fun InputScope.handleSetAddress(value: String) {
         with(value) {
             updateState {
-                val hasChanged = value != it.originalUser.address.address ||
-                    it.additionalInformation != it.originalUser.address.additionalInfo ||
-                    it.postcode != it.originalUser.address.postcode ||
-                    it.city != it.originalUser.address.city ||
-                    it.state != it.originalUser.address.state ||
-                    it.country != it.originalUser.address.country
+                val hasChanged = value != it.original.address.address ||
+                    it.additionalInformation != it.original.address.additionalInfo ||
+                    it.postcode != it.original.address.postcode ||
+                    it.city != it.original.address.city ||
+                    it.state != it.original.address.state ||
+                    it.country != it.original.address.country
                 it.copy(
                     address = this,
                     addressError = if (it.isSaveAddressButtonDisabled) null else {
@@ -357,12 +354,12 @@ internal class AdminUserPageInputHandler :
     private suspend fun InputScope.handleSetAdditionalInfo(value: String) {
         with(value) {
             updateState {
-                val hasChanged = it.address != it.originalUser.address.address ||
-                    value != it.originalUser.address.additionalInfo ||
-                    it.postcode != it.originalUser.address.postcode ||
-                    it.city != it.originalUser.address.city ||
-                    it.state != it.originalUser.address.state ||
-                    it.country != it.originalUser.address.country
+                val hasChanged = it.address != it.original.address.address ||
+                    value != it.original.address.additionalInfo ||
+                    it.postcode != it.original.address.postcode ||
+                    it.city != it.original.address.city ||
+                    it.state != it.original.address.state ||
+                    it.country != it.original.address.country
                 it.copy(
                     additionalInformation = this,
                     additionalInformationError = null,
@@ -375,12 +372,12 @@ internal class AdminUserPageInputHandler :
     private suspend fun InputScope.handleSetPostcode(value: String) {
         with(value) {
             updateState {
-                val hasChanged = it.address != it.originalUser.address.address ||
-                    it.additionalInformation != it.originalUser.address.additionalInfo ||
-                    value != it.originalUser.address.postcode ||
-                    it.city != it.originalUser.address.city ||
-                    it.state != it.originalUser.address.state ||
-                    it.country != it.originalUser.address.country
+                val hasChanged = it.address != it.original.address.address ||
+                    it.additionalInformation != it.original.address.additionalInfo ||
+                    value != it.original.address.postcode ||
+                    it.city != it.original.address.city ||
+                    it.state != it.original.address.state ||
+                    it.country != it.original.address.country
                 it.copy(
                     postcode = this,
                     postcodeError = if (it.isSaveAddressButtonDisabled) null else {
@@ -395,12 +392,12 @@ internal class AdminUserPageInputHandler :
     private suspend fun InputScope.handleSetCity(value: String) {
         with(value) {
             updateState {
-                val hasChanged = it.address != it.originalUser.address.address ||
-                    it.additionalInformation != it.originalUser.address.additionalInfo ||
-                    it.postcode != it.originalUser.address.postcode ||
-                    value != it.originalUser.address.city ||
-                    it.state != it.originalUser.address.state ||
-                    it.country != it.originalUser.address.country
+                val hasChanged = it.address != it.original.address.address ||
+                    it.additionalInformation != it.original.address.additionalInfo ||
+                    it.postcode != it.original.address.postcode ||
+                    value != it.original.address.city ||
+                    it.state != it.original.address.state ||
+                    it.country != it.original.address.country
                 it.copy(
                     city = this,
                     cityError = if (it.isSaveAddressButtonDisabled) null else {
@@ -415,12 +412,12 @@ internal class AdminUserPageInputHandler :
     private suspend fun InputScope.handleSetState(value: String) {
         with(value) {
             updateState {
-                val hasChanged = it.address != it.originalUser.address.address ||
-                    it.additionalInformation != it.originalUser.address.additionalInfo ||
-                    it.postcode != it.originalUser.address.postcode ||
-                    it.city != it.originalUser.address.city ||
-                    value != it.originalUser.address.state ||
-                    it.country != it.originalUser.address.country
+                val hasChanged = it.address != it.original.address.address ||
+                    it.additionalInformation != it.original.address.additionalInfo ||
+                    it.postcode != it.original.address.postcode ||
+                    it.city != it.original.address.city ||
+                    value != it.original.address.state ||
+                    it.country != it.original.address.country
                 it.copy(
                     state = this,
                     stateError = if (it.isSaveAddressButtonDisabled) null else {
@@ -435,12 +432,12 @@ internal class AdminUserPageInputHandler :
     private suspend fun InputScope.handleSetCountry(value: String) {
         with(value) {
             updateState {
-                val hasChanged = it.address != it.originalUser.address.address ||
-                    it.additionalInformation != it.originalUser.address.additionalInfo ||
-                    it.postcode != it.originalUser.address.postcode ||
-                    it.city != it.originalUser.address.city ||
-                    it.state != it.originalUser.address.state ||
-                    value != it.originalUser.address.country
+                val hasChanged = it.address != it.original.address.address ||
+                    it.additionalInformation != it.original.address.additionalInfo ||
+                    it.postcode != it.original.address.postcode ||
+                    it.city != it.original.address.city ||
+                    it.state != it.original.address.state ||
+                    value != it.original.address.country
                 it.copy(
                     country = this,
                     countryError = if (it.isSaveAddressButtonDisabled) null else {
@@ -482,17 +479,17 @@ internal class AdminUserPageInputHandler :
                     authService.userId?.let { id ->
                         userService.update(
                             id = id,
-                            address = if (address != originalUser.address.address) address else null,
-                            additionalInfo = if (additionalInformation != originalUser.address.additionalInfo) additionalInformation else null,
-                            city = if (city != originalUser.address.city) city else null,
-                            postcode = if (postcode != originalUser.address.postcode) postcode else null,
-                            state = if (state != originalUser.address.state) state else null,
-                            country = if (country != originalUser.address.country) country else null,
+                            address = if (address != original.address.address) address else null,
+                            additionalInfo = if (additionalInformation != original.address.additionalInfo) additionalInformation else null,
+                            city = if (city != original.address.city) city else null,
+                            postcode = if (postcode != original.address.postcode) postcode else null,
+                            state = if (state != original.address.state) state else null,
+                            country = if (country != original.address.country) country else null,
                         ).fold(
                             onSuccess = { data ->
                                 postInput(
                                     AdminUserPageContract.Inputs.SetUserProfile(
-                                        user = this@with.originalUser.copy(
+                                        user = this@with.original.copy(
                                             address = UserGetByIdQuery.Address(
                                                 address = data.updateUser.address.address,
                                                 additionalInfo = data.updateUser.address.additionalInfo,
@@ -505,6 +502,7 @@ internal class AdminUserPageInputHandler :
                                     )
                                 )
                                 postInput(AdminUserPageContract.Inputs.SetAddressButtonDisabled(isDisabled = true))
+                                postInput(AdminUserPageContract.Inputs.SetAddressNotEditable)
                             },
                             onFailure = {
                                 postEvent(

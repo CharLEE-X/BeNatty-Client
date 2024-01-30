@@ -2,28 +2,9 @@ package feature.account.profile
 
 import component.localization.getString
 import data.UserGetQuery
-import org.koin.core.component.KoinComponent
 
-object ProfileContract : KoinComponent {
+object ProfileContract {
     data class State(
-        val originalUser: UserGetQuery.GetUser = UserGetQuery.GetUser(
-            id = "",
-            email = "",
-            details = UserGetQuery.Details(
-                name = "",
-                phone = "",
-            ),
-            address = UserGetQuery.Address(
-                address = "",
-                additionalInfo = "",
-                postcode = "",
-                city = "",
-                state = "",
-                country = "",
-            ),
-            __typename = "",
-        ),
-
         // Personal details
         val fullName: String = "",
         val fullNameError: String? = null,
@@ -37,6 +18,7 @@ object ProfileContract : KoinComponent {
         val phoneError: String? = null,
         val shakePhone: Boolean = false,
 
+        val isPersonalDetailsEditing: Boolean = false,
         val isSavePersonalDetailsButtonDisabled: Boolean = true,
 
         // Password
@@ -74,7 +56,26 @@ object ProfileContract : KoinComponent {
         val countryError: String? = null,
         val shakeCountry: Boolean = false,
 
+        val isAddressEditing: Boolean = false,
         val isSaveAddressButtonDisabled: Boolean = true,
+
+        val original: UserGetQuery.GetUser = UserGetQuery.GetUser(
+            id = "",
+            email = email,
+            details = UserGetQuery.Details(
+                name = fullName,
+                phone = phone,
+            ),
+            address = UserGetQuery.Address(
+                address = address,
+                additionalInfo = additionalInformation,
+                postcode = postcode,
+                city = city,
+                state = state,
+                country = country,
+            ),
+            __typename = "",
+        ),
 
         val strings: Strings = Strings()
     )
@@ -91,6 +92,8 @@ object ProfileContract : KoinComponent {
         data class SetPhoneShake(val shake: Boolean) : Inputs
         data object SavePersonalDetails : Inputs
         data class SetPersonalDetailsButtonDisabled(val isDisabled: Boolean) : Inputs
+        data object SetPersonalDetailsEditable : Inputs
+        data object SetPersonalDetailsNotEditable : Inputs
 
         data class SetOldPassword(val oldPassword: String) : Inputs
         data class SetOldPasswordShake(val shake: Boolean) : Inputs
@@ -112,6 +115,8 @@ object ProfileContract : KoinComponent {
         data class SetCountryShake(val shake: Boolean) : Inputs
         data object SaveAddress : Inputs
         data class SetAddressButtonDisabled(val isDisabled: Boolean) : Inputs
+        data object SetAddressEditable : Inputs
+        data object SetAddressNotEditable : Inputs
     }
 
     sealed interface Events {
@@ -119,10 +124,12 @@ object ProfileContract : KoinComponent {
     }
 
     data class Strings(
+        val save: String = getString(component.localization.Strings.Save),
+        val edit: String = getString(component.localization.Strings.Edit),
+        val cancel: String = getString(component.localization.Strings.Cancel),
         val fullName: String = getString(component.localization.Strings.FullName),
         val email: String = getString(component.localization.Strings.Email),
         val phone: String = getString(component.localization.Strings.Phone),
-        val save: String = getString(component.localization.Strings.Save),
         val personalDetails: String = getString(component.localization.Strings.PersonalDetails),
         val profile: String = getString(component.localization.Strings.Profile),
         val oldPassword: String = getString(component.localization.Strings.OldPassword),

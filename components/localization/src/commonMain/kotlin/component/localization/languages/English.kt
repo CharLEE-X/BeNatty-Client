@@ -106,4 +106,9 @@ internal fun englishLanguage(
     Strings.UpdatedAt -> "Updated at"
     Strings.Never -> "Never"
     Strings.Registered -> "Registered"
+    Strings.NewProduct -> "New product"
+    Strings.Details -> "Details"
+    Strings.Name -> "Name"
+    Strings.Create -> "Create"
+    Strings.ShortDescription -> "Short description"
 }

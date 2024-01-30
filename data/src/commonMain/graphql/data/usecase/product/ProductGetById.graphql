@@ -1,0 +1,61 @@
+query ProductGetById($getProductByIdId: ObjectId!) {
+  getProductById(id: $getProductByIdId) {
+    product {
+      common {
+        allowReviews
+        catalogVisibility
+        categories
+        createdAt
+        createdBy
+        isFeatured
+        updatedAt
+        name
+        relatedIds
+        shortDescription
+        tags
+      }
+      data {
+        description
+        images {
+          altText
+          created
+          id
+          modified
+          name
+          url
+        }
+        isPurchasable
+        parentId
+        postStatus
+      }
+      id
+      inventory {
+        backorderStatus
+        canBackorder
+        isOnBackorder
+        lowStockThreshold
+        onePerOrder
+        remainingStock
+        stockStatus
+        trackInventory
+      }
+      price {
+        onSale
+        price
+        regularPrice
+        saleEnd
+        salePrice
+        saleStart
+      }
+      shipping {
+        height
+        length
+        requiresShipping
+        weight
+        width
+      }
+    }
+    reviews
+    totalInWishlist
+  }
+}

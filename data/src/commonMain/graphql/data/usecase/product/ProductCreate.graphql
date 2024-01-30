@@ -1,8 +1,8 @@
-mutation ProductCreate($name: String!) {
-  createProduct(name: $name) {
+mutation ProductCreate($input: ProductCreateInput!) {
+  createProduct(input: $input) {
     id
-    common {
-      name
-    }
+    name
+    createdBy
+    createdAt
   }
 }

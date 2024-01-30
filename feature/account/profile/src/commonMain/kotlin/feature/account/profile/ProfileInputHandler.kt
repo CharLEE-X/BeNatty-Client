@@ -13,7 +13,7 @@ import kotlin.time.Duration.Companion.seconds
 
 val SHAKE_ANIM_DURATION = (.25).seconds
 
-private typealias ProfileInputScope = InputHandlerScope<ProfileContract.Inputs, ProfileContract.Events, ProfileContract.State>
+private typealias InputScope = InputHandlerScope<ProfileContract.Inputs, ProfileContract.Events, ProfileContract.State>
 
 internal class ProfileInputHandler :
     KoinComponent,
@@ -27,7 +27,7 @@ internal class ProfileInputHandler :
         input: ProfileContract.Inputs,
     ) = when (input) {
         ProfileContract.Inputs.GetUserProfile -> handleGetUserProfile()
-        is ProfileContract.Inputs.SetUserProfile -> updateState { it.copy(originalUser = input.user) }
+        is ProfileContract.Inputs.SetUserProfile -> updateState { it.copy(original = input.user) }
 
         is ProfileContract.Inputs.SetFullName -> handleSetFullName(input.fullName)
         is ProfileContract.Inputs.SetFullNameShake -> {
@@ -65,14 +65,43 @@ internal class ProfileInputHandler :
         ProfileContract.Inputs.SaveAddress -> handleSaveAddress()
         is ProfileContract.Inputs.SetAddressButtonDisabled ->
             updateState { it.copy(isSaveAddressButtonDisabled = input.isDisabled) }
+
+        ProfileContract.Inputs.SetAddressEditable -> updateState { it.copy(isAddressEditing = true) }
+        ProfileContract.Inputs.SetAddressNotEditable -> handleSetAddressNotEditable()
+        ProfileContract.Inputs.SetPersonalDetailsEditable ->
+            updateState { it.copy(isPersonalDetailsEditing = true) }
+
+        ProfileContract.Inputs.SetPersonalDetailsNotEditable ->
+            updateState { it.copy(isPersonalDetailsEditing = false) }
     }
 
-    private suspend fun ProfileInputScope.handleSetFullName(value: String) {
+    private suspend fun InputScope.handleSetAddressNotEditable() {
+        updateState {
+            it.copy(
+                isAddressEditing = false,
+                isSaveAddressButtonDisabled = true,
+                address = it.original.address.address ?: "",
+                addressError = null,
+                additionalInformation = it.original.address.additionalInfo ?: "",
+                additionalInformationError = null,
+                postcode = it.original.address.postcode ?: "",
+                postcodeError = null,
+                city = it.original.address.city ?: "",
+                cityError = null,
+                state = it.original.address.state ?: "",
+                stateError = null,
+                country = it.original.address.country ?: "",
+                countryError = null,
+            )
+        }
+    }
+
+    private suspend fun InputScope.handleSetFullName(value: String) {
         with(value) {
             updateState {
-                val hasChanged = value != it.originalUser.details.name ||
-                    it.email != it.originalUser.email ||
-                    it.phone != it.originalUser.details.phone
+                val hasChanged = value != it.original.details.name ||
+                    it.email != it.original.email ||
+                    it.phone != it.original.details.phone
                 it.copy(
                     fullName = this,
                     fullNameError = if (it.isSavePersonalDetailsButtonDisabled) null else {
@@ -84,12 +113,12 @@ internal class ProfileInputHandler :
         }
     }
 
-    private suspend fun ProfileInputScope.handleSetEmail(value: String) {
+    private suspend fun InputScope.handleSetEmail(value: String) {
         with(value) {
             updateState {
-                val hasChanged = it.fullName != it.originalUser.details.name ||
-                    value != it.originalUser.email ||
-                    it.phone != it.originalUser.details.phone
+                val hasChanged = it.fullName != it.original.details.name ||
+                    value != it.original.email ||
+                    it.phone != it.original.details.phone
                 it.copy(
                     email = this,
                     emailError = if (it.isSavePersonalDetailsButtonDisabled) null else {
@@ -101,12 +130,12 @@ internal class ProfileInputHandler :
         }
     }
 
-    private suspend fun ProfileInputScope.handleSetPhone(value: String) {
+    private suspend fun InputScope.handleSetPhone(value: String) {
         with(value) {
             updateState {
-                val hasChanged = it.fullName != it.originalUser.details.name ||
-                    it.email != it.originalUser.email ||
-                    value != it.originalUser.details.phone
+                val hasChanged = it.fullName != it.original.details.name ||
+                    it.email != it.original.email ||
+                    value != it.original.details.phone
                 it.copy(
                     phone = this,
                     phoneError = if (it.isSavePersonalDetailsButtonDisabled) null else {
@@ -118,7 +147,7 @@ internal class ProfileInputHandler :
         }
     }
 
-    private suspend fun ProfileInputScope.handleSavePersonalDetails() {
+    private suspend fun InputScope.handleSavePersonalDetails() {
         with(getCurrentState()) {
             val isFullNameError = fullNameError != null
             val isEmailError = emailError != null
@@ -143,14 +172,14 @@ internal class ProfileInputHandler :
                     authService.userId?.let { id ->
                         userService.update(
                             id = id,
-                            name = if (fullName != originalUser.details.name) fullName else null,
-                            email = if (email != originalUser.email) email else null,
-                            phone = if (phone != originalUser.details.phone) phone else null,
+                            name = if (fullName != original.details.name) fullName else null,
+                            email = if (email != original.email) email else null,
+                            phone = if (phone != original.details.phone) phone else null,
                         ).fold(
                             onSuccess = { data ->
                                 postInput(
                                     ProfileContract.Inputs.SetUserProfile(
-                                        user = this@with.originalUser.copy(
+                                        user = this@with.original.copy(
                                             email = data.updateUser.email,
                                             details = UserGetQuery.Details(
                                                 name = data.updateUser.details.name,
@@ -160,6 +189,7 @@ internal class ProfileInputHandler :
                                     )
                                 )
                                 postInput(ProfileContract.Inputs.SetPersonalDetailsButtonDisabled(isDisabled = true))
+                                postInput(ProfileContract.Inputs.SetPersonalDetailsNotEditable)
                             },
                             onFailure = {
                                 postEvent(
@@ -175,7 +205,7 @@ internal class ProfileInputHandler :
         }
     }
 
-    private suspend fun ProfileInputScope.handleSetOldPassword(value: String) {
+    private suspend fun InputScope.handleSetOldPassword(value: String) {
         with(value) {
             updateState {
                 val hasChanged = value != it.oldPassword ||
@@ -191,7 +221,7 @@ internal class ProfileInputHandler :
         }
     }
 
-    private suspend fun ProfileInputScope.handleSetNewPassword(value: String) {
+    private suspend fun InputScope.handleSetNewPassword(value: String) {
         with(value) {
             updateState {
                 val hasChanged = it.oldPassword != it.oldPassword ||
@@ -207,7 +237,7 @@ internal class ProfileInputHandler :
         }
     }
 
-    private suspend fun ProfileInputScope.handleSavePassword() {
+    private suspend fun InputScope.handleSavePassword() {
         with(getCurrentState()) {
             val isOldPassError = oldPasswordError != null
             val isNewPassError = newPasswordError != null
@@ -246,15 +276,15 @@ internal class ProfileInputHandler :
         }
     }
 
-    private suspend fun ProfileInputScope.handleSetAddress(value: String) {
+    private suspend fun InputScope.handleSetAddress(value: String) {
         with(value) {
             updateState {
-                val hasChanged = value != it.originalUser.address.address ||
-                    it.additionalInformation != it.originalUser.address.additionalInfo ||
-                    it.postcode != it.originalUser.address.postcode ||
-                    it.city != it.originalUser.address.city ||
-                    it.state != it.originalUser.address.state ||
-                    it.country != it.originalUser.address.country
+                val hasChanged = value != it.original.address.address ||
+                    it.additionalInformation != it.original.address.additionalInfo ||
+                    it.postcode != it.original.address.postcode ||
+                    it.city != it.original.address.city ||
+                    it.state != it.original.address.state ||
+                    it.country != it.original.address.country
                 it.copy(
                     address = this,
                     addressError = if (it.isSaveAddressButtonDisabled) null else {
@@ -266,15 +296,15 @@ internal class ProfileInputHandler :
         }
     }
 
-    private suspend fun ProfileInputScope.handleSetAdditionalInfo(value: String) {
+    private suspend fun InputScope.handleSetAdditionalInfo(value: String) {
         with(value) {
             updateState {
-                val hasChanged = it.address != it.originalUser.address.address ||
-                    value != it.originalUser.address.additionalInfo ||
-                    it.postcode != it.originalUser.address.postcode ||
-                    it.city != it.originalUser.address.city ||
-                    it.state != it.originalUser.address.state ||
-                    it.country != it.originalUser.address.country
+                val hasChanged = it.address != it.original.address.address ||
+                    value != it.original.address.additionalInfo ||
+                    it.postcode != it.original.address.postcode ||
+                    it.city != it.original.address.city ||
+                    it.state != it.original.address.state ||
+                    it.country != it.original.address.country
                 it.copy(
                     additionalInformation = this,
                     additionalInformationError = null,
@@ -284,15 +314,15 @@ internal class ProfileInputHandler :
         }
     }
 
-    private suspend fun ProfileInputScope.handleSetPostcode(value: String) {
+    private suspend fun InputScope.handleSetPostcode(value: String) {
         with(value) {
             updateState {
-                val hasChanged = it.address != it.originalUser.address.address ||
-                    it.additionalInformation != it.originalUser.address.additionalInfo ||
-                    value != it.originalUser.address.postcode ||
-                    it.city != it.originalUser.address.city ||
-                    it.state != it.originalUser.address.state ||
-                    it.country != it.originalUser.address.country
+                val hasChanged = it.address != it.original.address.address ||
+                    it.additionalInformation != it.original.address.additionalInfo ||
+                    value != it.original.address.postcode ||
+                    it.city != it.original.address.city ||
+                    it.state != it.original.address.state ||
+                    it.country != it.original.address.country
                 it.copy(
                     postcode = this,
                     postcodeError = if (it.isSaveAddressButtonDisabled) null else {
@@ -304,15 +334,15 @@ internal class ProfileInputHandler :
         }
     }
 
-    private suspend fun ProfileInputScope.handleSetCity(value: String) {
+    private suspend fun InputScope.handleSetCity(value: String) {
         with(value) {
             updateState {
-                val hasChanged = it.address != it.originalUser.address.address ||
-                    it.additionalInformation != it.originalUser.address.additionalInfo ||
-                    it.postcode != it.originalUser.address.postcode ||
-                    value != it.originalUser.address.city ||
-                    it.state != it.originalUser.address.state ||
-                    it.country != it.originalUser.address.country
+                val hasChanged = it.address != it.original.address.address ||
+                    it.additionalInformation != it.original.address.additionalInfo ||
+                    it.postcode != it.original.address.postcode ||
+                    value != it.original.address.city ||
+                    it.state != it.original.address.state ||
+                    it.country != it.original.address.country
                 it.copy(
                     city = this,
                     cityError = if (it.isSaveAddressButtonDisabled) null else {
@@ -324,15 +354,15 @@ internal class ProfileInputHandler :
         }
     }
 
-    private suspend fun ProfileInputScope.handleSetState(value: String) {
+    private suspend fun InputScope.handleSetState(value: String) {
         with(value) {
             updateState {
-                val hasChanged = it.address != it.originalUser.address.address ||
-                    it.additionalInformation != it.originalUser.address.additionalInfo ||
-                    it.postcode != it.originalUser.address.postcode ||
-                    it.city != it.originalUser.address.city ||
-                    value != it.originalUser.address.state ||
-                    it.country != it.originalUser.address.country
+                val hasChanged = it.address != it.original.address.address ||
+                    it.additionalInformation != it.original.address.additionalInfo ||
+                    it.postcode != it.original.address.postcode ||
+                    it.city != it.original.address.city ||
+                    value != it.original.address.state ||
+                    it.country != it.original.address.country
                 it.copy(
                     state = this,
                     stateError = if (it.isSaveAddressButtonDisabled) null else {
@@ -344,15 +374,15 @@ internal class ProfileInputHandler :
         }
     }
 
-    private suspend fun ProfileInputScope.handleSetCountry(value: String) {
+    private suspend fun InputScope.handleSetCountry(value: String) {
         with(value) {
             updateState {
-                val hasChanged = it.address != it.originalUser.address.address ||
-                    it.additionalInformation != it.originalUser.address.additionalInfo ||
-                    it.postcode != it.originalUser.address.postcode ||
-                    it.city != it.originalUser.address.city ||
-                    it.state != it.originalUser.address.state ||
-                    value != it.originalUser.address.country
+                val hasChanged = it.address != it.original.address.address ||
+                    it.additionalInformation != it.original.address.additionalInfo ||
+                    it.postcode != it.original.address.postcode ||
+                    it.city != it.original.address.city ||
+                    it.state != it.original.address.state ||
+                    value != it.original.address.country
                 it.copy(
                     country = this,
                     countryError = if (it.isSaveAddressButtonDisabled) null else {
@@ -364,7 +394,7 @@ internal class ProfileInputHandler :
         }
     }
 
-    private suspend fun ProfileInputScope.handleSaveAddress() {
+    private suspend fun InputScope.handleSaveAddress() {
         with(getCurrentState()) {
             val isAddressError = addressError != null
             val isPostalCodeError = postcodeError != null
@@ -394,17 +424,17 @@ internal class ProfileInputHandler :
                     authService.userId?.let { id ->
                         userService.update(
                             id = id,
-                            address = if (address != originalUser.address.address) address else null,
-                            additionalInfo = if (additionalInformation != originalUser.address.additionalInfo) additionalInformation else null,
-                            city = if (city != originalUser.address.city) city else null,
-                            postcode = if (postcode != originalUser.address.postcode) postcode else null,
-                            state = if (state != originalUser.address.state) state else null,
-                            country = if (country != originalUser.address.country) country else null,
+                            address = if (address != original.address.address) address else null,
+                            additionalInfo = if (additionalInformation != original.address.additionalInfo) additionalInformation else null,
+                            city = if (city != original.address.city) city else null,
+                            postcode = if (postcode != original.address.postcode) postcode else null,
+                            state = if (state != original.address.state) state else null,
+                            country = if (country != original.address.country) country else null,
                         ).fold(
                             onSuccess = { data ->
                                 postInput(
                                     ProfileContract.Inputs.SetUserProfile(
-                                        user = this@with.originalUser.copy(
+                                        user = this@with.original.copy(
                                             address = UserGetQuery.Address(
                                                 address = data.updateUser.address.address,
                                                 additionalInfo = data.updateUser.address.additionalInfo,
@@ -417,6 +447,7 @@ internal class ProfileInputHandler :
                                     )
                                 )
                                 postInput(ProfileContract.Inputs.SetAddressButtonDisabled(isDisabled = true))
+                                postInput(ProfileContract.Inputs.SetAddressNotEditable)
                             },
                             onFailure = {
                                 postEvent(ProfileContract.Events.OnError(it.message ?: "Error while updating address"))
@@ -428,7 +459,7 @@ internal class ProfileInputHandler :
         }
     }
 
-    private suspend fun ProfileInputScope.handleGetUserProfile() {
+    private suspend fun InputScope.handleGetUserProfile() {
         sideJob("handleGetUserProfile") {
             userService.get().collect {
                 it.fold(

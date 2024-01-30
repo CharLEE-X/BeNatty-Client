@@ -25,6 +25,7 @@ import feature.account.profile.ProfileViewModel
 import org.jetbrains.compose.web.attributes.AutoComplete
 import org.jetbrains.compose.web.css.em
 import web.components.widgets.CommonTextfield
+import web.components.widgets.EditCancelButton
 import web.components.widgets.PageHeader
 import web.components.widgets.SaveButton
 import web.components.widgets.SectionHeader
@@ -56,7 +57,15 @@ fun ProfilePage(
 private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) {
     SectionHeader(
         text = state.strings.personalDetails,
-    )
+    ) {
+        EditCancelButton(
+            isEditing = state.isPersonalDetailsEditing,
+            editText = state.strings.edit,
+            cancelText = state.strings.cancel,
+            edit = { vm.trySend(ProfileContract.Inputs.SetPersonalDetailsEditable) },
+            cancel = { vm.trySend(ProfileContract.Inputs.SetPersonalDetailsNotEditable) },
+        )
+    }
     CommonTextfield(
         value = state.fullName,
         onValueChange = { vm.trySend(ProfileContract.Inputs.SetFullName(it)) },
@@ -65,6 +74,7 @@ private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) 
         icon = { MdiPerson() },
         autoComplete = AutoComplete.givenName,
         shake = state.shakeFullName,
+        isEditing = state.isPersonalDetailsEditing,
         modifier = Modifier.fillMaxWidth(),
     )
     CommonTextfield(
@@ -77,6 +87,7 @@ private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) 
         required = true,
         autoComplete = AutoComplete.email,
         shake = state.shakeEmail,
+        isEditing = state.isPersonalDetailsEditing,
         modifier = Modifier.fillMaxWidth(),
     )
     CommonTextfield(
@@ -88,6 +99,7 @@ private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) 
         type = TextFieldType.TEXT,
         autoComplete = AutoComplete.tel,
         shake = state.shakePhone,
+        isEditing = state.isPersonalDetailsEditing,
         modifier = Modifier.fillMaxWidth(),
     )
     SaveButton(
@@ -131,7 +143,15 @@ fun Password(vm: ProfileViewModel, state: ProfileContract.State) {
 private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
     SectionHeader(
         text = state.strings.address,
-    )
+    ) {
+        EditCancelButton(
+            isEditing = state.isAddressEditing,
+            editText = state.strings.edit,
+            cancelText = state.strings.cancel,
+            edit = { vm.trySend(ProfileContract.Inputs.SetAddressEditable) },
+            cancel = { vm.trySend(ProfileContract.Inputs.SetAddressNotEditable) },
+        )
+    }
     CommonTextfield(
         value = state.address,
         onValueChange = { vm.trySend(ProfileContract.Inputs.SetAddress(it)) },
@@ -140,6 +160,7 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
         icon = { MdiHome() },
         autoComplete = AutoComplete.streetAddress,
         shake = state.shakeAddress,
+        isEditing = state.isAddressEditing,
         modifier = Modifier.fillMaxWidth(),
     )
     CommonTextfield(
@@ -149,6 +170,7 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
         errorMsg = state.additionalInformationError,
         icon = { MdiBusiness() },
         autoComplete = AutoComplete.ccAdditionalName,
+        isEditing = state.isAddressEditing,
         modifier = Modifier.fillMaxWidth(),
     )
     Row(
@@ -164,6 +186,7 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
             icon = { MdiLocalPostOffice() },
             autoComplete = AutoComplete.postalCode,
             shake = state.shakePostcode,
+            isEditing = state.isAddressEditing,
             modifier = Modifier.weight(1f),
         )
         CommonTextfield(
@@ -174,6 +197,7 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
             icon = { MdiLocationCity() },
             autoComplete = AutoComplete.addressLevel2,
             shake = state.shakeCity,
+            isEditing = state.isAddressEditing,
             modifier = Modifier.weight(1f)
         )
     }
@@ -190,6 +214,7 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
             icon = { MdiGite() },
             autoComplete = AutoComplete.addressLevel1,
             shake = state.shakeState,
+            isEditing = state.isAddressEditing,
             modifier = Modifier.weight(1f),
         )
         CommonTextfield(
@@ -200,6 +225,7 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
             icon = { MdiFlag() },
             autoComplete = AutoComplete.countryName,
             shake = state.shakeCountry,
+            isEditing = state.isAddressEditing,
             modifier = Modifier.weight(1f)
         )
     }
