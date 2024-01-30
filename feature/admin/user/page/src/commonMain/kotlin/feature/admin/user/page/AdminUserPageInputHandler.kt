@@ -84,6 +84,11 @@ internal class AdminUserPageInputHandler :
 
         AdminUserPageContract.Inputs.SaveRole -> handleSaveRole()
         is AdminUserPageContract.Inputs.SetIsEmailVerified -> updateState { it.copy(emailVerified = input.isVerified) }
+        is AdminUserPageContract.Inputs.SetCreatedAt -> updateState { it.copy(createdAt = input.createdAt) }
+        is AdminUserPageContract.Inputs.SetCreatedBy -> updateState { it.copy(createdBy = input.createdBy) }
+        is AdminUserPageContract.Inputs.SetLastActive -> updateState { it.copy(lastActive = input.lastActive) }
+        is AdminUserPageContract.Inputs.SetUpdatedAt -> updateState { it.copy(updatedAt = input.updatedAt) }
+        is AdminUserPageContract.Inputs.SetWishlistSize -> updateState { it.copy(wishlistSize = input.size) }
     }
 
     private suspend fun InputScope.handleSaveRole() {
@@ -541,12 +546,25 @@ internal class AdminUserPageInputHandler :
                         data.getUserById.address.state?.let { postInput(AdminUserPageContract.Inputs.SetState(it)) }
                         data.getUserById.address.country?.let { postInput(AdminUserPageContract.Inputs.SetCountry(it)) }
                         postInput(AdminUserPageContract.Inputs.SetAddressButtonDisabled(isDisabled = true))
+
+                        try {
+                            postInput(AdminUserPageContract.Inputs.SetCreatedAt(data.getUserById.createdAt.toLong()))
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                        data.getUserById.createdBy?.let {
+                            postInput(AdminUserPageContract.Inputs.SetCreatedBy(it.toString()))
+                        }
+                        postInput(AdminUserPageContract.Inputs.SetLastActive(data.getUserById.lastActive))
+                        try {
+                            postInput(AdminUserPageContract.Inputs.SetUpdatedAt(data.getUserById.updatedAt.toLong()))
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     },
                     onFailure = {
                         postEvent(
-                            AdminUserPageContract.Events.OnError(
-                                it.message ?: "Error while getting user profile"
-                            )
+                            AdminUserPageContract.Events.OnError(it.message ?: "Error while getting user profile")
                         )
                     },
                 )

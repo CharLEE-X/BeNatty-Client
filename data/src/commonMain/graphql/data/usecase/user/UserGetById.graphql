@@ -16,5 +16,10 @@ query UserGetById($id: ObjectId!) {
       state
       country
     }
+    wishlist
+    lastActive
+    createdBy
+    createdAt
+    updatedAt
   }
 }

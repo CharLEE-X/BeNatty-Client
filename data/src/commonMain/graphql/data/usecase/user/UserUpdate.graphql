@@ -16,8 +16,5 @@ mutation UserUpdate($input: UserUpdateInput!) {
       country
     }
     wishlist
-    emailVerified
-    recentlyViewed
-    updatedAt
   }
 }

@@ -1,5 +1,6 @@
 package feature.admin.user.page
 
+import com.apollographql.apollo3.mpp.currentTimeMillis
 import component.localization.getString
 import data.UserGetByIdQuery
 import data.type.Role
@@ -24,7 +25,11 @@ object AdminUserPageContract {
                 state = "",
                 country = "",
             ),
-            __typename = "",
+            wishlist = emptyList(),
+            lastActive = null,
+            createdBy = null,
+            createdAt = "",
+            updatedAt = "",
         ),
 
         val screenState: ScreenState = ScreenState.New.Create,
@@ -80,6 +85,12 @@ object AdminUserPageContract {
         val isAddressEditing: Boolean = false,
         val isSaveAddressButtonDisabled: Boolean = true,
 
+        val wishlistSize: Int = 0,
+        val lastActive: String? = null,
+        val createdBy: String? = null,
+        val createdAt: Long = currentTimeMillis(),
+        val updatedAt: Long = currentTimeMillis(),
+
         val strings: Strings = Strings()
     )
 
@@ -131,6 +142,11 @@ object AdminUserPageContract {
         data object SetAddressNotEditable : Inputs
         data class SetAddressButtonDisabled(val isDisabled: Boolean) : Inputs
 
+        data class SetWishlistSize(val size: Int) : Inputs
+        data class SetLastActive(val lastActive: String?) : Inputs
+        data class SetCreatedBy(val createdBy: String?) : Inputs
+        data class SetCreatedAt(val createdAt: Long) : Inputs
+        data class SetUpdatedAt(val updatedAt: Long) : Inputs
     }
 
     sealed interface Events {
@@ -161,6 +177,14 @@ object AdminUserPageContract {
         val role: String = getString(component.localization.Strings.Role),
         val verified: String = getString(component.localization.Strings.Verified),
         val notVerified: String = getString(component.localization.Strings.NotVerified),
+        val otherInfo: String = getString(component.localization.Strings.OtherInfo),
+        val wishlist: String = getString(component.localization.Strings.Wishlist),
+        val lastActive: String = getString(component.localization.Strings.LastActive),
+        val createdBy: String = getString(component.localization.Strings.CreatedBy),
+        val createdAt: String = getString(component.localization.Strings.CreatedAt),
+        val updatedAt: String = getString(component.localization.Strings.UpdatedAt),
+        val never: String = getString(component.localization.Strings.Never),
+        val registered: String = getString(component.localization.Strings.Registered),
     )
 
     sealed interface ScreenState {

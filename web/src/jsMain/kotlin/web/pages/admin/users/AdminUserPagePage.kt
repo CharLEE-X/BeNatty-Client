@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.browser.dom.ElementTarget
+import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -34,6 +35,7 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPhone
 import com.varabyte.kobweb.silk.components.overlay.Tooltip
 import com.varabyte.kobweb.silk.components.text.SpanText
+import core.util.millisToTime
 import data.type.Role
 import feature.admin.user.page.AdminUserPageContract
 import feature.admin.user.page.AdminUserPageViewModel
@@ -106,6 +108,10 @@ fun AdminUserPagePage(
     Role(vm, state)
     Divider(modifier = Modifier.margin(topBottom = 1.em))
     Address(vm, state)
+    Divider(modifier = Modifier.margin(topBottom = 1.em))
+    Wishlist(vm, state)
+    Divider(modifier = Modifier.margin(topBottom = 1.em))
+    OtherInfo(vm, state)
 }
 
 @Composable
@@ -312,6 +318,43 @@ private fun Address(vm: AdminUserPageViewModel, state: AdminUserPageContract.Sta
         disabled = state.isSaveAddressButtonDisabled,
         onClick = { vm.trySend(AdminUserPageContract.Inputs.SaveAddress) },
     )
+}
+
+@Composable
+fun Wishlist(vm: AdminUserPageViewModel, state: AdminUserPageContract.State) {
+    SectionHeader(
+        text = state.strings.wishlist,
+    ) {
+        SpanText(text = "Total: ${state.wishlistSize}")
+    }
+
+    SpanText(text = "Seeing User wishlist Coming soon...")
+}
+
+@Composable
+fun OtherInfo(vm: AdminUserPageViewModel, state: AdminUserPageContract.State) {
+    SectionHeader(
+        text = state.strings.otherInfo,
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .gap(1.em)
+            .margin(bottom = 2.em),
+    ) {
+        Column {
+            SpanText(text = state.strings.lastActive)
+            SpanText(text = state.strings.createdBy)
+            SpanText(text = state.strings.createdAt)
+            SpanText(text = state.strings.updatedAt)
+        }
+        Column {
+            SpanText(text = state.lastActive ?: state.strings.never)
+            SpanText(text = state.createdBy ?: state.strings.registered)
+            SpanText(text = millisToTime(state.createdAt))
+            SpanText(text = millisToTime(state.updatedAt))
+        }
+    }
 }
 
 @Composable

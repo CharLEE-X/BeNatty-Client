@@ -99,4 +99,11 @@ internal fun englishLanguage(
     Strings.Role -> "Role"
     Strings.Verified -> "Verified"
     Strings.NotVerified -> "Not verified"
+    Strings.OtherInfo -> "Other info"
+    Strings.LastActive -> "Last active"
+    Strings.CreatedBy -> "Created by"
+    Strings.CreatedAt -> "Created at"
+    Strings.UpdatedAt -> "Updated at"
+    Strings.Never -> "Never"
+    Strings.Registered -> "Registered"
 }

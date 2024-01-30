@@ -94,4 +94,11 @@ enum class Strings {
     Role,
     Verified,
     NotVerified,
+    OtherInfo,
+    LastActive,
+    CreatedBy,
+    CreatedAt,
+    UpdatedAt,
+    Never,
+    Registered,
 }

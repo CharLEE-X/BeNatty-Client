@@ -10,7 +10,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
@@ -53,19 +52,25 @@ fun AdminUsersPage(
             }
         }
         state.users.forEachIndexed { index, user ->
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                SpanText(
-                    text = user.email,
-                    modifier = Modifier
-                        .roleStyle(MaterialTheme.typography.bodyLarge)
-                        .onClick { onUserClick(user.id.toString()) }
-                        .cursor(Cursor.Pointer)
-                )
-                Divider(modifier = Modifier.margin(topBottom = 0.5.em))
-            }
+            UserItem(
+                email = user.email,
+                onClick = { onUserClick(user.id.toString()) },
+            )
         }
     }
+}
+
+@Composable
+private fun UserItem(
+    email: String,
+    onClick: () -> Unit,
+) {
+    SpanText(
+        text = email,
+        modifier = Modifier
+            .roleStyle(MaterialTheme.typography.bodyLarge)
+            .onClick { onClick() }
+            .cursor(Cursor.Pointer)
+    )
+    Divider(modifier = Modifier.margin(topBottom = 0.5.em))
 }
