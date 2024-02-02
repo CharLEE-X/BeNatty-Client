@@ -26,13 +26,15 @@ import web.pages.account.order.OrderPage
 import web.pages.account.profile.ProfilePage
 import web.pages.account.returns.ReturnsPage
 import web.pages.account.wishlist.WishlistPage
+import web.pages.admin.category.AdminCategoryListPage
+import web.pages.admin.category.AdminCategoryPage
 import web.pages.admin.dashboard.AdminDashboardPage
 import web.pages.admin.orders.AdminOrderListPage
 import web.pages.admin.orders.AdminOrderPagePage
 import web.pages.admin.products.AdminProductListPage
 import web.pages.admin.products.AdminProductPagePage
+import web.pages.admin.users.AdminUserListPage
 import web.pages.admin.users.AdminUserPagePage
-import web.pages.admin.users.AdminUsersPage
 import web.pages.auth.ForgotPasswordPage
 import web.pages.auth.LoginPage
 import web.pages.auth.RegisterPage
@@ -268,7 +270,7 @@ fun RouterContent(
                 }
 
                 RouterScreen.AdminUserList -> AdminLayout("Admin Users", router) {
-                    AdminUsersPage(
+                    AdminUserListPage(
                         onError = onError,
                         onUserClick = { id ->
                             router.trySend(
@@ -369,10 +371,81 @@ fun RouterContent(
                     )
                 }
 
-                RouterScreen.AdminOrderPage -> AdminLayout("Admin Order Page", router) {
+                RouterScreen.AdminOrderPageNew -> AdminLayout("Admin Order Page", router) {
                     AdminOrderPagePage(
                         onError = onError,
                     )
+                }
+
+                RouterScreen.AdminOrderPageExisting -> {
+                    val id: String by stringPath()
+                    AdminLayout("Admin Order Page", router) {
+                        AdminOrderPagePage(
+                            onError = onError,
+                        )
+                    }
+                }
+
+                RouterScreen.AdminCategoryList -> AdminLayout("Admin Category List", router) {
+                    AdminCategoryListPage(
+                        onError = onError,
+                        goToCreate = {
+                            router.trySend(
+                                RouterContract.Inputs.GoToDestination(
+                                    RouterScreen.AdminCategoryPageNew.matcher.routeFormat
+                                )
+                            )
+                        },
+                        onItemClick = { id ->
+                            router.trySend(
+                                RouterContract.Inputs.GoToDestination(
+                                    RouterScreen.AdminCategoryPageExisting.directions()
+                                        .pathParameter("id", id)
+                                        .build()
+                                )
+                            )
+                        },
+                    )
+                }
+
+                RouterScreen.AdminCategoryPageNew -> AdminLayout("Create Category", router) {
+                    AdminCategoryPage(
+                        id = null,
+                        onError = onError,
+                        goToList = {
+                            router.trySend(
+                                RouterContract.Inputs.GoToDestination(
+                                    RouterScreen.AdminCategoryList.matcher.routeFormat
+                                )
+                            )
+                        },
+                    )
+                }
+
+                RouterScreen.AdminCategoryPageExisting -> {
+                    val id: String by stringPath()
+                    AdminLayout("Edit Category", router) {
+                        AdminCategoryPage(
+                            id = id,
+                            onError = onError,
+                            goToList = {
+                                router.trySend(
+                                    RouterContract.Inputs.GoToDestination(
+                                        RouterScreen.AdminCategoryList.matcher.routeFormat
+                                    )
+                                )
+                            },
+                        )
+                    }
+                }
+
+                RouterScreen.AdminTagList -> AdminLayout("Admin Tag List", router) {
+                }
+
+                RouterScreen.AdminTagPageNew -> AdminLayout("Create Tag", router) {
+                }
+
+                RouterScreen.AdminTagPageExisting -> AdminLayout("Edit Tag", router) {
                 }
             }
         },

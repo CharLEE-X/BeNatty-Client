@@ -39,6 +39,8 @@ private const val DASHBOARD = "/dashboard"
 private const val USER = "/user"
 private const val LIST = "/list"
 private const val PAGE = "/page"
+private const val CATEGORY = "/category"
+private const val TAG = "/tag"
 
 enum class RouterScreen(
     routeFormat: String,
@@ -48,14 +50,26 @@ enum class RouterScreen(
 
     // Admin
     AdminDashboard(ADMIN + DASHBOARD),
+
     AdminUserList(ADMIN + USER + LIST),
     AdminUserPageNew(ADMIN + USER + PAGE),
     AdminUserPageExisting(ADMIN + USER + PAGE + ID),
+
     AdminProductList(ADMIN + PRODUCT + LIST),
     AdminProductPageNew(ADMIN + PRODUCT + PAGE),
     AdminProductPageExisting(ADMIN + PRODUCT + PAGE + ID),
+
     AdminOrderList(ADMIN + ORDER + LIST),
-    AdminOrderPage(ADMIN + ORDER + PAGE + ID),
+    AdminOrderPageNew(ADMIN + ORDER + PAGE),
+    AdminOrderPageExisting(ADMIN + ORDER + PAGE + ID),
+
+    AdminCategoryList(ADMIN + CATEGORY + LIST),
+    AdminCategoryPageNew(ADMIN + CATEGORY + PAGE),
+    AdminCategoryPageExisting(ADMIN + CATEGORY + PAGE + ID),
+
+    AdminTagList(ADMIN + LIST + PAGE),
+    AdminTagPageNew(ADMIN + TAG + PAGE),
+    AdminTagPageExisting(ADMIN + TAG + PAGE + ID),
 
     // Auth
     Login(LOGIN),
@@ -140,8 +154,15 @@ fun RouterScreen.pageTitle(shopName: String = "Natalia's Shop"): String {
         RouterScreen.AdminProductList -> "Admin Products"
         RouterScreen.AdminProductPageNew -> "Admin Product"
         RouterScreen.AdminOrderList -> "Admin Orders"
-        RouterScreen.AdminOrderPage -> "Admin Order"
+        RouterScreen.AdminOrderPageExisting -> "Admin Order"
         RouterScreen.AdminProductPageExisting -> "Admin Product details"
+        RouterScreen.AdminOrderPageNew -> "Admin Order Create"
+        RouterScreen.AdminCategoryList -> "Admin Categories"
+        RouterScreen.AdminCategoryPageNew -> "Admin Category Create"
+        RouterScreen.AdminCategoryPageExisting -> "Admin Category details"
+        RouterScreen.AdminTagList -> "Admin Tags"
+        RouterScreen.AdminTagPageNew -> "Admin Tag Create"
+        RouterScreen.AdminTagPageExisting -> "Admin Tag details"
     }
     return "$shopName - $title"
 }

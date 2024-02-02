@@ -6,6 +6,8 @@ import data.service.AdminService
 import data.service.AdminServiceImpl
 import data.service.AuthService
 import data.service.AuthServiceImpl
+import data.service.CategoryService
+import data.service.CategoryServiceImpl
 import data.service.DebugService
 import data.service.DebugServiceImpl
 import data.service.ProductService
@@ -46,6 +48,11 @@ val dataModule = module {
     }
     single<AdminService> {
         AdminServiceImpl(
+            apolloClient = get(),
+        )
+    }
+    single<CategoryService> {
+        CategoryServiceImpl(
             apolloClient = get(),
         )
     }

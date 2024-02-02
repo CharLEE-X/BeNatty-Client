@@ -118,6 +118,14 @@ private fun AdminSideBar(
                         AdminNavDest.Orders -> router.trySend(
                             RouterContract.Inputs.GoToDestination(RouterScreen.AdminOrderList.matcher.routeFormat)
                         )
+
+                        AdminNavDest.Categories -> router.trySend(
+                            RouterContract.Inputs.GoToDestination(RouterScreen.AdminCategoryList.matcher.routeFormat)
+                        )
+
+                        AdminNavDest.Tags -> router.trySend(
+                            RouterContract.Inputs.GoToDestination(RouterScreen.AdminTagList.matcher.routeFormat)
+                        )
                     }
                 }
             )
@@ -130,4 +138,6 @@ enum class AdminNavDest {
     Users,
     Products,
     Orders,
+    Categories,
+    Tags,
 }

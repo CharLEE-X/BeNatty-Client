@@ -58,6 +58,10 @@ kotlin {
                 implementation(feature.admin.product.list)
                 implementation(feature.admin.order.page)
                 implementation(feature.admin.order.list)
+                implementation(feature.admin.category.page)
+                implementation(feature.admin.category.list)
+                implementation(feature.admin.tag.page)
+                implementation(feature.admin.tag.list)
             }
             implementation(compose.runtime)
             implementation(compose.html.core)

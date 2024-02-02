@@ -4,6 +4,7 @@ import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
 import data.service.ProductService
+import data.type.CatalogVisibility
 import data.type.ProductCreateInput
 import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
@@ -40,6 +41,10 @@ internal class AdminProductPageInputHandler :
 
         is AdminProductPageContract.Inputs.SetShortDescriptionShake ->
             updateState { it.copy(shakeShortDescription = input.shake) }
+
+        is AdminProductPageContract.Inputs.SetIsFeatured -> handleSetIsFeatured(input.isFeatured)
+        is AdminProductPageContract.Inputs.SetAllowReviews -> handleSetAllowReviews(input.allowReviews)
+        is AdminProductPageContract.Inputs.SetCatalogVisibility -> handleSetCatalogVisibility(input.catalogVisibility)
 
         is AdminProductPageContract.Inputs.SetCommonDetailsButtonDisabled ->
             updateState { it.copy(isSaveCommonDetailsButtonDisabled = input.isDisabled) }
@@ -83,6 +88,13 @@ internal class AdminProductPageInputHandler :
                             shortDescription = if (shortDescription != original.product.common.shortDescription) {
                                 shortDescription
                             } else null,
+                            isFeatured = if (isFeatured != original.product.common.isFeatured) isFeatured else null,
+                            allowReviews = if (allowReviews != original.product.common.allowReviews) {
+                                allowReviews
+                            } else null,
+                            catalogVisibility = if (catalogVisibility != original.product.common.catalogVisibility) {
+                                catalogVisibility
+                            } else null,
                         ).fold(
                             onSuccess = { data ->
                                 postInput(
@@ -92,6 +104,9 @@ internal class AdminProductPageInputHandler :
                                                 common = this@with.original.product.common.copy(
                                                     name = data.updateProduct.common.name,
                                                     shortDescription = data.updateProduct.common.shortDescription,
+                                                    isFeatured = data.updateProduct.common.isFeatured,
+                                                    allowReviews = data.updateProduct.common.allowReviews,
+                                                    catalogVisibility = data.updateProduct.common.catalogVisibility,
                                                     createdBy = data.updateProduct.common.createdBy,
                                                     createdAt = data.updateProduct.common.createdAt,
                                                     updatedAt = data.updateProduct.common.updatedAt,
@@ -117,23 +132,6 @@ internal class AdminProductPageInputHandler :
         }
     }
 
-    private suspend fun InputScope.handleSetShortDescription(shortDescription: String) {
-        with(shortDescription) {
-            updateState {
-                val hasChanged =
-                    shortDescription != it.original.product.common.shortDescription ||
-                        it.name != it.original.product.common.name
-                it.copy(
-                    shortDescription = this,
-                    shortDescriptionError = if (it.isSaveCommonDetailsButtonDisabled) null else {
-                        inputValidator.validateText(this)
-                    },
-                    isSaveCommonDetailsButtonDisabled = !hasChanged,
-                )
-            }
-        }
-    }
-
     private suspend fun InputScope.handleGetProductById(id: String) {
         sideJob("handleGetProduct") {
             productService.getById(id).collect { result ->
@@ -147,6 +145,19 @@ internal class AdminProductPageInputHandler :
                         postInput(
                             AdminProductPageContract.Inputs.SetShortDescription(
                                 data.getProductById.product.common.shortDescription ?: ""
+                            )
+                        )
+                        postInput(
+                            AdminProductPageContract.Inputs.SetIsFeatured(data.getProductById.product.common.isFeatured)
+                        )
+                        postInput(
+                            AdminProductPageContract.Inputs.SetAllowReviews(
+                                data.getProductById.product.common.allowReviews
+                            )
+                        )
+                        postInput(
+                            AdminProductPageContract.Inputs.SetCatalogVisibility(
+                                data.getProductById.product.common.catalogVisibility
                             )
                         )
                         postInput(AdminProductPageContract.Inputs.SetCommonDetailsButtonDisabled(isDisabled = true))
@@ -192,7 +203,10 @@ internal class AdminProductPageInputHandler :
                     name != it.original.product.common.name
                 } else {
                     name != it.original.product.common.name ||
-                        it.shortDescription != it.original.product.common.shortDescription
+                        it.shortDescription != it.original.product.common.shortDescription ||
+                        it.isFeatured != it.original.product.common.isFeatured ||
+                        it.allowReviews != it.original.product.common.allowReviews ||
+                        it.catalogVisibility != it.original.product.common.catalogVisibility
                 }
                 it.copy(
                     name = this,
@@ -206,13 +220,73 @@ internal class AdminProductPageInputHandler :
         }
     }
 
+    private suspend fun InputScope.handleSetShortDescription(shortDescription: String) {
+        with(shortDescription) {
+            updateState {
+                val hasChanged = it.name != it.original.product.common.name ||
+                    shortDescription != it.original.product.common.shortDescription ||
+                    it.isFeatured != it.original.product.common.isFeatured ||
+                    it.allowReviews != it.original.product.common.allowReviews ||
+                    it.catalogVisibility != it.original.product.common.catalogVisibility
+                it.copy(
+                    shortDescription = this,
+                    shortDescriptionError = if (it.isSaveCommonDetailsButtonDisabled) null else {
+                        inputValidator.validateText(this)
+                    },
+                    isSaveCommonDetailsButtonDisabled = !hasChanged,
+                )
+            }
+        }
+    }
+
+    private suspend fun InputScope.handleSetIsFeatured(featured: Boolean) {
+        updateState {
+            val hasChanged = it.name != it.original.product.common.name ||
+                it.shortDescription != it.original.product.common.shortDescription ||
+                featured != it.original.product.common.isFeatured ||
+                it.allowReviews != it.original.product.common.allowReviews ||
+                it.catalogVisibility != it.original.product.common.catalogVisibility
+            it.copy(
+                isFeatured = featured,
+                isSaveCommonDetailsButtonDisabled = !hasChanged,
+            )
+        }
+    }
+
+    private suspend fun InputScope.handleSetAllowReviews(allowReviews: Boolean) {
+        updateState {
+            val hasChanged = it.name != it.original.product.common.name ||
+                it.shortDescription != it.original.product.common.shortDescription ||
+                it.isFeatured != it.original.product.common.isFeatured ||
+                allowReviews != it.original.product.common.allowReviews ||
+                it.catalogVisibility != it.original.product.common.catalogVisibility
+            it.copy(
+                allowReviews = allowReviews,
+                isSaveCommonDetailsButtonDisabled = !hasChanged,
+            )
+        }
+    }
+
+    private suspend fun InputScope.handleSetCatalogVisibility(catalogVisibility: CatalogVisibility) {
+        updateState {
+            val hasChanged = it.name != it.original.product.common.name ||
+                it.shortDescription != it.original.product.common.shortDescription ||
+                it.isFeatured != it.original.product.common.isFeatured ||
+                it.allowReviews != it.original.product.common.allowReviews ||
+                catalogVisibility != it.original.product.common.catalogVisibility
+            it.copy(
+                catalogVisibility = catalogVisibility,
+                isSaveCommonDetailsButtonDisabled = !hasChanged,
+            )
+        }
+    }
+
     private suspend fun InputScope.handleInit(id: String?) {
         sideJob("handleInit") {
             if (id == null) {
                 postInput(AdminProductPageContract.Inputs.SetScreenState(AdminProductPageContract.ScreenState.New))
             } else {
                 postInput(AdminProductPageContract.Inputs.SetLoading(isLoading = true))
-                postInput(AdminProductPageContract.Inputs.SetId(id))
                 postInput(AdminProductPageContract.Inputs.SetScreenState(AdminProductPageContract.ScreenState.Existing.Read))
                 postInput(AdminProductPageContract.Inputs.GetProductById(id))
                 postInput(AdminProductPageContract.Inputs.SetLoading(isLoading = false))

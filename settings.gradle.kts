@@ -58,4 +58,8 @@ include(
     ":feature:admin:product:list",
     ":feature:admin:order:list",
     ":feature:admin:order:page",
+    ":feature:admin:category:list",
+    ":feature:admin:category:page",
+    ":feature:admin:tag:list",
+    ":feature:admin:tag:page",
 )

@@ -27,7 +27,14 @@ class AdminProductPageViewModel(
             logger = { PrintlnLogger() }
         }
         .withViewModel(
-            initialState = AdminProductPageContract.State(),
+            initialState = AdminProductPageContract.State(
+                id = productId,
+                screenState = if (productId == null) {
+                    AdminProductPageContract.ScreenState.New
+                } else {
+                    AdminProductPageContract.ScreenState.Existing.Read
+                }
+            ),
             inputHandler = AdminProductPageInputHandler(),
             name = TAG,
         )

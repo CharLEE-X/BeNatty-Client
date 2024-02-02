@@ -11,6 +11,7 @@ import web.compose.material3.common.jsRequire
 @Suppress("UnsafeCastFromDynamic")
 @Composable
 fun Switch(
+    value: Boolean? = null,
     selected: Boolean = false,
     onClick: (SyntheticMouseEvent) -> Unit = {},
     icons: Boolean = false,
@@ -20,8 +21,12 @@ fun Switch(
 ) = MdTagElement(
     tagName = "md-switch",
     applyAttrs = modifier
-        .onClick(onClick)
+        .onClick {
+            println("Switch.onClick: $it")
+            onClick(it)
+        }
         .toAttrs {
+            value?.let { attr("value", it.toString()) }
             if (selected) attr("selected", "")
             if (icons) attr("icons", "")
             if (showOnlySelectedIcon) attr("showOnlySelectedIcon", "")

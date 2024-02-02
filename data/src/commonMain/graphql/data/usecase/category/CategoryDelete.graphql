@@ -1,0 +1,3 @@
+mutation DeleteCategory($deleteCategoryId: ObjectId!) {
+  deleteCategory(id: $deleteCategoryId)
+}

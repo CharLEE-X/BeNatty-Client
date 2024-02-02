@@ -17,7 +17,7 @@ object AdminProductPageContract : KoinComponent {
     data class State(
         val isLoading: Boolean = false,
 
-        val screenState: ScreenState = ScreenState.New,
+        val screenState: ScreenState,
 
         // Common
         val id: String? = null,
@@ -121,6 +121,10 @@ object AdminProductPageContract : KoinComponent {
         data class SetShortDescription(val shortDescription: String) : Inputs
         data class SetShortDescriptionShake(val shake: Boolean) : Inputs
 
+        data class SetIsFeatured(val isFeatured: Boolean) : Inputs
+        data class SetAllowReviews(val allowReviews: Boolean) : Inputs
+        data class SetCatalogVisibility(val catalogVisibility: CatalogVisibility) : Inputs
+
         data class SetCommonDetailsEditable(val isEditable: Boolean) : Inputs
         data class SetCommonDetailsButtonDisabled(val isDisabled: Boolean) : Inputs
         data object SaveCommonDetails : Inputs
@@ -150,6 +154,11 @@ object AdminProductPageContract : KoinComponent {
         val name: String = getString(component.localization.Strings.Name),
         val create: String = getString(component.localization.Strings.Create),
         val shortDescription: String = getString(component.localization.Strings.ShortDescription),
+        val isFeatured: String = getString(component.localization.Strings.IsFeatured),
+        val allowReviews: String = getString(component.localization.Strings.AllowReviews),
+        val catalogVisibility: String = getString(component.localization.Strings.CatalogVisibility),
+        val createProduct: String = getString(component.localization.Strings.CreateProduct),
+        val product: String = getString(component.localization.Strings.Product),
     )
 
     sealed interface ScreenState {

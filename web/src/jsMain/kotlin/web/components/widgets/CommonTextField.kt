@@ -35,7 +35,7 @@ fun CommonTextfield(
     shake: Boolean = false,
     isEditing: Boolean = false,
     outlineColor: CSSColorValue? = if (isEditing) null else MaterialTheme.colors.mdSysColorSurface.value(),
-    icon: @Composable () -> Unit,
+    icon: (@Composable () -> Unit)? = null,
 ) {
     var translateX by remember { mutableStateOf(0.em) }
 
@@ -56,7 +56,7 @@ fun CommonTextfield(
         onInput = { onValueChange(it) },
         label = label,
         type = type,
-        leadingIcon = { icon() },
+        leadingIcon = icon,
         trailingIcon = { errorMsg?.let { MdiError() } },
         error = errorMsg != null,
         errorText = errorMsg,

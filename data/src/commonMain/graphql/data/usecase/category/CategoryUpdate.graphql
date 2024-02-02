@@ -1,0 +1,12 @@
+mutation UpdateCategory($input: CategoryUpdateInput!) {
+  updateCategory(input: $input) {
+    createdAt
+    createdBy
+    description
+    display
+    id
+    name
+    parentId
+    updatedAt
+  }
+}

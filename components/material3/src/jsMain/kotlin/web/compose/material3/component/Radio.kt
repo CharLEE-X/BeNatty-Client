@@ -13,9 +13,9 @@ import web.compose.material3.common.jsRequire
 @Suppress("UnsafeCastFromDynamic")
 @Composable
 fun Radio(
-    checked: Boolean? = null,
-    name: String? = null,
     value: String? = null,
+    checked: Boolean = false,
+    name: String? = null,
     disabled: Boolean = false,
     onChange: (SyntheticEvent<EventTarget>) -> Unit = {},
     modifier: Modifier = Modifier,
@@ -23,9 +23,9 @@ fun Radio(
 ) = MdTagElement(
     tagName = "md-radio",
     applyAttrs = modifier.toAttrs {
-        checked?.let { attr("checked", "") }
-        name?.let { attr("name", it) }
         value?.let { attr("value", it) }
+        if (checked) attr("checked", "")
+        name?.let { attr("name", it) }
         if (disabled) attr("disabled", "")
         addEventListener("change") {
             onChange(it)

@@ -6,7 +6,6 @@ enum class Strings {
     CompanyName,
     AppVersion,
     AppCopyright,
-
     NoImage,
     CloseButton,
     Apply,
@@ -14,11 +13,9 @@ enum class Strings {
     RemoveFilter,
     AddFilter,
     Logo,
-
     Unknown,
     Save,
     Add,
-
     Login,
     SignUp,
     ContinueWithGoogle,
@@ -45,7 +42,6 @@ enum class Strings {
     OpenGmail,
     OpenOutlook,
     BackTo,
-
     Phone,
     PersonalDetails,
     OldPassword,
@@ -56,7 +52,6 @@ enum class Strings {
     City,
     State,
     Country,
-
     PromoText,
     HelpAndFaq,
     Help,
@@ -67,7 +62,6 @@ enum class Strings {
     Wishlist,
     Profile,
     Logout,
-
     Subscribe,
     Accessibility,
     TrackOrder,
@@ -106,4 +100,19 @@ enum class Strings {
     Name,
     Create,
     ShortDescription,
+    IsFeatured,
+    AllowReviews,
+    CatalogVisibility,
+    Categories,
+    NewCategory,
+    PressCreateToStart,
+    CreateUser,
+    User,
+    CreateProduct,
+    Product,
+    CreateCategory,
+    Category,
+    Description,
+    Display,
+    ParentId,
 }

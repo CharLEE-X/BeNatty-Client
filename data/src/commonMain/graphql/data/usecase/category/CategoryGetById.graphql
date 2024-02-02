@@ -1,0 +1,12 @@
+query GetCategoryById($getCategoryByIdId: ObjectId!) {
+  getCategoryById(id: $getCategoryByIdId) {
+    createdAt
+    createdBy
+    description
+    display
+    id
+    name
+    parentId
+    updatedAt
+  }
+}

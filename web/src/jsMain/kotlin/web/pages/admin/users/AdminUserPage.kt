@@ -6,15 +6,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import com.varabyte.kobweb.browser.dom.ElementTarget
+import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.color
+import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
+import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiBusiness
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiCheck
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEmail
@@ -28,15 +31,16 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPhone
 import com.varabyte.kobweb.silk.components.overlay.Tooltip
 import com.varabyte.kobweb.silk.components.text.SpanText
+import core.util.enumCapitalized
 import core.util.millisToTime
 import data.type.Role
-import feature.admin.user.page.AdminUserPageContract
-import feature.admin.user.page.AdminUserPageViewModel
+import feature.admin.tag.page.AdminTagPageContract
+import feature.admin.tag.page.AdminTagPageViewModel
 import org.jetbrains.compose.web.attributes.AutoComplete
 import org.jetbrains.compose.web.css.em
+import web.components.layouts.DetailPageLayout
 import web.components.widgets.CommonTextfield
 import web.components.widgets.EditCancelButton
-import web.components.widgets.PageHeader
 import web.components.widgets.SaveButton
 import web.components.widgets.SectionHeader
 import web.compose.material3.component.Divider
@@ -52,7 +56,7 @@ fun AdminUserPagePage(
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
-        AdminUserPageViewModel(
+        AdminTagPageViewModel(
             userId = userId,
             scope = scope,
             onError = onError,
@@ -61,28 +65,33 @@ fun AdminUserPagePage(
     }
     val state by vm.observeStates().collectAsState()
 
-    PageHeader("User: ${state.id}") {
-        DeleteButtonWithConfirmation(
-            deleteText = state.strings.delete,
-            cancelText = state.strings.cancel,
-            onDelete = { vm.trySend(AdminUserPageContract.Inputs.DeleteUser) },
-        )
+    DetailPageLayout(
+        title = if (state.screenState is AdminTagPageContract.ScreenState.New) {
+            state.strings.createUser
+        } else {
+            "${state.strings.user}: ${state.id}"
+        },
+        showDelete = state.screenState is AdminTagPageContract.ScreenState.Existing,
+        deleteText = state.strings.delete,
+        cancelText = state.strings.cancel,
+        onDeleteClick = { vm.trySend(AdminTagPageContract.Inputs.DeleteUser) },
+    ) {
+        PersonalDetails(vm, state)
+        Divider(modifier = Modifier.margin(topBottom = 1.em))
+        Password(vm, state)
+        Divider(modifier = Modifier.margin(topBottom = 1.em))
+        Role(vm, state)
+        Divider(modifier = Modifier.margin(topBottom = 1.em))
+        Address(vm, state)
+        Divider(modifier = Modifier.margin(topBottom = 1.em))
+        Wishlist(vm, state)
+        Divider(modifier = Modifier.margin(topBottom = 1.em))
+        OtherInfo(vm, state)
     }
-    PersonalDetails(vm, state)
-    Divider(modifier = Modifier.margin(topBottom = 1.em))
-    Password(vm, state)
-    Divider(modifier = Modifier.margin(topBottom = 1.em))
-    Role(vm, state)
-    Divider(modifier = Modifier.margin(topBottom = 1.em))
-    Address(vm, state)
-    Divider(modifier = Modifier.margin(topBottom = 1.em))
-    Wishlist(vm, state)
-    Divider(modifier = Modifier.margin(topBottom = 1.em))
-    OtherInfo(vm, state)
 }
 
 @Composable
-private fun PersonalDetails(vm: AdminUserPageViewModel, state: AdminUserPageContract.State) {
+private fun PersonalDetails(vm: AdminTagPageViewModel, state: AdminTagPageContract.State) {
     SectionHeader(
         text = state.strings.personalDetails,
     ) {
@@ -90,13 +99,13 @@ private fun PersonalDetails(vm: AdminUserPageViewModel, state: AdminUserPageCont
             isEditing = state.isPersonalDetailsEditing,
             editText = state.strings.edit,
             cancelText = state.strings.cancel,
-            edit = { vm.trySend(AdminUserPageContract.Inputs.SetPersonalDetailsEditable) },
-            cancel = { vm.trySend(AdminUserPageContract.Inputs.SetPersonalDetailsNotEditable) },
+            edit = { vm.trySend(AdminTagPageContract.Inputs.SetPersonalDetailsEditable) },
+            cancel = { vm.trySend(AdminTagPageContract.Inputs.SetPersonalDetailsNotEditable) },
         )
     }
     CommonTextfield(
         value = state.fullName,
-        onValueChange = { vm.trySend(AdminUserPageContract.Inputs.SetFullName(it)) },
+        onValueChange = { vm.trySend(AdminTagPageContract.Inputs.SetFullName(it)) },
         label = state.strings.fullName,
         errorMsg = state.fullNameError,
         icon = { MdiPerson() },
@@ -113,7 +122,7 @@ private fun PersonalDetails(vm: AdminUserPageViewModel, state: AdminUserPageCont
     ) {
         CommonTextfield(
             value = state.email,
-            onValueChange = { vm.trySend(AdminUserPageContract.Inputs.SetEmail(it)) },
+            onValueChange = { vm.trySend(AdminTagPageContract.Inputs.SetEmail(it)) },
             label = state.strings.email,
             errorMsg = state.emailError,
             icon = { MdiEmail() },
@@ -133,7 +142,7 @@ private fun PersonalDetails(vm: AdminUserPageViewModel, state: AdminUserPageCont
     }
     CommonTextfield(
         value = state.phone,
-        onValueChange = { vm.trySend(AdminUserPageContract.Inputs.SetPhone(it)) },
+        onValueChange = { vm.trySend(AdminTagPageContract.Inputs.SetPhone(it)) },
         label = state.strings.phone,
         errorMsg = state.phoneError,
         icon = { MdiPhone() },
@@ -146,52 +155,53 @@ private fun PersonalDetails(vm: AdminUserPageViewModel, state: AdminUserPageCont
     SaveButton(
         text = state.strings.save,
         disabled = state.isSavePersonalDetailsButtonDisabled,
-        onClick = { vm.trySend(AdminUserPageContract.Inputs.SavePersonalDetails) },
+        onClick = { vm.trySend(AdminTagPageContract.Inputs.SavePersonalDetails) },
     )
 }
 
 @Composable
-fun Password(vm: AdminUserPageViewModel, state: AdminUserPageContract.State) {
+fun Password(vm: AdminTagPageViewModel, state: AdminTagPageContract.State) {
     SectionHeader(
         text = state.strings.password,
     )
     FilledTonalButton(
-        onClick = { vm.trySend(AdminUserPageContract.Inputs.ResetPassword) },
+        onClick = { vm.trySend(AdminTagPageContract.Inputs.ResetPassword) },
     ) {
         SpanText(state.strings.resetPassword)
     }
 }
 
 @Composable
-fun Role(vm: AdminUserPageViewModel, state: AdminUserPageContract.State) {
+fun Role(vm: AdminTagPageViewModel, state: AdminTagPageContract.State) {
     SectionHeader(
         text = state.strings.role,
     )
-    Role.entries
-        .filter { it != Role.UNKNOWN__ }
-        .forEach { role ->
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.gap(1.em)
-            ) {
-                Radio(
-                    checked = state.role == role,
-                    name = "role",
-                    value = role.name,
-                    onChange = { vm.trySend(AdminUserPageContract.Inputs.SetRole(role)) },
-                )
-                SpanText(role.name)
-            }
+
+    Role.entries.filter { it != Role.UNKNOWN__ }.forEach { role ->
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .gap(1.em)
+                .onClick { vm.trySend(AdminTagPageContract.Inputs.SetRole(role)) }
+                .cursor(Cursor.Pointer)
+        ) {
+            Radio(
+                checked = state.role == role,
+                name = "role",
+                value = role.name,
+            )
+            SpanText(role.name.enumCapitalized())
         }
+    }
     SaveButton(
         text = state.strings.save,
         disabled = state.isSaveRoleButtonDisabled,
-        onClick = { vm.trySend(AdminUserPageContract.Inputs.SaveRole) },
+        onClick = { vm.trySend(AdminTagPageContract.Inputs.SaveRole) },
     )
 }
 
 @Composable
-private fun Address(vm: AdminUserPageViewModel, state: AdminUserPageContract.State) {
+private fun Address(vm: AdminTagPageViewModel, state: AdminTagPageContract.State) {
     SectionHeader(
         text = state.strings.address,
     ) {
@@ -199,13 +209,13 @@ private fun Address(vm: AdminUserPageViewModel, state: AdminUserPageContract.Sta
             isEditing = state.isAddressEditing,
             editText = state.strings.edit,
             cancelText = state.strings.cancel,
-            edit = { vm.trySend(AdminUserPageContract.Inputs.SetAddressEditable) },
-            cancel = { vm.trySend(AdminUserPageContract.Inputs.SetAddressNotEditable) },
+            edit = { vm.trySend(AdminTagPageContract.Inputs.SetAddressEditable) },
+            cancel = { vm.trySend(AdminTagPageContract.Inputs.SetAddressNotEditable) },
         )
     }
     CommonTextfield(
         value = state.address,
-        onValueChange = { vm.trySend(AdminUserPageContract.Inputs.SetAddress(it)) },
+        onValueChange = { vm.trySend(AdminTagPageContract.Inputs.SetAddress(it)) },
         label = state.strings.address,
         errorMsg = state.addressError,
         icon = { MdiHome() },
@@ -216,7 +226,7 @@ private fun Address(vm: AdminUserPageViewModel, state: AdminUserPageContract.Sta
     )
     CommonTextfield(
         value = state.additionalInformation,
-        onValueChange = { vm.trySend(AdminUserPageContract.Inputs.SetAdditionalInformation(it)) },
+        onValueChange = { vm.trySend(AdminTagPageContract.Inputs.SetAdditionalInformation(it)) },
         label = state.strings.additionalInformation,
         errorMsg = state.additionalInformationError,
         icon = { MdiBusiness() },
@@ -231,7 +241,7 @@ private fun Address(vm: AdminUserPageViewModel, state: AdminUserPageContract.Sta
     ) {
         CommonTextfield(
             value = state.postcode,
-            onValueChange = { vm.trySend(AdminUserPageContract.Inputs.SetPostcode(it)) },
+            onValueChange = { vm.trySend(AdminTagPageContract.Inputs.SetPostcode(it)) },
             label = state.strings.postcode,
             errorMsg = state.postcodeError,
             icon = { MdiLocalPostOffice() },
@@ -242,7 +252,7 @@ private fun Address(vm: AdminUserPageViewModel, state: AdminUserPageContract.Sta
         )
         CommonTextfield(
             value = state.city,
-            onValueChange = { vm.trySend(AdminUserPageContract.Inputs.SetCity(it)) },
+            onValueChange = { vm.trySend(AdminTagPageContract.Inputs.SetCity(it)) },
             label = state.strings.city,
             errorMsg = state.cityError,
             icon = { MdiLocationCity() },
@@ -259,7 +269,7 @@ private fun Address(vm: AdminUserPageViewModel, state: AdminUserPageContract.Sta
     ) {
         CommonTextfield(
             value = state.state,
-            onValueChange = { vm.trySend(AdminUserPageContract.Inputs.SetState(it)) },
+            onValueChange = { vm.trySend(AdminTagPageContract.Inputs.SetState(it)) },
             label = state.strings.state,
             errorMsg = state.stateError,
             icon = { MdiGite() },
@@ -270,7 +280,7 @@ private fun Address(vm: AdminUserPageViewModel, state: AdminUserPageContract.Sta
         )
         CommonTextfield(
             value = state.country,
-            onValueChange = { vm.trySend(AdminUserPageContract.Inputs.SetCountry(it)) },
+            onValueChange = { vm.trySend(AdminTagPageContract.Inputs.SetCountry(it)) },
             label = state.strings.country,
             errorMsg = state.countryError,
             icon = { MdiFlag() },
@@ -283,12 +293,12 @@ private fun Address(vm: AdminUserPageViewModel, state: AdminUserPageContract.Sta
     SaveButton(
         text = state.strings.save,
         disabled = state.isSaveAddressButtonDisabled,
-        onClick = { vm.trySend(AdminUserPageContract.Inputs.SaveAddress) },
+        onClick = { vm.trySend(AdminTagPageContract.Inputs.SaveAddress) },
     )
 }
 
 @Composable
-fun Wishlist(vm: AdminUserPageViewModel, state: AdminUserPageContract.State) {
+fun Wishlist(vm: AdminTagPageViewModel, state: AdminTagPageContract.State) {
     SectionHeader(
         text = state.strings.wishlist,
     ) {
@@ -299,7 +309,7 @@ fun Wishlist(vm: AdminUserPageViewModel, state: AdminUserPageContract.State) {
 }
 
 @Composable
-fun OtherInfo(vm: AdminUserPageViewModel, state: AdminUserPageContract.State) {
+fun OtherInfo(vm: AdminTagPageViewModel, state: AdminTagPageContract.State) {
     SectionHeader(
         text = state.strings.otherInfo,
     )

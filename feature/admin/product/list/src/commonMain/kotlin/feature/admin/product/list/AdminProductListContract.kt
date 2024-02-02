@@ -32,5 +32,6 @@ object AdminProductListContract {
     data class Strings(
         val products: String = getString(component.localization.Strings.Products),
         val newProduct: String = getString(component.localization.Strings.NewProduct),
+        val pressCreateToStart: String = getString(component.localization.Strings.PressCreateToStart),
     )
 }

@@ -10,6 +10,7 @@ import data.ProductDeleteMutation
 import data.ProductGetByIdQuery
 import data.ProductUpdateMutation
 import data.ProductsGetAllPageQuery
+import data.type.CatalogVisibility
 import data.type.PageInput
 import data.type.ProductCommonInput
 import data.type.ProductCreateInput
@@ -28,6 +29,9 @@ interface ProductService {
         id: String,
         name: String? = null,
         shortDescription: String? = null,
+        isFeatured: Boolean? = null,
+        allowReviews: Boolean? = null,
+        catalogVisibility: CatalogVisibility? = null,
     ): Result<ProductUpdateMutation.Data>
 }
 
@@ -61,13 +65,22 @@ internal class ProductServiceImpl(private val apolloClient: ApolloClient) : Prod
     override suspend fun update(
         id: String,
         name: String?,
-        shortDescription: String?
+        shortDescription: String?,
+        isFeatured: Boolean?,
+        allowReviews: Boolean?,
+        catalogVisibility: CatalogVisibility?,
     ): Result<ProductUpdateMutation.Data> {
-        val common = if (name != null || shortDescription != null) {
+        val common = if (
+            name != null || shortDescription != null || isFeatured != null || allowReviews != null ||
+            catalogVisibility != null
+        ) {
             Optional.present(
                 ProductCommonInput(
                     name = name.skipIfNull(),
                     shortDescription = shortDescription.skipIfNull(),
+                    isFeatured = isFeatured.skipIfNull(),
+                    allowReviews = allowReviews.skipIfNull(),
+                    catalogVisibility = catalogVisibility.skipIfNull(),
                 )
             )
         } else Optional.absent()

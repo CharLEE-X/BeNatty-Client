@@ -6,7 +6,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.gap
-import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.px
@@ -50,9 +49,9 @@ fun CategoryBar(
                 SegmentedButton(
                     label = filter.name,
                     selected = currentCategoryFilter == filter,
+                    onClick = { onCategoryFilterClick(filter) },
                     modifier = Modifier
                         .width(100.px)
-                        .onClick { onCategoryFilterClick(filter) }
                 )
             }
         }

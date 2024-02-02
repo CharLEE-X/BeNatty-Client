@@ -2,6 +2,7 @@ package web.compose.material3.component.labs
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.toAttrs
 import org.jetbrains.compose.web.dom.ContentBuilder
 import web.compose.material3.common.MdElement
@@ -27,14 +28,17 @@ fun SegmentedButtonSet(
 fun SegmentedButton(
     label: String? = null,
     selected: Boolean = false,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) = MdTagElement(
     tagName = "md-outlined-segmented-button",
-    applyAttrs = modifier.toAttrs {
-        label?.let { attr("label", it) }
-        if (selected) {
-            attr("selected", "")
-        }
-    },
+    applyAttrs = modifier
+        .onClick { onClick() }
+        .toAttrs {
+            label?.let { attr("label", it) }
+            if (selected) {
+                attr("selected", "")
+            }
+        },
     content = null
 ).also { jsRequire("@material/web/labs/segmentedbutton/outlined-segmented-button.js") }
