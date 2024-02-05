@@ -16,6 +16,7 @@ class AdminCategoryPageViewModel(
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
     goToUserList: suspend () -> Unit,
+    goToUser: suspend (String) -> Unit,
 ) : BasicViewModel<
     AdminCategoryPageContract.Inputs,
     AdminCategoryPageContract.Events,
@@ -41,6 +42,7 @@ class AdminCategoryPageViewModel(
     eventHandler = AdminCategoryPageEventHandler(
         onError = onError,
         goToUserList = goToUserList,
+        goToUser = goToUser,
     ),
     coroutineScope = scope,
 ) {

@@ -17,6 +17,7 @@ import data.type.CreateUserInput
 import data.type.PageInput
 import data.type.PersonalDetailsInput
 import data.type.Role
+import data.type.SortDirection
 import data.type.UserUpdateInput
 import data.utils.handle
 import data.utils.skipIfNull
@@ -27,7 +28,14 @@ interface UserService {
     suspend fun create(input: CreateUserInput): Result<CreateUserMutation.Data>
     suspend fun get(): Flow<Result<UserGetQuery.Data>>
     suspend fun getById(id: String): Flow<Result<UserGetByIdQuery.Data>>
-    suspend fun getAllAsPage(page: Int, size: Int): Result<UsersGetAllPageQuery.Data>
+    suspend fun getAsPage(
+        page: Int,
+        size: Int,
+        query: String?,
+        sortBy: String?,
+        sortDirection: SortDirection?,
+    ): Result<UsersGetAllPageQuery.Data>
+
     suspend fun deleteById(id: String): Result<DeleteUserByIdMutation.Data>
 
     suspend fun update(
@@ -70,8 +78,20 @@ internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserSer
             .map { it.handle() }
     }
 
-    override suspend fun getAllAsPage(page: Int, size: Int): Result<UsersGetAllPageQuery.Data> {
-        val pageInput = PageInput(page, size)
+    override suspend fun getAsPage(
+        page: Int,
+        size: Int,
+        query: String?,
+        sortBy: String?,
+        sortDirection: SortDirection?,
+    ): Result<UsersGetAllPageQuery.Data> {
+        val pageInput = PageInput(
+            page = page,
+            size = size,
+            query = query.skipIfNull(),
+            sortBy = sortBy.skipIfNull(),
+            sortDirection = sortDirection.skipIfNull(),
+        )
         return apolloClient.query(UsersGetAllPageQuery(pageInput))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()

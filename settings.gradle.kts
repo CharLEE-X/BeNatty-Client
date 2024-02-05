@@ -52,14 +52,10 @@ include(
     ":feature:account:wishlist",
 
     ":feature:admin:dashboard",
+    ":feature:admin:list",
     ":feature:admin:user:page",
-    ":feature:admin:user:list",
     ":feature:admin:product:page",
-    ":feature:admin:product:list",
-    ":feature:admin:order:list",
     ":feature:admin:order:page",
-    ":feature:admin:category:list",
     ":feature:admin:category:page",
-    ":feature:admin:tag:list",
     ":feature:admin:tag:page",
 )

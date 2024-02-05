@@ -1,12 +1,18 @@
 query GetCategoryById($getCategoryByIdId: ObjectId!) {
   getCategoryById(id: $getCategoryByIdId) {
     createdAt
-    createdBy
+    creator {
+      id
+      name
+    }
     description
     display
     id
     name
-    parentId
+    parent {
+      id
+      name
+    }
     updatedAt
   }
 }

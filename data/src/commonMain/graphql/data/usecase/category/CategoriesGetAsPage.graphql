@@ -1,0 +1,17 @@
+query GetCategoriesAsPage($pageInput: PageInput!) {
+  getCategoriesAsPage(pageInput: $pageInput) {
+    categories {
+      id
+      createdAt
+      description
+      display
+      name
+    }
+    info {
+      count
+      pages
+      prev
+      next
+    }
+  }
+}

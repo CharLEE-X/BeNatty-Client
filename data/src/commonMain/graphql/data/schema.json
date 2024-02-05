@@ -201,11 +201,11 @@
           "__typename": "__Type",
           "kind": "OBJECT",
           "name": "AuthResponse",
-          "description": "A response to authentication.",
+          "description": null,
           "fields": [
             {
               "name": "token",
-              "description": "The authentication token for the user.",
+              "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
@@ -222,7 +222,7 @@
             },
             {
               "name": "userMinimal",
-              "description": "Minimal information about the authenticated user.",
+              "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
@@ -353,9 +353,13 @@
               "args": [],
               "type": {
                 "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "ObjectId",
-                "ofType": null
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
+                  "ofType": null
+                }
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -431,7 +435,7 @@
               "type": {
                 "__typename": "__Type",
                 "kind": "SCALAR",
-                "name": "String",
+                "name": "ObjectId",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -456,7 +460,20 @@
             }
           ],
           "inputFields": null,
-          "interfaces": [],
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "Identifiable",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "TimeTrackable",
+              "ofType": null
+            }
+          ],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -516,7 +533,7 @@
               "deprecationReason": null
             },
             {
-              "name": "createdBy",
+              "name": "creator",
               "description": null,
               "args": [],
               "type": {
@@ -524,8 +541,8 @@
                 "kind": "NON_NULL",
                 "name": null,
                 "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ObjectId",
+                  "kind": "OBJECT",
+                  "name": "IdWithName",
                   "ofType": null
                 }
               },
@@ -542,7 +559,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -568,7 +585,14 @@
             }
           ],
           "inputFields": null,
-          "interfaces": [],
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "Identifiable",
+              "ofType": null
+            }
+          ],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -577,6 +601,246 @@
           "__typename": "__Type",
           "kind": "OBJECT",
           "name": "CategoryItem",
+          "description": null,
+          "fields": [
+            {
+              "name": "createdAt",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "description",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "display",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "Identifiable",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "CategoryMinimal",
+          "description": null,
+          "fields": [
+            {
+              "name": "display",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "parentId",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "ObjectId",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "Identifiable",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "CategoryPage",
+          "description": null,
+          "fields": [
+            {
+              "name": "categories",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "CategoryItem",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "info",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "PagingInfo",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "CategoryPageItem",
           "description": null,
           "fields": [
             {
@@ -642,9 +906,63 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "Identifiable",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "CategoryProfile",
+          "description": null,
+          "fields": [
+            {
+              "name": "createdAt",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
-              "name": "parentId",
+              "name": "creator",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "IdWithName",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "description",
               "description": null,
               "args": [],
               "type": {
@@ -655,22 +973,9 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null,
-          "specifiedByURL": null
-        },
-        {
-          "__typename": "__Type",
-          "kind": "OBJECT",
-          "name": "CategoryPage",
-          "description": null,
-          "fields": [
+            },
             {
-              "name": "categories",
+              "name": "display",
               "description": null,
               "args": [],
               "type": {
@@ -678,24 +983,16 @@
                 "kind": "NON_NULL",
                 "name": null,
                 "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "OBJECT",
-                      "name": "CategoryItem",
-                      "ofType": null
-                    }
-                  }
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
                 }
               },
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "info",
+              "name": "id",
               "description": null,
               "args": [],
               "type": {
@@ -703,8 +1000,55 @@
                 "kind": "NON_NULL",
                 "name": null,
                 "ofType": {
-                  "kind": "OBJECT",
-                  "name": "PagingInfo",
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "parent",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "OBJECT",
+                "name": "IdWithName",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updatedAt",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
                   "ofType": null
                 }
               },
@@ -713,7 +1057,20 @@
             }
           ],
           "inputFields": null,
-          "interfaces": [],
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "Identifiable",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "TimeTrackable",
+              "ofType": null
+            }
+          ],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -792,7 +1149,7 @@
               "type": {
                 "__typename": "__Type",
                 "kind": "SCALAR",
-                "name": "String",
+                "name": "ObjectId",
                 "ofType": null
               },
               "defaultValue": null,
@@ -879,6 +1236,23 @@
           "description": null,
           "fields": [
             {
+              "name": "createdAt",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "email",
               "description": null,
               "args": [],
@@ -914,7 +1288,14 @@
             }
           ],
           "inputFields": null,
-          "interfaces": [],
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "Identifiable",
+              "ofType": null
+            }
+          ],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -987,11 +1368,11 @@
           "__typename": "__Type",
           "kind": "OBJECT",
           "name": "ForgotPasswordResponse",
-          "description": "Model for forgot password response",
+          "description": null,
           "fields": [
             {
               "name": "email",
-              "description": "Email of the user.",
+              "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
@@ -1008,7 +1389,7 @@
             },
             {
               "name": "isForgotPasswordEmailSent",
-              "description": "Indicates if forgot password email was sent",
+              "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
@@ -1032,6 +1413,175 @@
         },
         {
           "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "IdWithName",
+          "description": null,
+          "fields": [
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "Identifiable",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "INTERFACE",
+          "name": "Identifiable",
+          "description": null,
+          "fields": [
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": [
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "Category",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "CategoryCreateResult",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "CategoryItem",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "CategoryMinimal",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "CategoryPageItem",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "CategoryProfile",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "CreatedUser",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "IdWithName",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "Product",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "UserItem",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "UserProfile",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "UserWithDetailsWithName",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "UserWithEmailAndName",
+              "ofType": null
+            }
+          ],
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
           "kind": "SCALAR",
           "name": "Int",
           "description": "Built-in Int",
@@ -1046,13 +1596,13 @@
           "__typename": "__Type",
           "kind": "INPUT_OBJECT",
           "name": "LoginInput",
-          "description": "Input data for login.",
+          "description": null,
           "fields": null,
           "inputFields": [
             {
               "__typename": "__InputValue",
               "name": "email",
-              "description": "Email of the user.",
+              "description": null,
               "type": {
                 "__typename": "__Type",
                 "kind": "NON_NULL",
@@ -1070,7 +1620,7 @@
             {
               "__typename": "__InputValue",
               "name": "password",
-              "description": "\nUser password. Special characters prohibited @£€#¢∞§¶•ªº\\$%^&*()_+=\"\nInvalid format will throw error: 'Invalid password'\"\n\nRegex: ^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}$\n",
+              "description": null,
               "type": {
                 "__typename": "__Type",
                 "kind": "NON_NULL",
@@ -1212,7 +1762,7 @@
                 {
                   "__typename": "__InputValue",
                   "name": "loginInput",
-                  "description": "Input data for login.",
+                  "description": null,
                   "type": {
                     "__typename": "__Type",
                     "kind": "NON_NULL",
@@ -1243,12 +1793,12 @@
             },
             {
               "name": "register",
-              "description": "Signs up user with email and password, no header needed.",
+              "description": null,
               "args": [
                 {
                   "__typename": "__InputValue",
                   "name": "registerInput",
-                  "description": "Input data for login.",
+                  "description": null,
                   "type": {
                     "__typename": "__Type",
                     "kind": "NON_NULL",
@@ -1516,13 +2066,13 @@
           "__typename": "__Type",
           "kind": "INPUT_OBJECT",
           "name": "PageInput",
-          "description": "The name of the data model being paginated.",
+          "description": null,
           "fields": null,
           "inputFields": [
             {
               "__typename": "__InputValue",
               "name": "page",
-              "description": "The current page number to get. Negative page number is invalid. Default is 0.",
+              "description": null,
               "type": {
                 "__typename": "__Type",
                 "kind": "NON_NULL",
@@ -1539,8 +2089,22 @@
             },
             {
               "__typename": "__InputValue",
+              "name": "query",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
               "name": "size",
-              "description": "The number of items to return per page. Must be between 1 and 100. Default is 10.",
+              "description": null,
               "type": {
                 "__typename": "__Type",
                 "kind": "NON_NULL",
@@ -1550,6 +2114,34 @@
                   "name": "Int",
                   "ofType": null
                 }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "sortBy",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "sortDirection",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "ENUM",
+                "name": "SortDirection",
+                "ofType": null
               },
               "defaultValue": null,
               "isDeprecated": false,
@@ -1565,11 +2157,11 @@
           "__typename": "__Type",
           "kind": "OBJECT",
           "name": "PagingInfo",
-          "description": "Metadata about the pagination",
+          "description": null,
           "fields": [
             {
               "name": "count",
-              "description": "The total number of items across all pages.",
+              "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
@@ -1586,7 +2178,7 @@
             },
             {
               "name": "next",
-              "description": "The next page number, or null if this is the last page.",
+              "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
@@ -1599,7 +2191,7 @@
             },
             {
               "name": "pages",
-              "description": "The total number of pages.",
+              "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
@@ -1616,7 +2208,7 @@
             },
             {
               "name": "prev",
-              "description": "The previous page number, or null if this is the first page (page 0).",
+              "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
@@ -1638,11 +2230,11 @@
           "__typename": "__Type",
           "kind": "OBJECT",
           "name": "PersonalDetails",
-          "description": "Represents a user's personal details.",
+          "description": null,
           "fields": [
             {
               "name": "name",
-              "description": "Full name of the user.",
+              "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
@@ -1659,7 +2251,7 @@
             },
             {
               "name": "phone",
-              "description": "Phone number of the user.",
+              "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
@@ -1681,13 +2273,13 @@
           "__typename": "__Type",
           "kind": "INPUT_OBJECT",
           "name": "PersonalDetailsInput",
-          "description": "Represents a user's personal details.",
+          "description": null,
           "fields": null,
           "inputFields": [
             {
               "__typename": "__InputValue",
               "name": "name",
-              "description": "Full name of the user.",
+              "description": null,
               "type": {
                 "__typename": "__Type",
                 "kind": "SCALAR",
@@ -1701,7 +2293,7 @@
             {
               "__typename": "__InputValue",
               "name": "phone",
-              "description": "Phone number of the user.",
+              "description": null,
               "type": {
                 "__typename": "__Type",
                 "kind": "SCALAR",
@@ -1714,6 +2306,36 @@
             }
           ],
           "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "PersonalDetailsWithName",
+          "description": null,
+          "fields": [
+            {
+              "name": "name",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -1865,7 +2487,14 @@
             }
           ],
           "inputFields": null,
-          "interfaces": [],
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "Identifiable",
+              "ofType": null
+            }
+          ],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -2085,7 +2714,14 @@
             }
           ],
           "inputFields": null,
-          "interfaces": [],
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "TimeTrackable",
+              "ofType": null
+            }
+          ],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -3053,6 +3689,40 @@
           "description": null,
           "fields": [
             {
+              "name": "catalogVisibility",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "CatalogVisibility",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "createdAt",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "id",
               "description": null,
               "args": [],
@@ -3070,6 +3740,19 @@
               "deprecationReason": null
             },
             {
+              "name": "image",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "name",
               "description": null,
               "args": [],
@@ -3080,6 +3763,36 @@
                 "ofType": {
                   "kind": "SCALAR",
                   "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "price",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "totalSold",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
                   "ofType": null
                 }
               },
@@ -3122,13 +3835,9 @@
               "args": [],
               "type": {
                 "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -3139,13 +3848,9 @@
               "args": [],
               "type": {
                 "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -3169,13 +3874,9 @@
               "args": [],
               "type": {
                 "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -3303,6 +4004,23 @@
           "name": "ProductProfile",
           "description": null,
           "fields": [
+            {
+              "name": "creator",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "IdWithName",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "name": "product",
               "description": null,
@@ -3858,12 +4576,12 @@
             },
             {
               "name": "forgotPassword",
-              "description": "Reset password for userId",
+              "description": null,
               "args": [
                 {
                   "__typename": "__InputValue",
                   "name": "email",
-                  "description": "Email of the user.",
+                  "description": null,
                   "type": {
                     "__typename": "__Type",
                     "kind": "NON_NULL",
@@ -4029,8 +4747,33 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "Category",
+                  "name": "CategoryProfile",
                   "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "getCategoriesAllMinimal",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "CategoryMinimal",
+                      "ofType": null
+                    }
+                  }
                 }
               },
               "isDeprecated": false,
@@ -4047,13 +4790,13 @@
           "__typename": "__Type",
           "kind": "INPUT_OBJECT",
           "name": "RegisterInput",
-          "description": "Input data for authentication.",
+          "description": null,
           "fields": null,
           "inputFields": [
             {
               "__typename": "__InputValue",
               "name": "email",
-              "description": "Email of the user.",
+              "description": null,
               "type": {
                 "__typename": "__Type",
                 "kind": "NON_NULL",
@@ -4071,7 +4814,7 @@
             {
               "__typename": "__InputValue",
               "name": "name",
-              "description": "Full name of the user.",
+              "description": null,
               "type": {
                 "__typename": "__Type",
                 "kind": "NON_NULL",
@@ -4089,7 +4832,7 @@
             {
               "__typename": "__InputValue",
               "name": "password",
-              "description": "\nUser password. Special characters prohibited @£€#¢∞§¶•ªº\\$%^&*()_+=\"\nInvalid format will throw error: 'Invalid password'\"\n\nRegex: ^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}$\n",
+              "description": null,
               "type": {
                 "__typename": "__Type",
                 "kind": "NON_NULL",
@@ -4150,6 +4893,31 @@
         {
           "__typename": "__Type",
           "kind": "ENUM",
+          "name": "SortDirection",
+          "description": null,
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": [
+            {
+              "name": "ASC",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "DESC",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "ENUM",
           "name": "StockStatus",
           "description": null,
           "fields": null,
@@ -4192,6 +4960,78 @@
         },
         {
           "__typename": "__Type",
+          "kind": "INTERFACE",
+          "name": "TimeTrackable",
+          "description": null,
+          "fields": [
+            {
+              "name": "createdAt",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updatedAt",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": [
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "Category",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "CategoryProfile",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "ProductCommon",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            }
+          ],
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
           "kind": "OBJECT",
           "name": "User",
           "description": null,
@@ -4207,6 +5047,23 @@
                 "ofType": {
                   "kind": "OBJECT",
                   "name": "Address",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "createdAt",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
                   "ofType": null
                 }
               },
@@ -4380,7 +5237,20 @@
             }
           ],
           "inputFields": null,
-          "interfaces": [],
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "Identifiable",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "TimeTrackable",
+              "ofType": null
+            }
+          ],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -4391,6 +5261,23 @@
           "name": "UserItem",
           "description": null,
           "fields": [
+            {
+              "name": "createdAt",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "name": "email",
               "description": null,
@@ -4424,10 +5311,51 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "totalOrders",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "inputFields": null,
-          "interfaces": [],
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "Identifiable",
+              "ofType": null
+            }
+          ],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -4436,11 +5364,11 @@
           "__typename": "__Type",
           "kind": "OBJECT",
           "name": "UserMinimal",
-          "description": "Represents a minimal user object",
+          "description": null,
           "fields": [
             {
               "name": "email",
-              "description": "Email of the user.",
+              "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
@@ -4457,7 +5385,7 @@
             },
             {
               "name": "id",
-              "description": "Unique identifier of the user.",
+              "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
@@ -4674,7 +5602,14 @@
             }
           ],
           "inputFields": null,
-          "interfaces": [],
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "Identifiable",
+              "ofType": null
+            }
+          ],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -4776,6 +5711,131 @@
             }
           ],
           "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "UserWithDetailsWithName",
+          "description": null,
+          "fields": [
+            {
+              "name": "details",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "PersonalDetailsWithName",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "Identifiable",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "UserWithEmailAndName",
+          "description": null,
+          "fields": [
+            {
+              "name": "details",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "PersonalDetailsWithName",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "email",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "Identifiable",
+              "ofType": null
+            }
+          ],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null

@@ -5,14 +5,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import com.varabyte.kobweb.compose.foundation.layout.Column
-import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
-import com.varabyte.kobweb.compose.ui.modifiers.gap
-import com.varabyte.kobweb.silk.components.text.SpanText
-import feature.admin.order.list.AdminOrderListViewModel
-import org.jetbrains.compose.web.css.em
-import web.compose.material3.component.Divider
+import feature.admin.list.AdminListContract
+import feature.admin.list.AdminListViewModel
+import web.components.layouts.ListPageLayout
 
 @Composable
 fun AdminOrderListPage(
@@ -20,20 +15,26 @@ fun AdminOrderListPage(
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
-        AdminOrderListViewModel(
-            // FIXME use order vm
+        AdminListViewModel(
+            dataType = AdminListContract.DataType.ORDER,
+            isSlot1Sortable = true,
+            showSlot2 = true,
+            isSlot2Sortable = true,
+            showSlot3 = true,
+            isSlot3Sortable = true,
+            showSlot4 = false,
+            isSlot4Sortable = false,
+            showSlot5 = false,
+            isSlot5Sortable = false,
+            showSlot6 = false,
+            isSlot6Sortable = false,
             scope = scope,
             onError = onError,
+            goToCreate = {},
+            goToDetail = {}
         )
     }
     val state by vm.observeStates().collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .gap(1.em)
-    ) {
-        SpanText("AdminOrderListPage")
-        Divider()
-    }
+    ListPageLayout(state, vm)
 }

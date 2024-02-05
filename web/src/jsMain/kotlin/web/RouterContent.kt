@@ -281,7 +281,7 @@ fun RouterContent(
                                 )
                             )
                         },
-                        goToCreateUser = {
+                        goToCreate = {
                             router.trySend(
                                 RouterContract.Inputs.GoToDestination(
                                     RouterScreen.AdminUserPageExisting.matcher.routeFormat
@@ -351,6 +351,29 @@ fun RouterContent(
                         productId = null,
                         onError = onError,
                         goToProductList = { router.trySend(RouterContract.Inputs.GoBack()) },
+                        goToCreateCategory = {
+                            router.trySend(
+                                RouterContract.Inputs.GoToDestination(
+                                    RouterScreen.AdminCategoryPageNew.matcher.routeFormat
+                                )
+                            )
+                        },
+                        goToCreateTag = {
+                            router.trySend(
+                                RouterContract.Inputs.GoToDestination(
+                                    RouterScreen.AdminTagPageNew.matcher.routeFormat
+                                )
+                            )
+                        },
+                        goToUserDetails = { id ->
+                            router.trySend(
+                                RouterContract.Inputs.GoToDestination(
+                                    RouterScreen.AdminUserPageExisting.directions()
+                                        .pathParameter("id", id)
+                                        .build()
+                                )
+                            )
+                        },
                     )
                 }
 
@@ -361,6 +384,29 @@ fun RouterContent(
                             productId = id,
                             onError = onError,
                             goToProductList = { router.trySend(RouterContract.Inputs.GoBack()) },
+                            goToCreateCategory = {
+                                router.trySend(
+                                    RouterContract.Inputs.GoToDestination(
+                                        RouterScreen.AdminCategoryPageNew.matcher.routeFormat
+                                    )
+                                )
+                            },
+                            goToCreateTag = {
+                                router.trySend(
+                                    RouterContract.Inputs.GoToDestination(
+                                        RouterScreen.AdminTagPageNew.matcher.routeFormat
+                                    )
+                                )
+                            },
+                            goToUserDetails = { id ->
+                                router.trySend(
+                                    RouterContract.Inputs.GoToDestination(
+                                        RouterScreen.AdminUserPageExisting.directions()
+                                            .pathParameter("id", id)
+                                            .build()
+                                    )
+                                )
+                            },
                         )
                     }
                 }
@@ -396,7 +442,7 @@ fun RouterContent(
                                 )
                             )
                         },
-                        onItemClick = { id ->
+                        goToCategoryDetail = { id ->
                             router.trySend(
                                 RouterContract.Inputs.GoToDestination(
                                     RouterScreen.AdminCategoryPageExisting.directions()
@@ -419,6 +465,15 @@ fun RouterContent(
                                 )
                             )
                         },
+                        goToUserDetail = { id ->
+                            router.trySend(
+                                RouterContract.Inputs.GoToDestination(
+                                    RouterScreen.AdminUserPageExisting.directions()
+                                        .pathParameter("id", id)
+                                        .build()
+                                )
+                            )
+                        },
                     )
                 }
 
@@ -432,6 +487,15 @@ fun RouterContent(
                                 router.trySend(
                                     RouterContract.Inputs.GoToDestination(
                                         RouterScreen.AdminCategoryList.matcher.routeFormat
+                                    )
+                                )
+                            },
+                            goToUserDetail = { id ->
+                                router.trySend(
+                                    RouterContract.Inputs.GoToDestination(
+                                        RouterScreen.AdminUserPageExisting.directions()
+                                            .pathParameter("id", id)
+                                            .build()
                                     )
                                 )
                             },

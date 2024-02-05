@@ -1,7 +1,7 @@
 package feature.admin.category.page
 
-import com.apollographql.apollo3.mpp.currentTimeMillis
 import component.localization.getString
+import data.GetCategoriesAllMinimalQuery
 import data.GetCategoryByIdQuery
 import data.service.AuthService
 import org.koin.core.component.KoinComponent
@@ -12,7 +12,9 @@ object AdminCategoryPageContract : KoinComponent {
 
     data class State(
         val isLoading: Boolean = false,
-        val screenState: ScreenState = ScreenState.New.Create,
+        val screenState: ScreenState = ScreenState.Existing.Read,
+
+        val categories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal> = emptyList(),
 
         // Personal details
         val id: String? = null,
@@ -22,11 +24,14 @@ object AdminCategoryPageContract : KoinComponent {
         val shakeName: Boolean = false,
 
         val description: String = "",
-        val parentId: String? = null,
+        val parent: GetCategoryByIdQuery.Parent? = null,
         val display: Boolean = true,
-        val createdBy: String = authService.userId ?: "",
-        val createdAt: Long = currentTimeMillis(),
-        val updatedAt: Long = currentTimeMillis(),
+        val creator: GetCategoryByIdQuery.Creator = GetCategoryByIdQuery.Creator(
+            id = authService.userId ?: "",
+            name = "",
+        ),
+        val createdAt: String = "",
+        val updatedAt: String = "",
 
         val isDetailsEditing: Boolean = false,
         val isSaveButtonDisabled: Boolean = true,
@@ -37,9 +42,12 @@ object AdminCategoryPageContract : KoinComponent {
             id = id ?: "",
             name = name,
             description = description,
-            parentId = parentId,
+            parent = null,
             display = true,
-            createdBy = null,
+            creator = GetCategoryByIdQuery.Creator(
+                id = authService.userId ?: "",
+                name = "",
+            ),
             createdAt = createdAt.toString(),
             updatedAt = updatedAt.toString(),
         ),
@@ -50,34 +58,51 @@ object AdminCategoryPageContract : KoinComponent {
     sealed interface Inputs {
         data class Init(val id: String?) : Inputs
 
-        data class SetLoading(val isLoading: Boolean) : Inputs
-        data class SetScreenState(val screenState: ScreenState) : Inputs
+        sealed interface Get : Inputs {
+            data class CategoryById(val id: String) : Inputs
+            data object AllCategories : Inputs
+        }
 
-        data object CreateNew : Inputs
-        data class GetById(val id: String) : Inputs
-        data object Delete : Inputs
+        sealed interface Set : Inputs {
+            data class Loading(val isLoading: Boolean) : Inputs
+            data class StateOfScreen(val screenState: ScreenState) : Inputs
 
-        data class SetCategoryProfile(val category: GetCategoryByIdQuery.GetCategoryById) : Inputs
-        data class SetId(val id: String) : Inputs
+            data class AllCategories(val categories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal>) :
+                Inputs
 
-        data class SetName(val fullName: String) : Inputs
-        data class SetNameShake(val shake: Boolean) : Inputs
-        data class SetDetailsEditable(val isEditable: Boolean) : Inputs
-        data class SetSaveButtonDisabled(val isDisabled: Boolean) : Inputs
-        data object SaveDetails : Inputs
+            data class OriginalCategory(val category: GetCategoryByIdQuery.GetCategoryById) : Inputs
+            data class Id(val id: String) : Inputs
 
-        data class SetCreatedBy(val createdBy: String) : Inputs
-        data class SetCreatedAt(val createdAt: Long) : Inputs
-        data class SetUpdatedAt(val updatedAt: Long) : Inputs
+            data class Name(val fullName: String) : Inputs
+            data class IsNameShake(val shake: Boolean) : Inputs
+            data class IsDetailsEditable(val isEditable: Boolean) : Inputs
+            data class IsSaveButtonDisabled(val isDisabled: Boolean) : Inputs
 
-        data class SetDescription(val description: String) : Inputs
-        data class SetParentId(val parentId: String) : Inputs
-        data class SetDisplay(val display: Boolean) : Inputs
+            data class Description(val description: String) : Inputs
+            data class Parent(val parent: GetCategoryByIdQuery.Parent?) : Inputs
+            data class Display(val display: Boolean) : Inputs
+
+            data class Creator(val creator: GetCategoryByIdQuery.Creator) : Inputs
+            data class CreatedAt(val createdAt: String) : Inputs
+            data class UpdatedAt(val updatedAt: String) : Inputs
+        }
+
+        sealed interface OnClick : Inputs {
+            data object CreateNew : Inputs
+            data object Delete : Inputs
+            data object Edit : Inputs
+            data object Cancel : Inputs
+            data object SaveDetails : Inputs
+            data object Parent : Inputs
+            data object Creator : Inputs
+            data class ParentPicker(val category: GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal) : Inputs
+        }
     }
 
     sealed interface Events {
         data class OnError(val message: String) : Events
         data object GoToList : Events
+        data class GoToUser(val id: String) : Events
     }
 
     data class Strings(
@@ -118,14 +143,13 @@ object AdminCategoryPageContract : KoinComponent {
         val create: String = getString(component.localization.Strings.Create),
         val description: String = getString(component.localization.Strings.Description),
         val display: String = getString(component.localization.Strings.Display),
-        val parentId: String = getString(component.localization.Strings.ParentId),
+        val parentCategory: String = getString(component.localization.Strings.ParentCategory),
+        val none: String = getString(component.localization.Strings.None),
+        val noOtherCategoriesToChooseFrom: String = getString(component.localization.Strings.NoOtherCategoriesToChooseFrom),
     )
 
     sealed interface ScreenState {
-        sealed interface New : ScreenState {
-            data object Create : New
-            data object Created : New
-        }
+        data object Create : ScreenState
 
         sealed interface Existing : ScreenState {
             data object Read : Existing

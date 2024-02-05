@@ -1,6 +1,5 @@
 package feature.admin.tag.page
 
-import com.apollographql.apollo3.mpp.currentTimeMillis
 import component.localization.getString
 import data.UserGetByIdQuery
 import data.type.Role
@@ -88,8 +87,8 @@ object AdminTagPageContract {
         val wishlistSize: Int = 0,
         val lastActive: String? = null,
         val createdBy: String? = null,
-        val createdAt: Long = currentTimeMillis(),
-        val updatedAt: Long = currentTimeMillis(),
+        val createdAt: String = "",
+        val updatedAt: String = "",
 
         val strings: Strings = Strings()
     )
@@ -104,7 +103,7 @@ object AdminTagPageContract {
         data class GetUserById(val id: String) : Inputs
 
         data class SetId(val id: String) : Inputs
-        data class SetUserProfile(val user: UserGetByIdQuery.GetUserById) : Inputs
+        data class SetOriginalUser(val user: UserGetByIdQuery.GetUserById) : Inputs
 
         data object DeleteUser : Inputs
 
@@ -145,8 +144,8 @@ object AdminTagPageContract {
         data class SetWishlistSize(val size: Int) : Inputs
         data class SetLastActive(val lastActive: String?) : Inputs
         data class SetCreatedBy(val createdBy: String?) : Inputs
-        data class SetCreatedAt(val createdAt: Long) : Inputs
-        data class SetUpdatedAt(val updatedAt: Long) : Inputs
+        data class SetCreatedAt(val createdAt: String) : Inputs
+        data class SetUpdatedAt(val updatedAt: String) : Inputs
     }
 
     sealed interface Events {

@@ -1,7 +1,6 @@
 package web.components.sections.desktopNav.sections
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -9,24 +8,18 @@ import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.id
 import com.varabyte.kobweb.compose.ui.modifiers.margin
-import com.varabyte.kobweb.compose.ui.modifiers.onKeyDown
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.icons.MoonIcon
 import com.varabyte.kobweb.silk.components.icons.SunIcon
-import com.varabyte.kobweb.silk.components.icons.fa.FaMagnifyingGlass
-import com.varabyte.kobweb.silk.components.icons.fa.IconSize
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiFavorite
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiShoppingBasket
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.text.SpanText
-import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
@@ -35,10 +28,9 @@ import web.components.sections.desktopNav.DesktopNavContract
 import web.components.sections.desktopNav.DesktopNavViewModel
 import web.components.sections.desktopNav.label
 import web.components.widgets.Logo
+import web.components.widgets.SearchBar
 import web.compose.material3.component.IconButton
-import web.compose.material3.component.OutlinedTextField
 import web.compose.material3.component.TextButton
-import web.compose.material3.component.TextFieldType
 import web.compose.material3.component.labs.Menu
 import web.compose.material3.component.labs.MenuItem
 
@@ -69,7 +61,7 @@ fun LogoSearchButtonsSection(
             value = searchValue,
             onValueChange = onSearchValueChanged,
             placeholder = DesktopNavContract.Strings.search,
-            onEnterClick = {},
+            onEnterPress = {},
             onSearchIconClick = { },
             containerShape = "30px",
         )
@@ -125,45 +117,6 @@ fun LogoSearchButtonsSection(
             ) {
                 if (colorMode.isLight) MoonIcon() else SunIcon()
             }
-        }
-    }
-}
-
-@Composable
-fun SearchBar(
-    modifier: Modifier = Modifier,
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder: String,
-    onEnterClick: () -> Unit,
-    onSearchIconClick: (Boolean) -> Unit,
-    containerShape: String? = null,
-) {
-    val breakpoint = rememberBreakpoint()
-
-    LaunchedEffect(breakpoint) {
-        if (breakpoint >= Breakpoint.SM) onSearchIconClick(false)
-    }
-
-    if (breakpoint >= Breakpoint.SM) {
-        OutlinedTextField(
-            placeholder = placeholder,
-            value = value,
-            onInput = { onValueChange(it) },
-            type = TextFieldType.SEARCH,
-            leadingIcon = { FaMagnifyingGlass() },
-            containerShape = containerShape,
-            modifier = modifier
-                .fillMaxWidth()
-                .onKeyDown {
-                    if (it.key == "Enter") onEnterClick()
-                }
-        )
-    } else {
-        IconButton(
-            onClick = { onSearchIconClick(true) },
-        ) {
-            FaMagnifyingGlass(size = IconSize.SM)
         }
     }
 }

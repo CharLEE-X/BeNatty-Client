@@ -32,7 +32,6 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiPhone
 import com.varabyte.kobweb.silk.components.overlay.Tooltip
 import com.varabyte.kobweb.silk.components.text.SpanText
 import core.util.enumCapitalized
-import core.util.millisToTime
 import data.type.Role
 import feature.admin.tag.page.AdminTagPageContract
 import feature.admin.tag.page.AdminTagPageViewModel
@@ -69,11 +68,17 @@ fun AdminUserPagePage(
         title = if (state.screenState is AdminTagPageContract.ScreenState.New) {
             state.strings.createUser
         } else {
-            "${state.strings.user}: ${state.id}"
+            state.strings.user
         },
+        id = state.id,
+        name = state.fullName.ifEmpty { null },
         showDelete = state.screenState is AdminTagPageContract.ScreenState.Existing,
         deleteText = state.strings.delete,
         cancelText = state.strings.cancel,
+        createdAtText = state.strings.createdAt,
+        updatedAtText = state.strings.updatedAt,
+        createdAtValue = state.createdAt,
+        updatedAtValue = state.updatedAt,
         onDeleteClick = { vm.trySend(AdminTagPageContract.Inputs.DeleteUser) },
     ) {
         PersonalDetails(vm, state)
@@ -322,14 +327,10 @@ fun OtherInfo(vm: AdminTagPageViewModel, state: AdminTagPageContract.State) {
         Column {
             SpanText(text = state.strings.lastActive)
             SpanText(text = state.strings.createdBy)
-            SpanText(text = state.strings.createdAt)
-            SpanText(text = state.strings.updatedAt)
         }
         Column {
             SpanText(text = state.lastActive ?: state.strings.never)
             SpanText(text = state.createdBy ?: state.strings.registered)
-            SpanText(text = millisToTime(state.createdAt))
-            SpanText(text = millisToTime(state.updatedAt))
         }
     }
 }

@@ -5,38 +5,38 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import feature.admin.category.list.AdminCategoryListViewModel
-import web.components.layouts.ListItem
+import feature.admin.list.AdminListContract
+import feature.admin.list.AdminListViewModel
 import web.components.layouts.ListPageLayout
 
 @Composable
 fun AdminCategoryListPage(
     onError: suspend (String) -> Unit,
-    onItemClick: (String) -> Unit,
+    goToCategoryDetail: (String) -> Unit,
     goToCreate: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
-        AdminCategoryListViewModel(
+        AdminListViewModel(
+            dataType = AdminListContract.DataType.CATEGORY,
+            isSlot1Sortable = true,
+            showSlot2 = true,
+            isSlot2Sortable = true,
+            showSlot3 = true,
+            isSlot3Sortable = true,
+            showSlot4 = false,
+            isSlot4Sortable = false,
+            showSlot5 = false,
+            isSlot5Sortable = false,
+            showSlot6 = false,
+            isSlot6Sortable = false,
             scope = scope,
             onError = onError,
-            goToCreateCategory = goToCreate,
-            onCategoryClick = onItemClick
+            goToCreate = goToCreate,
+            goToDetail = goToCategoryDetail,
         )
     }
     val state by vm.observeStates().collectAsState()
 
-    ListPageLayout(
-        title = state.strings.categories,
-        createText = state.strings.newCategory,
-        pressCreateToStartText = state.strings.pressCreateToStart,
-        onAddClick = goToCreate,
-        onItemClick = onItemClick,
-        items = state.categories.map {
-            ListItem(
-                id = it.id.toString(),
-                name = it.name,
-            )
-        },
-    )
+    ListPageLayout(state, vm)
 }

@@ -36,9 +36,7 @@ fun SegmentedButton(
         .onClick { onClick() }
         .toAttrs {
             label?.let { attr("label", it) }
-            if (selected) {
-                attr("selected", "")
-            }
+            if (selected) attr("selected", "")
         },
     content = null
 ).also { jsRequire("@material/web/labs/segmentedbutton/outlined-segmented-button.js") }

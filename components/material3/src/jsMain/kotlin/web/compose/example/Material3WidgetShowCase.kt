@@ -55,6 +55,7 @@ import web.compose.example.components.BadgeShowcase
 import web.compose.example.components.ButtonShowcase
 import web.compose.example.components.CardShowcase
 import web.compose.example.components.CheckboxShowcase
+import web.compose.example.components.ChipShowcase
 import web.compose.example.components.DialogShowcase
 import web.compose.example.components.DividerShowcase
 import web.compose.example.components.ElevationShowcase
@@ -277,6 +278,7 @@ fun ShowcaseContent() {
 
                         Column(modifier = Modifier.flex(1)) {
                             FocusRingShowcase()
+                            ChipShowcase()
                         }
                         Column(modifier = Modifier.flex(1)) {
                             RippleShowcase()

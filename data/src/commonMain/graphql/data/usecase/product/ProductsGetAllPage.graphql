@@ -9,6 +9,11 @@ query ProductsGetAllPage($pageInput: PageInput!) {
     products {
       id
       name
+      createdAt
+      image
+      price
+      totalSold
+      catalogVisibility
     }
   }
 }

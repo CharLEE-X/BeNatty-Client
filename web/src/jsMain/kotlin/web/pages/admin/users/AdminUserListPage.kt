@@ -5,36 +5,38 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import feature.admin.tag.list.AdminUserListViewModel
-import web.components.layouts.ListItem
+import feature.admin.list.AdminListContract
+import feature.admin.list.AdminListViewModel
 import web.components.layouts.ListPageLayout
 
 @Composable
 fun AdminUserListPage(
     onError: suspend (String) -> Unit,
     onUserClick: (String) -> Unit,
-    goToCreateUser: () -> Unit,
+    goToCreate: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
-        AdminUserListViewModel(
+        AdminListViewModel(
+            dataType = AdminListContract.DataType.USER,
+            isSlot1Sortable = true,
+            showSlot2 = true,
+            isSlot2Sortable = true,
+            showSlot3 = true,
+            isSlot3Sortable = true,
+            showSlot4 = false,
+            isSlot4Sortable = false,
+            showSlot5 = false,
+            isSlot5Sortable = false,
+            showSlot6 = false,
+            isSlot6Sortable = false,
             scope = scope,
             onError = onError,
+            goToCreate = goToCreate,
+            goToDetail = onUserClick
         )
     }
     val state by vm.observeStates().collectAsState()
 
-    ListPageLayout(
-        title = state.strings.users,
-        createText = state.strings.newUser,
-        pressCreateToStartText = state.strings.pressCreateToStart,
-        onAddClick = { goToCreateUser() },
-        onItemClick = { onUserClick(it) },
-        items = state.users.map {
-            ListItem(
-                id = it.id.toString(),
-                name = it.email,
-            )
-        },
-    )
+    ListPageLayout(state, vm)
 }

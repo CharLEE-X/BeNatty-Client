@@ -10,8 +10,12 @@ import data.service.CategoryService
 import data.service.CategoryServiceImpl
 import data.service.DebugService
 import data.service.DebugServiceImpl
+import data.service.OrderService
+import data.service.OrderServiceImpl
 import data.service.ProductService
 import data.service.ProductServiceImpl
+import data.service.TagService
+import data.service.TagServiceImpl
 import data.service.UserService
 import data.service.UserServiceImpl
 import org.koin.core.module.Module
@@ -53,6 +57,16 @@ val dataModule = module {
     }
     single<CategoryService> {
         CategoryServiceImpl(
+            apolloClient = get(),
+        )
+    }
+    single<TagService> {
+        TagServiceImpl(
+            apolloClient = get(),
+        )
+    }
+    single<OrderService> {
+        OrderServiceImpl(
             apolloClient = get(),
         )
     }

@@ -2,7 +2,11 @@ package feature.admin.category.page
 
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
+import com.copperleaf.ballast.postInput
 import component.localization.InputValidator
+import core.util.millisToTime
+import data.GetCategoriesAllMinimalQuery
+import data.GetCategoryByIdQuery
 import data.service.CategoryService
 import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
@@ -23,41 +27,100 @@ internal class AdminUserPageInputHandler :
         input: AdminCategoryPageContract.Inputs,
     ) = when (input) {
         is AdminCategoryPageContract.Inputs.Init -> handleInit(input.id)
-        AdminCategoryPageContract.Inputs.CreateNew -> handleCreateNew()
-        is AdminCategoryPageContract.Inputs.SetLoading -> updateState { it.copy(isLoading = input.isLoading) }
-        is AdminCategoryPageContract.Inputs.SetScreenState -> updateState { it.copy(screenState = input.screenState) }
-        is AdminCategoryPageContract.Inputs.SetId -> updateState { it.copy(id = input.id) }
 
-        is AdminCategoryPageContract.Inputs.GetById -> handleGetById(input.id)
-        is AdminCategoryPageContract.Inputs.SetCategoryProfile -> updateState { it.copy(original = input.category) }
+        is AdminCategoryPageContract.Inputs.Get.CategoryById -> handleGetById(input.id)
+        is AdminCategoryPageContract.Inputs.Get.AllCategories -> handleGetAllCategories()
 
-        is AdminCategoryPageContract.Inputs.SetName -> handleSetName(input.fullName)
-        is AdminCategoryPageContract.Inputs.SetNameShake -> updateState { it.copy(shakeName = input.shake) }
+        is AdminCategoryPageContract.Inputs.Set.Loading -> updateState { it.copy(isLoading = input.isLoading) }
+        is AdminCategoryPageContract.Inputs.Set.StateOfScreen -> updateState { it.copy(screenState = input.screenState) }
+        is AdminCategoryPageContract.Inputs.Set.AllCategories -> updateState { it.copy(categories = input.categories) }
+        is AdminCategoryPageContract.Inputs.Set.OriginalCategory -> updateState { it.copy(original = input.category) }
+        is AdminCategoryPageContract.Inputs.Set.Id -> updateState { it.copy(id = input.id) }
+        is AdminCategoryPageContract.Inputs.Set.Name -> handleSetName(input.fullName)
+        is AdminCategoryPageContract.Inputs.Set.IsNameShake -> updateState { it.copy(shakeName = input.shake) }
 
-        AdminCategoryPageContract.Inputs.SaveDetails -> handleSaveDetails()
-        is AdminCategoryPageContract.Inputs.SetSaveButtonDisabled ->
+        is AdminCategoryPageContract.Inputs.Set.IsSaveButtonDisabled ->
             updateState { it.copy(isSaveButtonDisabled = input.isDisabled) }
 
-        is AdminCategoryPageContract.Inputs.SetDetailsEditable ->
-            updateState { it.copy(isDetailsEditing = true) }
+        is AdminCategoryPageContract.Inputs.Set.IsDetailsEditable -> updateState { it.copy(isDetailsEditing = true) }
+        is AdminCategoryPageContract.Inputs.Set.CreatedAt -> updateState { it.copy(createdAt = input.createdAt) }
+        is AdminCategoryPageContract.Inputs.Set.Creator -> updateState { it.copy(creator = input.creator) }
+        is AdminCategoryPageContract.Inputs.Set.UpdatedAt -> updateState { it.copy(updatedAt = input.updatedAt) }
+        is AdminCategoryPageContract.Inputs.Set.Description -> handleSetDescription(input.description)
+        is AdminCategoryPageContract.Inputs.Set.Display -> handleSetDisplay(input.display)
+        is AdminCategoryPageContract.Inputs.Set.Parent -> handleSetParent(input.parent)
 
-        is AdminCategoryPageContract.Inputs.Delete -> handleDelete()
-        is AdminCategoryPageContract.Inputs.SetCreatedAt -> updateState { it.copy(createdAt = input.createdAt) }
-        is AdminCategoryPageContract.Inputs.SetCreatedBy -> updateState { it.copy(createdBy = input.createdBy) }
-        is AdminCategoryPageContract.Inputs.SetUpdatedAt -> updateState { it.copy(updatedAt = input.updatedAt) }
-        is AdminCategoryPageContract.Inputs.SetDescription -> handleSetDescription(input.description)
-        is AdminCategoryPageContract.Inputs.SetDisplay -> handleSetDisplay(input.display)
-        is AdminCategoryPageContract.Inputs.SetParentId -> handleSetParentId(input.parentId)
+        AdminCategoryPageContract.Inputs.OnClick.CreateNew -> handleCreateNew()
+        AdminCategoryPageContract.Inputs.OnClick.SaveDetails -> handleSaveDetails()
+        AdminCategoryPageContract.Inputs.OnClick.Delete -> handleDelete()
+        AdminCategoryPageContract.Inputs.OnClick.Edit -> handleEdit()
+        AdminCategoryPageContract.Inputs.OnClick.Cancel -> handleCancel()
+        AdminCategoryPageContract.Inputs.OnClick.Parent -> handleGoToParent()
+        AdminCategoryPageContract.Inputs.OnClick.Creator -> handleGoToCreator()
+        is AdminCategoryPageContract.Inputs.OnClick.ParentPicker -> handleOnClickParentPicker(input.category)
     }
 
-    private suspend fun InputScope.handleSetParentId(parentId: String) {
+    private suspend fun InputScope.handleCancel() {
         updateState {
-            val hasChanged = parentId != it.original.parentId ||
+            it.copy(
+                name = it.original.name,
+                description = it.original.description ?: "",
+                parent = it.original.parent,
+                display = it.original.display,
+                isSaveButtonDisabled = true,
+                isDetailsEditing = false,
+            )
+        }
+    }
+
+    private suspend fun InputScope.handleEdit() {
+        updateState { it.copy(isDetailsEditing = true) }
+    }
+
+    private suspend fun InputScope.handleOnClickParentPicker(category: GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal) {
+        val newParent = GetCategoryByIdQuery.Parent(
+            id = category.id,
+            name = category.name,
+        )
+        postInput(AdminCategoryPageContract.Inputs.Set.Parent(newParent))
+    }
+
+    private suspend fun InputScope.handleGoToCreator() {
+        val state = getCurrentState()
+        postEvent(AdminCategoryPageContract.Events.GoToUser(state.creator.id.toString()))
+    }
+
+    private suspend fun InputScope.handleGoToParent() {
+        val state = getCurrentState()
+        state.parent?.let { postEvent(AdminCategoryPageContract.Events.GoToUser(it.id.toString())) }
+    }
+
+    private suspend fun InputScope.handleGetAllCategories() {
+        val state = getCurrentState()
+        sideJob("handleGetAllCategories") {
+            categoryService.getCategoriesAllMinimal().fold(
+                onSuccess = { data ->
+                    val categories = data.getCategoriesAllMinimal
+                        .filter { it.id != state.id }
+                    postInput(AdminCategoryPageContract.Inputs.Set.AllCategories(categories))
+                },
+                onFailure = {
+                    postEvent(
+                        AdminCategoryPageContract.Events.OnError(it.message ?: "Error while getting all categories")
+                    )
+                },
+            )
+        }
+    }
+
+    private suspend fun InputScope.handleSetParent(parent: GetCategoryByIdQuery.Parent?) {
+        updateState {
+            val hasChanged = parent != it.original.parent?.id ||
                 it.display != it.original.display ||
                 it.description != it.original.description ||
                 it.name != it.original.name
             it.copy(
-                parentId = parentId,
+                parent = parent,
                 isSaveButtonDisabled = !hasChanged,
             )
         }
@@ -84,14 +147,15 @@ internal class AdminUserPageInputHandler :
 
     private suspend fun InputScope.handleInit(id: String?) {
         sideJob("handleInit") {
+            postInput(AdminCategoryPageContract.Inputs.Get.AllCategories)
             if (id == null) {
-                postInput(AdminCategoryPageContract.Inputs.SetScreenState(AdminCategoryPageContract.ScreenState.New.Create))
+                postInput(AdminCategoryPageContract.Inputs.Set.StateOfScreen(AdminCategoryPageContract.ScreenState.Create))
             } else {
-                postInput(AdminCategoryPageContract.Inputs.SetLoading(isLoading = true))
-                postInput(AdminCategoryPageContract.Inputs.SetId(id))
-                postInput(AdminCategoryPageContract.Inputs.SetScreenState(AdminCategoryPageContract.ScreenState.Existing.Read))
-                postInput(AdminCategoryPageContract.Inputs.GetById(id))
-                postInput(AdminCategoryPageContract.Inputs.SetLoading(isLoading = false))
+                postInput(AdminCategoryPageContract.Inputs.Set.Loading(isLoading = true))
+                postInput(AdminCategoryPageContract.Inputs.Set.Id(id))
+                postInput(AdminCategoryPageContract.Inputs.Get.CategoryById(id))
+                postInput(AdminCategoryPageContract.Inputs.Set.StateOfScreen(AdminCategoryPageContract.ScreenState.Existing.Read))
+                postInput(AdminCategoryPageContract.Inputs.Set.Loading(isLoading = false))
             }
         }
     }
@@ -101,17 +165,31 @@ internal class AdminUserPageInputHandler :
         sideJob("handleCreateNewUser") {
             categoryService.create(name = state.name).fold(
                 onSuccess = { data ->
+                    val creator = GetCategoryByIdQuery.Creator(
+                        id = data.createCategory.creator.id,
+                        name = data.createCategory.creator.name,
+                    )
+                    val createdAt = millisToTime(data.createCategory.createdAt.toLong())
+
+                    println("Category created at: $createdAt ${data.createCategory.createdAt}")
+
                     postInput(
-                        AdminCategoryPageContract.Inputs.SetCategoryProfile(
+                        AdminCategoryPageContract.Inputs.Set.OriginalCategory(
                             category = state.original.copy(
                                 id = data.createCategory.id,
                                 name = data.createCategory.name,
-                                createdBy = data.createCategory.createdBy,
-                                createdAt = data.createCategory.createdAt,
+                                creator = creator,
+                                createdAt = createdAt,
+                                updatedAt = createdAt
                             )
                         )
                     )
-                    postInput(AdminCategoryPageContract.Inputs.SetScreenState(AdminCategoryPageContract.ScreenState.Existing.Read))
+
+                    postInput(AdminCategoryPageContract.Inputs.Set.Creator(creator))
+                    postInput(AdminCategoryPageContract.Inputs.Set.CreatedAt(createdAt))
+                    postInput(AdminCategoryPageContract.Inputs.Set.UpdatedAt(createdAt))
+
+                    postInput(AdminCategoryPageContract.Inputs.Set.StateOfScreen(AdminCategoryPageContract.ScreenState.Existing.Read))
                 },
                 onFailure = {
                     postEvent(
@@ -130,7 +208,7 @@ internal class AdminUserPageInputHandler :
                 val hasChanged = name != it.original.name ||
                     it.display != it.original.display ||
                     it.description != it.original.description ||
-                    it.parentId != it.original.parentId
+                    it.parent != it.original.parent
                 it.copy(
                     name = this,
                     nameError = if (it.isSaveButtonDisabled && it.isCreateButtonDisabled) null else {
@@ -149,7 +227,7 @@ internal class AdminUserPageInputHandler :
                 val hasChanged = description != it.original.description ||
                     it.display != it.original.display ||
                     it.name != it.original.name ||
-                    it.parentId != it.original.parentId
+                    it.parent != it.original.parent
                 it.copy(
                     description = this,
                     isSaveButtonDisabled = !hasChanged,
@@ -163,7 +241,7 @@ internal class AdminUserPageInputHandler :
             val hasChanged = display != it.original.display ||
                 it.description != it.original.description ||
                 it.name != it.original.name ||
-                it.parentId != it.original.parentId
+                it.parent != it.original.parent
             it.copy(
                 display = display,
                 isSaveButtonDisabled = !hasChanged,
@@ -178,11 +256,11 @@ internal class AdminUserPageInputHandler :
 
             if (!isNoError) {
                 sideJob("handleSavePersonalDetailsShakes") {
-                    if (isFullNameError) postInput(AdminCategoryPageContract.Inputs.SetNameShake(shake = true))
+                    if (isFullNameError) postInput(AdminCategoryPageContract.Inputs.Set.IsNameShake(shake = true))
 
                     delay(SHAKE_ANIM_DURATION)
 
-                    if (isFullNameError) postInput(AdminCategoryPageContract.Inputs.SetNameShake(shake = false))
+                    if (isFullNameError) postInput(AdminCategoryPageContract.Inputs.Set.IsNameShake(shake = false))
                 }
             } else {
                 id?.let { id ->
@@ -191,23 +269,27 @@ internal class AdminUserPageInputHandler :
                             id = id,
                             name = if (name != original.name) name else null,
                             description = if (description != original.description) description else null,
-                            parentId = if (parentId != original.parentId) parentId else null,
+                            parentId = parent?.id?.toString(),
                             display = if (display != original.display) display else null,
                         ).fold(
                             onSuccess = { data ->
                                 postInput(
-                                    AdminCategoryPageContract.Inputs.SetCategoryProfile(
+                                    AdminCategoryPageContract.Inputs.Set.OriginalCategory(
                                         category = this@with.original.copy(
                                             name = data.updateCategory.name,
                                             description = data.updateCategory.description,
-                                            parentId = data.updateCategory.parentId,
+                                            parent = data.updateCategory.parentId?.toString()?.let { id ->
+                                                GetCategoryByIdQuery.Parent(
+                                                    id = id,
+                                                    name = data.updateCategory.name
+                                                )
+                                            },
                                             display = data.updateCategory.display,
                                             updatedAt = data.updateCategory.updatedAt,
                                         )
                                     )
                                 )
-                                postInput(AdminCategoryPageContract.Inputs.SetSaveButtonDisabled(isDisabled = true))
-                                postInput(AdminCategoryPageContract.Inputs.SetDetailsEditable(isEditable = false))
+                                postInput(AdminCategoryPageContract.Inputs.OnClick.Cancel)
                             },
                             onFailure = {
                                 postEvent(
@@ -218,7 +300,7 @@ internal class AdminUserPageInputHandler :
                             },
                         )
                     }
-                }
+                } ?: postEvent(AdminCategoryPageContract.Events.OnError("Error while updating details"))
             }
         }
     }
@@ -228,31 +310,25 @@ internal class AdminUserPageInputHandler :
             categoryService.getById(id).collect { result ->
                 result.fold(
                     onSuccess = { data ->
-                        postInput(AdminCategoryPageContract.Inputs.SetCategoryProfile(data.getCategoryById))
+                        postInput(AdminCategoryPageContract.Inputs.Set.OriginalCategory(data.getCategoryById))
 
-                        postInput(AdminCategoryPageContract.Inputs.SetName(data.getCategoryById.name))
+                        postInput(AdminCategoryPageContract.Inputs.Set.Name(data.getCategoryById.name))
                         postInput(
-                            AdminCategoryPageContract.Inputs.SetDescription(
+                            AdminCategoryPageContract.Inputs.Set.Description(
                                 data.getCategoryById.description ?: ""
                             )
                         )
-                        postInput(AdminCategoryPageContract.Inputs.SetParentId(data.getCategoryById.parentId ?: ""))
-                        postInput(AdminCategoryPageContract.Inputs.SetDisplay(data.getCategoryById.display))
-                        postInput(AdminCategoryPageContract.Inputs.SetCreatedBy(data.getCategoryById.createdBy.toString()))
-                        postInput(AdminCategoryPageContract.Inputs.SetCreatedAt(data.getCategoryById.createdAt.toLong()))
-                        postInput(AdminCategoryPageContract.Inputs.SetUpdatedAt(data.getCategoryById.updatedAt.toLong()))
-                        postInput(AdminCategoryPageContract.Inputs.SetSaveButtonDisabled(isDisabled = true))
+                        postInput(AdminCategoryPageContract.Inputs.Set.Parent(data.getCategoryById.parent))
+                        postInput(AdminCategoryPageContract.Inputs.Set.Display(data.getCategoryById.display))
+                        postInput(AdminCategoryPageContract.Inputs.Set.Creator(data.getCategoryById.creator))
+                        postInput(AdminCategoryPageContract.Inputs.Set.IsSaveButtonDisabled(isDisabled = true))
 
                         try {
-                            postInput(AdminCategoryPageContract.Inputs.SetCreatedAt(data.getCategoryById.createdAt.toLong()))
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                        data.getCategoryById.createdBy?.let {
-                            postInput(AdminCategoryPageContract.Inputs.SetCreatedBy(it.toString()))
-                        }
-                        try {
-                            postInput(AdminCategoryPageContract.Inputs.SetUpdatedAt(data.getCategoryById.updatedAt.toLong()))
+                            val createdAt = millisToTime(data.getCategoryById.createdAt.toLong())
+                            postInput(AdminCategoryPageContract.Inputs.Set.CreatedAt(createdAt))
+
+                            val updatedAt = millisToTime(data.getCategoryById.updatedAt.toLong())
+                            postInput(AdminCategoryPageContract.Inputs.Set.UpdatedAt(updatedAt))
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }

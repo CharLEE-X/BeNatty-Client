@@ -1,0 +1,8 @@
+query GetCategoriesAllMinimal {
+  getCategoriesAllMinimal {
+    display
+    id
+    name
+    parentId
+  }
+}

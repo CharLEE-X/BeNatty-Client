@@ -3,6 +3,7 @@ package feature.admin.tag.page
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
+import core.util.millisToTime
 import data.UserGetByIdQuery
 import data.service.AuthService
 import data.service.UserService
@@ -34,7 +35,7 @@ internal class AdminUserPageInputHandler :
         is AdminTagPageContract.Inputs.SetId -> updateState { it.copy(id = input.id) }
 
         is AdminTagPageContract.Inputs.GetUserById -> handleGetUserById(input.id)
-        is AdminTagPageContract.Inputs.SetUserProfile -> updateState { it.copy(original = input.user) }
+        is AdminTagPageContract.Inputs.SetOriginalUser -> updateState { it.copy(original = input.user) }
 
         is AdminTagPageContract.Inputs.SetFullName -> handleSetFullName(input.fullName)
         is AdminTagPageContract.Inputs.SetFullNameShake -> updateState { it.copy(shakeFullName = input.shake) }
@@ -98,7 +99,7 @@ internal class AdminUserPageInputHandler :
                 ).fold(
                     onSuccess = { data ->
                         postInput(
-                            AdminTagPageContract.Inputs.SetUserProfile(
+                            AdminTagPageContract.Inputs.SetOriginalUser(
                                 user = state.original.copy(role = data.updateUser.role)
                             )
                         )
@@ -199,14 +200,17 @@ internal class AdminUserPageInputHandler :
         sideJob("handleCreateNewUser") {
             userService.create(input).fold(
                 onSuccess = { data ->
+                    val createdAt = millisToTime(data.createUser.createdAt.toLong())
                     postInput(
-                        AdminTagPageContract.Inputs.SetUserProfile(
+                        AdminTagPageContract.Inputs.SetOriginalUser(
                             user = state.original.copy(
                                 id = data.createUser.id,
                                 email = data.createUser.email,
                                 details = state.original.details.copy(
                                     name = state.fullName,
                                 ),
+                                createdAt = createdAt,
+                                updatedAt = createdAt,
                             )
                         )
                     )
@@ -304,7 +308,7 @@ internal class AdminUserPageInputHandler :
                         ).fold(
                             onSuccess = { data ->
                                 postInput(
-                                    AdminTagPageContract.Inputs.SetUserProfile(
+                                    AdminTagPageContract.Inputs.SetOriginalUser(
                                         user = this@with.original.copy(
                                             email = data.updateUser.email,
                                             details = UserGetByIdQuery.Details(
@@ -488,7 +492,7 @@ internal class AdminUserPageInputHandler :
                         ).fold(
                             onSuccess = { data ->
                                 postInput(
-                                    AdminTagPageContract.Inputs.SetUserProfile(
+                                    AdminTagPageContract.Inputs.SetOriginalUser(
                                         user = this@with.original.copy(
                                             address = UserGetByIdQuery.Address(
                                                 address = data.updateUser.address.address,
@@ -525,7 +529,7 @@ internal class AdminUserPageInputHandler :
                     onSuccess = { data ->
                         println("data.getUserById ${data.getUserById}")
 
-                        postInput(AdminTagPageContract.Inputs.SetUserProfile(data.getUserById))
+                        postInput(AdminTagPageContract.Inputs.SetOriginalUser(data.getUserById))
 
                         postInput(AdminTagPageContract.Inputs.SetEmail(data.getUserById.email))
                         postInput(AdminTagPageContract.Inputs.SetIsEmailVerified(data.getUserById.emailVerified))
@@ -545,17 +549,17 @@ internal class AdminUserPageInputHandler :
                         data.getUserById.address.country?.let { postInput(AdminTagPageContract.Inputs.SetCountry(it)) }
                         postInput(AdminTagPageContract.Inputs.SetAddressButtonDisabled(isDisabled = true))
 
-                        try {
-                            postInput(AdminTagPageContract.Inputs.SetCreatedAt(data.getUserById.createdAt.toLong()))
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
                         data.getUserById.createdBy?.let {
                             postInput(AdminTagPageContract.Inputs.SetCreatedBy(it.toString()))
                         }
                         postInput(AdminTagPageContract.Inputs.SetLastActive(data.getUserById.lastActive))
+
                         try {
-                            postInput(AdminTagPageContract.Inputs.SetUpdatedAt(data.getUserById.updatedAt.toLong()))
+                            val createdAt = millisToTime(data.getUserById.createdAt.toLong())
+                            postInput(AdminTagPageContract.Inputs.SetCreatedAt(createdAt))
+
+                            val updatedAt = millisToTime(data.getUserById.updatedAt.toLong())
+                            postInput(AdminTagPageContract.Inputs.SetUpdatedAt(updatedAt))
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }

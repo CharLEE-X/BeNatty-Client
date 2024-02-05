@@ -55,6 +55,10 @@ query ProductGetById($getProductByIdId: ObjectId!) {
         width
       }
     }
+    creator {
+      id
+      name
+    }
     reviews
     totalInWishlist
   }

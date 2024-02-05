@@ -21,6 +21,7 @@ import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
+import web.compose.example.components.ChipShowcase
 import web.compose.material3.component.labs.FilledCard
 
 @Composable
@@ -57,6 +58,7 @@ fun HomeContent(
                             .borderRadius(1.em)
                     )
                     SpanText("Home Page")
+                    ChipShowcase()
                 }
             }
         }

@@ -52,16 +52,12 @@ kotlin {
                 implementation(feature.account.wishlist)
 
                 implementation(feature.admin.dashboard)
+                implementation(feature.admin.list)
                 implementation(feature.admin.user.page)
-                implementation(feature.admin.user.list)
                 implementation(feature.admin.product.page)
-                implementation(feature.admin.product.list)
                 implementation(feature.admin.order.page)
-                implementation(feature.admin.order.list)
                 implementation(feature.admin.category.page)
-                implementation(feature.admin.category.list)
                 implementation(feature.admin.tag.page)
-                implementation(feature.admin.tag.list)
             }
             implementation(compose.runtime)
             implementation(compose.html.core)

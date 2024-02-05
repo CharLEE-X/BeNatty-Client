@@ -6,7 +6,6 @@ import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.watch
 import data.CreateCategoryMutation
 import data.DeleteCategoryMutation
-import data.GetCategoriesAllMinimalQuery
 import data.GetCategoriesAsPageQuery
 import data.GetCategoryByIdQuery
 import data.UpdateCategoryMutation
@@ -19,7 +18,7 @@ import data.utils.skipIfNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-interface CategoryService {
+interface OrderService {
     suspend fun create(name: String): Result<CreateCategoryMutation.Data>
 
     suspend fun getAsPage(
@@ -31,7 +30,6 @@ interface CategoryService {
     ): Result<GetCategoriesAsPageQuery.Data>
 
     suspend fun getById(id: String): Flow<Result<GetCategoryByIdQuery.Data>>
-    suspend fun getCategoriesAllMinimal(): Result<GetCategoriesAllMinimalQuery.Data>
     suspend fun deleteById(id: String): Result<DeleteCategoryMutation.Data>
     suspend fun update(
         id: String,
@@ -42,7 +40,7 @@ interface CategoryService {
     ): Result<UpdateCategoryMutation.Data>
 }
 
-internal class CategoryServiceImpl(private val apolloClient: ApolloClient) : CategoryService {
+internal class OrderServiceImpl(private val apolloClient: ApolloClient) : OrderService {
     override suspend fun create(name: String): Result<CreateCategoryMutation.Data> {
         val input = CategoryCreateInput(name = name)
         return apolloClient.mutation(CreateCategoryMutation(input))
@@ -74,12 +72,6 @@ internal class CategoryServiceImpl(private val apolloClient: ApolloClient) : Cat
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .watch()
             .map { it.handle() }
-    }
-
-    override suspend fun getCategoriesAllMinimal(): Result<GetCategoriesAllMinimalQuery.Data> {
-        return apolloClient.query(GetCategoriesAllMinimalQuery())
-            .fetchPolicy(FetchPolicy.NetworkOnly)
-            .handle()
     }
 
     override suspend fun deleteById(id: String): Result<DeleteCategoryMutation.Data> {
