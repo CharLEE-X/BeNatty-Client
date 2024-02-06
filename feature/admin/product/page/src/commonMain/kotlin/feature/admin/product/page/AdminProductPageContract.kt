@@ -43,7 +43,7 @@ object AdminProductPageContract : KoinComponent {
         val updatedAt: String = "",
         val postStatus: PostStatus = PostStatus.Draft,
 
-        val description: String = "",
+        val description: String? = null,
         val descriptionError: String? = null,
         val shakeDescription: Boolean = false,
 

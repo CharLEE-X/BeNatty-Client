@@ -196,7 +196,7 @@ private fun Description(
     vm: AdminProductPageViewModel
 ) {
     CommonTextfield(
-        value = state.description,
+        value = state.description ?: "",
         onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.Description(it)) },
         label = state.strings.description,
         errorMsg = state.descriptionError,

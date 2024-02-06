@@ -122,7 +122,14 @@ internal class AdminProductPageInputHandler :
                 result.fold(
                     onSuccess = { data ->
                         // COMMON
-                        postInput(AdminProductPageContract.Inputs.Set.OriginalProduct(data.getProductById))
+                        val originalProduct = data.getProductById.copy(
+                            product = data.getProductById.product.copy(
+                                data = data.getProductById.product.data.copy(
+                                    description = data.getProductById.product.data.description ?: ""
+                                )
+                            )
+                        )
+                        postInput(AdminProductPageContract.Inputs.Set.OriginalProduct(originalProduct))
 
                         postInput(AdminProductPageContract.Inputs.Set.Name(data.getProductById.product.common.name))
                         postInput(
@@ -169,9 +176,7 @@ internal class AdminProductPageInputHandler :
                             )
                         )
                         postInput(
-                            AdminProductPageContract.Inputs.Set.IsPurchasable(
-                                data.getProductById.product.data.isPurchasable
-                            )
+                            AdminProductPageContract.Inputs.Set.IsPurchasable(data.getProductById.product.data.isPurchasable)
                         )
                     },
                     onFailure = {
@@ -383,8 +388,8 @@ internal class AdminProductPageInputHandler :
                                         ),
                                     )
                                 )
-                                postInput(AdminProductPageContract.Inputs.Set.IsCommonDetailsButtonDisabled(isDisabled = true))
-                                postInput(AdminProductPageContract.Inputs.Set.IsCommonDetailsEditable(isEditable = false))
+                                postInput(AdminProductPageContract.Inputs.Set.IsDataButtonDisabled(isDisabled = true))
+                                postInput(AdminProductPageContract.Inputs.Set.IsDataEditable(isEditable = false))
                             },
                             onFailure = {
                                 postEvent(
