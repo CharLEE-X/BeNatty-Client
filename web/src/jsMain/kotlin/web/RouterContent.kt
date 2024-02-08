@@ -7,10 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import com.copperleaf.ballast.navigation.browser.BrowserHashNavigationInterceptor
 import com.copperleaf.ballast.navigation.routing.RouterContract
-import com.copperleaf.ballast.navigation.routing.build
 import com.copperleaf.ballast.navigation.routing.currentDestinationOrNull
-import com.copperleaf.ballast.navigation.routing.directions
-import com.copperleaf.ballast.navigation.routing.pathParameter
 import com.copperleaf.ballast.navigation.routing.renderCurrentDestination
 import com.copperleaf.ballast.navigation.routing.stringPath
 import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
@@ -149,13 +146,8 @@ fun RouterContent(
 
                 RouterScreen.Checkout -> appRoute {
                     CheckoutPage(
+                        router = router,
                         onError = onError,
-                        goBack = { router.trySend(RouterContract.Inputs.GoBack()) },
-                        goToPayment = {
-                            router.trySend(
-                                RouterContract.Inputs.GoToDestination(RouterScreen.Payment.matcher.routeFormat)
-                            )
-                        },
                     )
                 }
 
@@ -269,238 +261,82 @@ fun RouterContent(
                     )
                 }
 
-                RouterScreen.AdminUserList -> AdminLayout("Admin Users", router) {
-                    AdminUserListPage(
-                        onError = onError,
-                        onUserClick = { id ->
-                            router.trySend(
-                                RouterContract.Inputs.GoToDestination(
-                                    RouterScreen.AdminUserPageExisting.directions()
-                                        .pathParameter("id", id)
-                                        .build()
-                                )
-                            )
-                        },
-                        goToCreate = {
-                            router.trySend(
-                                RouterContract.Inputs.GoToDestination(
-                                    RouterScreen.AdminUserPageExisting.matcher.routeFormat
-                                )
-                            )
-                        },
-                    )
-                }
+                RouterScreen.AdminUserList -> AdminUserListPage(
+                    router = router,
+                    onError = onError,
+                )
 
-                RouterScreen.AdminUserPageNew -> {
-                    AdminLayout("Create user", router) {
-                        AdminUserPagePage(
-                            userId = null,
-                            onError = onError,
-                            goToUserList = {
-                                router.trySend(
-                                    RouterContract.Inputs.GoToDestination(
-                                        RouterScreen.AdminUserList.matcher.routeFormat
-                                    )
-                                )
-                            },
-                        )
-                    }
-                }
+                RouterScreen.AdminUserPageNew -> AdminUserPagePage(
+                    router = router,
+                    userId = null,
+                    onError = onError,
+                )
 
                 RouterScreen.AdminUserPageExisting -> {
                     val id by stringPath()
-                    AdminLayout("User details", router) {
-                        AdminUserPagePage(
-                            userId = id,
-                            onError = onError,
-                            goToUserList = {
-                                router.trySend(
-                                    RouterContract.Inputs.GoToDestination(
-                                        RouterScreen.AdminUserList.matcher.routeFormat
-                                    )
-                                )
-                            },
-                        )
-                    }
-                }
-
-                RouterScreen.AdminProductList -> AdminLayout("Admin Product List", router) {
-                    AdminProductListPage(
+                    AdminUserPagePage(
+                        router = router,
+                        userId = id,
                         onError = onError,
-                        goToCreateProduct = {
-                            router.trySend(
-                                RouterContract.Inputs.GoToDestination(
-                                    RouterScreen.AdminProductPageNew.matcher.routeFormat
-                                )
-                            )
-                        },
-                        onProductClick = { id ->
-                            router.trySend(
-                                RouterContract.Inputs.GoToDestination(
-                                    RouterScreen.AdminProductPageExisting.directions()
-                                        .pathParameter("id", id)
-                                        .build()
-                                )
-                            )
-                        },
                     )
                 }
 
-                RouterScreen.AdminProductPageNew -> AdminLayout("Create Product", router) {
-                    AdminProductPagePage(
-                        productId = null,
-                        onError = onError,
-                        goToProductList = { router.trySend(RouterContract.Inputs.GoBack()) },
-                        goToCreateCategory = {
-                            router.trySend(
-                                RouterContract.Inputs.GoToDestination(
-                                    RouterScreen.AdminCategoryPageNew.matcher.routeFormat
-                                )
-                            )
-                        },
-                        goToCreateTag = {
-                            router.trySend(
-                                RouterContract.Inputs.GoToDestination(
-                                    RouterScreen.AdminTagPageNew.matcher.routeFormat
-                                )
-                            )
-                        },
-                        goToUserDetails = { id ->
-                            router.trySend(
-                                RouterContract.Inputs.GoToDestination(
-                                    RouterScreen.AdminUserPageExisting.directions()
-                                        .pathParameter("id", id)
-                                        .build()
-                                )
-                            )
-                        },
-                    )
-                }
+                RouterScreen.AdminProductList -> AdminProductListPage(
+                    router = router,
+                    onError = onError,
+                )
+
+                RouterScreen.AdminProductPageNew -> AdminProductPagePage(
+                    productId = null,
+                    router = router,
+                    onError = onError,
+                )
 
                 RouterScreen.AdminProductPageExisting -> {
                     val id: String by stringPath()
-                    AdminLayout("Edit Product", router) {
-                        AdminProductPagePage(
-                            productId = id,
-                            onError = onError,
-                            goToProductList = { router.trySend(RouterContract.Inputs.GoBack()) },
-                            goToCreateCategory = {
-                                router.trySend(
-                                    RouterContract.Inputs.GoToDestination(
-                                        RouterScreen.AdminCategoryPageNew.matcher.routeFormat
-                                    )
-                                )
-                            },
-                            goToCreateTag = {
-                                router.trySend(
-                                    RouterContract.Inputs.GoToDestination(
-                                        RouterScreen.AdminTagPageNew.matcher.routeFormat
-                                    )
-                                )
-                            },
-                            goToUserDetails = { id ->
-                                router.trySend(
-                                    RouterContract.Inputs.GoToDestination(
-                                        RouterScreen.AdminUserPageExisting.directions()
-                                            .pathParameter("id", id)
-                                            .build()
-                                    )
-                                )
-                            },
-                        )
-                    }
-                }
-
-                RouterScreen.AdminOrderList -> AdminLayout("Admin Order List", router) {
-                    AdminOrderListPage(
+                    AdminProductPagePage(
+                        productId = id,
+                        router = router,
                         onError = onError,
                     )
                 }
 
-                RouterScreen.AdminOrderPageNew -> AdminLayout("Admin Order Page", router) {
-                    AdminOrderPagePage(
-                        onError = onError,
-                    )
-                }
+                RouterScreen.AdminOrderList -> AdminOrderListPage(
+                    router = router,
+                    onError = onError,
+                )
+
+                RouterScreen.AdminOrderPageNew -> AdminOrderPagePage(
+                    router = router,
+                    onError = onError,
+                )
 
                 RouterScreen.AdminOrderPageExisting -> {
                     val id: String by stringPath()
-                    AdminLayout("Admin Order Page", router) {
-                        AdminOrderPagePage(
-                            onError = onError,
-                        )
-                    }
-                }
-
-                RouterScreen.AdminCategoryList -> AdminLayout("Admin Category List", router) {
-                    AdminCategoryListPage(
+                    AdminOrderPagePage(
+                        router = router,
                         onError = onError,
-                        goToCreate = {
-                            router.trySend(
-                                RouterContract.Inputs.GoToDestination(
-                                    RouterScreen.AdminCategoryPageNew.matcher.routeFormat
-                                )
-                            )
-                        },
-                        goToCategoryDetail = { id ->
-                            router.trySend(
-                                RouterContract.Inputs.GoToDestination(
-                                    RouterScreen.AdminCategoryPageExisting.directions()
-                                        .pathParameter("id", id)
-                                        .build()
-                                )
-                            )
-                        },
                     )
                 }
 
-                RouterScreen.AdminCategoryPageNew -> AdminLayout("Create Category", router) {
-                    AdminCategoryPage(
-                        id = null,
-                        onError = onError,
-                        goToList = {
-                            router.trySend(
-                                RouterContract.Inputs.GoToDestination(
-                                    RouterScreen.AdminCategoryList.matcher.routeFormat
-                                )
-                            )
-                        },
-                        goToUserDetail = { id ->
-                            router.trySend(
-                                RouterContract.Inputs.GoToDestination(
-                                    RouterScreen.AdminUserPageExisting.directions()
-                                        .pathParameter("id", id)
-                                        .build()
-                                )
-                            )
-                        },
-                    )
-                }
+                RouterScreen.AdminCategoryList -> AdminCategoryListPage(
+                    router = router,
+                    onError = onError,
+                )
+
+                RouterScreen.AdminCategoryPageNew -> AdminCategoryPage(
+                    router = router,
+                    id = null,
+                    onError = onError,
+                )
 
                 RouterScreen.AdminCategoryPageExisting -> {
                     val id: String by stringPath()
-                    AdminLayout("Edit Category", router) {
-                        AdminCategoryPage(
-                            id = id,
-                            onError = onError,
-                            goToList = {
-                                router.trySend(
-                                    RouterContract.Inputs.GoToDestination(
-                                        RouterScreen.AdminCategoryList.matcher.routeFormat
-                                    )
-                                )
-                            },
-                            goToUserDetail = { id ->
-                                router.trySend(
-                                    RouterContract.Inputs.GoToDestination(
-                                        RouterScreen.AdminUserPageExisting.directions()
-                                            .pathParameter("id", id)
-                                            .build()
-                                    )
-                                )
-                            },
-                        )
-                    }
+                    AdminCategoryPage(
+                        router = router,
+                        id = id,
+                        onError = onError,
+                    )
                 }
 
                 RouterScreen.AdminTagList -> AdminLayout("Admin Tag List", router) {

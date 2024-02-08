@@ -5,6 +5,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import com.copperleaf.ballast.navigation.routing.RouterContract
+import com.copperleaf.ballast.navigation.routing.build
+import com.copperleaf.ballast.navigation.routing.directions
+import com.copperleaf.ballast.navigation.routing.pathParameter
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Row
@@ -21,14 +25,17 @@ import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.admin.category.page.AdminCategoryPageContract
 import feature.admin.category.page.AdminCategoryPageViewModel
+import feature.router.RouterScreen
+import feature.router.RouterViewModel
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
+import web.components.layouts.AdminLayout
 import web.components.layouts.DetailPageLayout
-import web.components.widgets.CommonTextfield
-import web.components.widgets.EditCancelButton
+import web.components.widgets.CommonTextField
+import web.components.widgets.HasChangesWidget
 import web.components.widgets.SaveButton
 import web.components.widgets.SectionHeader
 import web.compose.material3.component.FilledButton
@@ -37,10 +44,9 @@ import web.compose.material3.component.Switch
 
 @Composable
 fun AdminCategoryPage(
+    router: RouterViewModel,
     id: String?,
     onError: suspend (String) -> Unit,
-    goToList: suspend () -> Unit,
-    goToUserDetail: (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -48,30 +54,61 @@ fun AdminCategoryPage(
             id = id,
             scope = scope,
             onError = onError,
-            goToUserList = goToList,
-            goToUser = goToUserDetail,
+            goToUserList = {
+                router.trySend(
+                    RouterContract.Inputs.GoToDestination(
+                        RouterScreen.AdminCategoryList.matcher.routeFormat
+                    )
+                )
+            },
+            goToUser = { id ->
+                router.trySend(
+                    RouterContract.Inputs.GoToDestination(
+                        RouterScreen.AdminUserPageExisting.directions()
+                            .pathParameter("id", id)
+                            .build()
+                    )
+                )
+            },
         )
     }
     val state by vm.observeStates().collectAsState()
 
-    DetailPageLayout(
-        title = if (state.screenState is AdminCategoryPageContract.ScreenState.Create) {
-            state.strings.createCategory
-        } else {
-            state.strings.category
-        },
-        id = state.id,
-        name = state.name.ifEmpty { null },
-        showDelete = state.screenState !is AdminCategoryPageContract.ScreenState.Create,
-        deleteText = state.strings.delete,
-        cancelText = state.strings.cancel,
-        createdAtText = state.strings.createdAt,
-        updatedAtText = state.strings.updatedAt,
-        createdAtValue = state.createdAt,
-        updatedAtValue = state.updatedAt,
-        onDeleteClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.Delete) },
+    val title = if (state.screenState is AdminCategoryPageContract.ScreenState.Create) {
+        state.strings.createCategory
+    } else {
+        state.strings.category
+    }
+
+    AdminLayout(
+        title = title,
+        router = router,
+        overlay = {
+            HasChangesWidget(
+                hasChanges = state.wasEdited,
+                messageText = state.strings.unsavedChanges,
+                saveText = state.strings.save,
+                resetText = state.strings.reset,
+                onSave = { },
+                onCancel = { },
+            )
+        }
     ) {
-        Details(vm, state)
+        DetailPageLayout(
+            title = title,
+            id = state.id,
+            name = state.name.ifEmpty { null },
+            showDelete = state.screenState !is AdminCategoryPageContract.ScreenState.Create,
+            deleteText = state.strings.delete,
+            cancelText = state.strings.cancel,
+            createdAtText = state.strings.createdAt,
+            updatedAtText = state.strings.updatedAt,
+            createdAtValue = state.createdAt,
+            updatedAtValue = state.updatedAt,
+            onDeleteClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.Delete) },
+        ) {
+            Details(vm, state)
+        }
     }
 }
 
@@ -79,30 +116,14 @@ fun AdminCategoryPage(
 private fun Details(vm: AdminCategoryPageViewModel, state: AdminCategoryPageContract.State) {
     SectionHeader(
         text = state.strings.details,
-    ) {
-        println("state.screenState: ${state.screenState}")
-        if (state.screenState is AdminCategoryPageContract.ScreenState.Existing) {
-            EditCancelButton(
-                isEditing = state.isDetailsEditing,
-                editText = state.strings.edit,
-                cancelText = state.strings.cancel,
-                edit = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.Edit) },
-                cancel = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.Cancel) },
-            )
-        }
-    }
-    CommonTextfield(
+    )
+    CommonTextField(
         value = state.name,
         onValueChange = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Name(it)) },
         label = state.strings.name,
         errorMsg = state.nameError,
         icon = null,
         shake = state.shakeName,
-        isEditing = if (state.screenState is AdminCategoryPageContract.ScreenState.Existing) {
-            state.isDetailsEditing
-        } else {
-            true
-        },
         modifier = Modifier.fillMaxWidth(),
     )
 
@@ -113,14 +134,13 @@ private fun Details(vm: AdminCategoryPageViewModel, state: AdminCategoryPageCont
             onClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.CreateNew) },
         )
     } else {
-        CommonTextfield(
+        CommonTextField(
             value = state.description,
             onValueChange = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Description(it)) },
             label = state.strings.description,
             errorMsg = null,
             icon = null,
             shake = false,
-            isEditing = state.isDetailsEditing,
             modifier = Modifier.fillMaxWidth(),
         )
         Row(
@@ -152,7 +172,7 @@ private fun Details(vm: AdminCategoryPageViewModel, state: AdminCategoryPageCont
                 }
             } ?: SpanText(text = state.strings.none)
         }
-        if (state.isDetailsEditing) {
+        if (state.wasEdited) {
             CategoryPicker(state, vm)
         }
 
@@ -167,12 +187,6 @@ private fun Details(vm: AdminCategoryPageViewModel, state: AdminCategoryPageCont
                 SpanText(text = state.creator.name)
             }
         }
-
-        SaveButton(
-            text = state.strings.save,
-            disabled = state.isSaveButtonDisabled,
-            onClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.SaveDetails) },
-        )
     }
 }
 

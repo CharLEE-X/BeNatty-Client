@@ -14,16 +14,13 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiError
 import feature.account.profile.SHAKE_ANIM_DURATION
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.web.attributes.AutoComplete
-import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.s
-import org.jetbrains.compose.web.css.value
-import theme.MaterialTheme
 import web.compose.material3.component.OutlinedTextField
 import web.compose.material3.component.TextFieldType
 
 @Composable
-fun CommonTextfield(
+fun CommonTextField(
     modifier: Modifier,
     value: String,
     onValueChange: (String) -> Unit,
@@ -33,8 +30,6 @@ fun CommonTextfield(
     autoComplete: AutoComplete = AutoComplete.off,
     required: Boolean = false,
     shake: Boolean = false,
-    isEditing: Boolean = false,
-    outlineColor: CSSColorValue? = if (isEditing) null else MaterialTheme.colors.mdSysColorSurface.value(),
     icon: (@Composable () -> Unit)? = null,
 ) {
     var translateX by remember { mutableStateOf(0.em) }
@@ -62,8 +57,6 @@ fun CommonTextfield(
         errorText = errorMsg,
         required = required,
         autoComplete = autoComplete,
-        readOnly = !isEditing,
-        outlineColor = outlineColor,
         modifier = modifier
             .translateX(translateX)
             .transition(CSSTransition("translate", SHAKE_ANIM_DURATION.inWholeSeconds.s))

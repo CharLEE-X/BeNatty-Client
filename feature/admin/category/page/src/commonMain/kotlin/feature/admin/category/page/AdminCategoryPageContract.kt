@@ -33,7 +33,7 @@ object AdminCategoryPageContract : KoinComponent {
         val createdAt: String = "",
         val updatedAt: String = "",
 
-        val isDetailsEditing: Boolean = false,
+        val wasEdited: Boolean = false,
         val isSaveButtonDisabled: Boolean = true,
 
         val isCreateButtonDisabled: Boolean = true,
@@ -146,6 +146,9 @@ object AdminCategoryPageContract : KoinComponent {
         val parentCategory: String = getString(component.localization.Strings.ParentCategory),
         val none: String = getString(component.localization.Strings.None),
         val noOtherCategoriesToChooseFrom: String = getString(component.localization.Strings.NoOtherCategoriesToChooseFrom),
+        val unsavedChanges: String = getString(component.localization.Strings.UnsavedChanges),
+        val saveChanges: String = getString(component.localization.Strings.SaveChanges),
+        val reset: String = getString(component.localization.Strings.Reset),
     )
 
     sealed interface ScreenState {

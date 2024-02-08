@@ -64,10 +64,10 @@ internal class AdminUserPageInputHandler :
             updateState { it.copy(isSaveAddressButtonDisabled = input.isDisabled) }
 
         is AdminTagPageContract.Inputs.SetPersonalDetailsEditable ->
-            updateState { it.copy(isPersonalDetailsEditing = true) }
+            updateState { it.copy(wasEdited = true) }
 
         is AdminTagPageContract.Inputs.SetPersonalDetailsNotEditable ->
-            updateState { it.copy(isPersonalDetailsEditing = false) }
+            updateState { it.copy(wasEdited = false) }
 
         is AdminTagPageContract.Inputs.SetAddressEditable -> updateState { it.copy(isAddressEditing = true) }
         is AdminTagPageContract.Inputs.SetAddressNotEditable -> handleSetAddressNotEditable()

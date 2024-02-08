@@ -2930,7 +2930,7 @@
               "deprecationReason": null
             },
             {
-              "name": "createdBy",
+              "name": "creator",
               "description": null,
               "args": [],
               "type": {
@@ -2938,8 +2938,8 @@
                 "kind": "NON_NULL",
                 "name": null,
                 "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
+                  "kind": "OBJECT",
+                  "name": "IdWithName",
                   "ofType": null
                 }
               },
@@ -3134,13 +3134,9 @@
               "description": null,
               "type": {
                 "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
               },
               "defaultValue": null,
               "isDeprecated": false,

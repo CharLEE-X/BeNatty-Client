@@ -10,14 +10,20 @@ import data.ProductDeleteMutation
 import data.ProductGetByIdQuery
 import data.ProductUpdateMutation
 import data.ProductsGetAllPageQuery
+import data.type.BackorderStatus
 import data.type.CatalogVisibility
 import data.type.PageInput
 import data.type.PostStatus
 import data.type.ProductCommonInput
 import data.type.ProductCreateInput
 import data.type.ProductDataInput
+import data.type.ProductImageInput
+import data.type.ProductInventoryInput
+import data.type.ProductPriceInput
+import data.type.ProductShippingInput
 import data.type.ProductUpdateInput
 import data.type.SortDirection
+import data.type.StockStatus
 import data.utils.handle
 import data.utils.skipIfNull
 import kotlinx.coroutines.flow.Flow
@@ -37,14 +43,35 @@ interface ProductService {
     suspend fun deleteById(id: String): Result<ProductDeleteMutation.Data>
     suspend fun update(
         id: String,
-        name: String? = null,
-        shortDescription: String? = null,
-        isFeatured: Boolean? = null,
-        allowReviews: Boolean? = null,
-        catalogVisibility: CatalogVisibility? = null,
-        categories: List<String>? = null,
-        postStatus: PostStatus? = null,
-        description: String? = null,
+        name: String?,
+        shortDescription: String?,
+        isFeatured: Boolean?,
+        allowReviews: Boolean?,
+        catalogVisibility: CatalogVisibility?,
+        categories: List<String>?,
+        description: String?,
+        postStatus: PostStatus?,
+        images: List<ProductImageInput>?,
+        isPurchasable: Boolean?,
+        backorderStatus: BackorderStatus?,
+        canBackorder: Boolean?,
+        isOnBackorder: Boolean?,
+        lowStockThreshold: Int?,
+        onePerOrder: Boolean?,
+        remainingStock: Int?,
+        stockStatus: StockStatus?,
+        trackInventory: Boolean?,
+        onSale: Boolean?,
+        price: String?,
+        regularPrice: String?,
+        saleEnd: String?,
+        salePrice: String?,
+        saleStart: String?,
+        height: String?,
+        length: String?,
+        requiresShipping: Boolean?,
+        weight: String?,
+        width: String?,
     ): Result<ProductUpdateMutation.Data>
 }
 
@@ -57,8 +84,29 @@ internal class ProductServiceImpl(private val apolloClient: ApolloClient) : Prod
         allowReviews: Boolean?,
         catalogVisibility: CatalogVisibility?,
         categories: List<String>?,
-        postStatus: PostStatus?,
         description: String?,
+        postStatus: PostStatus?,
+        images: List<ProductImageInput>?,
+        isPurchasable: Boolean?,
+        backorderStatus: BackorderStatus?,
+        canBackorder: Boolean?,
+        isOnBackorder: Boolean?,
+        lowStockThreshold: Int?,
+        onePerOrder: Boolean?,
+        remainingStock: Int?,
+        stockStatus: StockStatus?,
+        trackInventory: Boolean?,
+        onSale: Boolean?,
+        price: String?,
+        regularPrice: String?,
+        saleEnd: String?,
+        salePrice: String?,
+        saleStart: String?,
+        height: String?,
+        length: String?,
+        requiresShipping: Boolean?,
+        weight: String?,
+        width: String?,
     ): Result<ProductUpdateMutation.Data> {
         val common = if (
             name != null || shortDescription != null || isFeatured != null || allowReviews != null ||
@@ -76,13 +124,65 @@ internal class ProductServiceImpl(private val apolloClient: ApolloClient) : Prod
             )
         } else Optional.absent()
 
-        val data = if (postStatus != null || description != null) {
+        val data = if (
+            postStatus != null || description != null || images != null || isPurchasable != null
+        ) {
             Optional.present(
                 ProductDataInput(
                     description = description.skipIfNull(),
                     postStatus = postStatus.skipIfNull(),
-                    images = Optional.absent(),
-                    isPurchasable = false,
+                    images = images.skipIfNull(),
+                    isPurchasable = isPurchasable.skipIfNull(),
+                    parentId = Optional.absent(),
+                )
+            )
+        } else Optional.absent()
+
+        val inventory = if (
+            onePerOrder != null || backorderStatus != null || canBackorder != null || isOnBackorder != null ||
+            lowStockThreshold != null || remainingStock != null || stockStatus != null || trackInventory != null
+        ) {
+            Optional.present(
+                ProductInventoryInput(
+                    onePerOrder = onePerOrder.skipIfNull(),
+                    backorderStatus = backorderStatus.skipIfNull(),
+                    canBackorder = canBackorder.skipIfNull(),
+                    isOnBackorder = isOnBackorder.skipIfNull(),
+                    lowStockThreshold = lowStockThreshold.skipIfNull(),
+                    remainingStock = remainingStock.skipIfNull(),
+                    stockStatus = stockStatus.skipIfNull(),
+                    trackInventory = trackInventory.skipIfNull(),
+                )
+            )
+        } else Optional.absent()
+
+        val price = if (
+            onSale != null || price != null || regularPrice != null || saleEnd != null ||
+            salePrice != null || saleStart != null
+        ) {
+            Optional.present(
+                ProductPriceInput(
+                    onSale = onSale.skipIfNull(),
+                    price = price.skipIfNull(),
+                    regularPrice = regularPrice.skipIfNull(),
+                    saleEnd = saleEnd.skipIfNull(),
+                    salePrice = salePrice.skipIfNull(),
+                    saleStart = saleStart.skipIfNull(),
+                )
+            )
+        } else Optional.absent()
+
+        val shipping = if (
+            height != null || length != null || requiresShipping != null || weight != null ||
+            width != null
+        ) {
+            Optional.present(
+                ProductShippingInput(
+                    height = height.skipIfNull(),
+                    length = length.skipIfNull(),
+                    requiresShipping = requiresShipping.skipIfNull(),
+                    weight = weight.skipIfNull(),
+                    width = width.skipIfNull(),
                 )
             )
         } else Optional.absent()
@@ -91,7 +191,11 @@ internal class ProductServiceImpl(private val apolloClient: ApolloClient) : Prod
             id = id,
             common = common,
             data = data,
+            inventory = inventory,
+            price = price,
+            shipping = shipping,
         )
+
         return apolloClient.mutation(ProductUpdateMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()

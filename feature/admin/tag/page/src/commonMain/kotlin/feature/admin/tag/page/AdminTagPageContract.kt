@@ -50,7 +50,7 @@ object AdminTagPageContract {
         val phoneError: String? = null,
         val shakePhone: Boolean = false,
 
-        val isPersonalDetailsEditing: Boolean = false,
+        val wasEdited: Boolean = false,
         val isSavePersonalDetailsButtonDisabled: Boolean = true,
 
         // Role
@@ -186,6 +186,9 @@ object AdminTagPageContract {
         val registered: String = getString(component.localization.Strings.Registered),
         val createUser: String = getString(component.localization.Strings.CreateUser),
         val user: String = getString(component.localization.Strings.User),
+        val unsavedChanges: String = getString(component.localization.Strings.UnsavedChanges),
+        val saveChanges: String = getString(component.localization.Strings.SaveChanges),
+        val reset: String = getString(component.localization.Strings.Reset),
     )
 
     sealed interface ScreenState {

@@ -2,7 +2,10 @@ mutation ProductCreate($input: ProductCreateInput!) {
   createProduct(input: $input) {
     id
     name
-    createdBy
+    creator {
+      id
+      name
+    }
     createdAt
   }
 }

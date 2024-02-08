@@ -7,10 +7,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import feature.admin.list.AdminListContract
 import feature.admin.list.AdminListViewModel
+import feature.router.RouterViewModel
+import web.components.layouts.AdminLayout
 import web.components.layouts.ListPageLayout
 
 @Composable
 fun AdminOrderListPage(
+    router: RouterViewModel,
     onError: suspend (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -36,5 +39,7 @@ fun AdminOrderListPage(
     }
     val state by vm.observeStates().collectAsState()
 
-    ListPageLayout(state, vm)
+    AdminLayout("Admin Order List", router) {
+        ListPageLayout(state, vm)
+    }
 }

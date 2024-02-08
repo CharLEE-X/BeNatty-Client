@@ -42,7 +42,7 @@ internal class AdminUserPageInputHandler :
         is AdminCategoryPageContract.Inputs.Set.IsSaveButtonDisabled ->
             updateState { it.copy(isSaveButtonDisabled = input.isDisabled) }
 
-        is AdminCategoryPageContract.Inputs.Set.IsDetailsEditable -> updateState { it.copy(isDetailsEditing = true) }
+        is AdminCategoryPageContract.Inputs.Set.IsDetailsEditable -> updateState { it.copy(wasEdited = true) }
         is AdminCategoryPageContract.Inputs.Set.CreatedAt -> updateState { it.copy(createdAt = input.createdAt) }
         is AdminCategoryPageContract.Inputs.Set.Creator -> updateState { it.copy(creator = input.creator) }
         is AdminCategoryPageContract.Inputs.Set.UpdatedAt -> updateState { it.copy(updatedAt = input.updatedAt) }
@@ -68,13 +68,13 @@ internal class AdminUserPageInputHandler :
                 parent = it.original.parent,
                 display = it.original.display,
                 isSaveButtonDisabled = true,
-                isDetailsEditing = false,
+                wasEdited = false,
             )
         }
     }
 
     private suspend fun InputScope.handleEdit() {
-        updateState { it.copy(isDetailsEditing = true) }
+        updateState { it.copy(wasEdited = true) }
     }
 
     private suspend fun InputScope.handleOnClickParentPicker(category: GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal) {

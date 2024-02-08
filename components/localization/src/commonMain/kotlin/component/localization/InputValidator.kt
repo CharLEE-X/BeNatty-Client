@@ -6,6 +6,7 @@ interface InputValidator {
     fun validateRepeatPassword(password: String, repeatPassword: String): String?
     fun validateText(text: String, length: Int = 2): String?
     fun validatePhone(phone: String, length: Int = 8): String?
+    fun validateNumberPositive(number: Int): String?
 }
 
 internal class InputValidatorImpl : InputValidator {
@@ -45,6 +46,13 @@ internal class InputValidatorImpl : InputValidator {
         return when {
             phone.isBlank() -> "Phone cannot be empty"
             phone.length < length -> "Phone must be at least 8 characters"
+            else -> null
+        }
+    }
+
+    override fun validateNumberPositive(number: Int): String? {
+        return when {
+            number < 0 -> "Number must be positive"
             else -> null
         }
     }

@@ -8,6 +8,9 @@ import data.type.Role
 object AdminUserPageContract {
     data class State(
         val isLoading: Boolean = false,
+        val wasEdited: Boolean = false,
+        val screenState: ScreenState = ScreenState.New.Create,
+
         val original: UserGetByIdQuery.GetUserById = UserGetByIdQuery.GetUserById(
             id = "",
             email = "",
@@ -31,65 +34,32 @@ object AdminUserPageContract {
             createdAt = "",
             updatedAt = "",
         ),
-
-        val screenState: ScreenState = ScreenState.New.Create,
+        val current: UserGetByIdQuery.GetUserById = original,
 
         // Personal details
-        val id: String? = null,
-
-        val fullName: String = "",
-        val fullNameError: String? = null,
+        val nameError: String? = null,
         val shakeFullName: Boolean = false,
-
-        val email: String = "",
         val emailError: String? = null,
         val shakeEmail: Boolean = false,
-
         val emailVerified: Boolean = false,
-
-        val phone: String = "",
         val phoneError: String? = null,
         val shakePhone: Boolean = false,
-
-        val isPersonalDetailsEditing: Boolean = false,
-        val isSavePersonalDetailsButtonDisabled: Boolean = true,
-
-        // Role
-        val role: Role = Role.USER,
-        val isSaveRoleButtonDisabled: Boolean = true,
-
-        // Address
-        val address: String = "",
         val addressError: String? = null,
         val shakeAddress: Boolean = false,
-
-        val additionalInformation: String = "",
         val additionalInformationError: String? = null,
-
-        val postcode: String = "",
         val postcodeError: String? = null,
         val shakePostcode: Boolean = false,
-
-        val city: String = "",
         val cityError: String? = null,
         val shakeCity: Boolean = false,
-
-        val state: String = "",
         val stateError: String? = null,
         val shakeState: Boolean = false,
-
-        val country: String = "",
         val countryError: String? = null,
         val shakeCountry: Boolean = false,
-
-        val isAddressEditing: Boolean = false,
-        val isSaveAddressButtonDisabled: Boolean = true,
-
-        val wishlistSize: Int = 0,
         val lastActive: String? = null,
         val createdBy: String? = null,
         val createdAt: Long = currentTimeMillis(),
         val updatedAt: Long = currentTimeMillis(),
+        val wishlistSize: Int = 0,
 
         val strings: Strings = Strings()
     )
@@ -97,56 +67,50 @@ object AdminUserPageContract {
     sealed interface Inputs {
         data class Init(val id: String?) : Inputs
 
-        data class SetLoading(val isLoading: Boolean) : Inputs
-        data class SetScreenState(val screenState: ScreenState) : Inputs
+        sealed interface Get : Inputs {
+            data class UserById(val id: String) : Inputs
+        }
 
-        data object CreateNewUser : Inputs
-        data class GetUserById(val id: String) : Inputs
+        sealed interface OnCLick : Inputs {
+            data object Create : Inputs
+            data object Delete : Inputs
+            data object ResetPassword : Inputs
+            data object SaveEdit : Inputs
+            data object CancelEdit : Inputs
+        }
 
-        data class SetId(val id: String) : Inputs
-        data class SetUserProfile(val user: UserGetByIdQuery.GetUserById) : Inputs
+        sealed interface Set : Inputs {
+            data class OriginalUser(val user: UserGetByIdQuery.GetUserById) : Inputs
+            data class CurrentUser(val user: UserGetByIdQuery.GetUserById) : Inputs
+            data class Loading(val isLoading: Boolean) : Inputs
+            data class StateOfScreen(val screenState: ScreenState) : Inputs
 
-        data object DeleteUser : Inputs
-
-        data class SetFullName(val fullName: String) : Inputs
-        data class SetFullNameShake(val shake: Boolean) : Inputs
-        data class SetEmail(val email: String) : Inputs
-        data class SetIsEmailVerified(val isVerified: Boolean) : Inputs
-        data class SetEmailShake(val shake: Boolean) : Inputs
-        data class SetPhone(val phone: String) : Inputs
-        data class SetPhoneShake(val shake: Boolean) : Inputs
-        data object SavePersonalDetails : Inputs
-        data object SetPersonalDetailsEditable : Inputs
-        data object SetPersonalDetailsNotEditable : Inputs
-        data class SetPersonalDetailsButtonDisabled(val isDisabled: Boolean) : Inputs
-
-        data object ResetPassword : Inputs
-
-        data class SetRole(val role: Role) : Inputs
-        data class SetRoleButtonDisabled(val isDisabled: Boolean) : Inputs
-        data object SaveRole : Inputs
-
-        data class SetAddress(val address: String) : Inputs
-        data class SetAddressShake(val shake: Boolean) : Inputs
-        data class SetAdditionalInformation(val additionalInformation: String) : Inputs
-        data class SetPostcode(val postcode: String) : Inputs
-        data class SetPostcodeShake(val shake: Boolean) : Inputs
-        data class SetCity(val city: String) : Inputs
-        data class SetCityShake(val shake: Boolean) : Inputs
-        data class SetState(val state: String) : Inputs
-        data class SetStateShake(val shake: Boolean) : Inputs
-        data class SetCountry(val country: String) : Inputs
-        data class SetCountryShake(val shake: Boolean) : Inputs
-        data object SaveAddress : Inputs
-        data object SetAddressEditable : Inputs
-        data object SetAddressNotEditable : Inputs
-        data class SetAddressButtonDisabled(val isDisabled: Boolean) : Inputs
-
-        data class SetWishlistSize(val size: Int) : Inputs
-        data class SetLastActive(val lastActive: String?) : Inputs
-        data class SetCreatedBy(val createdBy: String?) : Inputs
-        data class SetCreatedAt(val createdAt: Long) : Inputs
-        data class SetUpdatedAt(val updatedAt: Long) : Inputs
+            data class Id(val id: String) : Inputs
+            data class FullName(val fullName: String) : Inputs
+            data class NameShake(val shake: Boolean) : Inputs
+            data class Email(val email: String) : Inputs
+            data class IsEmailVerified(val isVerified: Boolean) : Inputs
+            data class EmailShake(val shake: Boolean) : Inputs
+            data class Phone(val phone: String) : Inputs
+            data class PhoneShake(val shake: Boolean) : Inputs
+            data class UserRole(val role: Role) : Inputs
+            data class Address(val address: String) : Inputs
+            data class AddressShake(val shake: Boolean) : Inputs
+            data class AdditionalInformation(val additionalInformation: String) : Inputs
+            data class Postcode(val postcode: String) : Inputs
+            data class PostcodeShake(val shake: Boolean) : Inputs
+            data class City(val city: String) : Inputs
+            data class CityShake(val shake: Boolean) : Inputs
+            data class State(val state: String) : Inputs
+            data class StateShake(val shake: Boolean) : Inputs
+            data class Country(val country: String) : Inputs
+            data class CountryShake(val shake: Boolean) : Inputs
+            data class WishlistSize(val size: Int) : Inputs
+            data class LastActive(val lastActive: String?) : Inputs
+            data class CreatedBy(val createdBy: String?) : Inputs
+            data class CreatedAt(val createdAt: Long) : Inputs
+            data class UpdatedAt(val updatedAt: Long) : Inputs
+        }
     }
 
     sealed interface Events {
@@ -185,6 +149,12 @@ object AdminUserPageContract {
         val wishlist: String = getString(component.localization.Strings.Wishlist),
         val lastActive: String = getString(component.localization.Strings.LastActive),
         val registered: String = getString(component.localization.Strings.Registered),
+        val createUser: String = getString(component.localization.Strings.CreateUser),
+        val unsavedChanges: String = getString(component.localization.Strings.UnsavedChanges),
+        val saveChanges: String = getString(component.localization.Strings.SaveChanges),
+        val reset: String = getString(component.localization.Strings.Reset),
+        val user: String = getString(component.localization.Strings.User),
+        val id: String = getString(component.localization.Strings.Id),
     )
 
     sealed interface ScreenState {

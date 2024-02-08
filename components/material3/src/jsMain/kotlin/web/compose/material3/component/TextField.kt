@@ -8,6 +8,7 @@ import com.varabyte.kobweb.compose.ui.toAttrs
 import org.jetbrains.compose.web.attributes.AutoComplete
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.dom.Span
+import org.w3c.dom.HTMLInputElement
 import web.compose.material3.common.MdTagElement
 import web.compose.material3.common.jsRequire
 import web.compose.material3.common.slot
@@ -17,7 +18,7 @@ import web.compose.material3.common.slot
 @Composable
 fun MdTextFieldTagElement(
     tagName: String,
-    value: String?,
+    value: String,
     onInput: (String) -> Unit,
     label: String?,
     placeholder: String?,
@@ -61,7 +62,8 @@ fun MdTextFieldTagElement(
             .toAttrs {
                 classes("md-text-field")
 
-                value?.let { attr("value", it) }
+                prop({ element: HTMLInputElement, value: String -> element.value = value }, value)
+
                 attr("type", type.value)
                 label?.let { attr("label", it) }
                 placeholder?.let { attr("placeholder", it) }
@@ -116,8 +118,8 @@ enum class TextFieldType(val value: String) {
 @Suppress("UnsafeCastFromDynamic")
 @Composable
 fun FilledTextField(
-    value: String? = null,
-    onInput: (String) -> Unit = {},
+    value: String,
+    onInput: (String) -> Unit,
     label: String? = null,
     placeholder: String? = null,
     leadingIcon: (@Composable () -> Unit)? = null,
@@ -189,8 +191,8 @@ fun FilledTextField(
 @Suppress("UnsafeCastFromDynamic")
 @Composable
 fun OutlinedTextField(
-    value: String? = null,
-    onInput: (String) -> Unit = {},
+    value: String,
+    onInput: (String) -> Unit,
     label: String? = null,
     placeholder: String? = null,
     leadingIcon: (@Composable () -> Unit)? = null,

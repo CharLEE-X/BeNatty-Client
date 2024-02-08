@@ -29,6 +29,7 @@ fun TextFieldShowcase() {
     FilledTextField(
         label = "Filled Text Field",
         value = textFieldValue,
+        onInput = {},
         disabled = true,
         modifier = Modifier.padding(5.px)
     )
@@ -36,6 +37,7 @@ fun TextFieldShowcase() {
     FilledTextField(
         label = "Filled Text Field",
         value = "Some input",
+        onInput = {},
         error = true,
         errorText = "No valid input",
         modifier = Modifier.padding(5.px),
@@ -51,6 +53,7 @@ fun TextFieldShowcase() {
     OutlinedTextField(
         label = "Input a number",
         value = "111",
+        onInput = {},
         type = TextFieldType.NUMBER,
         required = true,
         modifier = Modifier.padding(5.px),
@@ -59,6 +62,7 @@ fun TextFieldShowcase() {
     OutlinedTextField(
         label = "Input a password",
         value = "Welcome",
+        onInput = {},
         type = TextFieldType.PASSWORD,
         modifier = Modifier.padding(5.px),
     )
@@ -66,6 +70,7 @@ fun TextFieldShowcase() {
     OutlinedTextField(
         label = "Input an email",
         value = "john.doe@example.com",
+        onInput = {},
         type = TextFieldType.EMAIL,
         modifier = Modifier.padding(5.px),
     )
@@ -73,6 +78,7 @@ fun TextFieldShowcase() {
     OutlinedTextField(
         label = "Input an url",
         value = "https://www.example.com",
+        onInput = {},
         type = TextFieldType.URL,
         modifier = Modifier.padding(5.px),
     )
@@ -80,6 +86,7 @@ fun TextFieldShowcase() {
     OutlinedTextField(
         label = "Input an search",
         value = "Some search?",
+        onInput = {},
         type = TextFieldType.SEARCH,
         modifier = Modifier.padding(5.px),
     )

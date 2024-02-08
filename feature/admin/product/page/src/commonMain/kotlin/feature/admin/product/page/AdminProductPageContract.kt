@@ -18,94 +18,95 @@ object AdminProductPageContract : KoinComponent {
         val isLoading: Boolean = false,
         val screenState: ScreenState,
 
+        val wasEdited: Boolean = false,
+
         // Common
-        val id: String? = null,
-        val name: String = "",
         val nameError: String? = null,
         val shakeName: Boolean = false,
-        val isCreateProductButtonDisabled: Boolean = true,
-        val shortDescription: String = "",
         val shortDescriptionError: String? = null,
         val shakeShortDescription: Boolean = false,
-        val isFeatured: Boolean = false,
-        val allowReviews: Boolean = true,
-        val catalogVisibility: CatalogVisibility = CatalogVisibility.Everywhere,
-        val categories: List<String> = emptyList(),
-        val tags: List<String> = emptyList(),
-        val relatedIds: List<String> = emptyList(),
-        val isCommonDetailsEditing: Boolean = false,
-        val isSaveCommonDetailsButtonDisabled: Boolean = true,
-        val creator: ProductGetByIdQuery.Creator = ProductGetByIdQuery.Creator(
-            id = authService.userId.toString(),
-            name = "",
-        ),
-        val createdAt: String = "",
-        val updatedAt: String = "",
-        val postStatus: PostStatus = PostStatus.Draft,
-
-        val description: String? = null,
         val descriptionError: String? = null,
         val shakeDescription: Boolean = false,
+        val lowStockThresholdError: String? = null,
+        val shakeLowStockThreshold: Boolean = false,
+        val remainingStockError: String? = null,
+        val shakeRemainingStock: Boolean = false,
+        val priceError: String? = null,
+        val shakePrice: Boolean = false,
+        val regularPriceError: String? = null,
+        val shakeRegularPrice: Boolean = false,
+        val salePriceError: String? = null,
+        val shakeSalePrice: Boolean = false,
+        val weightError: String? = null,
+        val shakeWeight: Boolean = false,
+        val heightError: String? = null,
+        val shakeHeight: Boolean = false,
+        val lengthError: String? = null,
+        val shakeLength: Boolean = false,
+        val widthError: String? = null,
+        val shakeWidth: Boolean = false,
 
-        val isDataEditing: Boolean = false,
-        val isSaveDataButtonDisabled: Boolean = true,
-        val isPurchasable: Boolean = true,
-
+        val isCreateDisabled: Boolean = true,
         val allCategories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal> = emptyList(),
 
         val original: ProductGetByIdQuery.GetProductById = ProductGetByIdQuery.GetProductById(
             product = ProductGetByIdQuery.Product(
-                id = id ?: "",
+                id = "",
                 common = ProductGetByIdQuery.Common(
-                    name = name,
-                    shortDescription = shortDescription,
-                    allowReviews = allowReviews,
-                    catalogVisibility = catalogVisibility,
-                    categories = categories,
-                    isFeatured = isFeatured,
-                    relatedIds = relatedIds,
-                    tags = tags,
-                    createdBy = creator,
-                    createdAt = createdAt,
-                    updatedAt = updatedAt,
+                    name = "",
+                    shortDescription = "",
+                    allowReviews = true,
+                    catalogVisibility = CatalogVisibility.Everywhere,
+                    categories = emptyList(),
+                    isFeatured = false,
+                    relatedIds = emptyList(),
+                    tags = emptyList(),
+                    createdBy = "",
+                    createdAt = "",
+                    updatedAt = "",
                 ),
                 data = ProductGetByIdQuery.Data1(
-                    postStatus = postStatus,
-                    description = description,
-                    isPurchasable = isPurchasable,
-                    images = listOf(),
+                    postStatus = PostStatus.Draft,
+                    description = "",
+                    isPurchasable = false,
+                    images = emptyList(),
                     parentId = null,
                 ),
                 inventory = ProductGetByIdQuery.Inventory(
+                    onePerOrder = false,
                     backorderStatus = BackorderStatus.Allowed,
                     canBackorder = true,
                     isOnBackorder = true,
                     lowStockThreshold = 0,
-                    onePerOrder = true,
                     remainingStock = 0,
-                    stockStatus = StockStatus.InStock,
+                    stockStatus = StockStatus.OutOfStock,
                     trackInventory = true,
                 ),
                 price = ProductGetByIdQuery.Price(
-                    price = "0.00",
-                    regularPrice = "0.00",
-                    salePrice = "0.00",
-                    onSale = true,
+                    price = null,
+                    regularPrice = null,
+                    salePrice = null,
+                    onSale = false,
                     saleStart = null,
                     saleEnd = null,
                 ),
                 shipping = ProductGetByIdQuery.Shipping(
-                    height = "",
-                    length = "",
-                    weight = "",
-                    width = "",
+                    height = null,
+                    length = null,
+                    weight = null,
+                    width = null,
                     requiresShipping = true,
                 ),
             ),
-            creator = creator,
+            creator = ProductGetByIdQuery.Creator(
+                id = authService.userId.toString(),
+                name = "",
+            ),
             reviews = emptyList(),
             totalInWishlist = 0,
         ),
+
+        val current: ProductGetByIdQuery.GetProductById = original,
 
         val strings: Strings = Strings()
     )
@@ -120,15 +121,11 @@ object AdminProductPageContract : KoinComponent {
 
         sealed interface OnClick : Inputs {
             data object Create : OnClick
-            data object SaveCommonDetails : Inputs
-            data object SaveDataDetails : Inputs
-            data object EditDetails : OnClick
-            data object EditData : OnClick
-            data object CancelEditDetails : OnClick
-            data object CancelEditData : OnClick
             data object Delete : OnClick
-            data class Category(val category: String) : Inputs
-            data object Creator : Inputs
+            data object SaveEdit : Inputs
+            data object CancelEdit : OnClick
+            data class GoToCategory(val category: String) : Inputs
+            data object GoToCreator : Inputs
         }
 
         sealed interface Set : Inputs {
@@ -138,6 +135,7 @@ object AdminProductPageContract : KoinComponent {
             data class Loading(val isLoading: Boolean) : Inputs
             data class StateOfScreen(val screenState: ScreenState) : Inputs
             data class OriginalProduct(val product: ProductGetByIdQuery.GetProductById) : Inputs
+            data class CurrentProduct(val product: ProductGetByIdQuery.GetProductById) : Inputs
 
             data class Id(val id: String) : Inputs
             data class Name(val name: String) : Inputs
@@ -147,8 +145,6 @@ object AdminProductPageContract : KoinComponent {
             data class IsFeatured(val isFeatured: Boolean) : Inputs
             data class AllowReviews(val allowReviews: Boolean) : Inputs
             data class VisibilityInCatalog(val catalogVisibility: CatalogVisibility) : Inputs
-            data class IsCommonDetailsEditable(val isEditable: Boolean) : Inputs
-            data class IsCommonDetailsButtonDisabled(val isDisabled: Boolean) : Inputs
             data class Creator(val creator: ProductGetByIdQuery.Creator) : Inputs
             data class CreatedAt(val createdAt: String) : Inputs
             data class UpdatedAt(val updatedAt: String) : Inputs
@@ -157,8 +153,35 @@ object AdminProductPageContract : KoinComponent {
             data class Description(val description: String) : Inputs
             data class DescriptionShake(val shake: Boolean) : Inputs
             data class IsPurchasable(val isPurchasable: Boolean) : Inputs
-            data class IsDataEditable(val isEditable: Boolean) : Inputs
-            data class IsDataButtonDisabled(val isDisabled: Boolean) : Inputs
+            data class OnePerOrder(val onePerOrder: Boolean) : Inputs
+            data class StatusOfBackorder(val backorderStatus: BackorderStatus) : Inputs
+            data class CanBackorder(val canBackorder: Boolean) : Inputs
+            data class IsOnBackorder(val isOnBackorder: Boolean) : Inputs
+            data class LowStockThreshold(val lowStockThreshold: Int) : Inputs
+            data class LowStockThresholdShake(val shake: Boolean) : Inputs
+            data class RemainingStock(val remainingStock: Int) : Inputs
+            data class RemainingStockShake(val shake: Boolean) : Inputs
+            data class StatusOfStock(val stockStatus: StockStatus) : Inputs
+            data class TrackInventory(val trackInventory: Boolean) : Inputs
+            data class Price(val price: String) : Inputs
+            data class PriceShake(val shake: Boolean) : Inputs
+            data class RegularPrice(val regularPrice: String) : Inputs
+            data class RegularPriceShake(val shake: Boolean) : Inputs
+            data class SalePrice(val salePrice: String) : Inputs
+            data class SalePriceShake(val shake: Boolean) : Inputs
+            data class OnSale(val onSale: Boolean) : Inputs
+            data class SaleStart(val saleStart: String) : Inputs
+            data class SaleEnd(val saleEnd: String) : Inputs
+            data class Height(val height: String) : Inputs
+            data class HeightShake(val shake: Boolean) : Inputs
+            data class Length(val length: String) : Inputs
+            data class LengthShake(val shake: Boolean) : Inputs
+            data class Weight(val weight: String) : Inputs
+            data class WeightShake(val shake: Boolean) : Inputs
+            data class Width(val width: String) : Inputs
+            data class WidthShake(val shake: Boolean) : Inputs
+            data class RequiresShipping(val requiresShipping: Boolean) : Inputs
+            data class Images(val images: List<ProductGetByIdQuery.Image>) : Inputs
         }
     }
 
@@ -173,11 +196,10 @@ object AdminProductPageContract : KoinComponent {
     data class Strings(
         val products: String = getString(component.localization.Strings.Products),
         val country: String = getString(component.localization.Strings.Country),
-        val edit: String = getString(component.localization.Strings.Edit),
         val save: String = getString(component.localization.Strings.Save),
         val cancel: String = getString(component.localization.Strings.Cancel),
-        val delete: String = getString(component.localization.Strings.Delete),
         val createdBy: String = getString(component.localization.Strings.CreatedBy),
+        val delete: String = getString(component.localization.Strings.Delete),
         val createdAt: String = getString(component.localization.Strings.CreatedAt),
         val updatedAt: String = getString(component.localization.Strings.UpdatedAt),
         val never: String = getString(component.localization.Strings.Never),
@@ -196,6 +218,32 @@ object AdminProductPageContract : KoinComponent {
         val data: String = getString(component.localization.Strings.Data),
         val description: String = getString(component.localization.Strings.Description),
         val isPurchasable: String = getString(component.localization.Strings.IsPurchasable),
+        val inventory: String = getString(component.localization.Strings.Inventory),
+        val onePerOrder: String = getString(component.localization.Strings.OnePerOrder),
+        val unsavedChanges: String = getString(component.localization.Strings.UnsavedChanges),
+        val saveChanges: String = getString(component.localization.Strings.SaveChanges),
+        val reset: String = getString(component.localization.Strings.Reset),
+        val images: String = getString(component.localization.Strings.Images),
+        val noImages: String = getString(component.localization.Strings.NoImages),
+        val backorderStatus: String = getString(component.localization.Strings.BackorderStatus),
+        val canBackorder: String = getString(component.localization.Strings.CanBackorder),
+        val isOnBackorder: String = getString(component.localization.Strings.IsOnBackorder),
+        val lowStockThreshold: String = getString(component.localization.Strings.LowStockThreshold),
+        val remainingStock: String = getString(component.localization.Strings.RemainingStock),
+        val stockStatus: String = getString(component.localization.Strings.Status),
+        val trackInventory: String = getString(component.localization.Strings.TrackInventory),
+        val price: String = getString(component.localization.Strings.Price),
+        val regularPrice: String = getString(component.localization.Strings.RegularPrice),
+        val salePrice: String = getString(component.localization.Strings.SalePrice),
+        val onSale: String = getString(component.localization.Strings.OnSale),
+        val saleStart: String = getString(component.localization.Strings.SaleStart),
+        val saleEnd: String = getString(component.localization.Strings.SaleEnd),
+        val shipping: String = getString(component.localization.Strings.Shipping),
+        val height: String = getString(component.localization.Strings.Height),
+        val length: String = getString(component.localization.Strings.Length),
+        val weight: String = getString(component.localization.Strings.Weight),
+        val width: String = getString(component.localization.Strings.Width),
+        val requiresShipping: String = getString(component.localization.Strings.RequiresShipping),
     )
 
     sealed interface ScreenState {

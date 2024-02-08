@@ -31,7 +31,6 @@ class AdminProductPageViewModel(
         }
         .withViewModel(
             initialState = AdminProductPageContract.State(
-                id = productId,
                 screenState = if (productId == null) {
                     AdminProductPageContract.ScreenState.New
                 } else {

@@ -7,7 +7,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.copperleaf.ballast.navigation.routing.RouterContract
+import com.varabyte.kobweb.compose.foundation.layout.Box
+import com.varabyte.kobweb.compose.foundation.layout.BoxScope
 import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -15,13 +18,16 @@ import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxHeight
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.router.RouterScreen
 import feature.router.RouterViewModel
 import kotlinx.browser.document
+import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
@@ -32,32 +38,38 @@ import web.components.widgets.Logo
 fun AdminLayout(
     title: String,
     router: RouterViewModel,
-    content: @Composable () -> Unit,
+    overlay: @Composable BoxScope.() -> Unit = {},
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     LaunchedEffect(title) {
         document.title = "NataliaShop - $title"
     }
 
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .gap(1.em)
             .backgroundColor(MaterialTheme.colors.mdSysColorSurface.value())
     ) {
-        AdminSideBar(
-            router = router,
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(15.em)
-        )
         Column(
             modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f)
-                .padding(2.em)
+                .fillMaxSize()
+                .padding(left = 18.em, top = 2.em, right = 2.em, bottom = 2.em)
                 .gap(1.em)
         ) {
             content()
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            AdminSideBar(
+                router = router,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(15.em)
+                    .position(Position.Fixed)
+            )
+            overlay()
         }
     }
 }
