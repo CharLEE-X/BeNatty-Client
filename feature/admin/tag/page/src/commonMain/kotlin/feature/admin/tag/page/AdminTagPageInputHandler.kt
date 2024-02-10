@@ -195,7 +195,7 @@ internal class AdminUserPageInputHandler :
         val input = CreateUserInput(
             email = state.email,
             name = state.fullName,
-            role = Role.USER,
+            role = Role.User,
         )
         sideJob("handleCreateNewUser") {
             userService.create(input).fold(

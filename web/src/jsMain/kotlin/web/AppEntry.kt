@@ -52,7 +52,8 @@ fun AppEntry(content: @Composable () -> Unit) {
             ColorMode.DARK -> appDarkColorScheme
         }
 
-        MaterialTheme(colorScheme, defaultFontScheme) {
+        MaterialTheme(appLightColorScheme, defaultFontScheme) {
+//        MaterialTheme(colorScheme, defaultFontScheme) {
             Box(
                 modifier = Modifier
                     .minHeight(100.vh)

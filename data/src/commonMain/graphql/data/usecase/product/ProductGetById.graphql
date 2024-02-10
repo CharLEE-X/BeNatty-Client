@@ -48,6 +48,7 @@ query ProductGetById($getProductByIdId: ObjectId!) {
         saleStart
       }
       shipping {
+        presetId
         height
         length
         requiresShipping

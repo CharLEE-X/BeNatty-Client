@@ -29,7 +29,10 @@ fun CommonTextField(
     type: TextFieldType = TextFieldType.TEXT,
     autoComplete: AutoComplete = AutoComplete.off,
     required: Boolean = false,
+    disabled: Boolean = false,
     shake: Boolean = false,
+    prefixText: String? = null,
+    suffixText: String? = null,
     icon: (@Composable () -> Unit)? = null,
 ) {
     var translateX by remember { mutableStateOf(0.em) }
@@ -57,6 +60,9 @@ fun CommonTextField(
         errorText = errorMsg,
         required = required,
         autoComplete = autoComplete,
+        disabled = disabled,
+        prefixText = prefixText,
+        suffixText = suffixText,
         modifier = modifier
             .translateX(translateX)
             .transition(CSSTransition("translate", SHAKE_ANIM_DURATION.inWholeSeconds.s))

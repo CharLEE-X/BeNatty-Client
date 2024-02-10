@@ -15,8 +15,10 @@ class AdminCategoryPageViewModel(
     id: String?,
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
-    goToUserList: suspend () -> Unit,
-    goToUser: suspend (String) -> Unit,
+    goToUserList: () -> Unit,
+    goToUser: (String) -> Unit,
+    goToCreateCategory: () -> Unit,
+    goToCategory: (String) -> Unit,
 ) : BasicViewModel<
     AdminCategoryPageContract.Inputs,
     AdminCategoryPageContract.Events,
@@ -28,7 +30,13 @@ class AdminCategoryPageViewModel(
             logger = { PrintlnLogger() }
         }
         .withViewModel(
-            initialState = AdminCategoryPageContract.State(),
+            initialState = AdminCategoryPageContract.State(
+                screenState = if (id == null) {
+                    AdminCategoryPageContract.ScreenState.New
+                } else {
+                    AdminCategoryPageContract.ScreenState.Existing
+                }
+            ),
             inputHandler = AdminUserPageInputHandler(),
             name = TAG,
         )
@@ -43,6 +51,8 @@ class AdminCategoryPageViewModel(
         onError = onError,
         goToUserList = goToUserList,
         goToUser = goToUser,
+        goToCreateCategory = goToCreateCategory,
+        goToCategory = goToCategory,
     ),
     coroutineScope = scope,
 ) {

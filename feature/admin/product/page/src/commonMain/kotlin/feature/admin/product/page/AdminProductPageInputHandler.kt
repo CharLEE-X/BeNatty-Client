@@ -5,6 +5,7 @@ import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
 import core.util.millisToTime
+import data.GetCategoryByIdQuery
 import data.ProductGetByIdQuery
 import data.service.CategoryService
 import data.service.ProductService
@@ -30,31 +31,34 @@ internal class AdminProductPageInputHandler :
     private val inputValidator by inject<InputValidator>()
     private val categoryService: CategoryService by inject()
 
-    override suspend fun InputHandlerScope<AdminProductPageContract.Inputs, AdminProductPageContract.Events, AdminProductPageContract.State>.handleInput(
-        input: AdminProductPageContract.Inputs,
-    ) = when (input) {
+    override suspend fun InputScope.handleInput(input: AdminProductPageContract.Inputs) = when (input) {
         is AdminProductPageContract.Inputs.Init -> handleInit(input.productId)
 
         is AdminProductPageContract.Inputs.Get.ProductById -> handleGetProductById(input.id)
         AdminProductPageContract.Inputs.Get.AllCategories -> handleGetAllCategories()
+        AdminProductPageContract.Inputs.Get.AllTags -> handleGetAllTags()
+        is AdminProductPageContract.Inputs.Get.PresetCategory -> handleGetPresetCategory(input.categoryId)
 
         AdminProductPageContract.Inputs.OnClick.Create -> handleCreateNewProduct()
         AdminProductPageContract.Inputs.OnClick.Delete -> handleDeleteProduct()
         AdminProductPageContract.Inputs.OnClick.SaveEdit -> handleSaveDetails()
         AdminProductPageContract.Inputs.OnClick.CancelEdit -> handleCancelEdit()
         is AdminProductPageContract.Inputs.OnClick.GoToCategory -> handleOnClickCategory(input.category)
-        is AdminProductPageContract.Inputs.OnClick.GoToCreator -> {
+        is AdminProductPageContract.Inputs.OnClick.GoToUserCreator -> {
             val userId = getCurrentState().original.creator.id.toString()
             postEvent(AdminProductPageContract.Events.GoToUserDetails(userId))
         }
 
+        is AdminProductPageContract.Inputs.OnClick.PresetSelected -> handlePresetClick(input.preset)
+
         is AdminProductPageContract.Inputs.Set.AllCategories -> updateState { it.copy(allCategories = input.categories) }
+        is AdminProductPageContract.Inputs.Set.AllTags -> updateState { it.copy(allTags = input.tags) }
         is AdminProductPageContract.Inputs.Set.Loading -> updateState { it.copy(isLoading = input.isLoading) }
         is AdminProductPageContract.Inputs.Set.OriginalProduct ->
-            updateState { it.copy(original = input.product) }
+            updateState { it.copy(original = input.product).wasEdited() }
 
         is AdminProductPageContract.Inputs.Set.CurrentProduct ->
-            updateState { it.copy(current = input.product) }
+            updateState { it.copy(current = input.product).wasEdited() }
 
         is AdminProductPageContract.Inputs.Set.StateOfScreen -> updateState { it.copy(screenState = input.screenState) }
         is AdminProductPageContract.Inputs.Set.Id -> handleSetId(input.id)
@@ -102,6 +106,75 @@ internal class AdminProductPageInputHandler :
         is AdminProductPageContract.Inputs.Set.WidthShake -> updateState { it.copy(shakeWidth = input.shake) }
         is AdminProductPageContract.Inputs.Set.Height -> handleSetHeight(input.height)
         is AdminProductPageContract.Inputs.Set.HeightShake -> updateState { it.copy(shakeHeight = input.shake) }
+        is AdminProductPageContract.Inputs.Set.PresetCategory -> handleSetPresetCategory(input.category)
+        is AdminProductPageContract.Inputs.Set.ShippingPresetId -> handleSetShippingPresetId(input.presetId)
+        AdminProductPageContract.Inputs.OnClick.GoToCreateCategory ->
+            postEvent(AdminProductPageContract.Events.GoToCreateCategory)
+
+    }
+
+    private suspend fun InputScope.handleSetShippingPresetId(presetId: String?) {
+        updateState {
+            it.copy(
+                current = it.current.copy(
+                    product = it.current.product.copy(
+                        shipping = it.current.product.shipping.copy(
+                            presetId = presetId
+                        )
+                    )
+                )
+            ).wasEdited()
+        }
+    }
+
+    private suspend fun InputScope.handleSetPresetCategory(category: GetCategoryByIdQuery.GetCategoryById?) {
+        updateState {
+            it.copy(
+                presetCategory = category,
+                current = it.current.copy(
+                    product = it.current.product.copy(
+                        shipping = it.current.product.shipping.copy(
+                            presetId = category?.id,
+                            weight = category?.shippingPreset?.weight ?: it.current.product.shipping.weight,
+                            length = category?.shippingPreset?.length ?: it.current.product.shipping.length,
+                            width = category?.shippingPreset?.width ?: it.current.product.shipping.width,
+                            height = category?.shippingPreset?.height ?: it.current.product.shipping.height,
+                            requiresShipping = category?.shippingPreset?.requiresShipping
+                                ?: it.current.product.shipping.requiresShipping,
+                        )
+                    )
+                )
+            ).wasEdited()
+        }
+    }
+
+    private suspend fun InputScope.handleGetPresetCategory(categoryId: String) {
+        sideJob("handleGetPresetCategory") {
+            categoryService.getById(categoryId).collect { result ->
+                result.fold(
+                    onSuccess = { data ->
+                        postInput(AdminProductPageContract.Inputs.Set.ShippingPresetId(categoryId))
+                        postInput(AdminProductPageContract.Inputs.Set.PresetCategory(data.getCategoryById))
+                    },
+                    onFailure = {
+                        postEvent(
+                            AdminProductPageContract.Events.OnError(it.message ?: "Error while getting category")
+                        )
+                    },
+                )
+            }
+        }
+    }
+
+    private suspend fun InputScope.handlePresetClick(presetId: String) {
+        val state = getCurrentState()
+        sideJob("handlePresetClick") {
+            if (state.current.product.shipping.presetId == presetId) {
+                postInput(AdminProductPageContract.Inputs.Set.PresetCategory(null))
+            } else {
+                postInput(AdminProductPageContract.Inputs.Get.PresetCategory(presetId))
+            }
+        }
     }
 
     private suspend fun InputScope.handleSetStatusOfBackorder(backorderStatus: BackorderStatus) {
@@ -433,7 +506,7 @@ internal class AdminProductPageInputHandler :
             } else {
                 postInput(AdminProductPageContract.Inputs.Set.Loading(isLoading = true))
                 postInput(AdminProductPageContract.Inputs.Get.ProductById(id))
-                postInput(AdminProductPageContract.Inputs.Set.StateOfScreen(AdminProductPageContract.ScreenState.Existing.Read))
+                postInput(AdminProductPageContract.Inputs.Set.StateOfScreen(AdminProductPageContract.ScreenState.Existing))
                 postInput(AdminProductPageContract.Inputs.Set.Loading(isLoading = false))
             }
             postInput(AdminProductPageContract.Inputs.Get.AllCategories)
@@ -446,7 +519,6 @@ internal class AdminProductPageInputHandler :
             categoryService.getCategoriesAllMinimal().fold(
                 onSuccess = { data ->
                     val categories = data.getCategoriesAllMinimal
-                        .filter { it.id != state.current.product.id }
                     postInput(AdminProductPageContract.Inputs.Set.AllCategories(categories))
                 },
                 onFailure = {
@@ -455,6 +527,23 @@ internal class AdminProductPageInputHandler :
                     )
                 },
             )
+        }
+    }
+
+    private suspend fun InputScope.handleGetAllTags() {
+        val state = getCurrentState()
+        sideJob("handleGetAllTags") {
+//            categoryService.getCategoriesAllMinimal().fold(
+//                onSuccess = { data ->
+            val tags = emptyList<String>()
+            postInput(AdminProductPageContract.Inputs.Set.AllTags(tags))
+//                },
+//                onFailure = {
+//                    postEvent(
+//                        AdminProductPageContract.Events.OnError(it.message ?: "Error while getting all categories")
+//                    )
+//                },
+//            )
         }
     }
 
@@ -503,34 +592,7 @@ internal class AdminProductPageInputHandler :
         sideJob("handleCreateNewUser") {
             productService.create(input).fold(
                 onSuccess = { data ->
-                    val createdAt = millisToTime(data.createProduct.createdAt.toLong())
-                    postInput(
-                        AdminProductPageContract.Inputs.Set.OriginalProduct(
-                            product = state.original.copy(
-                                product = state.original.product.copy(
-                                    common = state.original.product.common.copy(
-                                        name = data.createProduct.name,
-                                        createdBy = data.createProduct.creator.id,
-                                        createdAt = createdAt,
-                                        updatedAt = createdAt,
-                                    ),
-                                ),
-                                creator = state.original.creator.copy(
-                                    id = data.createProduct.creator,
-                                    name = data.createProduct.name,
-                                ),
-                            )
-                        )
-                    )
-
-                    postInput(AdminProductPageContract.Inputs.Set.Id(data.createProduct.id))
-                    postInput(AdminProductPageContract.Inputs.Set.CreatedAt(createdAt))
-                    postInput(AdminProductPageContract.Inputs.Set.UpdatedAt(createdAt))
-                    postInput(
-                        AdminProductPageContract.Inputs.Set.StateOfScreen(
-                            AdminProductPageContract.ScreenState.Existing.Edit
-                        )
-                    )
+                    postEvent(AdminProductPageContract.Events.GoToProduct(data.createProduct.id))
                 },
                 onFailure = {
                     postEvent(
@@ -685,6 +747,7 @@ internal class AdminProductPageInputHandler :
                         onSale = if (current.product.price.onSale != original.product.price.onSale) current.product.price.onSale else null,
                         saleStart = if (current.product.price.saleStart != original.product.price.saleStart) current.product.price.saleStart else null,
                         saleEnd = if (current.product.price.saleEnd != original.product.price.saleEnd) current.product.price.saleEnd else null,
+                        presetId = if (current.product.shipping.presetId != original.product.shipping.presetId) current.product.shipping.presetId?.toString() else null,
                         height = if (current.product.shipping.height != original.product.shipping.height) current.product.shipping.height else null,
                         length = if (current.product.shipping.length != original.product.shipping.length) current.product.shipping.length else null,
                         weight = if (current.product.shipping.weight != original.product.shipping.weight) current.product.shipping.weight else null,
@@ -748,6 +811,7 @@ internal class AdminProductPageInputHandler :
                                                 saleEnd = data.updateProduct.price.saleEnd,
                                             ),
                                             shipping = ProductGetByIdQuery.Shipping(
+                                                presetId = data.updateProduct.shipping.presetId,
                                                 height = data.updateProduct.shipping.height,
                                                 length = data.updateProduct.shipping.length,
                                                 weight = data.updateProduct.shipping.weight,
@@ -905,38 +969,6 @@ internal class AdminProductPageInputHandler :
         }
     }
 
-    private fun AdminProductPageContract.State.wasEdited(): AdminProductPageContract.State = copy(
-        wasEdited =
-        current.product.common.name != original.product.common.name ||
-            current.product.common.shortDescription != original.product.common.shortDescription ||
-            current.product.common.allowReviews != original.product.common.allowReviews ||
-            current.product.common.catalogVisibility != original.product.common.catalogVisibility ||
-            current.product.common.categories != original.product.common.categories.map { it.toString() } ||
-            current.product.common.isFeatured != original.product.common.isFeatured ||
-            current.product.common.relatedIds != original.product.common.relatedIds ||
-            current.product.common.tags != original.product.common.tags ||
-            current.product.data.postStatus != original.product.data.postStatus ||
-            current.product.data.description != original.product.data.description ||
-            current.product.data.isPurchasable != original.product.data.isPurchasable ||
-            current.product.data.images != original.product.data.images ||
-            current.product.inventory.onePerOrder != original.product.inventory.onePerOrder ||
-            current.product.inventory.backorderStatus != original.product.inventory.backorderStatus ||
-            current.product.inventory.canBackorder != original.product.inventory.canBackorder ||
-            current.product.inventory.isOnBackorder != original.product.inventory.isOnBackorder ||
-            current.product.inventory.lowStockThreshold != original.product.inventory.lowStockThreshold ||
-            current.product.inventory.remainingStock != original.product.inventory.remainingStock ||
-            current.product.inventory.stockStatus != original.product.inventory.stockStatus ||
-            current.product.inventory.trackInventory != original.product.inventory.trackInventory ||
-            current.product.price.price != original.product.price.price ||
-            current.product.price.regularPrice != original.product.price.regularPrice ||
-            current.product.price.salePrice != original.product.price.salePrice ||
-            current.product.price.onSale != original.product.price.onSale ||
-            current.product.price.saleStart != original.product.price.saleStart ||
-            current.product.price.saleEnd != original.product.price.saleEnd ||
-            current.product.shipping.height != original.product.shipping.height ||
-            current.product.shipping.length != original.product.shipping.length ||
-            current.product.shipping.weight != original.product.shipping.weight ||
-            current.product.shipping.width != original.product.shipping.width ||
-            current.product.shipping.requiresShipping != original.product.shipping.requiresShipping
-    )
+    private fun AdminProductPageContract.State.wasEdited(): AdminProductPageContract.State =
+        copy(wasEdited = current != original)
 }

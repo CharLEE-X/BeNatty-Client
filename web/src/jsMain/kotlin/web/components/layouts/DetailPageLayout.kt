@@ -3,6 +3,7 @@ package web.components.layouts
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.css.FontStyle
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
+import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.Spacer
@@ -74,27 +75,31 @@ fun DetailPageLayout(
         }
         Divider(modifier = Modifier.margin(bottom = 1.em))
         content()
-        Divider(modifier = Modifier.margin(top = 1.em))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .gap(1.em)
-                .margin(bottom = 1.em)
-        ) {
-            if (createdAtValue.isNotEmpty()) {
-                SpanText(
-                    text = "$createdAtText: $createdAtValue",
-                    modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
-                )
-            }
+        if (createdAtValue.isEmpty() && updatedAtValue.isEmpty()) {
+            Box(Modifier.margin(top = 1.em))
+        } else {
+            Divider(modifier = Modifier.margin(top = 1.em))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .gap(1.em)
+                    .margin(bottom = 1.em)
+            ) {
+                if (createdAtValue.isNotEmpty()) {
+                    SpanText(
+                        text = "$createdAtText: $createdAtValue",
+                        modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
+                    )
+                }
 
-            if (updatedAtValue.isNotEmpty()) {
-                SpanText(
-                    text = "$updatedAtText: $updatedAtValue",
-                    modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
-                )
+                if (updatedAtValue.isNotEmpty()) {
+                    SpanText(
+                        text = "$updatedAtText: $updatedAtValue",
+                        modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
+                    )
+                }
             }
         }
     }

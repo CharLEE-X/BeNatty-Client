@@ -3,55 +3,51 @@ package feature.admin.category.page
 import component.localization.getString
 import data.GetCategoriesAllMinimalQuery
 import data.GetCategoryByIdQuery
-import data.service.AuthService
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
-object AdminCategoryPageContract : KoinComponent {
-    private val authService: AuthService by inject()
-
+object AdminCategoryPageContract {
     data class State(
         val isLoading: Boolean = false,
-        val screenState: ScreenState = ScreenState.Existing.Read,
-
-        val categories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal> = emptyList(),
-
-        // Personal details
-        val id: String? = null,
-
-        val name: String = "",
-        val nameError: String? = null,
-        val shakeName: Boolean = false,
-
-        val description: String = "",
-        val parent: GetCategoryByIdQuery.Parent? = null,
-        val display: Boolean = true,
-        val creator: GetCategoryByIdQuery.Creator = GetCategoryByIdQuery.Creator(
-            id = authService.userId ?: "",
-            name = "",
-        ),
-        val createdAt: String = "",
-        val updatedAt: String = "",
+        val screenState: ScreenState,
 
         val wasEdited: Boolean = false,
-        val isSaveButtonDisabled: Boolean = true,
 
-        val isCreateButtonDisabled: Boolean = true,
+        val allCategories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal> = emptyList(),
+
+        val nameError: String? = null,
+        val shakeName: Boolean = false,
+        val displayError: String? = null,
+        val shakeDisplay: Boolean = false,
+        val weightError: String? = null,
+        val shakeWeight: Boolean = false,
+        val lengthError: String? = null,
+        val shakeLength: Boolean = false,
+        val widthError: String? = null,
+        val shakeWidth: Boolean = false,
+        val heightError: String? = null,
+        val shakeHeight: Boolean = false,
 
         val original: GetCategoryByIdQuery.GetCategoryById = GetCategoryByIdQuery.GetCategoryById(
-            id = id ?: "",
-            name = name,
-            description = description,
+            id = "",
+            name = "",
+            description = "",
             parent = null,
-            display = true,
+            display = false,
+            shippingPreset = GetCategoryByIdQuery.ShippingPreset(
+                weight = "",
+                length = "",
+                width = "",
+                height = "",
+                requiresShipping = true,
+            ),
             creator = GetCategoryByIdQuery.Creator(
-                id = authService.userId ?: "",
+                id = "",
                 name = "",
             ),
-            createdAt = createdAt.toString(),
-            updatedAt = updatedAt.toString(),
+            createdAt = "",
+            updatedAt = "",
         ),
 
+        val current: GetCategoryByIdQuery.GetCategoryById = original,
         val strings: Strings = Strings()
     )
 
@@ -60,7 +56,18 @@ object AdminCategoryPageContract : KoinComponent {
 
         sealed interface Get : Inputs {
             data class CategoryById(val id: String) : Inputs
-            data object AllCategories : Inputs
+            data class AllCategories(val currentCategoryId: String?) : Inputs
+        }
+
+        sealed interface OnClick : Inputs {
+            data object Create : Inputs
+            data object Delete : Inputs
+            data object SaveEdit : Inputs
+            data object CancelEdit : Inputs
+            data object GoToParent : Inputs
+            data object GotToUserCreator : Inputs
+            data class ParentCategorySelected(val categoryName: String) : Inputs
+            data object GoToCreateCategory : Inputs
         }
 
         sealed interface Set : Inputs {
@@ -71,31 +78,27 @@ object AdminCategoryPageContract : KoinComponent {
                 Inputs
 
             data class OriginalCategory(val category: GetCategoryByIdQuery.GetCategoryById) : Inputs
-            data class Id(val id: String) : Inputs
+            data class CurrentCategory(val category: GetCategoryByIdQuery.GetCategoryById) : Inputs
 
+            data class Id(val id: String) : Inputs
             data class Name(val fullName: String) : Inputs
             data class IsNameShake(val shake: Boolean) : Inputs
-            data class IsDetailsEditable(val isEditable: Boolean) : Inputs
-            data class IsSaveButtonDisabled(val isDisabled: Boolean) : Inputs
-
             data class Description(val description: String) : Inputs
             data class Parent(val parent: GetCategoryByIdQuery.Parent?) : Inputs
             data class Display(val display: Boolean) : Inputs
-
+            data class IsDisplayShake(val shake: Boolean) : Inputs
             data class Creator(val creator: GetCategoryByIdQuery.Creator) : Inputs
             data class CreatedAt(val createdAt: String) : Inputs
             data class UpdatedAt(val updatedAt: String) : Inputs
-        }
-
-        sealed interface OnClick : Inputs {
-            data object CreateNew : Inputs
-            data object Delete : Inputs
-            data object Edit : Inputs
-            data object Cancel : Inputs
-            data object SaveDetails : Inputs
-            data object Parent : Inputs
-            data object Creator : Inputs
-            data class ParentPicker(val category: GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal) : Inputs
+            data class Weight(val weight: String) : Inputs
+            data class IsWeightShake(val shake: Boolean) : Inputs
+            data class Length(val length: String) : Inputs
+            data class IsLengthShake(val shake: Boolean) : Inputs
+            data class Width(val width: String) : Inputs
+            data class IsWidthShake(val shake: Boolean) : Inputs
+            data class Height(val height: String) : Inputs
+            data class IsHeightShake(val shake: Boolean) : Inputs
+            data class RequiresShipping(val requiresShipping: Boolean) : Inputs
         }
     }
 
@@ -103,6 +106,8 @@ object AdminCategoryPageContract : KoinComponent {
         data class OnError(val message: String) : Events
         data object GoToList : Events
         data class GoToUser(val id: String) : Events
+        data object GoToCreateCategory : Events
+        data class GoToCategory(val id: String) : Events
     }
 
     data class Strings(
@@ -112,30 +117,7 @@ object AdminCategoryPageContract : KoinComponent {
         val delete: String = getString(component.localization.Strings.Delete),
         val createdBy: String = getString(component.localization.Strings.CreatedBy),
         val createdAt: String = getString(component.localization.Strings.CreatedAt),
-        val updatedAt: String = getString(component.localization.Strings.UpdatedAt),
-        val never: String = getString(component.localization.Strings.Never),
-        val fullName: String = getString(component.localization.Strings.FullName),
-        val email: String = getString(component.localization.Strings.Email),
-        val phone: String = getString(component.localization.Strings.Phone),
-        val personalDetails: String = getString(component.localization.Strings.PersonalDetails),
-        val profile: String = getString(component.localization.Strings.Profile),
-        val oldPassword: String = getString(component.localization.Strings.OldPassword),
-        val newPassword: String = getString(component.localization.Strings.NewPassword),
-        val address: String = getString(component.localization.Strings.Address),
-        val additionalInformation: String = getString(component.localization.Strings.AdditionalInformation),
-        val postcode: String = getString(component.localization.Strings.PostalCode),
-        val city: String = getString(component.localization.Strings.City),
-        val state: String = getString(component.localization.Strings.State),
-        val country: String = getString(component.localization.Strings.Country),
-        val password: String = getString(component.localization.Strings.Password),
-        val resetPassword: String = getString(component.localization.Strings.ResetPassword),
-        val role: String = getString(component.localization.Strings.Role),
-        val verified: String = getString(component.localization.Strings.Verified),
-        val notVerified: String = getString(component.localization.Strings.NotVerified),
-        val otherInfo: String = getString(component.localization.Strings.OtherInfo),
-        val wishlist: String = getString(component.localization.Strings.Wishlist),
-        val lastActive: String = getString(component.localization.Strings.LastActive),
-        val registered: String = getString(component.localization.Strings.Registered),
+        val lastUpdatedAt: String = getString(component.localization.Strings.LastUpdatedAt),
         val createCategory: String = getString(component.localization.Strings.CreateCategory),
         val category: String = getString(component.localization.Strings.Category),
         val details: String = getString(component.localization.Strings.Details),
@@ -149,14 +131,19 @@ object AdminCategoryPageContract : KoinComponent {
         val unsavedChanges: String = getString(component.localization.Strings.UnsavedChanges),
         val saveChanges: String = getString(component.localization.Strings.SaveChanges),
         val reset: String = getString(component.localization.Strings.Reset),
+        val shippingPreset: String = getString(component.localization.Strings.ShippingPreset),
+        val height: String = getString(component.localization.Strings.Height),
+        val length: String = getString(component.localization.Strings.Length),
+        val weight: String = getString(component.localization.Strings.Weight),
+        val width: String = getString(component.localization.Strings.Width),
+        val requiresShipping: String = getString(component.localization.Strings.RequiresShipping),
+        val shipping: String = getString(component.localization.Strings.Shipping),
+        val kg: String? = getString(component.localization.Strings.Kg),
+        val cm: String? = getString(component.localization.Strings.Cm),
     )
 
     sealed interface ScreenState {
-        data object Create : ScreenState
-
-        sealed interface Existing : ScreenState {
-            data object Read : Existing
-            data object Edit : Existing
-        }
+        data object New : ScreenState
+        data object Existing : ScreenState
     }
 }

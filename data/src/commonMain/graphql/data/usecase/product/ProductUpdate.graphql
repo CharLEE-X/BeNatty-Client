@@ -47,6 +47,7 @@ mutation ProductUpdate($input: ProductUpdateInput!) {
       saleStart
     }
     shipping {
+      presetId
       height
       length
       requiresShipping

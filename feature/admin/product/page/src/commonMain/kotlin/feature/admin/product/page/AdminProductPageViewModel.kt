@@ -16,9 +16,10 @@ class AdminProductPageViewModel(
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
     goToProductList: () -> Unit,
-    goToCreateCategory: suspend () -> Unit,
-    goToCreateTag: suspend () -> Unit,
-    goToUserDetails: suspend (String) -> Unit,
+    goToCreateCategory: () -> Unit,
+    goToCreateTag: () -> Unit,
+    goToUserDetails: (String) -> Unit,
+    goToProduct: (String) -> Unit,
 ) : BasicViewModel<
     AdminProductPageContract.Inputs,
     AdminProductPageContract.Events,
@@ -34,7 +35,7 @@ class AdminProductPageViewModel(
                 screenState = if (productId == null) {
                     AdminProductPageContract.ScreenState.New
                 } else {
-                    AdminProductPageContract.ScreenState.Existing.Read
+                    AdminProductPageContract.ScreenState.Existing
                 }
             ),
             inputHandler = AdminProductPageInputHandler(),
@@ -53,6 +54,7 @@ class AdminProductPageViewModel(
         goToCreateCategory = goToCreateCategory,
         goToCreateTag = goToCreateTag,
         goToUserDetails = goToUserDetails,
+        goToProduct = goToProduct,
     ),
     coroutineScope = scope,
 ) {

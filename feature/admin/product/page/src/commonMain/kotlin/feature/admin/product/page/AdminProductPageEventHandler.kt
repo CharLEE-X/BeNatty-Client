@@ -9,6 +9,7 @@ internal class AdminProductPageEventHandler(
     private val goToCreateCategory: suspend () -> Unit,
     private val goToCreateTag: suspend () -> Unit,
     private val goToUserDetails: suspend (String) -> Unit,
+    private val goToProduct: suspend (String) -> Unit,
 ) : EventHandler<AdminProductPageContract.Inputs, AdminProductPageContract.Events, AdminProductPageContract.State> {
     override suspend fun EventHandlerScope<AdminProductPageContract.Inputs, AdminProductPageContract.Events, AdminProductPageContract.State>.handleEvent(
         event: AdminProductPageContract.Events,
@@ -18,5 +19,6 @@ internal class AdminProductPageEventHandler(
         AdminProductPageContract.Events.GoToCreateCategory -> goToCreateCategory()
         AdminProductPageContract.Events.GoToCreateTag -> goToCreateTag()
         is AdminProductPageContract.Events.GoToUserDetails -> goToUserDetails(event.userId)
+        is AdminProductPageContract.Events.GoToProduct -> goToProduct(event.id)
     }
 }

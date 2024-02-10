@@ -86,7 +86,7 @@ private fun AdminSideBar(
         modifier = modifier
             .padding(2.em)
             .gap(1.em)
-            .backgroundColor(MaterialTheme.colors.mdSysColorSurfaceContainer.value())
+            .backgroundColor(MaterialTheme.colors.mdSysColorSurfaceContainerHigh.value())
             .borderRadius(topRight = 2.em, bottomRight = 2.em)
     ) {
         Row(

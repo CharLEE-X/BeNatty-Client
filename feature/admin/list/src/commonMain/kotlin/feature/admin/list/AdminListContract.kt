@@ -51,7 +51,7 @@ object AdminListContract {
             slot4Text = when (dataType) {
                 DataType.USER -> getString(component.localization.Strings.Orders)
                 DataType.PRODUCT -> getString(component.localization.Strings.Sold)
-                DataType.ORDER -> getString(component.localization.Strings.Status)
+                DataType.ORDER -> getString(component.localization.Strings.StockStatus)
                 DataType.CATEGORY -> getString(component.localization.Strings.Display)
                 DataType.TAG -> getString(component.localization.Strings.Display)
             },
@@ -186,7 +186,7 @@ object AdminListContract {
             CreatedAt -> getString(component.localization.Strings.CreatedAt)
             Name -> getString(component.localization.Strings.Name)
             TotalPrice -> getString(component.localization.Strings.Price)
-            Status -> getString(component.localization.Strings.Status)
+            Status -> getString(component.localization.Strings.StockStatus)
         }
     }
 

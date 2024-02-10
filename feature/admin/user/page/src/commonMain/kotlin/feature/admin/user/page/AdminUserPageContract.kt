@@ -9,12 +9,12 @@ object AdminUserPageContract {
     data class State(
         val isLoading: Boolean = false,
         val wasEdited: Boolean = false,
-        val screenState: ScreenState = ScreenState.New.Create,
+        val screenState: ScreenState = ScreenState.New,
 
         val original: UserGetByIdQuery.GetUserById = UserGetByIdQuery.GetUserById(
             id = "",
             email = "",
-            role = Role.USER,
+            role = Role.User,
             emailVerified = false,
             details = UserGetByIdQuery.Details(
                 name = "",
@@ -125,7 +125,7 @@ object AdminUserPageContract {
         val delete: String = getString(component.localization.Strings.Delete),
         val createdBy: String = getString(component.localization.Strings.CreatedBy),
         val createdAt: String = getString(component.localization.Strings.CreatedAt),
-        val updatedAt: String = getString(component.localization.Strings.UpdatedAt),
+        val lastUpdatedAt: String = getString(component.localization.Strings.LastUpdatedAt),
         val never: String = getString(component.localization.Strings.Never),
         val fullName: String = getString(component.localization.Strings.FullName),
         val email: String = getString(component.localization.Strings.Email),
@@ -158,14 +158,7 @@ object AdminUserPageContract {
     )
 
     sealed interface ScreenState {
-        sealed interface New : ScreenState {
-            data object Create : New
-            data object Created : New
-        }
-
-        sealed interface Existing : ScreenState {
-            data object Read : Existing
-            data object Edit : Existing
-        }
+        data object New : ScreenState
+        data object Existing : ScreenState
     }
 }

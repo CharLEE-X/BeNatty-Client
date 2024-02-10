@@ -9,19 +9,12 @@ import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.copperleaf.ballast.navigation.routing.build
 import com.copperleaf.ballast.navigation.routing.directions
 import com.copperleaf.ballast.navigation.routing.pathParameter
-import com.varabyte.kobweb.compose.css.Cursor
-import com.varabyte.kobweb.compose.foundation.layout.Column
-import com.varabyte.kobweb.compose.foundation.layout.Row
-import com.varabyte.kobweb.compose.ui.Alignment
+import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
-import com.varabyte.kobweb.compose.ui.modifiers.gap
-import com.varabyte.kobweb.compose.ui.modifiers.margin
-import com.varabyte.kobweb.compose.ui.modifiers.onClick
-import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.size
+import com.varabyte.kobweb.core.App
 import com.varabyte.kobweb.silk.components.text.SpanText
-import core.util.enumCapitalized
 import data.type.BackorderStatus
 import data.type.CatalogVisibility
 import data.type.PostStatus
@@ -32,19 +25,17 @@ import feature.admin.tag.page.AdminTagPageContract
 import feature.router.RouterScreen
 import feature.router.RouterViewModel
 import org.jetbrains.compose.web.css.em
-import theme.MaterialTheme
-import theme.roleStyle
 import web.components.layouts.AdminLayout
 import web.components.layouts.DetailPageLayout
+import web.components.widgets.AppTooltip
+import web.components.widgets.CardSection
 import web.components.widgets.CommonTextField
+import web.components.widgets.CreatorSection
+import web.components.widgets.FilterChipSection
 import web.components.widgets.HasChangesWidget
 import web.components.widgets.SaveButton
-import web.components.widgets.SectionHeader
-import web.compose.material3.component.ChipSet
-import web.compose.material3.component.FilterChip
-import web.compose.material3.component.OutlinedButton
-import web.compose.material3.component.Radio
-import web.compose.material3.component.Switch
+import web.components.widgets.SwitchSection
+import web.compose.material3.component.Divider
 import web.compose.material3.component.TextFieldType
 
 @Composable
@@ -81,6 +72,15 @@ fun AdminProductPagePage(
                     )
                 )
             },
+            goToProduct = { id ->
+                router.trySend(
+                    RouterContract.Inputs.GoToDestination(
+                        RouterScreen.AdminProductPageExisting.directions()
+                            .pathParameter("id", id)
+                            .build()
+                    )
+                )
+            },
         )
     }
     val state by vm.observeStates().collectAsState()
@@ -111,34 +111,95 @@ fun AdminProductPagePage(
             deleteText = state.strings.delete,
             cancelText = state.strings.cancel,
             createdAtText = state.strings.createdAt,
-            updatedAtText = state.strings.updatedAt,
+            updatedAtText = state.strings.lastUpdatedAt,
             createdAtValue = state.current.product.common.createdAt,
             updatedAtValue = state.current.product.common.updatedAt,
             onDeleteClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.Delete) },
         ) {
-            CommonDetails(vm, state)
-            Data(vm, state)
-            Inventory(vm, state)
-            PriceSection(state, vm)
-            ShippingSection(state, vm)
+            CardSection(title = state.strings.details) {
+                Name(state, vm)
+                if (state.screenState is AdminProductPageContract.ScreenState.New) {
+                    SaveButton(
+                        text = state.strings.create,
+                        disabled = state.isCreateDisabled,
+                        onClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.Create) },
+                    )
+                } else {
+                    ShortDescription(state, vm)
+                    IsFeatured(vm, state)
+                    AllowReviews(vm, state)
+                    Divider()
+                    CatalogVisibility(state, vm)
+                    Divider()
+                    Categories(state, vm)
+                    Divider()
+                    Tags(state)
+                    Divider()
+                    Creator(state, vm)
+                }
+            }
+            CardSection(title = state.strings.data) {
+                PostStatus(state, vm)
+                Divider()
+                Description(state, vm)
+                IsPurchasable(vm, state)
+                Images(vm, state)
+            }
+            CardSection(title = state.strings.inventory) {
+                OnePerOrder(vm, state)
+                Divider()
+                BackorderStatus(vm, state)
+                Divider()
+                CanBackorder(vm, state)
+                IsOnBackorder(vm, state)
+                LowStockThreshold(vm, state)
+                RemainingStock(vm, state)
+                Divider()
+                StatusOfStock(vm, state)
+                Divider()
+                TrackInventory(vm, state)
+            }
+            CardSection(title = state.strings.price) {
+                Price(vm, state)
+                RegularPrice(vm, state)
+                OnSale(vm, state)
+                SalePrice(vm, state)
+                SaleStart(vm, state)
+                SaleEnd(vm, state)
+            }
+            CardSection(title = state.strings.shipping) {
+                ShippingPreset(vm, state)
+                Weight(vm, state)
+                Length(vm, state)
+                Width(vm, state)
+                Height(vm, state)
+            }
         }
     }
 }
 
 @Composable
-fun ShippingSection(state: AdminProductPageContract.State, vm: AdminProductPageViewModel) {
-    SectionHeader(
-        text = state.strings.shipping,
+private fun ShippingPreset(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+    val categories = state.current.product.common.categories
+        .map { it.toString() }
+        .mapNotNull { state.allCategories.firstOrNull { it.id.toString() == it.id.toString() }?.name }
+    FilterChipSection(
+        title = state.strings.shippingPreset,
+        chips = categories,
+        selectedChips = state.current.product.common.categories
+            .map { it.toString() }
+            .mapNotNull { id -> state.allCategories.firstOrNull { id == it.id.toString() }?.name },
+        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.PresetSelected(it)) },
+        noChipsText = state.strings.noOtherCategoriesToChooseFrom,
+        createText = state.strings.createCategory,
+        onCreateClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.GoToCreateCategory) },
+        afterTitle = { AppTooltip(state.strings.shippingPresetDesc) },
     )
-
-    Weight(vm, state)
-    Length(vm, state)
-    Width(vm, state)
-    Height(vm, state)
+    Box(Modifier.size(0.5.em))
 }
 
 @Composable
-fun Height(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun Height(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CommonTextField(
         value = state.current.product.shipping.height.toString(),
         onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.Height(it)) },
@@ -146,12 +207,14 @@ fun Height(vm: AdminProductPageViewModel, state: AdminProductPageContract.State)
         errorMsg = state.heightError,
         shake = state.shakeHeight,
         type = TextFieldType.NUMBER,
+        disabled = state.current.product.shipping.presetId != null,
         modifier = Modifier.fillMaxWidth(),
     )
+    AppTooltip(state.strings.heightDesc)
 }
 
 @Composable
-fun Width(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun Width(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CommonTextField(
         value = state.current.product.shipping.width.toString(),
         onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.Width(it)) },
@@ -159,12 +222,14 @@ fun Width(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) 
         errorMsg = state.widthError,
         shake = state.shakeWidth,
         type = TextFieldType.NUMBER,
+        disabled = state.current.product.shipping.presetId != null,
         modifier = Modifier.fillMaxWidth(),
     )
+    AppTooltip(state.strings.widthDesc)
 }
 
 @Composable
-fun Length(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun Length(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CommonTextField(
         value = state.current.product.shipping.length.toString(),
         onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.Length(it)) },
@@ -172,12 +237,14 @@ fun Length(vm: AdminProductPageViewModel, state: AdminProductPageContract.State)
         errorMsg = state.lengthError,
         shake = state.shakeLength,
         type = TextFieldType.NUMBER,
+        disabled = state.current.product.shipping.presetId != null,
         modifier = Modifier.fillMaxWidth(),
     )
+    AppTooltip(state.strings.lengthDesc)
 }
 
 @Composable
-fun Weight(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun Weight(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CommonTextField(
         value = state.current.product.shipping.weight.toString(),
         onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.Weight(it)) },
@@ -185,59 +252,40 @@ fun Weight(vm: AdminProductPageViewModel, state: AdminProductPageContract.State)
         errorMsg = state.weightError,
         shake = state.shakeWeight,
         type = TextFieldType.NUMBER,
+        disabled = state.current.product.shipping.presetId != null,
         modifier = Modifier.fillMaxWidth(),
     )
+    AppTooltip(state.strings.weightDesc)
 }
 
 @Composable
-fun PriceSection(state: AdminProductPageContract.State, vm: AdminProductPageViewModel) {
-    SectionHeader(
-        text = state.strings.price,
-    )
-
-    Price(vm, state)
-    RegularPrice(vm, state)
-    SalePrice(vm, state)
-    OnSale(vm, state)
-    SaleStart(vm, state)
-    SaleEnd(vm, state)
-}
-
-@Composable
-fun SaleStart(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun SaleStart(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     SpanText(
         text = "SaleStart: ${state.current.product.price.saleStart} TODO: Implement date picker",
     )
+    AppTooltip(state.strings.saleStartDesc)
 }
 
 @Composable
-fun SaleEnd(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun SaleEnd(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     SpanText(
         text = "SaleEnd: ${state.current.product.price.saleEnd} TODO: Implement date picker",
     )
+    AppTooltip(state.strings.saleEndDesc)
 }
 
 @Composable
-fun OnSale(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .gap(1.em)
-            .onClick {
-                vm.trySend(AdminProductPageContract.Inputs.Set.OnSale(!state.current.product.price.onSale))
-            }
-            .cursor(Cursor.Pointer)
-    ) {
-        Switch(
-            selected = state.current.product.price.onSale,
-            modifier = Modifier.gap(1.em),
-        )
-        SpanText(text = state.strings.onSale)
-    }
+private fun OnSale(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+    SwitchSection(
+        title = state.strings.onSale,
+        selected = state.current.product.price.onSale,
+        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.OnSale(!state.current.product.price.onSale)) },
+    )
+    AppTooltip(state.strings.onSaleDesc)
 }
 
 @Composable
-fun SalePrice(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun SalePrice(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CommonTextField(
         value = state.current.product.price.salePrice.toString(),
         onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.SalePrice(it)) },
@@ -248,10 +296,11 @@ fun SalePrice(vm: AdminProductPageViewModel, state: AdminProductPageContract.Sta
         required = state.current.product.price.onSale,
         modifier = Modifier.fillMaxWidth(),
     )
+    AppTooltip(state.strings.salePriceDesc)
 }
 
 @Composable
-fun RegularPrice(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun RegularPrice(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CommonTextField(
         value = state.current.product.price.regularPrice.toString(),
         onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.RegularPrice(it)) },
@@ -261,10 +310,11 @@ fun RegularPrice(vm: AdminProductPageViewModel, state: AdminProductPageContract.
         type = TextFieldType.NUMBER,
         modifier = Modifier.fillMaxWidth(),
     )
+    AppTooltip(state.strings.regularPriceDesc)
 }
 
 @Composable
-fun Price(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun Price(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CommonTextField(
         value = state.current.product.price.price.toString(),
         onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.Price(it)) },
@@ -275,45 +325,13 @@ fun Price(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) 
         required = true,
         modifier = Modifier.fillMaxWidth(),
     )
-}
-
-@Composable
-private fun CommonDetails(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
-    SectionHeader(
-        text = state.strings.details,
-    )
-    Name(state, vm)
-    if (state.screenState is AdminProductPageContract.ScreenState.New) {
-        SaveButton(
-            text = state.strings.create,
-            disabled = state.isCreateDisabled,
-            onClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.Create) },
-        )
-    } else {
-        ShortDescription(state, vm)
-        IsFeatured(vm, state)
-        AllowReviews(vm, state)
-        CatalogVisibility(state, vm)
-        Categories(state, vm)
-        Tags(state)
-        Creator(state, vm)
-    }
-}
-
-@Composable
-private fun Data(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
-    SectionHeader(
-        text = state.strings.data,
-    )
-    PostStatus(state, vm)
-    Description(state, vm)
-    IsPurchasable(vm, state)
-    Images(vm, state)
+    AppTooltip(state.strings.priceDesc)
 }
 
 @Composable
 private fun Images(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     SpanText(text = state.strings.images)
+    AppTooltip(state.strings.imagesDesc)
     state.current.product.data.images.forEach { image ->
         SpanText(text = "image.url: ${image.id}")
         SpanText(text = "image.url: ${image.url}")
@@ -326,75 +344,34 @@ private fun Images(vm: AdminProductPageViewModel, state: AdminProductPageContrac
 }
 
 @Composable
-private fun Inventory(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
-    SectionHeader(
-        text = state.strings.inventory,
+private fun TrackInventory(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+    SwitchSection(
+        title = state.strings.trackInventory,
+        selected = state.current.product.inventory.trackInventory,
+        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.TrackInventory(!state.current.product.inventory.trackInventory)) },
     )
-    OnePerOrder(vm, state)
-    BackorderStatus(vm, state)
-    CanBackorder(vm, state)
-    LowStockThreshold(vm, state)
-    RemainingStock(vm, state)
-    StatusOfStock(vm, state)
-    TrackInventory(vm, state)
-}
-
-@Composable
-fun TrackInventory(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .gap(1.em)
-            .onClick {
-                vm.trySend(AdminProductPageContract.Inputs.Set.TrackInventory(!state.current.product.inventory.trackInventory))
-            }
-            .cursor(Cursor.Pointer)
-    ) {
-        Switch(
-            selected = state.current.product.inventory.trackInventory,
-            modifier = Modifier.gap(1.em),
-        )
-        SpanText(text = state.strings.trackInventory)
-    }
+    AppTooltip(state.strings.trackInventoryDesc)
 }
 
 @Composable
 private fun StatusOfStock(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
-    Column(
-        modifier = Modifier
-            .gap(0.5.em)
-            .margin(topBottom = 1.em)
-    ) {
-        SpanText(
-            text = state.strings.stockStatus,
-            modifier = Modifier.roleStyle(MaterialTheme.typography.titleMedium)
-        )
-        StockStatus.entries
+    FilterChipSection(
+        title = state.strings.stockStatus,
+        chips = StockStatus.entries
             .filter { it != StockStatus.UNKNOWN__ }
-            .forEach { stockStatus ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(left = 1.em)
-                        .gap(1.em)
-                        .cursor(Cursor.Pointer)
-                        .onClick {
-                            vm.trySend(AdminProductPageContract.Inputs.Set.StatusOfStock(stockStatus))
-                        }
-                ) {
-                    Radio(
-                        checked = state.current.product.inventory.stockStatus == stockStatus,
-                        name = "role",
-                        value = stockStatus.name,
-                    )
-                    SpanText(text = stockStatus.name.enumCapitalized())
-                }
-            }
-    }
+            .map { it.name },
+        selectedChips = listOf(state.current.product.inventory.stockStatus.name),
+        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.Set.StatusOfStock(StockStatus.valueOf(it))) },
+        canBeEmpty = false,
+        noChipsText = "",
+        createText = "",
+        onCreateClick = {},
+        afterTitle = { AppTooltip(state.strings.stockStatusDesc) },
+    )
 }
 
 @Composable
-fun LowStockThreshold(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun LowStockThreshold(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CommonTextField(
         value = state.current.product.inventory.lowStockThreshold.toString(),
         onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.LowStockThreshold(it.toIntOrNull() ?: 0)) },
@@ -405,10 +382,11 @@ fun LowStockThreshold(vm: AdminProductPageViewModel, state: AdminProductPageCont
         required = true,
         modifier = Modifier.fillMaxWidth(),
     )
+    AppTooltip(state.strings.lowStockThresholdDesc)
 }
 
 @Composable
-fun RemainingStock(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun RemainingStock(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CommonTextField(
         value = state.current.product.inventory.remainingStock.toString(),
         onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.RemainingStock(it.toIntOrNull() ?: 0)) },
@@ -419,71 +397,54 @@ fun RemainingStock(vm: AdminProductPageViewModel, state: AdminProductPageContrac
         required = true,
         modifier = Modifier.fillMaxWidth(),
     )
+    AppTooltip(state.strings.remainingStockDesc)
 }
 
 @Composable
-fun CanBackorder(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .gap(1.em)
-            .cursor(Cursor.Pointer)
-            .onClick {
-                vm.trySend(AdminProductPageContract.Inputs.Set.CanBackorder(!state.current.product.inventory.canBackorder))
-            }
-    ) {
-        Switch(
-            selected = state.current.product.inventory.canBackorder,
-            modifier = Modifier.gap(1.em),
-        )
-        SpanText(text = state.strings.canBackorder)
-    }
+private fun IsOnBackorder(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+    SwitchSection(
+        title = state.strings.isOnBackorder,
+        selected = state.current.product.inventory.isOnBackorder,
+        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.IsOnBackorder(!state.current.product.inventory.isOnBackorder)) },
+    )
+    AppTooltip(state.strings.isOnBackorderDesc)
+}
+
+@Composable
+private fun CanBackorder(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+    SwitchSection(
+        title = state.strings.canBackorder,
+        selected = state.current.product.inventory.canBackorder,
+        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.IsOnBackorder(!state.current.product.inventory.canBackorder)) },
+    )
+    AppTooltip(state.strings.canBackorderDesc)
 }
 
 @Composable
 private fun BackorderStatus(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
-    SpanText(
-        text = state.strings.backorderStatus,
-        modifier = Modifier.roleStyle(MaterialTheme.typography.titleMedium)
+    FilterChipSection(
+        title = state.strings.backorderStatus,
+        chips = BackorderStatus.entries
+            .filter { it != BackorderStatus.UNKNOWN__ }
+            .map { it.name },
+        selectedChips = listOf(state.current.product.inventory.backorderStatus.name),
+        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.Set.StatusOfBackorder(BackorderStatus.valueOf(it))) },
+        canBeEmpty = false,
+        noChipsText = "",
+        createText = "",
+        onCreateClick = {},
+        afterTitle = { AppTooltip(state.strings.backorderStatusDesc) },
     )
-    BackorderStatus.entries
-        .filter { it != BackorderStatus.UNKNOWN__ }
-        .forEach { backorderStatus ->
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .padding(left = 1.em)
-                    .gap(1.em)
-                    .cursor(Cursor.Pointer)
-                    .onClick { vm.trySend(AdminProductPageContract.Inputs.Set.StatusOfBackorder(backorderStatus)) }
-            ) {
-                Radio(
-                    checked = state.current.product.inventory.backorderStatus == backorderStatus,
-                    name = "role",
-                    value = backorderStatus.name,
-                )
-                SpanText(text = backorderStatus.name.enumCapitalized())
-            }
-        }
 }
 
 @Composable
-fun IsPurchasable(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .gap(1.em)
-            .onClick {
-                vm.trySend(AdminProductPageContract.Inputs.Set.IsPurchasable(!state.current.product.data.isPurchasable))
-            }
-            .cursor(Cursor.Pointer)
-    ) {
-        Switch(
-            selected = state.current.product.data.isPurchasable,
-            modifier = Modifier.gap(1.em),
-        )
-        SpanText(text = state.strings.isPurchasable)
-    }
+private fun IsPurchasable(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+    SwitchSection(
+        title = state.strings.isPurchasable,
+        selected = state.current.product.data.isPurchasable,
+        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.IsPurchasable(!state.current.product.data.isPurchasable)) },
+    )
+    AppTooltip(state.strings.isPurchasableDesc)
 }
 
 
@@ -516,6 +477,7 @@ private fun Description(
         shake = state.shakeDescription,
         modifier = Modifier.fillMaxWidth(),
     )
+    AppTooltip(state.strings.descriptionDesc)
 }
 
 @Composable
@@ -526,55 +488,22 @@ private fun ShortDescription(
     CommonTextField(
         value = state.current.product.common.shortDescription ?: "",
         onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.ShortDescription(it)) },
-        label = state.strings.shortDescription,
+        label = state.strings.productShortDescription,
         errorMsg = state.shortDescriptionError,
         shake = state.shakeShortDescription,
         modifier = Modifier.fillMaxWidth(),
     )
+    AppTooltip(state.strings.productShortDescriptionDesc)
 }
 
 @Composable
-private fun IsFeatured(
-    vm: AdminProductPageViewModel,
-    state: AdminProductPageContract.State
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .gap(1.em)
-            .cursor(Cursor.Pointer)
-            .onClick {
-                vm.trySend(AdminProductPageContract.Inputs.Set.IsFeatured(!state.current.product.common.isFeatured))
-            }
-    ) {
-        Switch(
-            selected = state.current.product.common.isFeatured,
-            modifier = Modifier.gap(1.em),
-        )
-        SpanText(text = state.strings.isFeatured)
-    }
-}
-
-@Composable
-private fun OnePerOrder(
-    vm: AdminProductPageViewModel,
-    state: AdminProductPageContract.State
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .gap(1.em)
-            .cursor(Cursor.Pointer)
-            .onClick {
-                vm.trySend(AdminProductPageContract.Inputs.Set.OnePerOrder(!state.current.product.inventory.onePerOrder))
-            }
-    ) {
-        Switch(
-            selected = state.current.product.inventory.onePerOrder,
-            modifier = Modifier.gap(1.em),
-        )
-        SpanText(text = state.strings.onePerOrder)
-    }
+private fun IsFeatured(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+    SwitchSection(
+        title = state.strings.isFeatured,
+        selected = state.current.product.common.isFeatured,
+        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.IsFeatured(!state.current.product.common.isFeatured)) },
+    )
+    AppTooltip(state.strings.isFeaturedDesc)
 }
 
 @Composable
@@ -582,25 +511,22 @@ private fun AllowReviews(
     vm: AdminProductPageViewModel,
     state: AdminProductPageContract.State
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .gap(1.em)
-            .onClick {
-                vm.trySend(
-                    AdminProductPageContract.Inputs.Set.AllowReviews(
-                        !state.current.product.common.allowReviews
-                    )
-                )
-            }
-            .cursor(Cursor.Pointer)
-    ) {
-        Switch(
-            selected = state.current.product.common.allowReviews,
-            modifier = Modifier.gap(1.em),
-        )
-        SpanText(text = state.strings.allowReviews)
-    }
+    SwitchSection(
+        title = state.strings.allowReviews,
+        selected = state.current.product.common.allowReviews,
+        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.AllowReviews(!state.current.product.common.allowReviews)) },
+    )
+    AppTooltip(state.strings.allowReviewsDesc)
+}
+
+@Composable
+private fun OnePerOrder(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+    SwitchSection(
+        title = state.strings.onePerOrder,
+        selected = state.current.product.inventory.onePerOrder,
+        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.OnePerOrder(!state.current.product.inventory.onePerOrder)) },
+    )
+    AppTooltip(state.strings.onePerOrderDesc)
 }
 
 @Composable
@@ -608,37 +534,19 @@ private fun CatalogVisibility(
     state: AdminProductPageContract.State,
     vm: AdminProductPageViewModel
 ) {
-    Column(
-        modifier = Modifier
-            .gap(0.5.em)
-            .margin(topBottom = 1.em)
-    ) {
-        SpanText(
-            text = state.strings.catalogVisibility,
-            modifier = Modifier.roleStyle(MaterialTheme.typography.titleMedium)
-        )
-        CatalogVisibility.entries
+    FilterChipSection(
+        title = state.strings.catalogVisibility,
+        chips = CatalogVisibility.entries
             .filter { it != CatalogVisibility.UNKNOWN__ }
-            .forEach { catalogVisibility ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(left = 1.em)
-                        .gap(1.em)
-                        .cursor(Cursor.Pointer)
-                        .onClick {
-                            vm.trySend(AdminProductPageContract.Inputs.Set.VisibilityInCatalog(catalogVisibility))
-                        }
-                ) {
-                    Radio(
-                        checked = state.current.product.common.catalogVisibility == catalogVisibility,
-                        name = "role",
-                        value = catalogVisibility.name,
-                    )
-                    SpanText(text = catalogVisibility.name.enumCapitalized())
-                }
-            }
-    }
+            .map { it.name },
+        selectedChips = listOf(state.current.product.common.catalogVisibility.name),
+        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.Set.VisibilityInCatalog(CatalogVisibility.valueOf(it))) },
+        canBeEmpty = false,
+        noChipsText = "",
+        createText = "",
+        onCreateClick = {},
+        afterTitle = { AppTooltip(state.strings.catalogVisibilityDesc) },
+    )
 }
 
 @Composable
@@ -646,46 +554,43 @@ private fun Categories(
     state: AdminProductPageContract.State,
     vm: AdminProductPageViewModel
 ) {
-    SpanText(
-        text = state.strings.categories,
-        modifier = Modifier.roleStyle(MaterialTheme.typography.titleMedium)
+    FilterChipSection(
+        title = state.strings.categories,
+        chips = state.allCategories.map { it.name },
+        selectedChips = state.current.product.common.categories
+            .map { it.toString() }
+            .mapNotNull { id -> state.allCategories.firstOrNull { id == it.id.toString() }?.name },
+        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.GoToCategory(it)) },
+        noChipsText = state.strings.noOtherCategoriesToChooseFrom,
+        createText = state.strings.createCategory,
+        onCreateClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.GoToCreateCategory) },
+        afterTitle = { AppTooltip(state.strings.categoriesDesc) },
     )
-    ChipSet {
-        state.allCategories.forEach { category ->
-            FilterChip(
-                label = category.name,
-                selected = category.id in state.current.product.common.categories,
-                onClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.GoToCategory(category.id.toString())) },
-            )
-        }
-    }
 }
 
 @Composable
 private fun Tags(state: AdminProductPageContract.State) {
-    SpanText(
-        text = state.strings.tags,
-        modifier = Modifier.roleStyle(MaterialTheme.typography.titleMedium)
+    FilterChipSection(
+        title = state.strings.tags,
+        chips = state.allTags,
+        selectedChips = state.current.product.common.tags.map { it.toString() },
+        onChipClick = { /* TODO: Implement */ },
+        canBeEmpty = true,
+        noChipsText = state.strings.noTags,
+        createText = state.strings.createTag,
+        onCreateClick = { /* TODO: Implement */ },
+        afterTitle = { AppTooltip(state.strings.tagsDesc) },
     )
-    SpanText("TODO: Implement tags")
 }
 
 @Composable
-private fun Creator(
-    state: AdminProductPageContract.State,
-    vm: AdminProductPageViewModel
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.gap(1.em)
-    ) {
-        SpanText(text = "${state.strings.createdBy}:")
-        OutlinedButton(
-            onClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.GoToCreator) },
-        ) {
-            SpanText(text = state.current.creator.name)
-        }
-    }
+private fun Creator(state: AdminProductPageContract.State, vm: AdminProductPageViewModel) {
+    CreatorSection(
+        title = state.strings.createdBy,
+        creatorName = state.current.creator.name,
+        onClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.GoToUserCreator) },
+        afterTitle = { AppTooltip(state.strings.createdByDesc) },
+    )
 }
 
 @Composable
@@ -693,33 +598,17 @@ private fun PostStatus(
     state: AdminProductPageContract.State,
     vm: AdminProductPageViewModel
 ) {
-    Column(
-        modifier = Modifier
-            .gap(0.5.em)
-            .margin(topBottom = 1.em)
-    ) {
-        SpanText(
-            text = state.strings.postStatus,
-            modifier = Modifier.roleStyle(MaterialTheme.typography.titleMedium)
-        )
-        PostStatus.entries
+    FilterChipSection(
+        title = state.strings.postStatus,
+        chips = PostStatus.entries
             .filter { it != PostStatus.UNKNOWN__ }
-            .forEach { postStatus ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(left = 1.em)
-                        .gap(1.em)
-                        .cursor(Cursor.Pointer)
-                        .onClick { vm.trySend(AdminProductPageContract.Inputs.Set.StatusOfPost(postStatus)) }
-                ) {
-                    Radio(
-                        checked = state.current.product.data.postStatus == postStatus,
-                        name = "role",
-                        value = postStatus.name,
-                    )
-                    SpanText(text = postStatus.name.enumCapitalized())
-                }
-            }
-    }
+            .map { it.name },
+        selectedChips = listOf(state.current.product.data.postStatus.name),
+        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.Set.StatusOfPost(PostStatus.valueOf(it))) },
+        canBeEmpty = false,
+        noChipsText = "",
+        createText = "",
+        onCreateClick = {},
+        afterTitle = { AppTooltip(state.strings.postStatusDesc) },
+    )
 }

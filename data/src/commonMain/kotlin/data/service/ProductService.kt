@@ -67,6 +67,7 @@ interface ProductService {
         saleEnd: String?,
         salePrice: String?,
         saleStart: String?,
+        presetId: String?,
         height: String?,
         length: String?,
         requiresShipping: Boolean?,
@@ -102,6 +103,7 @@ internal class ProductServiceImpl(private val apolloClient: ApolloClient) : Prod
         saleEnd: String?,
         salePrice: String?,
         saleStart: String?,
+        presetId: String?,
         height: String?,
         length: String?,
         requiresShipping: Boolean?,
@@ -173,11 +175,12 @@ internal class ProductServiceImpl(private val apolloClient: ApolloClient) : Prod
         } else Optional.absent()
 
         val shipping = if (
-            height != null || length != null || requiresShipping != null || weight != null ||
+            presetId != null || height != null || length != null || requiresShipping != null || weight != null ||
             width != null
         ) {
             Optional.present(
                 ProductShippingInput(
+                    presetId = presetId.skipIfNull(),
                     height = height.skipIfNull(),
                     length = length.skipIfNull(),
                     requiresShipping = requiresShipping.skipIfNull(),

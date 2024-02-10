@@ -10,7 +10,7 @@ object AdminTagPageContract {
         val original: UserGetByIdQuery.GetUserById = UserGetByIdQuery.GetUserById(
             id = "",
             email = "",
-            role = Role.USER,
+            role = Role.User,
             emailVerified = false,
             details = UserGetByIdQuery.Details(
                 name = "",
@@ -54,7 +54,7 @@ object AdminTagPageContract {
         val isSavePersonalDetailsButtonDisabled: Boolean = true,
 
         // Role
-        val role: Role = Role.USER,
+        val role: Role = Role.User,
         val isSaveRoleButtonDisabled: Boolean = true,
 
         // Address
@@ -160,7 +160,7 @@ object AdminTagPageContract {
         val delete: String = getString(component.localization.Strings.Delete),
         val createdBy: String = getString(component.localization.Strings.CreatedBy),
         val createdAt: String = getString(component.localization.Strings.CreatedAt),
-        val updatedAt: String = getString(component.localization.Strings.UpdatedAt),
+        val lastUpdatedAt: String = getString(component.localization.Strings.LastUpdatedAt),
         val never: String = getString(component.localization.Strings.Never),
         val fullName: String = getString(component.localization.Strings.FullName),
         val email: String = getString(component.localization.Strings.Email),

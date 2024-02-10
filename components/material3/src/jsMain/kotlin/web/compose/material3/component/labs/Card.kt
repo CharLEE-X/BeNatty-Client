@@ -2,6 +2,7 @@ package web.compose.material3.component.labs
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
 import org.jetbrains.compose.web.dom.ContentBuilder
 import web.compose.material3.common.MdElement
@@ -12,12 +13,17 @@ import web.compose.material3.common.jsRequire
 @Composable
 fun ElevatedCard(
     modifier: Modifier = Modifier,
+    elevation: Int? = null,
     content: ContentBuilder<MdElement>? = null
 ) = MdTagElement(
     tagName = "md-elevated-card",
-    applyAttrs = modifier.toAttrs {
-        classes("card")
-    },
+    applyAttrs = modifier
+        .styleModifier {
+            elevation?.let { property("--md-elevated-card-container-elevation", elevation.toString()) }
+        }
+        .toAttrs {
+            classes("card")
+        },
     content = content
 ).also { jsRequire("@material/web/labs/card/elevated-card.js") }
 
@@ -25,10 +31,15 @@ fun ElevatedCard(
 @Composable
 fun OutlinedCard(
     modifier: Modifier = Modifier,
+    elevation: Int? = null,
     content: ContentBuilder<MdElement>? = null
 ) = MdTagElement(
     tagName = "md-outlined-card",
-    applyAttrs = modifier.toAttrs {
+    applyAttrs = modifier
+        .styleModifier {
+            elevation?.let { property("--md-outlined-card-container-elevation", elevation.toString()) }
+        }
+        .toAttrs {
         classes("card")
     },
     content = content
@@ -38,10 +49,15 @@ fun OutlinedCard(
 @Composable
 fun FilledCard(
     modifier: Modifier = Modifier,
+    elevation: Int? = null,
     content: ContentBuilder<MdElement>? = null
 ) = MdTagElement(
     tagName = "md-filled-card",
-    applyAttrs = modifier.toAttrs {
+    applyAttrs = modifier
+        .styleModifier {
+            elevation?.let { property("--md-filled-card-container-elevation", elevation.toString()) }
+        }
+        .toAttrs {
         classes("card")
     },
     content = content

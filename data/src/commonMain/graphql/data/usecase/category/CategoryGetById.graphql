@@ -1,18 +1,25 @@
 query GetCategoryById($getCategoryByIdId: ObjectId!) {
   getCategoryById(id: $getCategoryByIdId) {
-    createdAt
-    creator {
-      id
-      name
-    }
-    description
-    display
     id
     name
+    description
+    display
     parent {
       id
       name
     }
+    creator {
+      id
+      name
+    }
+    shippingPreset {
+      weight
+      length
+      width
+      height
+      requiresShipping
+    }
+    createdAt
     updatedAt
   }
 }

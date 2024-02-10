@@ -1,6 +1,7 @@
 package data.service
 
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.watch
@@ -13,6 +14,7 @@ import data.UpdateCategoryMutation
 import data.type.CategoryCreateInput
 import data.type.CategoryUpdateInput
 import data.type.PageInput
+import data.type.ShippingPresetInput
 import data.type.SortDirection
 import data.utils.handle
 import data.utils.skipIfNull
@@ -39,6 +41,11 @@ interface CategoryService {
         description: String?,
         parentId: String?,
         display: Boolean?,
+        weight: String?,
+        length: String?,
+        width: String?,
+        height: String?,
+        requiresShipping: Boolean?,
     ): Result<UpdateCategoryMutation.Data>
 }
 
@@ -94,13 +101,33 @@ internal class CategoryServiceImpl(private val apolloClient: ApolloClient) : Cat
         description: String?,
         parentId: String?,
         display: Boolean?,
+        weight: String?,
+        length: String?,
+        width: String?,
+        height: String?,
+        requiresShipping: Boolean?,
     ): Result<UpdateCategoryMutation.Data> {
+        val shippingPreset = if (
+            weight != null || length != null || width != null || height != null || requiresShipping != null
+        ) {
+            Optional.present(
+                ShippingPresetInput(
+                    weight = weight.skipIfNull(),
+                    length = length.skipIfNull(),
+                    width = width.skipIfNull(),
+                    height = height.skipIfNull(),
+                    requiresShipping = requiresShipping.skipIfNull(),
+                )
+            )
+        } else Optional.absent()
+
         val input = CategoryUpdateInput(
             id = id,
             name = name.skipIfNull(),
             description = description.skipIfNull(),
             parentId = parentId.skipIfNull(),
             display = display.skipIfNull(),
+            shippingPreset = shippingPreset,
         )
         return apolloClient.mutation(UpdateCategoryMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)

@@ -9,38 +9,22 @@ import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.copperleaf.ballast.navigation.routing.build
 import com.copperleaf.ballast.navigation.routing.directions
 import com.copperleaf.ballast.navigation.routing.pathParameter
-import com.varabyte.kobweb.compose.css.Cursor
-import com.varabyte.kobweb.compose.foundation.layout.Box
-import com.varabyte.kobweb.compose.foundation.layout.Row
-import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.border
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
-import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
-import com.varabyte.kobweb.compose.ui.modifiers.gap
-import com.varabyte.kobweb.compose.ui.modifiers.margin
-import com.varabyte.kobweb.compose.ui.modifiers.onClick
-import com.varabyte.kobweb.compose.ui.modifiers.padding
-import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.admin.category.page.AdminCategoryPageContract
 import feature.admin.category.page.AdminCategoryPageViewModel
 import feature.router.RouterScreen
 import feature.router.RouterViewModel
-import org.jetbrains.compose.web.css.LineStyle
-import org.jetbrains.compose.web.css.em
-import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.value
-import theme.MaterialTheme
 import web.components.layouts.AdminLayout
 import web.components.layouts.DetailPageLayout
+import web.components.widgets.CardSection
 import web.components.widgets.CommonTextField
+import web.components.widgets.CreatorSection
+import web.components.widgets.FilterChipSection
 import web.components.widgets.HasChangesWidget
 import web.components.widgets.SaveButton
-import web.components.widgets.SectionHeader
-import web.compose.material3.component.FilledButton
-import web.compose.material3.component.OutlinedButton
-import web.compose.material3.component.Switch
+import web.components.widgets.SwitchSection
+import web.compose.material3.component.TextFieldType
 
 @Composable
 fun AdminCategoryPage(
@@ -70,11 +54,25 @@ fun AdminCategoryPage(
                     )
                 )
             },
+            goToCreateCategory = {
+                router.trySend(
+                    RouterContract.Inputs.GoToDestination(RouterScreen.AdminCategoryPageNew.matcher.routeFormat)
+                )
+            },
+            goToCategory = { id ->
+                router.trySend(
+                    RouterContract.Inputs.GoToDestination(
+                        RouterScreen.AdminCategoryPageExisting.directions()
+                            .pathParameter("id", id)
+                            .build()
+                    )
+                )
+            },
         )
     }
     val state by vm.observeStates().collectAsState()
 
-    val title = if (state.screenState is AdminCategoryPageContract.ScreenState.Create) {
+    val title = if (state.screenState is AdminCategoryPageContract.ScreenState.New) {
         state.strings.createCategory
     } else {
         state.strings.category
@@ -89,150 +87,157 @@ fun AdminCategoryPage(
                 messageText = state.strings.unsavedChanges,
                 saveText = state.strings.save,
                 resetText = state.strings.reset,
-                onSave = { },
-                onCancel = { },
+                onSave = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.SaveEdit) },
+                onCancel = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.CancelEdit) },
             )
         }
     ) {
         DetailPageLayout(
             title = title,
-            id = state.id,
-            name = state.name.ifEmpty { null },
-            showDelete = state.screenState !is AdminCategoryPageContract.ScreenState.Create,
+            id = state.current.id.toString(),
+            name = state.current.name.ifEmpty { null },
+            showDelete = state.screenState !is AdminCategoryPageContract.ScreenState.New,
             deleteText = state.strings.delete,
             cancelText = state.strings.cancel,
             createdAtText = state.strings.createdAt,
-            updatedAtText = state.strings.updatedAt,
-            createdAtValue = state.createdAt,
-            updatedAtValue = state.updatedAt,
+            updatedAtText = state.strings.lastUpdatedAt,
+            createdAtValue = state.current.createdAt,
+            updatedAtValue = state.current.updatedAt,
             onDeleteClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.Delete) },
         ) {
             Details(vm, state)
+            if (state.screenState !is AdminCategoryPageContract.ScreenState.New) {
+                ShippingPreset(vm, state)
+            }
         }
+    }
+}
+
+@Composable
+private fun ShippingPreset(vm: AdminCategoryPageViewModel, state: AdminCategoryPageContract.State) {
+    CardSection(title = state.strings.shipping) {
+        SwitchSection(
+            title = state.strings.requiresShipping,
+            selected = state.current.shippingPreset?.requiresShipping ?: false,
+            onClick = {
+                vm.trySend(
+                    AdminCategoryPageContract.Inputs.Set.RequiresShipping(
+                        !(state.current.shippingPreset?.requiresShipping ?: false)
+                    )
+                )
+            },
+        )
+        CommonTextField(
+            value = state.current.shippingPreset?.weight ?: "",
+            onValueChange = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Weight(it)) },
+            label = state.strings.weight,
+            errorMsg = state.weightError,
+            icon = null,
+            shake = state.shakeWeight,
+            required = state.current.shippingPreset?.requiresShipping == true,
+            type = TextFieldType.NUMBER,
+            suffixText = state.strings.kg,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        CommonTextField(
+            value = state.current.shippingPreset?.length ?: "",
+            onValueChange = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Length(it)) },
+            label = state.strings.length,
+            errorMsg = state.lengthError,
+            icon = null,
+            shake = state.shakeLength,
+            required = state.current.shippingPreset?.requiresShipping ?: false,
+            type = TextFieldType.NUMBER,
+            suffixText = state.strings.cm,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        CommonTextField(
+            value = state.current.shippingPreset?.width ?: "",
+            onValueChange = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Width(it)) },
+            label = state.strings.width,
+            errorMsg = state.widthError,
+            icon = null,
+            shake = state.shakeWidth,
+            required = state.current.shippingPreset?.requiresShipping ?: false,
+            type = TextFieldType.NUMBER,
+            suffixText = state.strings.cm,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        CommonTextField(
+            value = state.current.shippingPreset?.height ?: "",
+            onValueChange = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Height(it)) },
+            label = state.strings.height,
+            errorMsg = state.heightError,
+            icon = null,
+            shake = state.shakeHeight,
+            required = state.current.shippingPreset?.requiresShipping ?: false,
+            type = TextFieldType.NUMBER,
+            suffixText = state.strings.cm,
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 
 @Composable
 private fun Details(vm: AdminCategoryPageViewModel, state: AdminCategoryPageContract.State) {
-    SectionHeader(
-        text = state.strings.details,
-    )
-    CommonTextField(
-        value = state.name,
-        onValueChange = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Name(it)) },
-        label = state.strings.name,
-        errorMsg = state.nameError,
-        icon = null,
-        shake = state.shakeName,
-        modifier = Modifier.fillMaxWidth(),
-    )
-
-    if (state.screenState is AdminCategoryPageContract.ScreenState.Create) {
-        SaveButton(
-            text = state.strings.create,
-            disabled = state.isCreateButtonDisabled,
-            onClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.CreateNew) },
-        )
-    } else {
+    CardSection(title = state.strings.details) {
         CommonTextField(
-            value = state.description,
-            onValueChange = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Description(it)) },
-            label = state.strings.description,
-            errorMsg = null,
+            value = state.current.name,
+            onValueChange = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Name(it)) },
+            label = state.strings.name,
+            errorMsg = state.nameError,
             icon = null,
-            shake = false,
+            shake = state.shakeName,
+            required = true,
             modifier = Modifier.fillMaxWidth(),
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .gap(1.em)
-                .onClick { vm.trySend(AdminCategoryPageContract.Inputs.Set.Display(!state.display)) }
-                .cursor(Cursor.Pointer)
-                .margin(bottom = 1.em),
-        ) {
-            Switch(
-                selected = state.display,
-                onClick = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Display(!state.display)) },
-                modifier = Modifier.gap(1.em),
+
+        if (state.screenState is AdminCategoryPageContract.ScreenState.New) {
+            SaveButton(
+                text = state.strings.create,
+                disabled = false,
+                onClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.Create) },
             )
-            SpanText(text = state.strings.display)
-        }
+        } else {
+            CommonTextField(
+                value = state.current.description ?: "",
+                onValueChange = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Description(it)) },
+                label = state.strings.description,
+                errorMsg = null,
+                icon = null,
+                shake = false,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            SwitchSection(
+                title = state.strings.display,
+                selected = state.current.display,
+                errorText = state.displayError,
+                disabled = state.displayError != null,
+                onClick = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Display(!state.current.display)) },
+            )
+            ParentCategory(vm, state)
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.gap(1.em)
-        ) {
-            SpanText(text = "${state.strings.parentCategory}:")
-            state.parent?.let { parent ->
-                OutlinedButton(
-                    onClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.Parent) },
-                ) {
-                    SpanText(text = parent.name)
-                }
-            } ?: SpanText(text = state.strings.none)
-        }
-        if (state.wasEdited) {
-            CategoryPicker(state, vm)
-        }
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.gap(1.em)
-        ) {
-            SpanText(text = "${state.strings.createdBy}:")
-            OutlinedButton(
-                onClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.Creator) },
-            ) {
-                SpanText(text = state.creator.name)
-            }
+            CreatorSection(
+                title = state.strings.createdBy,
+                creatorName = state.current.creator.name,
+                onClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.GotToUserCreator) },
+            )
         }
     }
 }
 
 @Composable
-private fun CategoryPicker(
+private fun ParentCategory(
+    vm: AdminCategoryPageViewModel,
     state: AdminCategoryPageContract.State,
-    vm: AdminCategoryPageViewModel
 ) {
-    if (state.categories.isNotEmpty()) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(1.em)
-                .gap(1.em)
-                .border(
-                    width = 1.px,
-                    color = MaterialTheme.colors.mdSysColorSurface.value(),
-                    style = LineStyle.Solid,
-                )
-                .borderRadius(2.em)
-        ) {
-            state.categories.forEach { category ->
-                if (state.parent?.id == category.id) { // current parent
-                    FilledButton(
-                        onClick = {
-                            vm.trySend(AdminCategoryPageContract.Inputs.OnClick.ParentPicker(category))
-                        },
-                    ) {
-                        SpanText(text = category.name)
-                    }
-                } else {
-                    OutlinedButton(
-                        onClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.ParentPicker(category)) },
-                    ) {
-                        SpanText(text = category.name)
-                    }
-                }
-            }
-        }
-    } else {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            SpanText(text = state.strings.noOtherCategoriesToChooseFrom)
-        }
-    }
+    FilterChipSection(
+        title = "${state.strings.parentCategory}: ${state.current.parent?.name ?: state.strings.none}",
+        chips = state.allCategories.map { it.name },
+        selectedChips = state.current.parent?.let { listOf(it.name) } ?: emptyList(),
+        onChipClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.ParentCategorySelected(it)) },
+        onCreateClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.GoToCreateCategory) },
+        noChipsText = state.strings.noOtherCategoriesToChooseFrom,
+        createText = state.strings.createCategory,
+    )
 }

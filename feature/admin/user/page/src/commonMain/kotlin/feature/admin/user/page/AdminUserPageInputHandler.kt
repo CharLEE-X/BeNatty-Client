@@ -3,6 +3,7 @@ package feature.admin.user.page
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
+import core.util.millisToTime
 import data.UserGetByIdQuery
 import data.service.AuthService
 import data.service.UserService
@@ -114,11 +115,11 @@ internal class AdminUserPageInputHandler :
     private suspend fun InputScope.handleInit(id: String?) {
         sideJob("handleInit") {
             if (id == null) {
-                postInput(AdminUserPageContract.Inputs.Set.StateOfScreen(AdminUserPageContract.ScreenState.New.Create))
+                postInput(AdminUserPageContract.Inputs.Set.StateOfScreen(AdminUserPageContract.ScreenState.New))
             } else {
                 postInput(AdminUserPageContract.Inputs.Set.Loading(isLoading = true))
                 postInput(AdminUserPageContract.Inputs.Set.Id(id))
-                postInput(AdminUserPageContract.Inputs.Set.StateOfScreen(AdminUserPageContract.ScreenState.Existing.Read))
+                postInput(AdminUserPageContract.Inputs.Set.StateOfScreen(AdminUserPageContract.ScreenState.Existing))
                 postInput(AdminUserPageContract.Inputs.Get.UserById(id))
                 postInput(AdminUserPageContract.Inputs.Set.Loading(isLoading = false))
             }
@@ -130,7 +131,7 @@ internal class AdminUserPageInputHandler :
         val input = CreateUserInput(
             email = state.current.email,
             name = state.current.details.name,
-            role = Role.USER,
+            role = Role.User,
         )
         sideJob("handleCreateUser") {
             userService.create(input).fold(
@@ -146,7 +147,7 @@ internal class AdminUserPageInputHandler :
                             )
                         )
                     )
-                    postInput(AdminUserPageContract.Inputs.Set.StateOfScreen(AdminUserPageContract.ScreenState.New.Created))
+                    postInput(AdminUserPageContract.Inputs.Set.StateOfScreen(AdminUserPageContract.ScreenState.New))
                 },
                 onFailure = {
                     postEvent(AdminUserPageContract.Events.OnError(it.message ?: "Error while creating new user"))
@@ -312,8 +313,14 @@ internal class AdminUserPageInputHandler :
             userService.getById(id).collect { result ->
                 result.fold(
                     onSuccess = { data ->
-                        postInput(AdminUserPageContract.Inputs.Set.OriginalUser(data.getUserById))
-                        postInput(AdminUserPageContract.Inputs.Set.CurrentUser(data.getUserById))
+                        val createdAt = millisToTime(data.getUserById.createdAt.toLong())
+                        val updatedAt = millisToTime(data.getUserById.updatedAt.toLong())
+                        val user = data.getUserById.copy(
+                            createdAt = createdAt,
+                            updatedAt = updatedAt,
+                        )
+                        postInput(AdminUserPageContract.Inputs.Set.OriginalUser(user))
+                        postInput(AdminUserPageContract.Inputs.Set.CurrentUser(user))
                     },
                     onFailure = {
                         postEvent(
@@ -325,16 +332,6 @@ internal class AdminUserPageInputHandler :
         }
     }
 
-    private fun AdminUserPageContract.State.wasEdited(): AdminUserPageContract.State = copy(
-        wasEdited = current.details.name != original.details.name ||
-            current.email != original.email ||
-            current.details.phone != original.details.phone ||
-            current.role != original.role ||
-            current.address.address != original.address.address ||
-            current.address.additionalInfo != original.address.additionalInfo ||
-            current.address.postcode != original.address.postcode ||
-            current.address.city != original.address.city ||
-            current.address.state != original.address.state ||
-            current.address.country != original.address.country
-    )
+    private fun AdminUserPageContract.State.wasEdited(): AdminUserPageContract.State =
+        copy(wasEdited = current != original)
 }
