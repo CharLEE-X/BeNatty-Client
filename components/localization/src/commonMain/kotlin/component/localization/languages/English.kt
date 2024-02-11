@@ -201,4 +201,5 @@ internal fun englishLanguage(
     Strings.CreateTag -> "Create tag"
     Strings.CreatedByDesc -> "The user who created the product."
     Strings.ShippingPresetDesc -> "The shipping preset for the product, coming from category shipping settings"
+    Strings.ImproveWithAi -> "Improve with AI"
 }

@@ -5,7 +5,9 @@ import com.varabyte.kobweb.browser.dom.ElementTarget
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
+import com.varabyte.kobweb.compose.ui.modifiers.setVariable
 import com.varabyte.kobweb.silk.components.overlay.AdvancedTooltip
+import com.varabyte.kobweb.silk.components.overlay.TooltipVars
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.value
@@ -25,5 +27,7 @@ fun AppTooltip(text: String) {
                 color = MaterialTheme.colors.mdSysColorOnSurface.value(),
                 style = LineStyle.Solid
             )
+            .setVariable(TooltipVars.BackgroundColor, MaterialTheme.colors.mdSysColorSurfaceVariant.value())
+            .setVariable(TooltipVars.Color, MaterialTheme.colors.mdSysColorOnSurface.value())
     )
 }

@@ -13,7 +13,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.size
-import com.varabyte.kobweb.core.App
 import com.varabyte.kobweb.silk.components.text.SpanText
 import data.type.BackorderStatus
 import data.type.CatalogVisibility
@@ -27,6 +26,7 @@ import feature.router.RouterViewModel
 import org.jetbrains.compose.web.css.em
 import web.components.layouts.AdminLayout
 import web.components.layouts.DetailPageLayout
+import web.components.layouts.ImproveWithAiRow
 import web.components.widgets.AppTooltip
 import web.components.widgets.CardSection
 import web.components.widgets.CommonTextField
@@ -133,7 +133,7 @@ fun AdminProductPagePage(
                     Divider()
                     Categories(state, vm)
                     Divider()
-                    Tags(state)
+                    Tags(vm, state)
                     Divider()
                     Creator(state, vm)
                 }
@@ -453,31 +453,20 @@ private fun Name(
     state: AdminProductPageContract.State,
     vm: AdminProductPageViewModel
 ) {
-    CommonTextField(
-        value = state.current.product.common.name,
-        onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.Name(it)) },
-        label = state.strings.name,
-        errorMsg = state.nameError,
-        shake = state.shakeName,
-        required = true,
-        modifier = Modifier.fillMaxWidth(),
-    )
-}
-
-@Composable
-private fun Description(
-    state: AdminProductPageContract.State,
-    vm: AdminProductPageViewModel
-) {
-    CommonTextField(
-        value = state.current.product.data.description ?: "",
-        onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.Description(it)) },
-        label = state.strings.description,
-        errorMsg = state.descriptionError,
-        shake = state.shakeDescription,
-        modifier = Modifier.fillMaxWidth(),
-    )
-    AppTooltip(state.strings.descriptionDesc)
+    ImproveWithAiRow(
+        tooltipText = state.strings.improveWithAi,
+        onImproveClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.ImproveName) }
+    ) {
+        CommonTextField(
+            value = state.current.product.common.name,
+            onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.Name(it)) },
+            label = state.strings.name,
+            errorMsg = state.nameError,
+            shake = state.shakeName,
+            required = true,
+            modifier = Modifier.weight(1f),
+        )
+    }
 }
 
 @Composable
@@ -485,15 +474,42 @@ private fun ShortDescription(
     state: AdminProductPageContract.State,
     vm: AdminProductPageViewModel
 ) {
-    CommonTextField(
-        value = state.current.product.common.shortDescription ?: "",
-        onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.ShortDescription(it)) },
-        label = state.strings.productShortDescription,
-        errorMsg = state.shortDescriptionError,
-        shake = state.shakeShortDescription,
-        modifier = Modifier.fillMaxWidth(),
-    )
-    AppTooltip(state.strings.productShortDescriptionDesc)
+    ImproveWithAiRow(
+        tooltipText = state.strings.improveWithAi,
+        onImproveClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.ImproveShortDescription) }
+    ) {
+        CommonTextField(
+            value = state.current.product.common.shortDescription ?: "",
+            onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.ShortDescription(it)) },
+            label = state.strings.productShortDescription,
+            errorMsg = state.shortDescriptionError,
+            shake = state.shakeShortDescription,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        AppTooltip(state.strings.productShortDescriptionDesc)
+    }
+}
+
+@Composable
+private fun Description(
+    state: AdminProductPageContract.State,
+    vm: AdminProductPageViewModel
+) {
+
+    ImproveWithAiRow(
+        tooltipText = state.strings.improveWithAi,
+        onImproveClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.ImproveDescription) }
+    ) {
+        CommonTextField(
+            value = state.current.product.data.description ?: "",
+            onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.Description(it)) },
+            label = state.strings.description,
+            errorMsg = state.descriptionError,
+            shake = state.shakeDescription,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        AppTooltip(state.strings.descriptionDesc)
+    }
 }
 
 @Composable
@@ -569,18 +585,23 @@ private fun Categories(
 }
 
 @Composable
-private fun Tags(state: AdminProductPageContract.State) {
-    FilterChipSection(
-        title = state.strings.tags,
-        chips = state.allTags,
-        selectedChips = state.current.product.common.tags.map { it.toString() },
-        onChipClick = { /* TODO: Implement */ },
-        canBeEmpty = true,
-        noChipsText = state.strings.noTags,
-        createText = state.strings.createTag,
-        onCreateClick = { /* TODO: Implement */ },
-        afterTitle = { AppTooltip(state.strings.tagsDesc) },
-    )
+private fun Tags(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+    ImproveWithAiRow(
+        tooltipText = state.strings.improveWithAi,
+        onImproveClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.ImproveTags) }
+    ) {
+        FilterChipSection(
+            title = state.strings.tags,
+            chips = state.allTags,
+            selectedChips = state.current.product.common.tags.map { it.toString() },
+            onChipClick = { /* TODO: Implement */ },
+            canBeEmpty = true,
+            noChipsText = state.strings.noTags,
+            createText = state.strings.createTag,
+            onCreateClick = { /* TODO: Implement */ },
+            afterTitle = { AppTooltip(state.strings.tagsDesc) },
+        )
+    }
 }
 
 @Composable

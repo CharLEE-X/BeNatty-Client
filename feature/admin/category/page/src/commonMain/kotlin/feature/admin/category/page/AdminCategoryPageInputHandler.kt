@@ -36,6 +36,7 @@ internal class AdminUserPageInputHandler :
         AdminCategoryPageContract.Inputs.OnClick.GotToUserCreator -> handleGoToCreator()
         is AdminCategoryPageContract.Inputs.OnClick.ParentCategorySelected -> handleOnClickParentPicker(input.categoryName)
         AdminCategoryPageContract.Inputs.OnClick.GoToCreateCategory -> postEvent(AdminCategoryPageContract.Events.GoToCreateCategory)
+        AdminCategoryPageContract.Inputs.OnClick.ImproveDescription -> handleImproveDescription()
 
         is AdminCategoryPageContract.Inputs.Set.Loading -> updateState { it.copy(isLoading = input.isLoading) }
         is AdminCategoryPageContract.Inputs.Set.StateOfScreen -> updateState { it.copy(screenState = input.screenState) }
@@ -72,6 +73,10 @@ internal class AdminUserPageInputHandler :
         is AdminCategoryPageContract.Inputs.Set.IsLengthShake -> updateState { it.copy(shakeLength = input.shake) }
         is AdminCategoryPageContract.Inputs.Set.IsWeightShake -> updateState { it.copy(shakeWeight = input.shake) }
         is AdminCategoryPageContract.Inputs.Set.IsWidthShake -> updateState { it.copy(shakeWidth = input.shake) }
+    }
+
+    private suspend fun InputScope.handleImproveDescription() {
+        noOp()
     }
 
     private suspend fun InputScope.handleSetDisplay(display: Boolean) {

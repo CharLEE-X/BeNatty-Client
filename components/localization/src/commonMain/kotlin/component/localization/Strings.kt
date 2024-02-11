@@ -190,4 +190,5 @@ enum class Strings {
     RequiresShippingDesc,
     CreatedByDesc,
     ShippingPresetDesc,
+    ImproveWithAi,
 }

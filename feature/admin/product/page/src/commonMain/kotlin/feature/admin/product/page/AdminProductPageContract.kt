@@ -128,6 +128,10 @@ object AdminProductPageContract {
             data object GoToCreateCategory : Inputs
             data object GoToUserCreator : Inputs
             data class PresetSelected(val preset: String) : Inputs
+            data object ImproveName : Inputs
+            data object ImproveShortDescription : Inputs
+            data object ImproveDescription : Inputs
+            data object ImproveTags : Inputs
         }
 
         sealed interface Set : Inputs {
@@ -286,8 +290,8 @@ object AdminProductPageContract {
         val widthDesc: String = getString(component.localization.Strings.WidthDesc),
         val heightDesc: String = getString(component.localization.Strings.HeightDesc),
         val shippingPresetDesc: String = getString(component.localization.Strings.ShippingPresetDesc),
-    ) {
-    }
+        val improveWithAi: String = getString(component.localization.Strings.ImproveWithAi),
+    )
 
     sealed interface ScreenState {
         data object New : ScreenState

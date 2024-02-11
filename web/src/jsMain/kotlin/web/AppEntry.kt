@@ -27,7 +27,9 @@ import theme.defaultFontScheme
 import web.compose.material3.theming.MaterialTheme
 
 private const val COLOR_MODE_KEY = "nataliashop:colorMode"
+const val FONT_CUSTOM = "Kalam"
 
+@Suppress("unused")
 @InitSilk
 fun initColorMode(ctx: InitSilkContext) {
     ctx.config.initialColorMode = localStorage.getItem(COLOR_MODE_KEY)?.let { ColorMode.valueOf(it) } ?: ColorMode.DARK

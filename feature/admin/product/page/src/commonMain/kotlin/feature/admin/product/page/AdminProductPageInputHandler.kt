@@ -49,6 +49,11 @@ internal class AdminProductPageInputHandler :
             postEvent(AdminProductPageContract.Events.GoToUserDetails(userId))
         }
 
+        AdminProductPageContract.Inputs.OnClick.ImproveName -> handleImproveName()
+        AdminProductPageContract.Inputs.OnClick.ImproveShortDescription -> handleImproveShortDescription()
+        AdminProductPageContract.Inputs.OnClick.ImproveDescription -> handleImproveDescription()
+        AdminProductPageContract.Inputs.OnClick.ImproveTags -> handleImproveTags()
+
         is AdminProductPageContract.Inputs.OnClick.PresetSelected -> handlePresetClick(input.preset)
 
         is AdminProductPageContract.Inputs.Set.AllCategories -> updateState { it.copy(allCategories = input.categories) }
@@ -110,7 +115,22 @@ internal class AdminProductPageInputHandler :
         is AdminProductPageContract.Inputs.Set.ShippingPresetId -> handleSetShippingPresetId(input.presetId)
         AdminProductPageContract.Inputs.OnClick.GoToCreateCategory ->
             postEvent(AdminProductPageContract.Events.GoToCreateCategory)
+    }
 
+    private suspend fun InputScope.handleImproveName() {
+        noOp()
+    }
+
+    private suspend fun InputScope.handleImproveShortDescription() {
+        noOp()
+    }
+
+    private suspend fun InputScope.handleImproveDescription() {
+        noOp()
+    }
+
+    private suspend fun InputScope.handleImproveTags() {
+        noOp()
     }
 
     private suspend fun InputScope.handleSetShippingPresetId(presetId: String?) {

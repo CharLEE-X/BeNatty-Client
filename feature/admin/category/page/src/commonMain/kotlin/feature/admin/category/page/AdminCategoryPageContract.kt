@@ -68,6 +68,7 @@ object AdminCategoryPageContract {
             data object GotToUserCreator : Inputs
             data class ParentCategorySelected(val categoryName: String) : Inputs
             data object GoToCreateCategory : Inputs
+            data object ImproveDescription : Inputs
         }
 
         sealed interface Set : Inputs {
@@ -140,7 +141,9 @@ object AdminCategoryPageContract {
         val shipping: String = getString(component.localization.Strings.Shipping),
         val kg: String? = getString(component.localization.Strings.Kg),
         val cm: String? = getString(component.localization.Strings.Cm),
-    )
+        val improveWithAi: String = getString(component.localization.Strings.ImproveWithAi),
+    ) {
+    }
 
     sealed interface ScreenState {
         data object New : ScreenState

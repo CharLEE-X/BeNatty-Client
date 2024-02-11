@@ -1,7 +1,6 @@
 package web.components.layouts
 
 import androidx.compose.runtime.Composable
-import com.varabyte.kobweb.compose.css.FontStyle
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -10,13 +9,14 @@ import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
-import com.varabyte.kobweb.compose.ui.modifiers.fontStyle
+import com.varabyte.kobweb.compose.ui.modifiers.fontFamily
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
 import theme.MaterialTheme
 import theme.roleStyle
+import web.FONT_CUSTOM
 import web.components.widgets.DeleteButtonWithConfirmation
 import web.compose.material3.component.Divider
 
@@ -55,7 +55,7 @@ fun DetailPageLayout(
                     text = "'${name}'",
                     modifier = Modifier
                         .roleStyle(MaterialTheme.typography.displayMedium)
-                        .fontStyle(FontStyle.Italic)
+                        .fontFamily(FONT_CUSTOM)
                 )
             }
             Spacer()

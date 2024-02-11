@@ -17,6 +17,7 @@ import feature.router.RouterScreen
 import feature.router.RouterViewModel
 import web.components.layouts.AdminLayout
 import web.components.layouts.DetailPageLayout
+import web.components.layouts.ImproveWithAiRow
 import web.components.widgets.CardSection
 import web.components.widgets.CommonTextField
 import web.components.widgets.CreatorSection
@@ -199,15 +200,20 @@ private fun Details(vm: AdminCategoryPageViewModel, state: AdminCategoryPageCont
                 onClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.Create) },
             )
         } else {
-            CommonTextField(
-                value = state.current.description ?: "",
-                onValueChange = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Description(it)) },
-                label = state.strings.description,
-                errorMsg = null,
-                icon = null,
-                shake = false,
-                modifier = Modifier.fillMaxWidth(),
-            )
+            ImproveWithAiRow(
+                tooltipText = state.strings.improveWithAi,
+                onImproveClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.ImproveDescription) }
+            ) {
+                CommonTextField(
+                    value = state.current.description ?: "",
+                    onValueChange = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Description(it)) },
+                    label = state.strings.description,
+                    errorMsg = null,
+                    icon = null,
+                    shake = false,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
             SwitchSection(
                 title = state.strings.display,
                 selected = state.current.display,

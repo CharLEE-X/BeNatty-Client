@@ -18,6 +18,7 @@ kobweb {
             listOf(
                 "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined",
                 "https://fonts.googleapis.com/css?family=Roboto",
+                "https://fonts.googleapis.com/css?family=Kalam",
             ).forEach {
                 head.add { link(it, "stylesheet") }
             }
