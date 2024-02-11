@@ -38,6 +38,7 @@ const val ADMIN = "/admin"
 private const val DASHBOARD = "/dashboard"
 private const val USER = "/user"
 private const val LIST = "/list"
+private const val CREATE = "/create"
 private const val PAGE = "/page"
 private const val CATEGORY = "/category"
 private const val TAG = "/tag"
@@ -52,23 +53,23 @@ enum class RouterScreen(
     AdminDashboard(ADMIN + DASHBOARD),
 
     AdminUserList(ADMIN + USER + LIST),
-    AdminUserPageNew(ADMIN + USER + PAGE),
+    AdminUserPageNew(ADMIN + USER + CREATE),
     AdminUserPageExisting(ADMIN + USER + PAGE + ID),
 
     AdminProductList(ADMIN + PRODUCT + LIST),
-    AdminProductPageNew(ADMIN + PRODUCT + PAGE),
+    AdminProductPageNew(ADMIN + PRODUCT + CREATE),
     AdminProductPageExisting(ADMIN + PRODUCT + PAGE + ID),
 
     AdminOrderList(ADMIN + ORDER + LIST),
-    AdminOrderPageNew(ADMIN + ORDER + PAGE),
+    AdminOrderPageNew(ADMIN + ORDER + CREATE),
     AdminOrderPageExisting(ADMIN + ORDER + PAGE + ID),
 
     AdminCategoryList(ADMIN + CATEGORY + LIST),
-    AdminCategoryPageNew(ADMIN + CATEGORY + PAGE),
+    AdminCategoryPageNew(ADMIN + CATEGORY + CREATE),
     AdminCategoryPageExisting(ADMIN + CATEGORY + PAGE + ID),
 
     AdminTagList(ADMIN + LIST + PAGE),
-    AdminTagPageNew(ADMIN + TAG + PAGE),
+    AdminTagPageNew(ADMIN + TAG + CREATE),
     AdminTagPageExisting(ADMIN + TAG + PAGE + ID),
 
     // Auth

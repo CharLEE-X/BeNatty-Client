@@ -1,0 +1,15 @@
+query GetTagsAsPage($pageInput: PageInput!) {
+  getTagsAsPage(pageInput: $pageInput) {
+    tags {
+      id
+      name
+      createdAt
+    }
+    info {
+      count
+      pages
+      prev
+      next
+    }
+  }
+}

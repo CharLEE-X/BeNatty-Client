@@ -30,6 +30,8 @@ import web.pages.admin.orders.AdminOrderListPage
 import web.pages.admin.orders.AdminOrderPagePage
 import web.pages.admin.products.AdminProductListPage
 import web.pages.admin.products.AdminProductPagePage
+import web.pages.admin.tag.AdminTagListPage
+import web.pages.admin.tag.AdminTagPage
 import web.pages.admin.users.AdminUserListPage
 import web.pages.admin.users.AdminUserPagePage
 import web.pages.auth.ForgotPasswordPage
@@ -339,13 +341,24 @@ fun RouterContent(
                     )
                 }
 
-                RouterScreen.AdminTagList -> AdminLayout("Admin Tag List", router) {
-                }
+                RouterScreen.AdminTagList -> AdminTagListPage(
+                    router = router,
+                    onError = onError,
+                )
 
-                RouterScreen.AdminTagPageNew -> AdminLayout("Create Tag", router) {
-                }
+                RouterScreen.AdminTagPageNew -> AdminTagPage(
+                    router = router,
+                    id = null,
+                    onError = onError,
+                )
 
-                RouterScreen.AdminTagPageExisting -> AdminLayout("Edit Tag", router) {
+                RouterScreen.AdminTagPageExisting -> {
+                    val id: String by currentDestination!!.stringPath("id")
+                    AdminTagPage(
+                        router = router,
+                        id = id,
+                        onError = onError,
+                    )
                 }
             }
         },

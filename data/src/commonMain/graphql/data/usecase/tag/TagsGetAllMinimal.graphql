@@ -1,0 +1,6 @@
+query TagsGetAllMinimal {
+  getTagsAllMinimal {
+    id
+    name
+  }
+}

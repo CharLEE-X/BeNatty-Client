@@ -13,6 +13,7 @@ import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.size
+import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.silk.components.text.SpanText
 import data.type.BackorderStatus
 import data.type.CatalogVisibility
@@ -20,7 +21,6 @@ import data.type.PostStatus
 import data.type.StockStatus
 import feature.admin.product.page.AdminProductPageContract
 import feature.admin.product.page.AdminProductPageViewModel
-import feature.admin.tag.page.AdminTagPageContract
 import feature.router.RouterScreen
 import feature.router.RouterViewModel
 import org.jetbrains.compose.web.css.em
@@ -37,6 +37,7 @@ import web.components.widgets.SaveButton
 import web.components.widgets.SwitchSection
 import web.compose.material3.component.Divider
 import web.compose.material3.component.TextFieldType
+import web.util.onEnterKeyDown
 
 @Composable
 fun AdminProductPagePage(
@@ -100,7 +101,7 @@ fun AdminProductPagePage(
         }
     ) {
         DetailPageLayout(
-            title = if (state.screenState is AdminTagPageContract.ScreenState.New) {
+            title = if (state.screenState is AdminProductPageContract.ScreenState.New) {
                 state.strings.createProduct
             } else {
                 state.strings.product
@@ -138,41 +139,44 @@ fun AdminProductPagePage(
                     Creator(state, vm)
                 }
             }
-            CardSection(title = state.strings.data) {
-                PostStatus(state, vm)
-                Divider()
-                Description(state, vm)
-                IsPurchasable(vm, state)
-                Images(vm, state)
-            }
-            CardSection(title = state.strings.inventory) {
-                OnePerOrder(vm, state)
-                Divider()
-                BackorderStatus(vm, state)
-                Divider()
-                CanBackorder(vm, state)
-                IsOnBackorder(vm, state)
-                LowStockThreshold(vm, state)
-                RemainingStock(vm, state)
-                Divider()
-                StatusOfStock(vm, state)
-                Divider()
-                TrackInventory(vm, state)
-            }
-            CardSection(title = state.strings.price) {
-                Price(vm, state)
-                RegularPrice(vm, state)
-                OnSale(vm, state)
-                SalePrice(vm, state)
-                SaleStart(vm, state)
-                SaleEnd(vm, state)
-            }
-            CardSection(title = state.strings.shipping) {
-                ShippingPreset(vm, state)
-                Weight(vm, state)
-                Length(vm, state)
-                Width(vm, state)
-                Height(vm, state)
+
+            if (state.screenState is AdminProductPageContract.ScreenState.Existing) {
+                CardSection(title = state.strings.data) {
+                    PostStatus(state, vm)
+                    Divider()
+                    Description(state, vm)
+                    IsPurchasable(vm, state)
+                    Images(state)
+                }
+                CardSection(title = state.strings.inventory) {
+                    OnePerOrder(vm, state)
+                    Divider()
+                    BackorderStatus(vm, state)
+                    Divider()
+                    CanBackorder(vm, state)
+                    IsOnBackorder(vm, state)
+                    LowStockThreshold(vm, state)
+                    RemainingStock(vm, state)
+                    Divider()
+                    StatusOfStock(vm, state)
+                    Divider()
+                    TrackInventory(vm, state)
+                }
+                CardSection(title = state.strings.price) {
+                    Price(vm, state)
+                    RegularPrice(vm, state)
+                    OnSale(vm, state)
+                    SalePrice(vm, state)
+                    SaleStart(state)
+                    SaleEnd(state)
+                }
+                CardSection(title = state.strings.shipping) {
+                    ShippingPreset(vm, state)
+                    Weight(vm, state)
+                    Length(vm, state)
+                    Width(vm, state)
+                    Height(vm, state)
+                }
             }
         }
     }
@@ -259,7 +263,7 @@ private fun Weight(vm: AdminProductPageViewModel, state: AdminProductPageContrac
 }
 
 @Composable
-private fun SaleStart(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun SaleStart(state: AdminProductPageContract.State) {
     SpanText(
         text = "SaleStart: ${state.current.product.price.saleStart} TODO: Implement date picker",
     )
@@ -267,7 +271,7 @@ private fun SaleStart(vm: AdminProductPageViewModel, state: AdminProductPageCont
 }
 
 @Composable
-private fun SaleEnd(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun SaleEnd(state: AdminProductPageContract.State) {
     SpanText(
         text = "SaleEnd: ${state.current.product.price.saleEnd} TODO: Implement date picker",
     )
@@ -329,7 +333,7 @@ private fun Price(vm: AdminProductPageViewModel, state: AdminProductPageContract
 }
 
 @Composable
-private fun Images(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun Images(state: AdminProductPageContract.State) {
     SpanText(text = state.strings.images)
     AppTooltip(state.strings.imagesDesc)
     state.current.product.data.images.forEach { image ->
@@ -464,7 +468,12 @@ private fun Name(
             errorMsg = state.nameError,
             shake = state.shakeName,
             required = true,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .thenIf(
+                    state.screenState is AdminProductPageContract.ScreenState.New,
+                    Modifier.onEnterKeyDown { vm.trySend(AdminProductPageContract.Inputs.OnClick.Create) }
+                )
         )
     }
 }
@@ -576,7 +585,7 @@ private fun Categories(
         selectedChips = state.current.product.common.categories
             .map { it.toString() }
             .mapNotNull { id -> state.allCategories.firstOrNull { id == it.id.toString() }?.name },
-        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.GoToCategory(it)) },
+        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.CategorySelected(it)) },
         noChipsText = state.strings.noOtherCategoriesToChooseFrom,
         createText = state.strings.createCategory,
         onCreateClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.GoToCreateCategory) },
@@ -592,13 +601,15 @@ private fun Tags(vm: AdminProductPageViewModel, state: AdminProductPageContract.
     ) {
         FilterChipSection(
             title = state.strings.tags,
-            chips = state.allTags,
-            selectedChips = state.current.product.common.tags.map { it.toString() },
-            onChipClick = { /* TODO: Implement */ },
+            chips = state.allTags.map { it.name },
+            selectedChips = state.current.product.common.tags
+                .map { it.toString() }
+                .mapNotNull { id -> state.allTags.firstOrNull { id == it.id.toString() }?.name },
+            onChipClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.TagSelected(it)) },
             canBeEmpty = true,
             noChipsText = state.strings.noTags,
             createText = state.strings.createTag,
-            onCreateClick = { /* TODO: Implement */ },
+            onCreateClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.GoToCreateTag) },
             afterTitle = { AppTooltip(state.strings.tagsDesc) },
         )
     }

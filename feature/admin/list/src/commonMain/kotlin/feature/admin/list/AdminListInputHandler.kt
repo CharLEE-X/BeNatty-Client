@@ -263,13 +263,13 @@ internal class AdminListInputHandler :
                         sortDirection = state.sortDirection
                     ).fold(
                         onSuccess = {
-                            val items = it.getCategoriesAsPage.categories.map { tags ->
+                            val items = it.getTagsAsPage.tags.map { tag ->
                                 ListItem(
-                                    id = tags.id.toString(),
-                                    slot1 = tags.name, // millisToMonthYear(tag.createdAt.toLong())
-                                    slot2 = tags.name,
-                                    slot3 = tags.name,
-                                    slot4 = tags.name,
+                                    id = tag.id.toString(),
+                                    slot1 = millisToDate(tag.createdAt.toLong()),
+                                    slot2 = tag.name,
+                                    slot3 = null,
+                                    slot4 = null,
                                     slot5 = null,
                                     slot6 = null,
                                 )
@@ -277,10 +277,10 @@ internal class AdminListInputHandler :
                             postInput(AdminListContract.Inputs.Set.Items(items))
 
                             val info = PageInfo(
-                                count = it.getCategoriesAsPage.info.count,
-                                pages = it.getCategoriesAsPage.info.pages,
-                                prev = it.getCategoriesAsPage.info.prev,
-                                next = it.getCategoriesAsPage.info.next,
+                                count = it.getTagsAsPage.info.count,
+                                pages = it.getTagsAsPage.info.pages,
+                                prev = it.getTagsAsPage.info.prev,
+                                next = it.getTagsAsPage.info.next,
                             )
                             postInput(AdminListContract.Inputs.Set.Info(info))
                         },

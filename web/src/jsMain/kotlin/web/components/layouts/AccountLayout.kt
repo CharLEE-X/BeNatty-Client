@@ -10,6 +10,7 @@ import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
+import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
@@ -19,7 +20,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
-import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
@@ -98,6 +98,7 @@ private fun MenuItems(
 fun SideNavItem(
     label: String,
     isCurrent: Boolean,
+    icon: @Composable (() -> Unit)? = null,
     onMenuItemClicked: () -> Unit
 ) {
     var hovered by remember { mutableStateOf(false) }
@@ -123,13 +124,23 @@ fun SideNavItem(
             .transition(CSSTransition("background-color", SmoothColorTransitionDurationVar.value()))
             .cursor(Cursor.Pointer)
     ) {
-        SpanText(
-            text = label,
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(0.5.em)
-                .margin(left = 1.em)
                 .color(contentColor)
-        )
+                .padding(
+                    leftRight = 1.em,
+                    topBottom = 0.5.em,
+                )
+                .gap(0.5.em)
+        ) {
+            icon?.invoke()
+            SpanText(
+                text = label,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer()
+        }
     }
 }

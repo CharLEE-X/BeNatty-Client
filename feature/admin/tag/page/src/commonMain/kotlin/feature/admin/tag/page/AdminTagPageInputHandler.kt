@@ -4,11 +4,7 @@ import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
 import core.util.millisToTime
-import data.UserGetByIdQuery
-import data.service.AuthService
-import data.service.UserService
-import data.type.CreateUserInput
-import data.type.Role
+import data.service.TagService
 import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -17,560 +13,206 @@ import kotlin.time.Duration.Companion.seconds
 val SHAKE_ANIM_DURATION = (.25).seconds
 private typealias InputScope = InputHandlerScope<AdminTagPageContract.Inputs, AdminTagPageContract.Events, AdminTagPageContract.State>
 
-internal class AdminUserPageInputHandler :
+internal class AdminTagPageInputHandler :
     KoinComponent,
     InputHandler<AdminTagPageContract.Inputs, AdminTagPageContract.Events, AdminTagPageContract.State> {
 
-    private val authService: AuthService by inject()
-    private val userService: UserService by inject()
+    private val tagService: TagService by inject()
     private val inputValidator: InputValidator by inject()
 
-    override suspend fun InputHandlerScope<AdminTagPageContract.Inputs, AdminTagPageContract.Events, AdminTagPageContract.State>.handleInput(
-        input: AdminTagPageContract.Inputs,
-    ) = when (input) {
+    override suspend fun InputScope.handleInput(input: AdminTagPageContract.Inputs) = when (input) {
         is AdminTagPageContract.Inputs.Init -> handleInit(input.id)
-        AdminTagPageContract.Inputs.CreateNewUser -> handleCreateNewUser()
-        is AdminTagPageContract.Inputs.SetLoading -> updateState { it.copy(isLoading = input.isLoading) }
-        is AdminTagPageContract.Inputs.SetScreenState -> updateState { it.copy(screenState = input.screenState) }
-        is AdminTagPageContract.Inputs.SetId -> updateState { it.copy(id = input.id) }
 
-        is AdminTagPageContract.Inputs.GetUserById -> handleGetUserById(input.id)
-        is AdminTagPageContract.Inputs.SetOriginalUser -> updateState { it.copy(original = input.user) }
+        is AdminTagPageContract.Inputs.Get.TagById -> handleGetById(input.id)
+        is AdminTagPageContract.Inputs.Get.AllTags -> handleGetAllTags(input.currentTagId)
 
-        is AdminTagPageContract.Inputs.SetFullName -> handleSetFullName(input.fullName)
-        is AdminTagPageContract.Inputs.SetFullNameShake -> updateState { it.copy(shakeFullName = input.shake) }
+        AdminTagPageContract.Inputs.OnClick.Create -> handleCreateNew()
+        AdminTagPageContract.Inputs.OnClick.SaveEdit -> handleSaveDetails()
+        AdminTagPageContract.Inputs.OnClick.Delete -> handleDelete()
+        AdminTagPageContract.Inputs.OnClick.CancelEdit -> handleCancel()
+        AdminTagPageContract.Inputs.OnClick.GotToUserCreator -> handleGoToCreator()
+        AdminTagPageContract.Inputs.OnClick.ImproveName -> handleImproveName()
 
-        is AdminTagPageContract.Inputs.SetEmail -> handleSetEmail(input.email)
-        is AdminTagPageContract.Inputs.SetEmailShake -> updateState { it.copy(shakeEmail = input.shake) }
-        is AdminTagPageContract.Inputs.SetPhone -> handleSetPhone(input.phone)
-        is AdminTagPageContract.Inputs.SetPhoneShake -> updateState { it.copy(shakePhone = input.shake) }
-        AdminTagPageContract.Inputs.SavePersonalDetails -> handleSavePersonalDetails()
-        is AdminTagPageContract.Inputs.SetPersonalDetailsButtonDisabled ->
-            updateState { it.copy(isSavePersonalDetailsButtonDisabled = input.isDisabled) }
+        is AdminTagPageContract.Inputs.Set.Loading -> updateState { it.copy(isLoading = input.isLoading) }
+        is AdminTagPageContract.Inputs.Set.StateOfScreen -> updateState { it.copy(screenState = input.screenState) }
+        is AdminTagPageContract.Inputs.Set.AllTags -> updateState { it.copy(allTags = input.categories) }
+        is AdminTagPageContract.Inputs.Set.OriginalTag ->
+            updateState { it.copy(original = input.category).wasEdited() }
 
-        is AdminTagPageContract.Inputs.SetAddress -> handleSetAddress(input.address)
-        is AdminTagPageContract.Inputs.SetAddressShake -> updateState { it.copy(shakeAddress = input.shake) }
-        is AdminTagPageContract.Inputs.SetAdditionalInformation -> handleSetAdditionalInfo(input.additionalInformation)
-        is AdminTagPageContract.Inputs.SetCity -> handleSetCity(input.city)
-        is AdminTagPageContract.Inputs.SetCityShake -> updateState { it.copy(shakeCity = input.shake) }
-        is AdminTagPageContract.Inputs.SetCountry -> handleSetCountry(input.country)
-        is AdminTagPageContract.Inputs.SetCountryShake -> updateState { it.copy(shakeCountry = input.shake) }
-        is AdminTagPageContract.Inputs.SetPostcode -> handleSetPostcode(input.postcode)
-        is AdminTagPageContract.Inputs.SetPostcodeShake -> updateState { it.copy(shakePostcode = input.shake) }
-        is AdminTagPageContract.Inputs.SetState -> handleSetState(input.state)
-        is AdminTagPageContract.Inputs.SetStateShake -> updateState { it.copy(shakeState = input.shake) }
-        AdminTagPageContract.Inputs.SaveAddress -> handleSaveAddress()
-        is AdminTagPageContract.Inputs.SetAddressButtonDisabled ->
-            updateState { it.copy(isSaveAddressButtonDisabled = input.isDisabled) }
+        is AdminTagPageContract.Inputs.Set.CurrentTag ->
+            updateState { it.copy(current = input.category).wasEdited() }
 
-        is AdminTagPageContract.Inputs.SetPersonalDetailsEditable ->
-            updateState { it.copy(wasEdited = true) }
+        is AdminTagPageContract.Inputs.Set.Id -> updateState { it.copy(current = it.current.copy(id = input.id)) }
+        is AdminTagPageContract.Inputs.Set.Name -> handleSetName(input.fullName)
+        is AdminTagPageContract.Inputs.Set.IsNameShake -> updateState { it.copy(shakeName = input.shake) }
 
-        is AdminTagPageContract.Inputs.SetPersonalDetailsNotEditable ->
-            updateState { it.copy(wasEdited = false) }
+        is AdminTagPageContract.Inputs.Set.CreatedAt ->
+            updateState { it.copy(current = it.current.copy(createdAt = input.createdAt)) }
 
-        is AdminTagPageContract.Inputs.SetAddressEditable -> updateState { it.copy(isAddressEditing = true) }
-        is AdminTagPageContract.Inputs.SetAddressNotEditable -> handleSetAddressNotEditable()
+        is AdminTagPageContract.Inputs.Set.Creator ->
+            updateState { it.copy(current = it.current.copy(creator = input.creator)) }
 
-        is AdminTagPageContract.Inputs.DeleteUser -> handleDeleteUser()
-
-        is AdminTagPageContract.Inputs.ResetPassword -> handleResetPassword()
-
-        is AdminTagPageContract.Inputs.SetRole -> handleSetRole(input.role)
-        is AdminTagPageContract.Inputs.SetRoleButtonDisabled ->
-            updateState { it.copy(isSaveRoleButtonDisabled = input.isDisabled) }
-
-        AdminTagPageContract.Inputs.SaveRole -> handleSaveRole()
-        is AdminTagPageContract.Inputs.SetIsEmailVerified -> updateState { it.copy(emailVerified = input.isVerified) }
-        is AdminTagPageContract.Inputs.SetCreatedAt -> updateState { it.copy(createdAt = input.createdAt) }
-        is AdminTagPageContract.Inputs.SetCreatedBy -> updateState { it.copy(createdBy = input.createdBy) }
-        is AdminTagPageContract.Inputs.SetLastActive -> updateState { it.copy(lastActive = input.lastActive) }
-        is AdminTagPageContract.Inputs.SetUpdatedAt -> updateState { it.copy(updatedAt = input.updatedAt) }
-        is AdminTagPageContract.Inputs.SetWishlistSize -> updateState { it.copy(wishlistSize = input.size) }
+        is AdminTagPageContract.Inputs.Set.UpdatedAt ->
+            updateState { it.copy(current = it.current.copy(updatedAt = input.updatedAt)) }
     }
 
-    private suspend fun InputScope.handleSaveRole() {
-        val state = getCurrentState()
-        state.id?.let { id ->
-            sideJob("handleSaveRole") {
-                userService.update(
-                    id = id,
-                    role = state.role,
-                ).fold(
-                    onSuccess = { data ->
-                        postInput(
-                            AdminTagPageContract.Inputs.SetOriginalUser(
-                                user = state.original.copy(role = data.updateUser.role)
-                            )
-                        )
-                        postInput(AdminTagPageContract.Inputs.SetRoleButtonDisabled(isDisabled = true))
-                    },
-                    onFailure = {
-                        postEvent(
-                            AdminTagPageContract.Events.OnError(
-                                it.message ?: "Error while updating role"
-                            )
-                        )
-                    },
-                )
-            }
-        }
+    private fun InputScope.handleImproveName() {
+        noOp()
     }
 
-    private suspend fun InputScope.handleSetRole(role: Role) {
+    private suspend fun InputScope.handleCancel() {
         updateState {
             it.copy(
-                role = role,
-                isSaveRoleButtonDisabled = role == it.original.role,
-            )
+                wasEdited = false,
+                current = it.original,
+            ).wasEdited()
         }
     }
 
-    private suspend fun InputScope.handleResetPassword() {
+    private suspend fun InputScope.handleGoToCreator() {
         val state = getCurrentState()
-        sideJob("handleResetPassword") {
-            authService.forgotPassword(state.email).fold(
-                onSuccess = {
-                    postEvent(AdminTagPageContract.Events.OnError("Password reset successfully"))
+        postEvent(AdminTagPageContract.Events.GoToUser(state.current.creator.id.toString()))
+    }
+
+    private suspend fun InputScope.handleGetAllTags(currentTagId: String?) {
+        sideJob("handleGetAllTags") {
+            tagService.getTagsAllMinimal().fold(
+                onSuccess = { data ->
+                    val allTags = data.getTagsAllMinimal
+                        .filter { currentTagId?.let { categoryId -> it.id != categoryId } ?: true }
+                    postInput(AdminTagPageContract.Inputs.Set.AllTags(allTags))
                 },
                 onFailure = {
-                    postEvent(AdminTagPageContract.Events.OnError(it.message ?: "Error while resetting password"))
+                    postEvent(
+                        AdminTagPageContract.Events.OnError(it.message ?: "Error while getting all tags")
+                    )
                 },
             )
         }
     }
 
-    private suspend fun InputScope.handleDeleteUser() {
-        getCurrentState().id?.let { id ->
-            sideJob("handleDeleteUser") {
-                userService.deleteById(id).fold(
-                    onSuccess = {
-                        postEvent(AdminTagPageContract.Events.GoToUserList)
-                    },
-                    onFailure = {
-                        postEvent(AdminTagPageContract.Events.OnError(it.message ?: "Error while deleting user"))
-                    },
-                )
-            }
-        }
-    }
-
-    private suspend fun InputScope.handleSetAddressNotEditable() {
-        updateState {
-            it.copy(
-                isAddressEditing = false,
-                isSaveAddressButtonDisabled = true,
-                address = it.original.address.address ?: "",
-                addressError = null,
-                additionalInformation = it.original.address.additionalInfo ?: "",
-                additionalInformationError = null,
-                postcode = it.original.address.postcode ?: "",
-                postcodeError = null,
-                city = it.original.address.city ?: "",
-                cityError = null,
-                state = it.original.address.state ?: "",
-                stateError = null,
-                country = it.original.address.country ?: "",
-                countryError = null,
+    private suspend fun InputScope.handleDelete() {
+        val state = getCurrentState()
+        sideJob("handleDeleteTag") {
+            tagService.deleteById(state.current.id.toString()).fold(
+                onSuccess = {
+                    postEvent(AdminTagPageContract.Events.GoToList)
+                },
+                onFailure = {
+                    postEvent(AdminTagPageContract.Events.OnError(it.message ?: "Error while deleting tag"))
+                },
             )
         }
     }
 
     private suspend fun InputScope.handleInit(id: String?) {
         sideJob("handleInit") {
+            postInput(AdminTagPageContract.Inputs.Get.AllTags(id))
             if (id == null) {
-                postInput(AdminTagPageContract.Inputs.SetScreenState(AdminTagPageContract.ScreenState.New.Create))
+                postInput(AdminTagPageContract.Inputs.Set.StateOfScreen(AdminTagPageContract.ScreenState.New))
             } else {
-                postInput(AdminTagPageContract.Inputs.SetLoading(isLoading = true))
-                postInput(AdminTagPageContract.Inputs.SetId(id))
-                postInput(AdminTagPageContract.Inputs.SetScreenState(AdminTagPageContract.ScreenState.Existing.Read))
-                postInput(AdminTagPageContract.Inputs.GetUserById(id))
-                postInput(AdminTagPageContract.Inputs.SetLoading(isLoading = false))
+                postInput(AdminTagPageContract.Inputs.Set.Loading(isLoading = true))
+                postInput(AdminTagPageContract.Inputs.Set.Id(id))
+                postInput(AdminTagPageContract.Inputs.Get.TagById(id))
+                postInput(AdminTagPageContract.Inputs.Set.StateOfScreen(AdminTagPageContract.ScreenState.Existing))
+                postInput(AdminTagPageContract.Inputs.Set.Loading(isLoading = false))
             }
         }
     }
 
-    private suspend fun InputScope.handleCreateNewUser() {
+    private suspend fun InputScope.handleCreateNew() {
         val state = getCurrentState()
-        val input = CreateUserInput(
-            email = state.email,
-            name = state.fullName,
-            role = Role.User,
-        )
         sideJob("handleCreateNewUser") {
-            userService.create(input).fold(
+            tagService.create(name = state.current.name).fold(
                 onSuccess = { data ->
-                    val createdAt = millisToTime(data.createUser.createdAt.toLong())
-                    postInput(
-                        AdminTagPageContract.Inputs.SetOriginalUser(
-                            user = state.original.copy(
-                                id = data.createUser.id,
-                                email = data.createUser.email,
-                                details = state.original.details.copy(
-                                    name = state.fullName,
-                                ),
-                                createdAt = createdAt,
-                                updatedAt = createdAt,
-                            )
-                        )
-                    )
-                    postInput(AdminTagPageContract.Inputs.SetScreenState(AdminTagPageContract.ScreenState.New.Created))
+                    postEvent(AdminTagPageContract.Events.GoToTag(data.createTag.id.toString()))
                 },
                 onFailure = {
-                    postEvent(
-                        AdminTagPageContract.Events.OnError(
-                            it.message ?: "Error while creating new user"
-                        )
-                    )
+                    postEvent(AdminTagPageContract.Events.OnError(it.message ?: "Error while creating new tag"))
                 },
             )
         }
     }
 
-    private suspend fun InputScope.handleSetFullName(value: String) {
-        with(value) {
+    private suspend fun InputScope.handleSetName(name: String) {
+        with(name) {
             updateState {
-                val hasChanged = value != it.original.details.name ||
-                    it.email != it.original.email ||
-                    it.phone != it.original.details.phone
                 it.copy(
-                    fullName = this,
-                    fullNameError = if (it.isSavePersonalDetailsButtonDisabled) null else {
-                        inputValidator.validateText(this)
-                    },
-                    isSavePersonalDetailsButtonDisabled = !hasChanged,
-                )
+                    current = it.current.copy(name = this),
+                    nameError = if (it.wasEdited) inputValidator.validateText(this) else null,
+                ).wasEdited()
             }
         }
     }
 
-    private suspend fun InputScope.handleSetEmail(value: String) {
-        with(value) {
-            updateState {
-                val hasChanged = it.fullName != it.original.details.name ||
-                    value != it.original.email ||
-                    it.phone != it.original.details.phone
-                it.copy(
-                    email = this,
-                    emailError = if (it.isSavePersonalDetailsButtonDisabled) null else {
-                        inputValidator.validateEmail(this)
-                    },
-                    isSavePersonalDetailsButtonDisabled = !hasChanged,
-                )
-            }
-        }
-    }
-
-    private suspend fun InputScope.handleSetPhone(value: String) {
-        with(value) {
-            updateState {
-                val hasChanged = it.fullName != it.original.details.name ||
-                    it.email != it.original.email ||
-                    value != it.original.details.phone
-                it.copy(
-                    phone = this,
-                    phoneError = if (it.isSavePersonalDetailsButtonDisabled) null else {
-                        inputValidator.validatePhone(this)
-                    },
-                    isSavePersonalDetailsButtonDisabled = !hasChanged,
-                )
-            }
-        }
-    }
-
-    private suspend fun InputScope.handleSavePersonalDetails() {
+    private suspend fun InputScope.handleSaveDetails() {
         with(getCurrentState()) {
-            val isFullNameError = fullNameError != null
-            val isEmailError = emailError != null
-            val isPhoneError = phoneError != null
-            val isNoError = !isFullNameError && !isEmailError && !isPhoneError
+            val isFullNameError = nameError != null
+            val isNoError = !isFullNameError
 
             if (!isNoError) {
                 sideJob("handleSavePersonalDetailsShakes") {
-                    if (isFullNameError) postInput(AdminTagPageContract.Inputs.SetFullNameShake(shake = true))
-                    if (isEmailError) postInput(AdminTagPageContract.Inputs.SetEmailShake(shake = true))
-                    if (isPhoneError) postInput(AdminTagPageContract.Inputs.SetPhoneShake(shake = true))
+                    if (isFullNameError) postInput(AdminTagPageContract.Inputs.Set.IsNameShake(shake = true))
 
                     delay(SHAKE_ANIM_DURATION)
 
-                    if (isFullNameError) postInput(AdminTagPageContract.Inputs.SetFullNameShake(shake = false))
-                    if (isEmailError) postInput(AdminTagPageContract.Inputs.SetEmailShake(shake = false))
-                    if (isPhoneError) postInput(AdminTagPageContract.Inputs.SetPhoneShake(shake = false))
+                    if (isFullNameError) postInput(AdminTagPageContract.Inputs.Set.IsNameShake(shake = false))
                 }
             } else {
-                id?.let { id ->
-                    sideJob("handleSavePersonalDetails") {
-                        userService.update(
-                            id = id,
-                            name = if (fullName != original.details.name) fullName else null,
-                            email = if (email != original.email) email else null,
-                            phone = if (phone != original.details.phone) phone else null,
-                        ).fold(
-                            onSuccess = { data ->
-                                postInput(
-                                    AdminTagPageContract.Inputs.SetOriginalUser(
-                                        user = this@with.original.copy(
-                                            email = data.updateUser.email,
-                                            details = UserGetByIdQuery.Details(
-                                                name = data.updateUser.details.name,
-                                                phone = data.updateUser.details.phone,
-                                            ),
-                                        )
+                sideJob("handleSavePersonalDetails") {
+                    tagService.update(
+                        id = current.id.toString(),
+                        name = if (current.name != original.name) current.name else null,
+                    ).fold(
+                        onSuccess = { data ->
+                            postInput(
+                                AdminTagPageContract.Inputs.Set.OriginalTag(
+                                    category = this@with.original.copy(
+                                        name = data.updateTag.name,
+                                        updatedAt = data.updateTag.updatedAt,
                                     )
                                 )
-                                postInput(AdminTagPageContract.Inputs.SetPersonalDetailsButtonDisabled(isDisabled = true))
-                                postInput(AdminTagPageContract.Inputs.SetPersonalDetailsNotEditable)
-                            },
-                            onFailure = {
-                                postEvent(
-                                    AdminTagPageContract.Events.OnError(
-                                        it.message ?: "Error while updating personal details"
-                                    )
+                            )
+                            postInput(AdminTagPageContract.Inputs.OnClick.CancelEdit)
+                        },
+                        onFailure = {
+                            postEvent(
+                                AdminTagPageContract.Events.OnError(
+                                    it.message ?: "Error while updating tag details"
                                 )
-                            },
-                        )
-                    }
+                            )
+                        },
+                    )
                 }
             }
         }
     }
 
-    private suspend fun InputScope.handleSetAddress(value: String) {
-        with(value) {
-            updateState {
-                val hasChanged = value != it.original.address.address ||
-                    it.additionalInformation != it.original.address.additionalInfo ||
-                    it.postcode != it.original.address.postcode ||
-                    it.city != it.original.address.city ||
-                    it.state != it.original.address.state ||
-                    it.country != it.original.address.country
-                it.copy(
-                    address = this,
-                    addressError = if (it.isSaveAddressButtonDisabled) null else {
-                        inputValidator.validateText(this, 2)
-                    },
-                    isSaveAddressButtonDisabled = !hasChanged,
-                )
-            }
-        }
-    }
-
-    private suspend fun InputScope.handleSetAdditionalInfo(value: String) {
-        with(value) {
-            updateState {
-                val hasChanged = it.address != it.original.address.address ||
-                    value != it.original.address.additionalInfo ||
-                    it.postcode != it.original.address.postcode ||
-                    it.city != it.original.address.city ||
-                    it.state != it.original.address.state ||
-                    it.country != it.original.address.country
-                it.copy(
-                    additionalInformation = this,
-                    additionalInformationError = null,
-                    isSaveAddressButtonDisabled = !hasChanged,
-                )
-            }
-        }
-    }
-
-    private suspend fun InputScope.handleSetPostcode(value: String) {
-        with(value) {
-            updateState {
-                val hasChanged = it.address != it.original.address.address ||
-                    it.additionalInformation != it.original.address.additionalInfo ||
-                    value != it.original.address.postcode ||
-                    it.city != it.original.address.city ||
-                    it.state != it.original.address.state ||
-                    it.country != it.original.address.country
-                it.copy(
-                    postcode = this,
-                    postcodeError = if (it.isSaveAddressButtonDisabled) null else {
-                        inputValidator.validateText(this, 5)
-                    },
-                    isSaveAddressButtonDisabled = !hasChanged,
-                )
-            }
-        }
-    }
-
-    private suspend fun InputScope.handleSetCity(value: String) {
-        with(value) {
-            updateState {
-                val hasChanged = it.address != it.original.address.address ||
-                    it.additionalInformation != it.original.address.additionalInfo ||
-                    it.postcode != it.original.address.postcode ||
-                    value != it.original.address.city ||
-                    it.state != it.original.address.state ||
-                    it.country != it.original.address.country
-                it.copy(
-                    city = this,
-                    cityError = if (it.isSaveAddressButtonDisabled) null else {
-                        inputValidator.validateText(this, 2)
-                    },
-                    isSaveAddressButtonDisabled = !hasChanged,
-                )
-            }
-        }
-    }
-
-    private suspend fun InputScope.handleSetState(value: String) {
-        with(value) {
-            updateState {
-                val hasChanged = it.address != it.original.address.address ||
-                    it.additionalInformation != it.original.address.additionalInfo ||
-                    it.postcode != it.original.address.postcode ||
-                    it.city != it.original.address.city ||
-                    value != it.original.address.state ||
-                    it.country != it.original.address.country
-                it.copy(
-                    state = this,
-                    stateError = if (it.isSaveAddressButtonDisabled) null else {
-                        inputValidator.validateText(this, 2)
-                    },
-                    isSaveAddressButtonDisabled = !hasChanged,
-                )
-            }
-        }
-    }
-
-    private suspend fun InputScope.handleSetCountry(value: String) {
-        with(value) {
-            updateState {
-                val hasChanged = it.address != it.original.address.address ||
-                    it.additionalInformation != it.original.address.additionalInfo ||
-                    it.postcode != it.original.address.postcode ||
-                    it.city != it.original.address.city ||
-                    it.state != it.original.address.state ||
-                    value != it.original.address.country
-                it.copy(
-                    country = this,
-                    countryError = if (it.isSaveAddressButtonDisabled) null else {
-                        inputValidator.validateText(this, 2)
-                    },
-                    isSaveAddressButtonDisabled = !hasChanged,
-                )
-            }
-        }
-    }
-
-    private suspend fun InputScope.handleSaveAddress() {
-        with(getCurrentState()) {
-            val isAddressError = addressError != null
-            val isPostalCodeError = postcodeError != null
-            val isCityError = cityError != null
-            val isStateError = stateError != null
-            val isCountryError = countryError != null
-            val isNoError = !isAddressError && !isPostalCodeError && !isCityError && !isStateError && !isCountryError
-
-            if (!isNoError) {
-                sideJob("handleSavePasswordShakes") {
-                    if (isAddressError) postInput(AdminTagPageContract.Inputs.SetAddressShake(shake = true))
-                    if (isPostalCodeError) postInput(AdminTagPageContract.Inputs.SetPostcodeShake(shake = true))
-                    if (isCityError) postInput(AdminTagPageContract.Inputs.SetCityShake(shake = true))
-                    if (isStateError) postInput(AdminTagPageContract.Inputs.SetStateShake(shake = true))
-                    if (isCountryError) postInput(AdminTagPageContract.Inputs.SetCountryShake(shake = true))
-
-                    delay(SHAKE_ANIM_DURATION)
-
-                    if (isAddressError) postInput(AdminTagPageContract.Inputs.SetAddressShake(shake = false))
-                    if (isPostalCodeError) postInput(AdminTagPageContract.Inputs.SetPostcodeShake(shake = false))
-                    if (isCityError) postInput(AdminTagPageContract.Inputs.SetCityShake(shake = false))
-                    if (isStateError) postInput(AdminTagPageContract.Inputs.SetStateShake(shake = false))
-                    if (isCountryError) postInput(AdminTagPageContract.Inputs.SetCountryShake(shake = false))
-                }
-            } else {
-                sideJob("handleSaveAddress") {
-                    authService.userId?.let { id ->
-                        userService.update(
-                            id = id,
-                            address = if (address != original.address.address) address else null,
-                            additionalInfo = if (additionalInformation != original.address.additionalInfo) additionalInformation else null,
-                            city = if (city != original.address.city) city else null,
-                            postcode = if (postcode != original.address.postcode) postcode else null,
-                            state = if (state != original.address.state) state else null,
-                            country = if (country != original.address.country) country else null,
-                        ).fold(
-                            onSuccess = { data ->
-                                postInput(
-                                    AdminTagPageContract.Inputs.SetOriginalUser(
-                                        user = this@with.original.copy(
-                                            address = UserGetByIdQuery.Address(
-                                                address = data.updateUser.address.address,
-                                                additionalInfo = data.updateUser.address.additionalInfo,
-                                                postcode = data.updateUser.address.postcode,
-                                                city = data.updateUser.address.city,
-                                                state = data.updateUser.address.state,
-                                                country = data.updateUser.address.country,
-                                            )
-                                        )
-                                    )
-                                )
-                                postInput(AdminTagPageContract.Inputs.SetAddressButtonDisabled(isDisabled = true))
-                                postInput(AdminTagPageContract.Inputs.SetAddressNotEditable)
-                            },
-                            onFailure = {
-                                postEvent(
-                                    AdminTagPageContract.Events.OnError(
-                                        it.message ?: "Error while updating address"
-                                    )
-                                )
-                            },
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    private suspend fun InputScope.handleGetUserById(id: String) {
+    private suspend fun InputScope.handleGetById(id: String) {
         sideJob("handleGetUserProfile") {
-            userService.getById(id).collect { result ->
+            tagService.getById(id).collect { result ->
                 result.fold(
                     onSuccess = { data ->
-                        println("data.getUserById ${data.getUserById}")
-
-                        postInput(AdminTagPageContract.Inputs.SetOriginalUser(data.getUserById))
-
-                        postInput(AdminTagPageContract.Inputs.SetEmail(data.getUserById.email))
-                        postInput(AdminTagPageContract.Inputs.SetIsEmailVerified(data.getUserById.emailVerified))
-                        postInput(AdminTagPageContract.Inputs.SetFullName(data.getUserById.details.name))
-                        data.getUserById.details.phone?.let { postInput(AdminTagPageContract.Inputs.SetPhone(it)) }
-                        postInput(AdminTagPageContract.Inputs.SetPersonalDetailsButtonDisabled(isDisabled = true))
-
-                        postInput(AdminTagPageContract.Inputs.SetRole(data.getUserById.role))
-
-                        data.getUserById.address.address?.let { postInput(AdminTagPageContract.Inputs.SetAddress(it)) }
-                        data.getUserById.address.additionalInfo?.let {
-                            postInput(AdminTagPageContract.Inputs.SetAdditionalInformation(it))
-                        }
-                        data.getUserById.address.postcode?.let { postInput(AdminTagPageContract.Inputs.SetPostcode(it)) }
-                        data.getUserById.address.city?.let { postInput(AdminTagPageContract.Inputs.SetCity(it)) }
-                        data.getUserById.address.state?.let { postInput(AdminTagPageContract.Inputs.SetState(it)) }
-                        data.getUserById.address.country?.let { postInput(AdminTagPageContract.Inputs.SetCountry(it)) }
-                        postInput(AdminTagPageContract.Inputs.SetAddressButtonDisabled(isDisabled = true))
-
-                        data.getUserById.createdBy?.let {
-                            postInput(AdminTagPageContract.Inputs.SetCreatedBy(it.toString()))
-                        }
-                        postInput(AdminTagPageContract.Inputs.SetLastActive(data.getUserById.lastActive))
-
-                        try {
-                            val createdAt = millisToTime(data.getUserById.createdAt.toLong())
-                            postInput(AdminTagPageContract.Inputs.SetCreatedAt(createdAt))
-
-                            val updatedAt = millisToTime(data.getUserById.updatedAt.toLong())
-                            postInput(AdminTagPageContract.Inputs.SetUpdatedAt(updatedAt))
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
+                        val createdAt = millisToTime(data.getTagById.createdAt.toLong())
+                        val updatedAt = millisToTime(data.getTagById.updatedAt.toLong())
+                        val category = data.getTagById.copy(
+                            createdAt = createdAt,
+                            updatedAt = updatedAt,
+                        )
+                        postInput(AdminTagPageContract.Inputs.Set.OriginalTag(category))
+                        postInput(AdminTagPageContract.Inputs.Set.CurrentTag(category))
                     },
                     onFailure = {
                         postEvent(
-                            AdminTagPageContract.Events.OnError(it.message ?: "Error while getting user profile")
+                            AdminTagPageContract.Events.OnError(it.message ?: "Error while getting tag profile")
                         )
                     },
                 )
             }
         }
     }
+
+    private fun AdminTagPageContract.State.wasEdited(): AdminTagPageContract.State = copy(
+        wasEdited = current.name != original.name
+    )
 }

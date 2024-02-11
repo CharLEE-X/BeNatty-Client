@@ -299,8 +299,6 @@ fun Item(
             AdminListContract.DataType.TAG -> {
                 SpanText(item.slot1)
                 SpanText(item.slot2 ?: "N/A")
-                SpanText(item.slot3 ?: "N/A")
-                SpanText(item.slot4 ?: "N/A")
             }
         }
     }

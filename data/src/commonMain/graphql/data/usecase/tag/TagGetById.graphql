@@ -1,0 +1,12 @@
+query GetTagById($getTagByIdId: ObjectId!) {
+  getTagById(id: $getTagByIdId) {
+    id
+    name
+    creator {
+      id
+      name
+    }
+    createdAt
+    updatedAt
+  }
+}

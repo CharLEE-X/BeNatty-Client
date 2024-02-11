@@ -191,4 +191,6 @@ enum class Strings {
     CreatedByDesc,
     ShippingPresetDesc,
     ImproveWithAi,
+    NoOtherTagsToChooseFrom,
+    Tag,
 }

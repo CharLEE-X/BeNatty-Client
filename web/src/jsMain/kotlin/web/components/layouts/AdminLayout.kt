@@ -23,6 +23,12 @@ import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.width
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiCategory
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiDashboard
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiShoppingBasket
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiStyle
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiTag
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.router.RouterScreen
 import feature.router.RouterViewModel
@@ -112,6 +118,7 @@ private fun AdminSideBar(
             SideNavItem(
                 label = item.name,
                 isCurrent = currentItem == item,
+                icon = { item.icon() },
                 onMenuItemClicked = {
                     currentItem = item
                     when (item) {
@@ -152,4 +159,14 @@ enum class AdminNavDest {
     Orders,
     Categories,
     Tags,
+}
+
+@Composable
+fun AdminNavDest.icon() = when (this) {
+    AdminNavDest.Dashboard -> MdiDashboard()
+    AdminNavDest.Users -> MdiPerson()
+    AdminNavDest.Products -> MdiStyle()
+    AdminNavDest.Orders -> MdiShoppingBasket()
+    AdminNavDest.Categories -> MdiCategory()
+    AdminNavDest.Tags -> MdiTag()
 }

@@ -11,6 +11,7 @@ import com.copperleaf.ballast.navigation.routing.directions
 import com.copperleaf.ballast.navigation.routing.pathParameter
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import com.varabyte.kobweb.compose.ui.thenIf
 import feature.admin.category.page.AdminCategoryPageContract
 import feature.admin.category.page.AdminCategoryPageViewModel
 import feature.router.RouterScreen
@@ -26,6 +27,7 @@ import web.components.widgets.HasChangesWidget
 import web.components.widgets.SaveButton
 import web.components.widgets.SwitchSection
 import web.compose.material3.component.TextFieldType
+import web.util.onEnterKeyDown
 
 @Composable
 fun AdminCategoryPage(
@@ -190,7 +192,12 @@ private fun Details(vm: AdminCategoryPageViewModel, state: AdminCategoryPageCont
             icon = null,
             shake = state.shakeName,
             required = true,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .thenIf(
+                    state.screenState is AdminCategoryPageContract.ScreenState.New,
+                    Modifier.onEnterKeyDown { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.Create) }
+                )
         )
 
         if (state.screenState is AdminCategoryPageContract.ScreenState.New) {

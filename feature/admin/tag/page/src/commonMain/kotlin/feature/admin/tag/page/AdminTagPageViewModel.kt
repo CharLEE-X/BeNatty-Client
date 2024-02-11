@@ -12,10 +12,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 class AdminTagPageViewModel(
-    userId: String?,
+    id: String?,
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
-    goToUserList: suspend () -> Unit,
+    goToUserList: () -> Unit,
+    goToUser: (String) -> Unit,
+    goToTag: (String) -> Unit,
 ) : BasicViewModel<
     AdminTagPageContract.Inputs,
     AdminTagPageContract.Events,
@@ -27,8 +29,14 @@ class AdminTagPageViewModel(
             logger = { PrintlnLogger() }
         }
         .withViewModel(
-            initialState = AdminTagPageContract.State(),
-            inputHandler = AdminUserPageInputHandler(),
+            initialState = AdminTagPageContract.State(
+                screenState = if (id == null) {
+                    AdminTagPageContract.ScreenState.New
+                } else {
+                    AdminTagPageContract.ScreenState.Existing
+                }
+            ),
+            inputHandler = AdminTagPageInputHandler(),
             name = TAG,
         )
         .dispatchers(
@@ -41,14 +49,17 @@ class AdminTagPageViewModel(
     eventHandler = AdminTagPageEventHandler(
         onError = onError,
         goToUserList = goToUserList,
+        goToUser = goToUser,
+        goToTag = goToTag,
     ),
     coroutineScope = scope,
 ) {
     init {
-        trySend(AdminTagPageContract.Inputs.Init(id = userId))
+        trySend(AdminTagPageContract.Inputs.Init(id = id))
     }
 
     companion object {
         private val TAG = this::class.simpleName!!
     }
 }
+

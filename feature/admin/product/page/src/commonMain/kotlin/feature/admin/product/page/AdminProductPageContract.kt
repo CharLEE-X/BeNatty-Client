@@ -4,6 +4,7 @@ import component.localization.getString
 import data.GetCategoriesAllMinimalQuery
 import data.GetCategoryByIdQuery
 import data.ProductGetByIdQuery
+import data.TagsGetAllMinimalQuery
 import data.type.BackorderStatus
 import data.type.CatalogVisibility
 import data.type.PostStatus
@@ -43,7 +44,7 @@ object AdminProductPageContract {
 
         val isCreateDisabled: Boolean = true,
         val allCategories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal> = emptyList(),
-        val allTags: List<String> = emptyList(),
+        val allTags: List<TagsGetAllMinimalQuery.GetTagsAllMinimal> = emptyList(),
         val presetCategory: GetCategoryByIdQuery.GetCategoryById? = null,
 
         val original: ProductGetByIdQuery.GetProductById = ProductGetByIdQuery.GetProductById(
@@ -124,8 +125,10 @@ object AdminProductPageContract {
             data object Delete : OnClick
             data object SaveEdit : Inputs
             data object CancelEdit : OnClick
-            data class GoToCategory(val category: String) : Inputs
+            data class CategorySelected(val categoryName: String) : Inputs
+            data class TagSelected(val tagName: String) : Inputs
             data object GoToCreateCategory : Inputs
+            data object GoToCreateTag : Inputs
             data object GoToUserCreator : Inputs
             data class PresetSelected(val preset: String) : Inputs
             data object ImproveName : Inputs
@@ -138,7 +141,7 @@ object AdminProductPageContract {
             data class AllCategories(val categories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal>) :
                 Inputs
 
-            data class AllTags(val tags: List<String>) : Inputs
+            data class AllTags(val tags: List<TagsGetAllMinimalQuery.GetTagsAllMinimal>) : Inputs
 
             data class Loading(val isLoading: Boolean) : Inputs
             data class StateOfScreen(val screenState: ScreenState) : Inputs

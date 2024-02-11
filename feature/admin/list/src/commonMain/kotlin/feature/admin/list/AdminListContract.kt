@@ -46,14 +46,14 @@ object AdminListContract {
                 DataType.PRODUCT -> getString(component.localization.Strings.Price)
                 DataType.ORDER -> getString(component.localization.Strings.Description)
                 DataType.CATEGORY -> getString(component.localization.Strings.Description)
-                DataType.TAG -> getString(component.localization.Strings.Description)
+                DataType.TAG -> ""
             },
             slot4Text = when (dataType) {
                 DataType.USER -> getString(component.localization.Strings.Orders)
                 DataType.PRODUCT -> getString(component.localization.Strings.Sold)
                 DataType.ORDER -> getString(component.localization.Strings.StockStatus)
                 DataType.CATEGORY -> getString(component.localization.Strings.Display)
-                DataType.TAG -> getString(component.localization.Strings.Display)
+                DataType.TAG -> ""
             },
             slot5Text = when (dataType) {
                 DataType.USER -> ""
@@ -202,20 +202,29 @@ object AdminListContract {
     }
 
     enum class TagSlot {
-        CreatedAt, Name, Description, Display;
+        CreatedAt, Name;
 
         fun asString() = when (this) {
             CreatedAt -> getString(component.localization.Strings.CreatedAt)
             Name -> getString(component.localization.Strings.Name)
-            Description -> getString(component.localization.Strings.Description)
-            Display -> getString(component.localization.Strings.Display)
         }
     }
 }
 
 data class ListItem(
+    /**
+     * Id of the item.
+     */
     val id: String,
+
+    /**
+     * Usually date: millisToDate(tag.createdAt.toLong())
+     */
     val slot1: String,
+
+    /**
+     * Usually email, name, or other short string
+     */
     val slot2: String?,
     val slot3: String?,
     val slot4: String?,

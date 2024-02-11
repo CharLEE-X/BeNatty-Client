@@ -4,22 +4,23 @@ import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.watch
-import data.CreateCategoryMutation
-import data.DeleteCategoryMutation
-import data.GetCategoriesAsPageQuery
-import data.GetCategoryByIdQuery
-import data.UpdateCategoryMutation
-import data.type.CategoryCreateInput
-import data.type.CategoryUpdateInput
+import data.CreateTagMutation
+import data.DeleteTagMutation
+import data.GetTagByIdQuery
+import data.GetTagsAsPageQuery
+import data.TagsGetAllMinimalQuery
+import data.UpdateTagMutation
 import data.type.PageInput
 import data.type.SortDirection
+import data.type.TagCreateInput
+import data.type.TagUpdateInput
 import data.utils.handle
 import data.utils.skipIfNull
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 interface TagService {
-    suspend fun create(name: String): Result<CreateCategoryMutation.Data>
+    suspend fun create(name: String): Result<CreateTagMutation.Data>
 
     suspend fun getAsPage(
         page: Int,
@@ -27,23 +28,21 @@ interface TagService {
         query: String?,
         sortBy: String?,
         sortDirection: SortDirection?,
-    ): Result<GetCategoriesAsPageQuery.Data>
+    ): Result<GetTagsAsPageQuery.Data>
 
-    suspend fun getById(id: String): Flow<Result<GetCategoryByIdQuery.Data>>
-    suspend fun deleteById(id: String): Result<DeleteCategoryMutation.Data>
+    suspend fun getById(id: String): Flow<Result<GetTagByIdQuery.Data>>
+    suspend fun getTagsAllMinimal(): Result<TagsGetAllMinimalQuery.Data>
+    suspend fun deleteById(id: String): Result<DeleteTagMutation.Data>
     suspend fun update(
         id: String,
         name: String?,
-        description: String?,
-        parentId: String?,
-        display: Boolean?,
-    ): Result<UpdateCategoryMutation.Data>
+    ): Result<UpdateTagMutation.Data>
 }
 
 internal class TagServiceImpl(private val apolloClient: ApolloClient) : TagService {
-    override suspend fun create(name: String): Result<CreateCategoryMutation.Data> {
-        val input = CategoryCreateInput(name = name)
-        return apolloClient.mutation(CreateCategoryMutation(input))
+    override suspend fun create(name: String): Result<CreateTagMutation.Data> {
+        val input = TagCreateInput(name = name)
+        return apolloClient.mutation(CreateTagMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }
@@ -54,7 +53,7 @@ internal class TagServiceImpl(private val apolloClient: ApolloClient) : TagServi
         query: String?,
         sortBy: String?,
         sortDirection: SortDirection?,
-    ): Result<GetCategoriesAsPageQuery.Data> {
+    ): Result<GetTagsAsPageQuery.Data> {
         val pageInput = PageInput(
             page = page,
             size = size,
@@ -62,20 +61,26 @@ internal class TagServiceImpl(private val apolloClient: ApolloClient) : TagServi
             sortBy = sortBy.skipIfNull(),
             sortDirection = sortDirection.skipIfNull(),
         )
-        return apolloClient.query(GetCategoriesAsPageQuery(pageInput))
+        return apolloClient.query(GetTagsAsPageQuery(pageInput))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }
 
-    override suspend fun getById(id: String): Flow<Result<GetCategoryByIdQuery.Data>> {
-        return apolloClient.query(GetCategoryByIdQuery(id))
+    override suspend fun getById(id: String): Flow<Result<GetTagByIdQuery.Data>> {
+        return apolloClient.query(GetTagByIdQuery(id))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .watch()
             .map { it.handle() }
     }
 
-    override suspend fun deleteById(id: String): Result<DeleteCategoryMutation.Data> {
-        return apolloClient.mutation(DeleteCategoryMutation(id))
+    override suspend fun getTagsAllMinimal(): Result<TagsGetAllMinimalQuery.Data> {
+        return apolloClient.query(TagsGetAllMinimalQuery())
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .handle()
+    }
+
+    override suspend fun deleteById(id: String): Result<DeleteTagMutation.Data> {
+        return apolloClient.mutation(DeleteTagMutation(id))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }
@@ -83,18 +88,12 @@ internal class TagServiceImpl(private val apolloClient: ApolloClient) : TagServi
     override suspend fun update(
         id: String,
         name: String?,
-        description: String?,
-        parentId: String?,
-        display: Boolean?,
-    ): Result<UpdateCategoryMutation.Data> {
-        val input = CategoryUpdateInput(
+    ): Result<UpdateTagMutation.Data> {
+        val input = TagUpdateInput(
             id = id,
             name = name.skipIfNull(),
-            description = description.skipIfNull(),
-            parentId = parentId.skipIfNull(),
-            display = display.skipIfNull(),
         )
-        return apolloClient.mutation(UpdateCategoryMutation(input))
+        return apolloClient.mutation(UpdateTagMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }

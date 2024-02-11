@@ -9,6 +9,7 @@ import data.GetCategoryByIdQuery
 import data.ProductGetByIdQuery
 import data.service.CategoryService
 import data.service.ProductService
+import data.service.TagService
 import data.type.BackorderStatus
 import data.type.CatalogVisibility
 import data.type.PostStatus
@@ -30,6 +31,7 @@ internal class AdminProductPageInputHandler :
     private val productService by inject<ProductService>()
     private val inputValidator by inject<InputValidator>()
     private val categoryService: CategoryService by inject()
+    private val tagService: TagService by inject()
 
     override suspend fun InputScope.handleInput(input: AdminProductPageContract.Inputs) = when (input) {
         is AdminProductPageContract.Inputs.Init -> handleInit(input.productId)
@@ -43,7 +45,8 @@ internal class AdminProductPageInputHandler :
         AdminProductPageContract.Inputs.OnClick.Delete -> handleDeleteProduct()
         AdminProductPageContract.Inputs.OnClick.SaveEdit -> handleSaveDetails()
         AdminProductPageContract.Inputs.OnClick.CancelEdit -> handleCancelEdit()
-        is AdminProductPageContract.Inputs.OnClick.GoToCategory -> handleOnClickCategory(input.category)
+        is AdminProductPageContract.Inputs.OnClick.CategorySelected -> handleOnClickCategory(input.categoryName)
+        is AdminProductPageContract.Inputs.OnClick.TagSelected -> handleTagClick(input.tagName)
         is AdminProductPageContract.Inputs.OnClick.GoToUserCreator -> {
             val userId = getCurrentState().original.creator.id.toString()
             postEvent(AdminProductPageContract.Events.GoToUserDetails(userId))
@@ -53,8 +56,13 @@ internal class AdminProductPageInputHandler :
         AdminProductPageContract.Inputs.OnClick.ImproveShortDescription -> handleImproveShortDescription()
         AdminProductPageContract.Inputs.OnClick.ImproveDescription -> handleImproveDescription()
         AdminProductPageContract.Inputs.OnClick.ImproveTags -> handleImproveTags()
+        AdminProductPageContract.Inputs.OnClick.GoToCreateTag ->
+            postEvent(AdminProductPageContract.Events.GoToCreateTag)
+
 
         is AdminProductPageContract.Inputs.OnClick.PresetSelected -> handlePresetClick(input.preset)
+        AdminProductPageContract.Inputs.OnClick.GoToCreateCategory ->
+            postEvent(AdminProductPageContract.Events.GoToCreateCategory)
 
         is AdminProductPageContract.Inputs.Set.AllCategories -> updateState { it.copy(allCategories = input.categories) }
         is AdminProductPageContract.Inputs.Set.AllTags -> updateState { it.copy(allTags = input.tags) }
@@ -113,23 +121,65 @@ internal class AdminProductPageInputHandler :
         is AdminProductPageContract.Inputs.Set.HeightShake -> updateState { it.copy(shakeHeight = input.shake) }
         is AdminProductPageContract.Inputs.Set.PresetCategory -> handleSetPresetCategory(input.category)
         is AdminProductPageContract.Inputs.Set.ShippingPresetId -> handleSetShippingPresetId(input.presetId)
-        AdminProductPageContract.Inputs.OnClick.GoToCreateCategory ->
-            postEvent(AdminProductPageContract.Events.GoToCreateCategory)
     }
 
-    private suspend fun InputScope.handleImproveName() {
+    private suspend fun InputScope.handleOnClickCategory(name: String) {
+        updateState { state ->
+            state.allCategories
+                .find { category -> category.name == name }
+                ?.let { chosenCategory ->
+                    val id = chosenCategory.id
+                    val userCategories = state.current.product.common.categories
+                    val newCategories = userCategories.toMutableList()
+
+                    if (id in userCategories) newCategories.remove(id) else newCategories.add(id)
+
+                    state.copy(
+                        current = state.current.copy(
+                            product = state.current.product.copy(
+                                common = state.current.product.common.copy(categories = newCategories)
+                            )
+                        )
+                    ).wasEdited()
+                } ?: state
+        }
+    }
+
+    private suspend fun InputScope.handleTagClick(name: String) {
+        updateState { state ->
+            state.allTags
+                .find { tag -> tag.name == name }
+                ?.let { chosenTag ->
+                    val id = chosenTag.id
+                    val userTags = state.current.product.common.tags
+                    val newTags = userTags.toMutableList()
+
+                    if (id in userTags) newTags.remove(id) else newTags.add(id)
+
+                    state.copy(
+                        current = state.current.copy(
+                            product = state.current.product.copy(
+                                common = state.current.product.common.copy(tags = newTags)
+                            )
+                        )
+                    ).wasEdited()
+                } ?: state
+        }
+    }
+
+    private fun InputScope.handleImproveName() {
         noOp()
     }
 
-    private suspend fun InputScope.handleImproveShortDescription() {
+    private fun InputScope.handleImproveShortDescription() {
         noOp()
     }
 
-    private suspend fun InputScope.handleImproveDescription() {
+    private fun InputScope.handleImproveDescription() {
         noOp()
     }
 
-    private suspend fun InputScope.handleImproveTags() {
+    private fun InputScope.handleImproveTags() {
         noOp()
     }
 
@@ -530,11 +580,11 @@ internal class AdminProductPageInputHandler :
                 postInput(AdminProductPageContract.Inputs.Set.Loading(isLoading = false))
             }
             postInput(AdminProductPageContract.Inputs.Get.AllCategories)
+            postInput(AdminProductPageContract.Inputs.Get.AllTags)
         }
     }
 
     private suspend fun InputScope.handleGetAllCategories() {
-        val state = getCurrentState()
         sideJob("handleGetAllCategories") {
             categoryService.getCategoriesAllMinimal().fold(
                 onSuccess = { data ->
@@ -551,19 +601,17 @@ internal class AdminProductPageInputHandler :
     }
 
     private suspend fun InputScope.handleGetAllTags() {
-        val state = getCurrentState()
         sideJob("handleGetAllTags") {
-//            categoryService.getCategoriesAllMinimal().fold(
-//                onSuccess = { data ->
-            val tags = emptyList<String>()
-            postInput(AdminProductPageContract.Inputs.Set.AllTags(tags))
-//                },
-//                onFailure = {
-//                    postEvent(
-//                        AdminProductPageContract.Events.OnError(it.message ?: "Error while getting all categories")
-//                    )
-//                },
-//            )
+            tagService.getTagsAllMinimal().fold(
+                onSuccess = { data ->
+                    postInput(AdminProductPageContract.Inputs.Set.AllTags(data.getTagsAllMinimal))
+                },
+                onFailure = {
+                    postEvent(
+                        AdminProductPageContract.Events.OnError(it.message ?: "Error while getting all tags")
+                    )
+                },
+            )
         }
     }
 
@@ -714,6 +762,9 @@ internal class AdminProductPageInputHandler :
                         } else null,
                         categories = if (current.product.common.categories.map { it.toString() } != original.product.common.categories.map { it.toString() }) {
                             current.product.common.categories.map { it.toString() }
+                        } else null,
+                        tags = if (current.product.common.tags.map { it.toString() } != original.product.common.tags.map { it.toString() }) {
+                            current.product.common.tags.map { it.toString() }
                         } else null,
                         description = if (current.product.data.description != original.product.data.description)
                             current.product.data.description else null,
@@ -879,9 +930,11 @@ internal class AdminProductPageInputHandler :
 
     private suspend fun InputScope.handleSetName(name: String) {
         updateState {
+            val isValidated = inputValidator.validateText(name)
             it.copy(
                 current = it.current.copy(product = it.current.product.copy(common = it.current.product.common.copy(name = name))),
-                nameError = if (!it.wasEdited) null else inputValidator.validateText(name),
+                nameError = if (!it.wasEdited) null else isValidated,
+                isCreateDisabled = isValidated != null
             ).wasEdited()
         }
     }
@@ -927,20 +980,6 @@ internal class AdminProductPageInputHandler :
                 current = it.current.copy(
                     product = it.current.product.copy(
                         common = it.current.product.common.copy(catalogVisibility = catalogVisibility)
-                    )
-                )
-            ).wasEdited()
-        }
-    }
-
-    private suspend fun InputScope.handleOnClickCategory(category: String) {
-        updateState {
-            val categories = it.current.product.common.categories.toMutableList()
-            if (categories.contains(category)) categories.remove(category) else categories.add(category)
-            it.copy(
-                current = it.current.copy(
-                    product = it.current.product.copy(
-                        common = it.current.product.common.copy(categories = categories)
                     )
                 )
             ).wasEdited()

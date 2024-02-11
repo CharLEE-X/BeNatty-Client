@@ -39,6 +39,15 @@ kotlin {
                 implementation(components.localization)
 
                 implementation(feature.debug)
+
+                implementation(feature.admin.dashboard)
+                implementation(feature.admin.list)
+                implementation(feature.admin.user.page)
+                implementation(feature.admin.product.page)
+                implementation(feature.admin.order.page)
+                implementation(feature.admin.category.page)
+                implementation(feature.admin.tag.page)
+
                 implementation(feature.root)
                 implementation(feature.router)
 
@@ -51,14 +60,6 @@ kotlin {
                 implementation(feature.account.orders)
                 implementation(feature.account.returns)
                 implementation(feature.account.wishlist)
-
-                implementation(feature.admin.dashboard)
-                implementation(feature.admin.list)
-                implementation(feature.admin.user.page)
-                implementation(feature.admin.product.page)
-                implementation(feature.admin.order.page)
-                implementation(feature.admin.category.page)
-                implementation(feature.admin.tag.page)
             }
             implementation(compose.runtime)
             implementation(compose.html.core)

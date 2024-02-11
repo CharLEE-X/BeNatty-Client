@@ -49,6 +49,7 @@ interface ProductService {
         allowReviews: Boolean?,
         catalogVisibility: CatalogVisibility?,
         categories: List<String>?,
+        tags: List<String>?,
         description: String?,
         postStatus: PostStatus?,
         images: List<ProductImageInput>?,
@@ -85,6 +86,7 @@ internal class ProductServiceImpl(private val apolloClient: ApolloClient) : Prod
         allowReviews: Boolean?,
         catalogVisibility: CatalogVisibility?,
         categories: List<String>?,
+        tags: List<String>?,
         description: String?,
         postStatus: PostStatus?,
         images: List<ProductImageInput>?,
@@ -112,7 +114,7 @@ internal class ProductServiceImpl(private val apolloClient: ApolloClient) : Prod
     ): Result<ProductUpdateMutation.Data> {
         val common = if (
             name != null || shortDescription != null || isFeatured != null || allowReviews != null ||
-            catalogVisibility != null || categories != null
+            catalogVisibility != null || categories != null || tags != null
         ) {
             Optional.present(
                 ProductCommonInput(
@@ -122,6 +124,7 @@ internal class ProductServiceImpl(private val apolloClient: ApolloClient) : Prod
                     allowReviews = allowReviews.skipIfNull(),
                     catalogVisibility = catalogVisibility.skipIfNull(),
                     categories = categories.skipIfNull(),
+                    tags = tags.skipIfNull(),
                 )
             )
         } else Optional.absent()
