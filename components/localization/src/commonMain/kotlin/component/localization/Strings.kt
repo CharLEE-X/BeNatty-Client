@@ -193,4 +193,5 @@ enum class Strings {
     ImproveWithAi,
     NoOtherTagsToChooseFrom,
     Tag,
+    InProducts,
 }

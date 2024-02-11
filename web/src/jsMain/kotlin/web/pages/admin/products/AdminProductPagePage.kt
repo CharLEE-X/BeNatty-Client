@@ -611,6 +611,7 @@ private fun Tags(vm: AdminProductPageViewModel, state: AdminProductPageContract.
             createText = state.strings.createTag,
             onCreateClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.GoToCreateTag) },
             afterTitle = { AppTooltip(state.strings.tagsDesc) },
+            modifier = Modifier.weight(1f),
         )
     }
 }

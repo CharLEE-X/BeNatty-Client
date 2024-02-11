@@ -204,4 +204,5 @@ internal fun englishLanguage(
     Strings.ImproveWithAi -> "Improve with AI"
     Strings.NoOtherTagsToChooseFrom -> "No other tags to choose from"
     Strings.Tag -> "Tag"
+    Strings.InProducts -> "In products"
 }

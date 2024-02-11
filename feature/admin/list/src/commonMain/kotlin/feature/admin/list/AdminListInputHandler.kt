@@ -235,7 +235,7 @@ internal class AdminListInputHandler :
                                     slot2 = category.name,
                                     slot3 = category.description,
                                     slot4 = category.display.toString(),
-                                    slot5 = null,
+                                    slot5 = category.usedInProducts.toString(),
                                     slot6 = null,
                                 )
                             }
@@ -268,7 +268,7 @@ internal class AdminListInputHandler :
                                     id = tag.id.toString(),
                                     slot1 = millisToDate(tag.createdAt.toLong()),
                                     slot2 = tag.name,
-                                    slot3 = null,
+                                    slot3 = tag.usedInProducts.toString(),
                                     slot4 = null,
                                     slot5 = null,
                                     slot6 = null,

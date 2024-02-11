@@ -294,11 +294,13 @@ fun Item(
                 SpanText(item.slot2 ?: "N/A")
                 SpanText(item.slot3 ?: "N/A")
                 if (item.slot4.toBoolean()) MdiVisibility() else MdiVisibilityOff()
+                SpanText(item.slot5 ?: "N/A")
             }
 
             AdminListContract.DataType.TAG -> {
                 SpanText(item.slot1)
                 SpanText(item.slot2 ?: "N/A")
+                SpanText(item.slot3 ?: "N/A")
             }
         }
     }

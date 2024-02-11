@@ -46,7 +46,7 @@ object AdminListContract {
                 DataType.PRODUCT -> getString(component.localization.Strings.Price)
                 DataType.ORDER -> getString(component.localization.Strings.Description)
                 DataType.CATEGORY -> getString(component.localization.Strings.Description)
-                DataType.TAG -> ""
+                DataType.TAG -> getString(component.localization.Strings.InProducts)
             },
             slot4Text = when (dataType) {
                 DataType.USER -> getString(component.localization.Strings.Orders)
@@ -59,7 +59,7 @@ object AdminListContract {
                 DataType.USER -> ""
                 DataType.PRODUCT -> getString(component.localization.Strings.CatalogVisibility)
                 DataType.ORDER -> ""
-                DataType.CATEGORY -> ""
+                DataType.CATEGORY -> getString(component.localization.Strings.InProducts)
                 DataType.TAG -> ""
             },
         ),
@@ -191,22 +191,24 @@ object AdminListContract {
     }
 
     enum class CategorySlot {
-        CreatedAt, Name, Description, Display;
+        CreatedAt, Name, Description, Display, InProducts;
 
         fun asString() = when (this) {
             CreatedAt -> getString(component.localization.Strings.CreatedAt)
             Name -> getString(component.localization.Strings.Name)
             Description -> getString(component.localization.Strings.Description)
             Display -> getString(component.localization.Strings.Display)
+            InProducts -> getString(component.localization.Strings.InProducts)
         }
     }
 
     enum class TagSlot {
-        CreatedAt, Name;
+        CreatedAt, Name, InProducts;
 
         fun asString() = when (this) {
             CreatedAt -> getString(component.localization.Strings.CreatedAt)
             Name -> getString(component.localization.Strings.Name)
+            InProducts -> getString(component.localization.Strings.InProducts)
         }
     }
 }

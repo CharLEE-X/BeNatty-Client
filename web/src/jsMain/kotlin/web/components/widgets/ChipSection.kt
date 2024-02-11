@@ -17,6 +17,7 @@ import web.compose.material3.component.FilterChip
 
 @Composable
 fun FilterChipSection(
+    modifier: Modifier = Modifier,
     title: String,
     chips: List<String>,
     selectedChips: List<String>,
@@ -30,7 +31,7 @@ fun FilterChipSection(
     SpanText(text = title)
     afterTitle()
     if (chips.isNotEmpty()) {
-        ChipSet {
+        ChipSet(modifier) {
             chips.forEach { chip ->
                 FilterChip(
                     label = chip.enumCapitalized(),

@@ -3,6 +3,7 @@ query GetTagsAsPage($pageInput: PageInput!) {
     tags {
       id
       name
+      usedInProducts
       createdAt
     }
     info {
