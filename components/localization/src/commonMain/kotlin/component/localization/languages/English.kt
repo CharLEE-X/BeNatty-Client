@@ -205,4 +205,5 @@ internal fun englishLanguage(
     Strings.NoOtherTagsToChooseFrom -> "No other tags to choose from"
     Strings.Tag -> "Tag"
     Strings.InProducts -> "In products"
+    Strings.AddImage -> "Add image"
 }

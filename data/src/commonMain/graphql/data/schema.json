@@ -2033,6 +2033,42 @@
               "deprecationReason": null
             },
             {
+              "name": "uploadImageToProduct",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "ProductImageUploadInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ProductImageUploadResult",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "createCategory",
               "description": null,
               "args": [
@@ -3605,6 +3641,85 @@
             }
           ],
           "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "INPUT_OBJECT",
+          "name": "ProductImageUploadInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "__typename": "__InputValue",
+              "name": "file",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Upload",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "productId",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "ProductImageUploadResult",
+          "description": null,
+          "fields": [
+            {
+              "name": "image",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ProductImage",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -6276,6 +6391,18 @@
               "ofType": null
             }
           ],
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "SCALAR",
+          "name": "Upload",
+          "description": "A file part in a multipart request",
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null,
           "specifiedByURL": null
         },
         {

@@ -24,8 +24,14 @@ kotlin {
             implementation(libs.apollo.normalizedCache)
             implementation(libs.apollo.ktorEngine)
 
+            implementation(libs.ktor.client.auth)
+            implementation(libs.ktor.client.contentNegotiation)
             implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.serialization)
             implementation(libs.ktor.client.websockets)
+
+            implementation(libs.okio)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -39,9 +45,14 @@ kotlin {
             implementation(libs.androidx.securityCrypto)
             implementation(libs.androidx.core)
             implementation(libs.apollo.normalizedCacheSqlite)
+            implementation(libs.ktor.client.jvm)
         }
         iosMain.dependencies {
             implementation(libs.apollo.normalizedCacheSqlite)
+            implementation(libs.ktor.client.ios)
+        }
+        jsMain.dependencies {
+            implementation(libs.ktor.client.js)
         }
     }
 }
@@ -53,6 +64,7 @@ apollo {
     service(libs.versions.projectName.get()) {
         packageName.set(project.name)
         generateFragmentImplementations.set(true)
+        mapScalarToUpload("Upload")
 
         introspection {
             endpointUrl.set(serverUrlGraphQl)

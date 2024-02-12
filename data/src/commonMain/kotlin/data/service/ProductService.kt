@@ -5,6 +5,9 @@ import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.watch
+import com.russhwolf.settings.Settings
+import com.russhwolf.settings.nullableString
+import data.BuildKonfig
 import data.ProductCreateMutation
 import data.ProductDeleteMutation
 import data.ProductGetByIdQuery
@@ -24,8 +27,19 @@ import data.type.ProductShippingInput
 import data.type.ProductUpdateInput
 import data.type.SortDirection
 import data.type.StockStatus
+import data.utils.ImageFile
 import data.utils.handle
 import data.utils.skipIfNull
+import data.utils.toByteArray
+import io.ktor.client.HttpClient
+import io.ktor.client.request.forms.FormPart
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.forms.submitFormWithBinaryData
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
+import io.ktor.http.takeFrom
+import io.ktor.utils.io.core.buildPacket
+import io.ktor.utils.io.core.writeFully
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -75,9 +89,57 @@ interface ProductService {
         weight: String?,
         width: String?,
     ): Result<ProductUpdateMutation.Data>
+
+    suspend fun uploadImage(
+        productId: String,
+        name: String,
+        file: ImageFile
+    ): Result<String>
 }
 
-internal class ProductServiceImpl(private val apolloClient: ApolloClient) : ProductService {
+const val SCREENSHOT_FILE_PART = "screenshot"
+const val SCREENSHOT_NAME_PART = "name"
+
+
+internal class ProductServiceImpl(
+    private val apolloClient: ApolloClient,
+    private val httpClient: HttpClient,
+    private val settings: Settings,
+) : ProductService {
+    override suspend fun uploadImage(
+        productId: String,
+        name: String,
+        file: ImageFile
+    ): Result<String> {
+        val baseUrl = BuildKonfig.serverUrlGraphQl
+        val token by settings.nullableString()
+
+        return kotlin.runCatching {
+            val response = httpClient.submitFormWithBinaryData(
+                formData {
+                    appendInput(
+                        key = SCREENSHOT_FILE_PART,
+                        headers = Headers.build {
+                            append(HttpHeaders.ContentDisposition, "filename=${name}")
+                            append(HttpHeaders.ContentType, "image/png")
+                            token?.let {
+                                append(HttpHeaders.Authorization, "Bearer $it")
+                            }
+                        }
+                    ) {
+                        buildPacket { writeFully(file.toByteArray()) }
+                    }
+                    append(FormPart(SCREENSHOT_NAME_PART, name))
+                }
+            ) {
+                url {
+                    takeFrom("${baseUrl}/auth/upload")
+                }
+            }
+            response.toString()
+        }
+    }
+
     override suspend fun update(
         id: String,
         name: String?,

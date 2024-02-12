@@ -10,11 +10,19 @@ import com.copperleaf.ballast.navigation.routing.build
 import com.copperleaf.ballast.navigation.routing.directions
 import com.copperleaf.ballast.navigation.routing.pathParameter
 import com.varabyte.kobweb.compose.foundation.layout.Box
+import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.flexWrap
+import com.varabyte.kobweb.compose.ui.modifiers.gap
+import com.varabyte.kobweb.compose.ui.modifiers.height
+import com.varabyte.kobweb.compose.ui.modifiers.minWidth
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.compose.ui.thenIf
+import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.shapes.Rect
+import com.varabyte.kobweb.silk.theme.shapes.clip
 import data.type.BackorderStatus
 import data.type.CatalogVisibility
 import data.type.PostStatus
@@ -23,7 +31,10 @@ import feature.admin.product.page.AdminProductPageContract
 import feature.admin.product.page.AdminProductPageViewModel
 import feature.router.RouterScreen
 import feature.router.RouterViewModel
+import org.jetbrains.compose.web.css.FlexWrap
 import org.jetbrains.compose.web.css.em
+import org.jetbrains.compose.web.css.percent
+import org.jetbrains.compose.web.css.px
 import web.components.layouts.AdminLayout
 import web.components.layouts.DetailPageLayout
 import web.components.layouts.ImproveWithAiRow
@@ -33,6 +44,7 @@ import web.components.widgets.CommonTextField
 import web.components.widgets.CreatorSection
 import web.components.widgets.FilterChipSection
 import web.components.widgets.HasChangesWidget
+import web.components.widgets.ImagePicker
 import web.components.widgets.SaveButton
 import web.components.widgets.SwitchSection
 import web.compose.material3.component.Divider
@@ -146,7 +158,7 @@ fun AdminProductPagePage(
                     Divider()
                     Description(state, vm)
                     IsPurchasable(vm, state)
-                    Images(state)
+                    Images(vm, state)
                 }
                 CardSection(title = state.strings.inventory) {
                     OnePerOrder(vm, state)
@@ -333,17 +345,42 @@ private fun Price(vm: AdminProductPageViewModel, state: AdminProductPageContract
 }
 
 @Composable
-private fun Images(state: AdminProductPageContract.State) {
+private fun Images(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     SpanText(text = state.strings.images)
     AppTooltip(state.strings.imagesDesc)
-    state.current.product.data.images.forEach { image ->
-        SpanText(text = "image.url: ${image.id}")
-        SpanText(text = "image.url: ${image.url}")
-        SpanText(text = "image.name: ${image.name}")
-        SpanText(text = "image.altText: ${image.altText}")
-    }
-    if (state.current.product.data.images.isEmpty()) {
-        SpanText(text = state.strings.noImages)
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .gap(1.em)
+    ) {
+        if (state.localImages.isEmpty()) {
+            SpanText(text = state.strings.noImages)
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(70.percent)
+                .flexWrap(FlexWrap.Wrap)
+                .gap(1.em)
+        ) {
+            state.localImages.forEach { image ->
+                Image(
+                    src = image.url,
+                    alt = image.altText,
+                    modifier = Modifier
+                        .size(200.px)
+                        .clip(Rect(8.px))
+                )
+            }
+        }
+        ImagePicker(
+            modifier = Modifier
+                .height(200.px)
+                .minWidth(300.px)
+                .weight(1f)
+        ) { file ->
+            vm.trySend(AdminProductPageContract.Inputs.UploadImage(file))
+        }
     }
 }
 

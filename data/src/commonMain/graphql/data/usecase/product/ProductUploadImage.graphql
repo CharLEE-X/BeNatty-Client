@@ -1,0 +1,12 @@
+mutation ProductUploadImage($input: ProductImageUploadInput!) {
+  uploadImageToProduct(input: $input) {
+    image {
+      id
+      name
+      altText
+      url
+      created
+      modified
+    }
+  }
+}

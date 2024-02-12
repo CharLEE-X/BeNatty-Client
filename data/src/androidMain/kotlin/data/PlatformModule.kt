@@ -6,6 +6,7 @@ import com.apollographql.apollo3.cache.normalized.api.NormalizedCacheFactory
 import com.apollographql.apollo3.cache.normalized.sql.SqlNormalizedCacheFactory
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.SharedPreferencesSettings
+import io.ktor.client.engine.cio.CIO
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -36,4 +37,5 @@ internal actual val platformModule: Module = module {
             delegate = prefs,
         )
     }
+    factory { CIO.create() }
 }

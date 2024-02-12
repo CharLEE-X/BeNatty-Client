@@ -4,6 +4,7 @@ import com.apollographql.apollo3.api.Optional
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
+import core.util.currentTimeMillis
 import core.util.millisToTime
 import data.GetCategoryByIdQuery
 import data.ProductGetByIdQuery
@@ -16,6 +17,7 @@ import data.type.PostStatus
 import data.type.ProductCreateInput
 import data.type.ProductImageInput
 import data.type.StockStatus
+import data.utils.ImageFile
 import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -35,6 +37,7 @@ internal class AdminProductPageInputHandler :
 
     override suspend fun InputScope.handleInput(input: AdminProductPageContract.Inputs) = when (input) {
         is AdminProductPageContract.Inputs.Init -> handleInit(input.productId)
+        is AdminProductPageContract.Inputs.UploadImage -> handleUploadImage(input.imageFile)
 
         is AdminProductPageContract.Inputs.Get.ProductById -> handleGetProductById(input.id)
         AdminProductPageContract.Inputs.Get.AllCategories -> handleGetAllCategories()
@@ -63,6 +66,8 @@ internal class AdminProductPageInputHandler :
         is AdminProductPageContract.Inputs.OnClick.PresetSelected -> handlePresetClick(input.preset)
         AdminProductPageContract.Inputs.OnClick.GoToCreateCategory ->
             postEvent(AdminProductPageContract.Events.GoToCreateCategory)
+
+        is AdminProductPageContract.Inputs.OnClick.AddImage -> handleAddImage(input.path)
 
         is AdminProductPageContract.Inputs.Set.AllCategories -> updateState { it.copy(allCategories = input.categories) }
         is AdminProductPageContract.Inputs.Set.AllTags -> updateState { it.copy(allTags = input.tags) }
@@ -121,6 +126,20 @@ internal class AdminProductPageInputHandler :
         is AdminProductPageContract.Inputs.Set.HeightShake -> updateState { it.copy(shakeHeight = input.shake) }
         is AdminProductPageContract.Inputs.Set.PresetCategory -> handleSetPresetCategory(input.category)
         is AdminProductPageContract.Inputs.Set.ShippingPresetId -> handleSetShippingPresetId(input.presetId)
+        is AdminProductPageContract.Inputs.Set.LocalImages -> updateState { it.copy(localImages = input.localImages) }
+    }
+
+    private suspend fun InputScope.handleAddImage(path: String) {
+        val time = currentTimeMillis().toString()
+        val img = ProductGetByIdQuery.Image(
+            id = "local$time",
+            url = path,
+            altText = "",
+            name = "",
+            created = time,
+            modified = time,
+        )
+        updateState { it.copy(localImages = it.localImages + img) }
     }
 
     private suspend fun InputScope.handleOnClickCategory(name: String) {
@@ -642,6 +661,7 @@ internal class AdminProductPageInputHandler :
                         )
                         postInput(AdminProductPageContract.Inputs.Set.OriginalProduct(originalProduct))
                         postInput(AdminProductPageContract.Inputs.Set.CurrentProduct(originalProduct))
+                        postInput(AdminProductPageContract.Inputs.Set.LocalImages(originalProduct.product.data.images))
                     },
                     onFailure = {
                         postEvent(
@@ -678,6 +698,21 @@ internal class AdminProductPageInputHandler :
             it.copy(
                 wasEdited = false,
                 current = it.original,
+            )
+        }
+    }
+
+    private suspend fun InputScope.handleUploadImage(file: ImageFile) {
+        val state = getCurrentState()
+        sideJob("handleSaveDetailsUploadImage") {
+            productService.uploadImage(state.current.product.id.toString(), "", file).fold(
+                onSuccess = { data ->
+                    println("Image uploaded successfully. Message: $data")
+                    postInput(AdminProductPageContract.Inputs.Get.ProductById(state.current.product.id.toString()))
+                },
+                onFailure = {
+                    postEvent(AdminProductPageContract.Events.OnError(it.message ?: "Error while uploading image"))
+                },
             )
         }
     }

@@ -194,4 +194,5 @@ enum class Strings {
     NoOtherTagsToChooseFrom,
     Tag,
     InProducts,
+    AddImage,
 }

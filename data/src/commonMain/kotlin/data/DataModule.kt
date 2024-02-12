@@ -18,6 +18,13 @@ import data.service.TagService
 import data.service.TagServiceImpl
 import data.service.UserService
 import data.service.UserServiceImpl
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -27,6 +34,23 @@ val dataModule = module {
         platformModule,
         apolloModule,
     )
+
+    single<HttpClient> {
+        HttpClient(get<HttpClientEngine>()) {
+            install(Logging) {
+                level = LogLevel.ALL
+            }
+            install(ContentNegotiation) {
+                json(
+                    Json {
+                        ignoreUnknownKeys = true
+                        encodeDefaults = true
+                        isLenient = true
+                    }
+                )
+            }
+        }
+    }
 
     single<DebugService> {
         DebugServiceImpl(
@@ -48,6 +72,8 @@ val dataModule = module {
     single<ProductService> {
         ProductServiceImpl(
             apolloClient = get(),
+            httpClient = get(),
+            settings = get(named(SettingsType.SETTINGS_ENCRYPTED.name)),
         )
     }
     single<AdminService> {

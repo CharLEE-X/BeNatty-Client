@@ -9,6 +9,7 @@ import data.type.BackorderStatus
 import data.type.CatalogVisibility
 import data.type.PostStatus
 import data.type.StockStatus
+import data.utils.ImageFile
 
 object AdminProductPageContract {
     data class State(
@@ -41,6 +42,8 @@ object AdminProductPageContract {
         val shakeLength: Boolean = false,
         val widthError: String? = null,
         val shakeWidth: Boolean = false,
+
+        val localImages: List<ProductGetByIdQuery.Image> = emptyList(),
 
         val isCreateDisabled: Boolean = true,
         val allCategories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal> = emptyList(),
@@ -112,6 +115,7 @@ object AdminProductPageContract {
 
     sealed interface Inputs {
         data class Init(val productId: String?) : Inputs
+        data class UploadImage(val imageFile: ImageFile) : Inputs
 
         sealed interface Get : Inputs {
             data class ProductById(val id: String) : Inputs
@@ -135,6 +139,7 @@ object AdminProductPageContract {
             data object ImproveShortDescription : Inputs
             data object ImproveDescription : Inputs
             data object ImproveTags : Inputs
+            data class AddImage(val path: String) : Inputs
         }
 
         sealed interface Set : Inputs {
@@ -195,6 +200,7 @@ object AdminProductPageContract {
             data class Images(val images: List<ProductGetByIdQuery.Image>) : Inputs
             data class PresetCategory(val category: GetCategoryByIdQuery.GetCategoryById?) : Inputs
             data class ShippingPresetId(val presetId: String?) : Inputs
+            data class LocalImages(val localImages: List<ProductGetByIdQuery.Image>) : Inputs
         }
     }
 
@@ -294,7 +300,9 @@ object AdminProductPageContract {
         val heightDesc: String = getString(component.localization.Strings.HeightDesc),
         val shippingPresetDesc: String = getString(component.localization.Strings.ShippingPresetDesc),
         val improveWithAi: String = getString(component.localization.Strings.ImproveWithAi),
-    )
+        val addImage: String = getString(component.localization.Strings.AddImage),
+    ) {
+    }
 
     sealed interface ScreenState {
         data object New : ScreenState
