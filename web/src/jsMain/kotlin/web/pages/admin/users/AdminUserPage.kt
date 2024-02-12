@@ -42,7 +42,6 @@ import web.components.widgets.CardSection
 import web.components.widgets.CommonTextField
 import web.components.widgets.FilterChipSection
 import web.components.widgets.HasChangesWidget
-import web.components.widgets.RadioSection
 import web.components.widgets.SectionHeader
 import web.compose.material3.component.FilledTonalButton
 import web.compose.material3.component.TextFieldType
@@ -253,6 +252,7 @@ private fun Address(vm: AdminUserPageViewModel, state: AdminUserPageContract.Sta
     }
 }
 
+@Suppress("UNUSED_PARAMETER")
 @Composable
 fun Wishlist(vm: AdminUserPageViewModel, state: AdminUserPageContract.State) {
     SectionHeader(

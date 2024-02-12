@@ -19,6 +19,8 @@ fun WishlistPage(
             onError = onError,
         )
     }
+
+    @Suppress("UNUSED_VARIABLE")
     val state by vm.observeStates().collectAsState()
 
     PageHeader("Wishlist")

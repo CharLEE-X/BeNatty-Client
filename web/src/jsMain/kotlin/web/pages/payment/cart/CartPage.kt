@@ -12,6 +12,7 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.router.RouterScreen
 import feature.router.RouterViewModel
 
+@Suppress("UNUSED_PARAMETER")
 @Composable
 fun CartPage(
     router: RouterViewModel,

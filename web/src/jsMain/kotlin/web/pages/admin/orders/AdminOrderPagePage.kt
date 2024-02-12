@@ -28,6 +28,8 @@ fun AdminOrderPagePage(
             onError = onError,
         )
     }
+
+    @Suppress("UNUSED_VARIABLE")
     val state by vm.observeStates().collectAsState()
 
     AdminLayout("Admin Order Page", router) {

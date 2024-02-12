@@ -7,6 +7,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.silk.components.text.SpanText
 
+@Suppress("UNUSED_PARAMETER")
 @Composable
 fun BlogPage(
     onError: suspend (String) -> Unit,

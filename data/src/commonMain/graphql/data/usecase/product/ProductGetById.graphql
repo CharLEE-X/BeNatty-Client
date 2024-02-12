@@ -21,7 +21,6 @@ query ProductGetById($getProductByIdId: ObjectId!) {
           created
           id
           modified
-          name
           url
         }
         isPurchasable

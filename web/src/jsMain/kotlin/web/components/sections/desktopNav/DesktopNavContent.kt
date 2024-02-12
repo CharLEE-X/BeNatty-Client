@@ -60,6 +60,8 @@ fun DesktopNav(
             logOut = logOut,
         )
     }
+
+    @Suppress("UNUSED_VARIABLE")
     val state by vm.observeStates().collectAsState()
 
     Column(

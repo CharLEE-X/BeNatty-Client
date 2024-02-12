@@ -2061,7 +2061,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "ProductImageUploadResult",
+                  "name": "Product",
                   "ofType": null
                 }
               },
@@ -3492,19 +3492,6 @@
               "deprecationReason": null
             },
             {
-              "name": "name",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "url",
               "description": null,
               "args": [],
@@ -3609,20 +3596,6 @@
             },
             {
               "__typename": "__InputValue",
-              "name": "name",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "__typename": "__InputValue",
               "name": "url",
               "description": null,
               "type": {
@@ -3654,7 +3627,7 @@
           "inputFields": [
             {
               "__typename": "__InputValue",
-              "name": "file",
+              "name": "imageString",
               "description": null,
               "type": {
                 "__typename": "__Type",
@@ -3662,7 +3635,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "Upload",
+                  "name": "String",
                   "ofType": null
                 }
               },
@@ -3690,36 +3663,6 @@
             }
           ],
           "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null,
-          "specifiedByURL": null
-        },
-        {
-          "__typename": "__Type",
-          "kind": "OBJECT",
-          "name": "ProductImageUploadResult",
-          "description": null,
-          "fields": [
-            {
-              "name": "image",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "ProductImage",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -6391,18 +6334,6 @@
               "ofType": null
             }
           ],
-          "specifiedByURL": null
-        },
-        {
-          "__typename": "__Type",
-          "kind": "SCALAR",
-          "name": "Upload",
-          "description": "A file part in a multipart request",
-          "fields": null,
-          "inputFields": null,
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null,
           "specifiedByURL": null
         },
         {

@@ -20,7 +20,6 @@ mutation ProductUpdate($input: ProductUpdateInput!) {
         created
         id
         modified
-        name
         url
       }
       isPurchasable

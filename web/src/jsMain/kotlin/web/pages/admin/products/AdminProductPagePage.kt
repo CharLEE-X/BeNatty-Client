@@ -31,10 +31,12 @@ import feature.admin.product.page.AdminProductPageContract
 import feature.admin.product.page.AdminProductPageViewModel
 import feature.router.RouterScreen
 import feature.router.RouterViewModel
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.FlexWrap
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
+import org.w3c.files.Blob
 import web.components.layouts.AdminLayout
 import web.components.layouts.DetailPageLayout
 import web.components.layouts.ImproveWithAiRow
@@ -49,6 +51,7 @@ import web.components.widgets.SaveButton
 import web.components.widgets.SwitchSection
 import web.compose.material3.component.Divider
 import web.compose.material3.component.TextFieldType
+import web.util.convertImageToBase64
 import web.util.onEnterKeyDown
 
 @Composable
@@ -346,6 +349,8 @@ private fun Price(vm: AdminProductPageViewModel, state: AdminProductPageContract
 
 @Composable
 private fun Images(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+    val scope = rememberCoroutineScope()
+
     SpanText(text = state.strings.images)
     AppTooltip(state.strings.imagesDesc)
 
@@ -354,7 +359,7 @@ private fun Images(vm: AdminProductPageViewModel, state: AdminProductPageContrac
             .fillMaxWidth()
             .gap(1.em)
     ) {
-        if (state.localImages.isEmpty()) {
+        if (state.current.product.data.images.isEmpty()) {
             SpanText(text = state.strings.noImages)
         }
         Row(
@@ -363,7 +368,7 @@ private fun Images(vm: AdminProductPageViewModel, state: AdminProductPageContrac
                 .flexWrap(FlexWrap.Wrap)
                 .gap(1.em)
         ) {
-            state.localImages.forEach { image ->
+            state.current.product.data.images.forEach { image ->
                 Image(
                     src = image.url,
                     alt = image.altText,
@@ -379,10 +384,22 @@ private fun Images(vm: AdminProductPageViewModel, state: AdminProductPageContrac
                 .minWidth(300.px)
                 .weight(1f)
         ) { file ->
-            vm.trySend(AdminProductPageContract.Inputs.UploadImage(file))
+            scope.launch {
+                val imageString = convertImageToBase64(file)
+                vm.trySend(AdminProductPageContract.Inputs.UploadImage(imageString))
+            }
         }
     }
 }
+
+data class JsImage(
+    val id: String,
+    val image: Blob,
+    val name: String?,
+    val altText: String,
+    val created: String,
+    val modified: String,
+)
 
 @Composable
 private fun TrackInventory(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {

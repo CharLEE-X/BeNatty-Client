@@ -24,6 +24,7 @@ import theme.MaterialTheme
 import web.compose.example.components.ChipShowcase
 import web.compose.material3.component.labs.FilledCard
 
+@Suppress("UNUSED_PARAMETER")
 @Composable
 fun HomeContent(
     router: RouterViewModel,

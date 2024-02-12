@@ -64,7 +64,6 @@ apollo {
     service(libs.versions.projectName.get()) {
         packageName.set(project.name)
         generateFragmentImplementations.set(true)
-        mapScalarToUpload("Upload")
 
         introspection {
             endpointUrl.set(serverUrlGraphQl)

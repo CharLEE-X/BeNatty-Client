@@ -11,6 +11,7 @@ import com.varabyte.kobweb.silk.components.forms.Button
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.router.RouterViewModel
 
+@Suppress("UNUSED_PARAMETER")
 @Composable
 fun ProductPage(
     router: RouterViewModel,

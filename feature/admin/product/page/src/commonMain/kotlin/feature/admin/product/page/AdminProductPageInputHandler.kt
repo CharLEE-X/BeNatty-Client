@@ -1,10 +1,8 @@
 package feature.admin.product.page
 
-import com.apollographql.apollo3.api.Optional
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
-import core.util.currentTimeMillis
 import core.util.millisToTime
 import data.GetCategoryByIdQuery
 import data.ProductGetByIdQuery
@@ -17,7 +15,6 @@ import data.type.PostStatus
 import data.type.ProductCreateInput
 import data.type.ProductImageInput
 import data.type.StockStatus
-import data.utils.ImageFile
 import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -37,7 +34,7 @@ internal class AdminProductPageInputHandler :
 
     override suspend fun InputScope.handleInput(input: AdminProductPageContract.Inputs) = when (input) {
         is AdminProductPageContract.Inputs.Init -> handleInit(input.productId)
-        is AdminProductPageContract.Inputs.UploadImage -> handleUploadImage(input.imageFile)
+        is AdminProductPageContract.Inputs.UploadImage -> handleUploadImage(input.imageString)
 
         is AdminProductPageContract.Inputs.Get.ProductById -> handleGetProductById(input.id)
         AdminProductPageContract.Inputs.Get.AllCategories -> handleGetAllCategories()
@@ -66,8 +63,6 @@ internal class AdminProductPageInputHandler :
         is AdminProductPageContract.Inputs.OnClick.PresetSelected -> handlePresetClick(input.preset)
         AdminProductPageContract.Inputs.OnClick.GoToCreateCategory ->
             postEvent(AdminProductPageContract.Events.GoToCreateCategory)
-
-        is AdminProductPageContract.Inputs.OnClick.AddImage -> handleAddImage(input.path)
 
         is AdminProductPageContract.Inputs.Set.AllCategories -> updateState { it.copy(allCategories = input.categories) }
         is AdminProductPageContract.Inputs.Set.AllTags -> updateState { it.copy(allTags = input.tags) }
@@ -126,20 +121,6 @@ internal class AdminProductPageInputHandler :
         is AdminProductPageContract.Inputs.Set.HeightShake -> updateState { it.copy(shakeHeight = input.shake) }
         is AdminProductPageContract.Inputs.Set.PresetCategory -> handleSetPresetCategory(input.category)
         is AdminProductPageContract.Inputs.Set.ShippingPresetId -> handleSetShippingPresetId(input.presetId)
-        is AdminProductPageContract.Inputs.Set.LocalImages -> updateState { it.copy(localImages = input.localImages) }
-    }
-
-    private suspend fun InputScope.handleAddImage(path: String) {
-        val time = currentTimeMillis().toString()
-        val img = ProductGetByIdQuery.Image(
-            id = "local$time",
-            url = path,
-            altText = "",
-            name = "",
-            created = time,
-            modified = time,
-        )
-        updateState { it.copy(localImages = it.localImages + img) }
     }
 
     private suspend fun InputScope.handleOnClickCategory(name: String) {
@@ -661,7 +642,6 @@ internal class AdminProductPageInputHandler :
                         )
                         postInput(AdminProductPageContract.Inputs.Set.OriginalProduct(originalProduct))
                         postInput(AdminProductPageContract.Inputs.Set.CurrentProduct(originalProduct))
-                        postInput(AdminProductPageContract.Inputs.Set.LocalImages(originalProduct.product.data.images))
                     },
                     onFailure = {
                         postEvent(
@@ -702,18 +682,40 @@ internal class AdminProductPageInputHandler :
         }
     }
 
-    private suspend fun InputScope.handleUploadImage(file: ImageFile) {
+    private suspend fun InputScope.handleUploadImage(imageString: String) {
         val state = getCurrentState()
         sideJob("handleSaveDetailsUploadImage") {
-            productService.uploadImage(state.current.product.id.toString(), "", file).fold(
+            postInput(AdminProductPageContract.Inputs.Set.Loading(isLoading = true))
+            productService.uploadImage(state.current.product.id.toString(), imageString).fold(
                 onSuccess = { data ->
-                    println("Image uploaded successfully. Message: $data")
-                    postInput(AdminProductPageContract.Inputs.Get.ProductById(state.current.product.id.toString()))
+                    println("Image uploaded successfully.\nMessage: ${data.uploadImageToProduct}")
+                    val images = data.uploadImageToProduct.data.images.map {
+                        ProductGetByIdQuery.Image(
+                            id = it.id,
+                            url = it.url,
+                            altText = it.altText,
+                            created = it.created,
+                            modified = it.modified,
+                        )
+                    }
+                    val original = state.original.copy(
+                        product = state.original.product.copy(
+                            data = state.original.product.data.copy(images = images)
+                        )
+                    )
+                    val current = state.current.copy(
+                        product = state.current.product.copy(
+                            data = state.current.product.data.copy(images = images)
+                        )
+                    )
+                    postInput(AdminProductPageContract.Inputs.Set.OriginalProduct(original))
+                    postInput(AdminProductPageContract.Inputs.Set.CurrentProduct(current))
                 },
                 onFailure = {
                     postEvent(AdminProductPageContract.Events.OnError(it.message ?: "Error while uploading image"))
                 },
             )
+            postInput(AdminProductPageContract.Inputs.Set.Loading(isLoading = false))
         }
     }
 
@@ -810,7 +812,6 @@ internal class AdminProductPageInputHandler :
                             current.product.data.images.map {
                                 ProductImageInput(
                                     id = it.id,
-                                    name = Optional.absent(),
                                     url = it.url,
                                     altText = it.altText,
                                     created = it.created,
@@ -866,7 +867,6 @@ internal class AdminProductPageInputHandler :
                             val images = data.updateProduct.data.images.map {
                                 ProductGetByIdQuery.Image(
                                     id = it.id,
-                                    name = it.name,
                                     url = it.url,
                                     altText = it.altText,
                                     created = it.created,
