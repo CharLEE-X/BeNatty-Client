@@ -142,6 +142,7 @@ object AdminCategoryPageContract {
         val kg: String? = getString(component.localization.Strings.Kg),
         val cm: String? = getString(component.localization.Strings.Cm),
         val improveWithAi: String = getString(component.localization.Strings.ImproveWithAi),
+        val deleteExplain: String = getString(component.localization.Strings.DeleteExplain),
     )
 
     sealed interface ScreenState {

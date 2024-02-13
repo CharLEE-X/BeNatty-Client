@@ -1,13 +1,11 @@
 mutation ProductUploadImage($input: ProductImageUploadInput!) {
   uploadImageToProduct(input: $input) {
-    data {
       images {
         id
         altText
-        url
+        blob
         created
         modified
       }
-    }
   }
 }

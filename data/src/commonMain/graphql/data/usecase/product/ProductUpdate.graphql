@@ -15,13 +15,7 @@ mutation ProductUpdate($input: ProductUpdateInput!) {
     }
     data {
       description
-      images {
-        altText
-        created
-        id
-        modified
-        url
-      }
+      images
       isPurchasable
       parentId
       postStatus

@@ -76,6 +76,7 @@ fun AdminTagPage(
     AdminLayout(
         title = title,
         router = router,
+        isLoading = state.isLoading,
         overlay = {
             HasChangesWidget(
                 hasChanges = state.wasEdited,
@@ -93,7 +94,6 @@ fun AdminTagPage(
             name = state.current.name.ifEmpty { null },
             showDelete = state.screenState !is AdminTagPageContract.ScreenState.New,
             deleteText = state.strings.delete,
-            cancelText = state.strings.cancel,
             createdAtText = state.strings.createdAt,
             updatedAtText = state.strings.lastUpdatedAt,
             createdAtValue = state.current.createdAt,

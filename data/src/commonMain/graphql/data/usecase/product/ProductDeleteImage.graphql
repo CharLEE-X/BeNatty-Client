@@ -1,0 +1,5 @@
+mutation DeleteProductImage($productId: ObjectId!, $imageId: ObjectId!) {
+  deleteProductImage(productId: $productId, imageId: $imageId) {
+    deleted
+  }
+}

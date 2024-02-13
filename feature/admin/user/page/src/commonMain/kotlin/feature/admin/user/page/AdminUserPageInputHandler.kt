@@ -32,11 +32,11 @@ internal class AdminUserPageInputHandler :
 
         is AdminUserPageContract.Inputs.Get.UserById -> handleGetUserById(input.id)
 
-        AdminUserPageContract.Inputs.OnCLick.Create -> handleCreateNewUser()
-        is AdminUserPageContract.Inputs.OnCLick.Delete -> handleDeleteUser()
-        is AdminUserPageContract.Inputs.OnCLick.ResetPassword -> handleResetPassword()
-        is AdminUserPageContract.Inputs.OnCLick.SaveEdit -> handleSavePersonalDetails()
-        AdminUserPageContract.Inputs.OnCLick.CancelEdit -> handleCancelEdit()
+        AdminUserPageContract.Inputs.OnClick.Create -> handleCreateNewUser()
+        is AdminUserPageContract.Inputs.OnClick.Delete -> handleDeleteUser()
+        is AdminUserPageContract.Inputs.OnClick.ResetPassword -> handleResetPassword()
+        is AdminUserPageContract.Inputs.OnClick.SaveEdit -> handleSavePersonalDetails()
+        AdminUserPageContract.Inputs.OnClick.CancelEdit -> handleCancelEdit()
 
         is AdminUserPageContract.Inputs.Set.OriginalUser -> updateState { it.copy(original = input.user).wasEdited() }
         is AdminUserPageContract.Inputs.Set.CurrentUser -> updateState { it.copy(current = input.user).wasEdited() }

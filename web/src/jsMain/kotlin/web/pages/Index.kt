@@ -5,9 +5,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import com.varabyte.kobweb.compose.foundation.layout.Box
-import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.core.Page
 import feature.root.RootContract
 import feature.root.RootViewModel
@@ -26,15 +23,11 @@ fun HomePage() {
     }
     val state by vm.observeStates().collectAsState()
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-    ) {
-        RouterContent(
-            isAuthenticated = state.isAuthenticated,
-            onError = {
-                println("Error: $it")
-            },
-            onLogOut = { vm.trySend(RootContract.Inputs.LogOut) },
-        )
-    }
+    RouterContent(
+        isAuthenticated = state.isAuthenticated,
+        onError = {
+            println("Error: $it")
+        },
+        onLogOut = { vm.trySend(RootContract.Inputs.LogOut) },
+    )
 }

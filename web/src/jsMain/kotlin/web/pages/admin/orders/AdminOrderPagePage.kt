@@ -32,7 +32,11 @@ fun AdminOrderPagePage(
     @Suppress("UNUSED_VARIABLE")
     val state by vm.observeStates().collectAsState()
 
-    AdminLayout("Admin Order Page", router) {
+    AdminLayout(
+        title = "Admin Order Page",
+        router = router,
+        isLoading = false
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()

@@ -9,7 +9,9 @@ import org.w3c.files.File
 import org.w3c.files.FilePropertyBag
 import org.w3c.files.FileReader
 
-suspend fun convertImageToBase64(file: File): String = coroutineScope {
+suspend fun convertImageToBase64(file: File): String? = coroutineScope {
+    if (file.type != "image/png") return@coroutineScope null
+
     val reader = FileReader()
     val promise = kotlin.js.Promise { resolve, reject ->
         reader.onload = { event ->

@@ -8,17 +8,19 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontFamily
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiAdd
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
 import theme.MaterialTheme
 import theme.roleStyle
 import web.FONT_CUSTOM
-import web.components.widgets.DeleteButtonWithConfirmation
 import web.compose.material3.component.Divider
+import web.compose.material3.component.FilledButton
 
 @Composable
 fun DetailPageLayout(
@@ -27,7 +29,6 @@ fun DetailPageLayout(
     name: String?,
     showDelete: Boolean,
     deleteText: String,
-    cancelText: String,
     createdAtText: String,
     updatedAtText: String,
     createdAtValue: String,
@@ -37,7 +38,7 @@ fun DetailPageLayout(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .gap(1.em)
     ) {
         Row(
@@ -60,11 +61,12 @@ fun DetailPageLayout(
             }
             Spacer()
             if (showDelete) {
-                DeleteButtonWithConfirmation(
-                    deleteText = deleteText,
-                    cancelText = cancelText,
-                    onDelete = onDeleteClick,
-                )
+                FilledButton(
+                    onClick = { onDeleteClick() },
+                    leadingIcon = { MdiAdd() },
+                ) {
+                    SpanText(text = deleteText)
+                }
             }
         }
         id?.let {

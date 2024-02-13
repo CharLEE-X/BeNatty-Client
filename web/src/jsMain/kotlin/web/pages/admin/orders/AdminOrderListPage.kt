@@ -39,7 +39,11 @@ fun AdminOrderListPage(
     }
     val state by vm.observeStates().collectAsState()
 
-    AdminLayout("Admin Order List", router) {
+    AdminLayout(
+        title = "Admin Order List",
+        router = router,
+        isLoading = false,
+    ) {
         ListPageLayout(state, vm)
     }
 }

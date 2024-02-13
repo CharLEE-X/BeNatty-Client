@@ -195,4 +195,5 @@ enum class Strings {
     Tag,
     InProducts,
     AddImage,
+    DeleteExplain,
 }

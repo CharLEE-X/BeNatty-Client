@@ -5,6 +5,7 @@ import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.watch
+import data.DeleteProductImageMutation
 import data.ProductCreateMutation
 import data.ProductDeleteMutation
 import data.ProductGetByIdQuery
@@ -82,11 +83,17 @@ interface ProductService {
         productId: String,
         imageString: String
     ): Result<ProductUploadImageMutation.Data>
+
+    suspend fun deleteImage(productId: String, imageId: String): Result<DeleteProductImageMutation.Data>
 }
 
 internal class ProductServiceImpl(
     private val apolloClient: ApolloClient,
 ) : ProductService {
+    override suspend fun deleteImage(productId: String, imageId: String): Result<DeleteProductImageMutation.Data> {
+        return apolloClient.mutation(DeleteProductImageMutation(productId, imageId)).handle()
+    }
+
     override suspend fun uploadImage(
         productId: String,
         imageString: String
@@ -181,7 +188,7 @@ internal class ProductServiceImpl(
             )
         } else Optional.absent()
 
-        val price = if (
+        val productPrice = if (
             onSale != null || price != null || regularPrice != null || saleEnd != null ||
             salePrice != null || saleStart != null
         ) {
@@ -218,7 +225,7 @@ internal class ProductServiceImpl(
             common = common,
             data = data,
             inventory = inventory,
-            price = price,
+            price = productPrice,
             shipping = shipping,
         )
 

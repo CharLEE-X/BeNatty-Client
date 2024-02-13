@@ -1,28 +1,50 @@
 package web.pages.admin.products
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.copperleaf.ballast.navigation.routing.build
 import com.copperleaf.ballast.navigation.routing.directions
 import com.copperleaf.ballast.navigation.routing.pathParameter
+import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
+import com.varabyte.kobweb.compose.css.CSSTransition
+import com.varabyte.kobweb.compose.css.ObjectFit
+import com.varabyte.kobweb.compose.css.Overflow
+import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Row
+import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
+import com.varabyte.kobweb.compose.ui.modifiers.border
+import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.flexWrap
 import com.varabyte.kobweb.compose.ui.modifiers.gap
-import com.varabyte.kobweb.compose.ui.modifiers.height
-import com.varabyte.kobweb.compose.ui.modifiers.minWidth
+import com.varabyte.kobweb.compose.ui.modifiers.margin
+import com.varabyte.kobweb.compose.ui.modifiers.objectFit
+import com.varabyte.kobweb.compose.ui.modifiers.onClick
+import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
+import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
+import com.varabyte.kobweb.compose.ui.modifiers.onMouseOut
+import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
+import com.varabyte.kobweb.compose.ui.modifiers.opacity
+import com.varabyte.kobweb.compose.ui.modifiers.overflow
+import com.varabyte.kobweb.compose.ui.modifiers.scale
 import com.varabyte.kobweb.compose.ui.modifiers.size
+import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.silk.components.graphics.Image
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiAddAPhoto
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
-import com.varabyte.kobweb.silk.theme.shapes.Rect
-import com.varabyte.kobweb.silk.theme.shapes.clip
+import data.ProductGetByIdQuery
 import data.type.BackorderStatus
 import data.type.CatalogVisibility
 import data.type.PostStatus
@@ -33,10 +55,14 @@ import feature.router.RouterScreen
 import feature.router.RouterViewModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.FlexWrap
+import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.em
-import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
-import org.w3c.files.Blob
+import org.jetbrains.compose.web.css.s
+import org.jetbrains.compose.web.css.value
+import org.w3c.dom.url.URL
+import org.w3c.files.File
+import theme.MaterialTheme
 import web.components.layouts.AdminLayout
 import web.components.layouts.DetailPageLayout
 import web.components.layouts.ImproveWithAiRow
@@ -44,13 +70,18 @@ import web.components.widgets.AppTooltip
 import web.components.widgets.CardSection
 import web.components.widgets.CommonTextField
 import web.components.widgets.CreatorSection
+import web.components.widgets.DeleteDialog
 import web.components.widgets.FilterChipSection
 import web.components.widgets.HasChangesWidget
 import web.components.widgets.ImagePicker
+import web.components.widgets.ImagePreviewDialog
 import web.components.widgets.SaveButton
 import web.components.widgets.SwitchSection
 import web.compose.material3.component.Divider
 import web.compose.material3.component.TextFieldType
+import web.compose.material3.component.TonalIconButton
+import web.compose.material3.component.labs.FilledCard
+import web.util.convertBase64ToFile
 import web.util.convertImageToBase64
 import web.util.onEnterKeyDown
 
@@ -101,9 +132,16 @@ fun AdminProductPagePage(
     }
     val state by vm.observeStates().collectAsState()
 
+    var previewDialogImage: ProductGetByIdQuery.Image? by remember { mutableStateOf(null) }
+    var previewDialogOpen by remember { mutableStateOf(false) }
+
+    var dialogOpen by remember { mutableStateOf(false) }
+    var dialogClosing by remember { mutableStateOf(false) }
+
     AdminLayout(
         title = state.strings.createProduct,
         router = router,
+        isLoading = state.isLoading,
         overlay = {
             HasChangesWidget(
                 hasChanges = state.wasEdited,
@@ -113,7 +151,30 @@ fun AdminProductPagePage(
                 onSave = { vm.trySend(AdminProductPageContract.Inputs.OnClick.SaveEdit) },
                 onCancel = { vm.trySend(AdminProductPageContract.Inputs.OnClick.CancelEdit) },
             )
-        }
+            if (previewDialogOpen) {
+                previewDialogImage?.let { image ->
+                    ImagePreviewDialog(
+                        open = previewDialogOpen,
+                        imageUrl = image.blob,
+                        alt = image.altText,
+                        onClose = { previewDialogOpen = false }
+                    )
+                }
+            }
+
+            DeleteDialog(
+                open = dialogOpen && !dialogClosing,
+                closing = dialogClosing,
+                title = state.strings.delete,
+                actionYesText = state.strings.delete,
+                actionNoText = state.strings.cancel,
+                contentText = state.strings.deleteExplain,
+                onOpen = { dialogOpen = it },
+                onClosing = { dialogClosing = it },
+                onYes = { vm.trySend(AdminProductPageContract.Inputs.OnClick.Delete) },
+                onNo = { dialogClosing = true },
+            )
+        },
     ) {
         DetailPageLayout(
             title = if (state.screenState is AdminProductPageContract.ScreenState.New) {
@@ -121,16 +182,15 @@ fun AdminProductPagePage(
             } else {
                 state.strings.product
             },
-            id = state.current.product.id.toString(),
-            name = state.current.product.common.name.ifEmpty { null },
+            id = state.current.id.toString(),
+            name = state.current.common.name.ifEmpty { null },
             showDelete = state.screenState is AdminProductPageContract.ScreenState.Existing,
             deleteText = state.strings.delete,
-            cancelText = state.strings.cancel,
             createdAtText = state.strings.createdAt,
             updatedAtText = state.strings.lastUpdatedAt,
-            createdAtValue = state.current.product.common.createdAt,
-            updatedAtValue = state.current.product.common.updatedAt,
-            onDeleteClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.Delete) },
+            createdAtValue = state.current.common.createdAt,
+            updatedAtValue = state.current.common.updatedAt,
+            onDeleteClick = { dialogOpen = !dialogOpen },
         ) {
             CardSection(title = state.strings.details) {
                 Name(state, vm)
@@ -161,7 +221,14 @@ fun AdminProductPagePage(
                     Divider()
                     Description(state, vm)
                     IsPurchasable(vm, state)
-                    Images(vm, state)
+                    Images(
+                        vm = vm,
+                        state = state,
+                        onImageCLick = {
+                            previewDialogImage = it
+                            previewDialogOpen = true
+                        }
+                    )
                 }
                 CardSection(title = state.strings.inventory) {
                     OnePerOrder(vm, state)
@@ -199,13 +266,13 @@ fun AdminProductPagePage(
 
 @Composable
 private fun ShippingPreset(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
-    val categories = state.current.product.common.categories
+    val categories = state.current.common.categories
         .map { it.toString() }
         .mapNotNull { state.allCategories.firstOrNull { it.id.toString() == it.id.toString() }?.name }
     FilterChipSection(
         title = state.strings.shippingPreset,
         chips = categories,
-        selectedChips = state.current.product.common.categories
+        selectedChips = state.current.common.categories
             .map { it.toString() }
             .mapNotNull { id -> state.allCategories.firstOrNull { id == it.id.toString() }?.name },
         onChipClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.PresetSelected(it)) },
@@ -220,13 +287,13 @@ private fun ShippingPreset(vm: AdminProductPageViewModel, state: AdminProductPag
 @Composable
 private fun Height(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CommonTextField(
-        value = state.current.product.shipping.height.toString(),
+        value = state.current.shipping.height.toString(),
         onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.Height(it)) },
         label = state.strings.height,
         errorMsg = state.heightError,
         shake = state.shakeHeight,
         type = TextFieldType.NUMBER,
-        disabled = state.current.product.shipping.presetId != null,
+        disabled = state.current.shipping.presetId != null,
         modifier = Modifier.fillMaxWidth(),
     )
     AppTooltip(state.strings.heightDesc)
@@ -235,13 +302,13 @@ private fun Height(vm: AdminProductPageViewModel, state: AdminProductPageContrac
 @Composable
 private fun Width(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CommonTextField(
-        value = state.current.product.shipping.width.toString(),
+        value = state.current.shipping.width.toString(),
         onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.Width(it)) },
         label = state.strings.width,
         errorMsg = state.widthError,
         shake = state.shakeWidth,
         type = TextFieldType.NUMBER,
-        disabled = state.current.product.shipping.presetId != null,
+        disabled = state.current.shipping.presetId != null,
         modifier = Modifier.fillMaxWidth(),
     )
     AppTooltip(state.strings.widthDesc)
@@ -250,13 +317,13 @@ private fun Width(vm: AdminProductPageViewModel, state: AdminProductPageContract
 @Composable
 private fun Length(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CommonTextField(
-        value = state.current.product.shipping.length.toString(),
+        value = state.current.shipping.length.toString(),
         onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.Length(it)) },
         label = state.strings.length,
         errorMsg = state.lengthError,
         shake = state.shakeLength,
         type = TextFieldType.NUMBER,
-        disabled = state.current.product.shipping.presetId != null,
+        disabled = state.current.shipping.presetId != null,
         modifier = Modifier.fillMaxWidth(),
     )
     AppTooltip(state.strings.lengthDesc)
@@ -265,13 +332,13 @@ private fun Length(vm: AdminProductPageViewModel, state: AdminProductPageContrac
 @Composable
 private fun Weight(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CommonTextField(
-        value = state.current.product.shipping.weight.toString(),
+        value = state.current.shipping.weight.toString(),
         onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.Weight(it)) },
         label = state.strings.weight,
         errorMsg = state.weightError,
         shake = state.shakeWeight,
         type = TextFieldType.NUMBER,
-        disabled = state.current.product.shipping.presetId != null,
+        disabled = state.current.shipping.presetId != null,
         modifier = Modifier.fillMaxWidth(),
     )
     AppTooltip(state.strings.weightDesc)
@@ -280,7 +347,7 @@ private fun Weight(vm: AdminProductPageViewModel, state: AdminProductPageContrac
 @Composable
 private fun SaleStart(state: AdminProductPageContract.State) {
     SpanText(
-        text = "SaleStart: ${state.current.product.price.saleStart} TODO: Implement date picker",
+        text = "SaleStart: ${state.current.price.saleStart} TODO: Implement date picker",
     )
     AppTooltip(state.strings.saleStartDesc)
 }
@@ -288,7 +355,7 @@ private fun SaleStart(state: AdminProductPageContract.State) {
 @Composable
 private fun SaleEnd(state: AdminProductPageContract.State) {
     SpanText(
-        text = "SaleEnd: ${state.current.product.price.saleEnd} TODO: Implement date picker",
+        text = "SaleEnd: ${state.current.price.saleEnd} TODO: Implement date picker",
     )
     AppTooltip(state.strings.saleEndDesc)
 }
@@ -297,8 +364,8 @@ private fun SaleEnd(state: AdminProductPageContract.State) {
 private fun OnSale(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     SwitchSection(
         title = state.strings.onSale,
-        selected = state.current.product.price.onSale,
-        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.OnSale(!state.current.product.price.onSale)) },
+        selected = state.current.price.onSale,
+        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.OnSale(!state.current.price.onSale)) },
     )
     AppTooltip(state.strings.onSaleDesc)
 }
@@ -306,13 +373,13 @@ private fun OnSale(vm: AdminProductPageViewModel, state: AdminProductPageContrac
 @Composable
 private fun SalePrice(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CommonTextField(
-        value = state.current.product.price.salePrice.toString(),
+        value = state.current.price.salePrice.toString(),
         onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.SalePrice(it)) },
         label = state.strings.salePrice,
         errorMsg = state.salePriceError,
         shake = state.shakeSalePrice,
         type = TextFieldType.NUMBER,
-        required = state.current.product.price.onSale,
+        required = state.current.price.onSale,
         modifier = Modifier.fillMaxWidth(),
     )
     AppTooltip(state.strings.salePriceDesc)
@@ -321,7 +388,7 @@ private fun SalePrice(vm: AdminProductPageViewModel, state: AdminProductPageCont
 @Composable
 private fun RegularPrice(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CommonTextField(
-        value = state.current.product.price.regularPrice.toString(),
+        value = state.current.price.regularPrice.toString(),
         onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.RegularPrice(it)) },
         label = state.strings.regularPrice,
         errorMsg = state.regularPriceError,
@@ -335,7 +402,7 @@ private fun RegularPrice(vm: AdminProductPageViewModel, state: AdminProductPageC
 @Composable
 private fun Price(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CommonTextField(
-        value = state.current.product.price.price.toString(),
+        value = state.current.price.price.toString(),
         onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.Price(it)) },
         label = state.strings.price,
         errorMsg = state.priceError,
@@ -348,8 +415,22 @@ private fun Price(vm: AdminProductPageViewModel, state: AdminProductPageContract
 }
 
 @Composable
-private fun Images(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun Images(
+    vm: AdminProductPageViewModel,
+    state: AdminProductPageContract.State,
+    onImageCLick: (ProductGetByIdQuery.Image) -> Unit,
+) {
     val scope = rememberCoroutineScope()
+
+    var localImageFiles by remember { mutableStateOf(emptyList<ProductGetByIdQuery.Image>()) }
+
+
+    LaunchedEffect(state.current.data.images) {
+        localImageFiles = state.current.data.images.map {
+            val file = convertBase64ToFile(it.blob, it.id.toString())
+            it.copy(blob = URL.createObjectURL(file))
+        }
+    }
 
     SpanText(text = state.strings.images)
     AppTooltip(state.strings.imagesDesc)
@@ -357,56 +438,153 @@ private fun Images(vm: AdminProductPageViewModel, state: AdminProductPageContrac
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .flexWrap(FlexWrap.Wrap)
             .gap(1.em)
     ) {
-        if (state.current.product.data.images.isEmpty()) {
-            SpanText(text = state.strings.noImages)
+        localImageFiles.forEachIndexed { index, image ->
+            ImageSlot(
+                url = image.blob,
+                alt = image.altText,
+                onFileDropped = {},
+                onImageClick = { onImageCLick(image) },
+                onDeleteClick = {
+                    localImageFiles.getOrNull(index)?.id?.let { id ->
+                        vm.trySend(AdminProductPageContract.Inputs.OnClick.DeleteImage(id.toString()))
+                    }
+                },
+            )
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(70.percent)
-                .flexWrap(FlexWrap.Wrap)
-                .gap(1.em)
-        ) {
-            state.current.product.data.images.forEach { image ->
-                Image(
-                    src = image.url,
-                    alt = image.altText,
-                    modifier = Modifier
-                        .size(200.px)
-                        .clip(Rect(8.px))
-                )
-            }
-        }
-        ImagePicker(
-            modifier = Modifier
-                .height(200.px)
-                .minWidth(300.px)
-                .weight(1f)
-        ) { file ->
-            scope.launch {
-                val imageString = convertImageToBase64(file)
-                vm.trySend(AdminProductPageContract.Inputs.UploadImage(imageString))
-            }
-        }
+        ImageSlot(
+            url = null,
+            alt = null,
+            onFileDropped = { file ->
+                scope.launch {
+                    convertImageToBase64(file)?.let { imageString ->
+                        vm.trySend(AdminProductPageContract.Inputs.UploadImage(imageString))
+                    } ?: run {
+                        println("Not PNG file")
+                        //TODO: Show error message
+                    }
+                }
+            },
+            onImageClick = {},
+            onDeleteClick = {},
+        )
     }
 }
 
-data class JsImage(
-    val id: String,
-    val image: Blob,
-    val name: String?,
-    val altText: String,
-    val created: String,
-    val modified: String,
-)
+@Composable
+private fun ImageSlot(
+    url: String?,
+    alt: String?,
+    cornerRadius: CSSLengthOrPercentageNumericValue = 14.px,
+    onFileDropped: (File) -> Unit,
+    onImageClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+) {
+    var imageHovered by remember { mutableStateOf(false) }
+    var addIconHovered by remember { mutableStateOf(false) }
+    var deleteIconHovered by remember { mutableStateOf(false) }
+
+    val size = 200.px
+
+    FilledCard(
+        modifier = Modifier
+            .size(size)
+            .borderRadius(cornerRadius)
+            .overflow(Overflow.Hidden)
+            .onMouseOver { imageHovered = true }
+            .onMouseOut { imageHovered = false }
+    ) {
+        url?.let {
+            Box {
+                Image(
+                    src = url,
+                    alt = alt ?: "",
+                    modifier = Modifier
+                        .size(size)
+                        .borderRadius(cornerRadius)
+                        .onClick { onImageClick() }
+                        .scale(if (imageHovered) 1.05 else 1.0)
+                        .onMouseOver { imageHovered = true }
+                        .onMouseOut { imageHovered = false }
+                        .objectFit(ObjectFit.Cover)
+                        .transition(CSSTransition("scale", 0.5.s, TransitionTimingFunction.Ease))
+                )
+                Box(
+                    modifier = Modifier
+                        .size(size)
+                        .borderRadius(cornerRadius)
+                        .objectFit(ObjectFit.Cover)
+                        .backgroundColor(
+//                            if (imageHovered || deleteIconHovered) {
+                            MaterialTheme.colors.mdSysColorOnSurface.value()
+//                            } else Colors.Transparent
+                        )
+                        .transition(CSSTransition("backgroundColor", 0.3.s, TransitionTimingFunction.Ease))
+                ) {}
+                TonalIconButton(
+                    onClick = { onDeleteClick() },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .margin(0.5.em)
+                        .onMouseOver { deleteIconHovered = true }
+                        .onMouseOut { deleteIconHovered = false }
+                        .opacity(if (imageHovered || deleteIconHovered) 1.0 else 0.0)
+                        .scale(if (deleteIconHovered) 1.05 else 1.0)
+                        .transition(
+                            CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                            CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
+                        )
+                ) {
+                    MdiDelete()
+                }
+            }
+        } ?: Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .borderRadius(cornerRadius)
+                .border(
+                    width = 2.px,
+                    color = MaterialTheme.colors.mdSysColorInverseSurface.value(),
+                    style = LineStyle.Dashed,
+                )
+                .size(size)
+                .backgroundColor(
+                    if (imageHovered || addIconHovered) {
+                        MaterialTheme.colors.mdSysColorSurfaceContainer.value()
+                    } else MaterialTheme.colors.mdSysColorSurface.value()
+                )
+                .transition(CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease))
+        ) {
+            ImagePicker(
+                onFileSelected = { onFileDropped(it) },
+                modifier = Modifier
+                    .size(size)
+                    .onMouseOver { imageHovered = true }
+                    .onMouseOut { imageHovered = false }
+            )
+            MdiAddAPhoto(
+                modifier = Modifier
+                    .onMouseEnter { addIconHovered = true }
+                    .onMouseLeave { addIconHovered = false }
+                    .opacity(if (imageHovered || addIconHovered) 1.0 else 0.5)
+                    .scale(if (imageHovered || addIconHovered) 1.05 else 1.0)
+                    .transition(
+                        CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                        CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
+                    )
+            )
+        }
+    }
+}
 
 @Composable
 private fun TrackInventory(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     SwitchSection(
         title = state.strings.trackInventory,
-        selected = state.current.product.inventory.trackInventory,
-        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.TrackInventory(!state.current.product.inventory.trackInventory)) },
+        selected = state.current.inventory.trackInventory,
+        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.TrackInventory(!state.current.inventory.trackInventory)) },
     )
     AppTooltip(state.strings.trackInventoryDesc)
 }
@@ -418,7 +596,7 @@ private fun StatusOfStock(vm: AdminProductPageViewModel, state: AdminProductPage
         chips = StockStatus.entries
             .filter { it != StockStatus.UNKNOWN__ }
             .map { it.name },
-        selectedChips = listOf(state.current.product.inventory.stockStatus.name),
+        selectedChips = listOf(state.current.inventory.stockStatus.name),
         onChipClick = { vm.trySend(AdminProductPageContract.Inputs.Set.StatusOfStock(StockStatus.valueOf(it))) },
         canBeEmpty = false,
         noChipsText = "",
@@ -431,8 +609,14 @@ private fun StatusOfStock(vm: AdminProductPageViewModel, state: AdminProductPage
 @Composable
 private fun LowStockThreshold(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CommonTextField(
-        value = state.current.product.inventory.lowStockThreshold.toString(),
-        onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.LowStockThreshold(it.toIntOrNull() ?: 0)) },
+        value = state.current.inventory.lowStockThreshold.toString(),
+        onValueChange = {
+            vm.trySend(
+                AdminProductPageContract.Inputs.Set.LowStockThreshold(
+                    it.toIntOrNull() ?: 0
+                )
+            )
+        },
         label = state.strings.lowStockThreshold,
         errorMsg = state.lowStockThresholdError,
         shake = state.shakeLowStockThreshold,
@@ -446,8 +630,14 @@ private fun LowStockThreshold(vm: AdminProductPageViewModel, state: AdminProduct
 @Composable
 private fun RemainingStock(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CommonTextField(
-        value = state.current.product.inventory.remainingStock.toString(),
-        onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.RemainingStock(it.toIntOrNull() ?: 0)) },
+        value = state.current.inventory.remainingStock.toString(),
+        onValueChange = {
+            vm.trySend(
+                AdminProductPageContract.Inputs.Set.RemainingStock(
+                    it.toIntOrNull() ?: 0
+                )
+            )
+        },
         label = state.strings.remainingStock,
         errorMsg = state.remainingStockError,
         shake = state.shakeRemainingStock,
@@ -462,8 +652,8 @@ private fun RemainingStock(vm: AdminProductPageViewModel, state: AdminProductPag
 private fun IsOnBackorder(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     SwitchSection(
         title = state.strings.isOnBackorder,
-        selected = state.current.product.inventory.isOnBackorder,
-        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.IsOnBackorder(!state.current.product.inventory.isOnBackorder)) },
+        selected = state.current.inventory.isOnBackorder,
+        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.IsOnBackorder(!state.current.inventory.isOnBackorder)) },
     )
     AppTooltip(state.strings.isOnBackorderDesc)
 }
@@ -472,8 +662,8 @@ private fun IsOnBackorder(vm: AdminProductPageViewModel, state: AdminProductPage
 private fun CanBackorder(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     SwitchSection(
         title = state.strings.canBackorder,
-        selected = state.current.product.inventory.canBackorder,
-        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.IsOnBackorder(!state.current.product.inventory.canBackorder)) },
+        selected = state.current.inventory.canBackorder,
+        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.IsOnBackorder(!state.current.inventory.canBackorder)) },
     )
     AppTooltip(state.strings.canBackorderDesc)
 }
@@ -485,8 +675,16 @@ private fun BackorderStatus(vm: AdminProductPageViewModel, state: AdminProductPa
         chips = BackorderStatus.entries
             .filter { it != BackorderStatus.UNKNOWN__ }
             .map { it.name },
-        selectedChips = listOf(state.current.product.inventory.backorderStatus.name),
-        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.Set.StatusOfBackorder(BackorderStatus.valueOf(it))) },
+        selectedChips = listOf(state.current.inventory.backorderStatus.name),
+        onChipClick = {
+            vm.trySend(
+                AdminProductPageContract.Inputs.Set.StatusOfBackorder(
+                    BackorderStatus.valueOf(
+                        it
+                    )
+                )
+            )
+        },
         canBeEmpty = false,
         noChipsText = "",
         createText = "",
@@ -499,8 +697,8 @@ private fun BackorderStatus(vm: AdminProductPageViewModel, state: AdminProductPa
 private fun IsPurchasable(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     SwitchSection(
         title = state.strings.isPurchasable,
-        selected = state.current.product.data.isPurchasable,
-        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.IsPurchasable(!state.current.product.data.isPurchasable)) },
+        selected = state.current.data.isPurchasable,
+        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.IsPurchasable(!state.current.data.isPurchasable)) },
     )
     AppTooltip(state.strings.isPurchasableDesc)
 }
@@ -516,7 +714,7 @@ private fun Name(
         onImproveClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.ImproveName) }
     ) {
         CommonTextField(
-            value = state.current.product.common.name,
+            value = state.current.common.name,
             onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.Name(it)) },
             label = state.strings.name,
             errorMsg = state.nameError,
@@ -542,7 +740,7 @@ private fun ShortDescription(
         onImproveClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.ImproveShortDescription) }
     ) {
         CommonTextField(
-            value = state.current.product.common.shortDescription ?: "",
+            value = state.current.common.shortDescription ?: "",
             onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.ShortDescription(it)) },
             label = state.strings.productShortDescription,
             errorMsg = state.shortDescriptionError,
@@ -564,7 +762,7 @@ private fun Description(
         onImproveClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.ImproveDescription) }
     ) {
         CommonTextField(
-            value = state.current.product.data.description ?: "",
+            value = state.current.data.description ?: "",
             onValueChange = { vm.trySend(AdminProductPageContract.Inputs.Set.Description(it)) },
             label = state.strings.description,
             errorMsg = state.descriptionError,
@@ -579,8 +777,8 @@ private fun Description(
 private fun IsFeatured(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     SwitchSection(
         title = state.strings.isFeatured,
-        selected = state.current.product.common.isFeatured,
-        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.IsFeatured(!state.current.product.common.isFeatured)) },
+        selected = state.current.common.isFeatured,
+        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.IsFeatured(!state.current.common.isFeatured)) },
     )
     AppTooltip(state.strings.isFeaturedDesc)
 }
@@ -592,8 +790,8 @@ private fun AllowReviews(
 ) {
     SwitchSection(
         title = state.strings.allowReviews,
-        selected = state.current.product.common.allowReviews,
-        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.AllowReviews(!state.current.product.common.allowReviews)) },
+        selected = state.current.common.allowReviews,
+        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.AllowReviews(!state.current.common.allowReviews)) },
     )
     AppTooltip(state.strings.allowReviewsDesc)
 }
@@ -602,8 +800,8 @@ private fun AllowReviews(
 private fun OnePerOrder(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     SwitchSection(
         title = state.strings.onePerOrder,
-        selected = state.current.product.inventory.onePerOrder,
-        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.OnePerOrder(!state.current.product.inventory.onePerOrder)) },
+        selected = state.current.inventory.onePerOrder,
+        onClick = { vm.trySend(AdminProductPageContract.Inputs.Set.OnePerOrder(!state.current.inventory.onePerOrder)) },
     )
     AppTooltip(state.strings.onePerOrderDesc)
 }
@@ -618,8 +816,16 @@ private fun CatalogVisibility(
         chips = CatalogVisibility.entries
             .filter { it != CatalogVisibility.UNKNOWN__ }
             .map { it.name },
-        selectedChips = listOf(state.current.product.common.catalogVisibility.name),
-        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.Set.VisibilityInCatalog(CatalogVisibility.valueOf(it))) },
+        selectedChips = listOf(state.current.common.catalogVisibility.name),
+        onChipClick = {
+            vm.trySend(
+                AdminProductPageContract.Inputs.Set.VisibilityInCatalog(
+                    CatalogVisibility.valueOf(
+                        it
+                    )
+                )
+            )
+        },
         canBeEmpty = false,
         noChipsText = "",
         createText = "",
@@ -636,7 +842,7 @@ private fun Categories(
     FilterChipSection(
         title = state.strings.categories,
         chips = state.allCategories.map { it.name },
-        selectedChips = state.current.product.common.categories
+        selectedChips = state.current.common.categories
             .map { it.toString() }
             .mapNotNull { id -> state.allCategories.firstOrNull { id == it.id.toString() }?.name },
         onChipClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.CategorySelected(it)) },
@@ -656,7 +862,7 @@ private fun Tags(vm: AdminProductPageViewModel, state: AdminProductPageContract.
         FilterChipSection(
             title = state.strings.tags,
             chips = state.allTags.map { it.name },
-            selectedChips = state.current.product.common.tags
+            selectedChips = state.current.common.tags
                 .map { it.toString() }
                 .mapNotNull { id -> state.allTags.firstOrNull { id == it.id.toString() }?.name },
             onChipClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.TagSelected(it)) },
@@ -690,7 +896,7 @@ private fun PostStatus(
         chips = PostStatus.entries
             .filter { it != PostStatus.UNKNOWN__ }
             .map { it.name },
-        selectedChips = listOf(state.current.product.data.postStatus.name),
+        selectedChips = listOf(state.current.data.postStatus.name),
         onChipClick = { vm.trySend(AdminProductPageContract.Inputs.Set.StatusOfPost(PostStatus.valueOf(it))) },
         canBeEmpty = false,
         noChipsText = "",

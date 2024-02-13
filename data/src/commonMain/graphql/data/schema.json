@@ -1611,6 +1611,12 @@
             {
               "__typename": "__Type",
               "kind": "OBJECT",
+              "name": "ProductProfile",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
               "name": "Tag",
               "ofType": null
             },
@@ -2061,7 +2067,61 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "Product",
+                  "name": "ProductImageUploadResult",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "deleteProductImage",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "productId",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "ObjectId",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "__typename": "__InputValue",
+                  "name": "imageId",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "ObjectId",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ProductImageDeleteResult",
                   "ofType": null
                 }
               },
@@ -3262,8 +3322,8 @@
                     "kind": "NON_NULL",
                     "name": null,
                     "ofType": {
-                      "kind": "OBJECT",
-                      "name": "ProductImage",
+                      "kind": "SCALAR",
+                      "name": "ObjectId",
                       "ofType": null
                     }
                   }
@@ -3420,11 +3480,126 @@
         {
           "__typename": "__Type",
           "kind": "OBJECT",
+          "name": "ProductDataProfile",
+          "description": null,
+          "fields": [
+            {
+              "name": "description",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "images",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "ProductImage",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "isPurchasable",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "parentId",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "ObjectId",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "postStatus",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "PostStatus",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
           "name": "ProductImage",
           "description": null,
           "fields": [
             {
               "name": "altText",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "blob",
               "description": null,
               "args": [],
               "type": {
@@ -3490,9 +3665,22 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "ProductImageDeleteResult",
+          "description": null,
+          "fields": [
             {
-              "name": "url",
+              "name": "deleted",
               "description": null,
               "args": [],
               "type": {
@@ -3501,7 +3689,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "Boolean",
                   "ofType": null
                 }
               },
@@ -3542,6 +3730,24 @@
             },
             {
               "__typename": "__InputValue",
+              "name": "blob",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
               "name": "created",
               "description": null,
               "type": {
@@ -3579,24 +3785,6 @@
             {
               "__typename": "__InputValue",
               "name": "modified",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "__typename": "__InputValue",
-              "name": "url",
               "description": null,
               "type": {
                 "__typename": "__Type",
@@ -3663,6 +3851,44 @@
             }
           ],
           "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "ProductImageUploadResult",
+          "description": null,
+          "fields": [
+            {
+              "name": "images",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "ProductImage",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -3999,7 +4225,7 @@
               "deprecationReason": null
             },
             {
-              "name": "image",
+              "name": "imageBlob",
               "description": null,
               "args": [],
               "type": {
@@ -4264,6 +4490,23 @@
           "description": null,
           "fields": [
             {
+              "name": "common",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ProductCommon",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "creator",
               "description": null,
               "args": [],
@@ -4281,7 +4524,7 @@
               "deprecationReason": null
             },
             {
-              "name": "product",
+              "name": "data",
               "description": null,
               "args": [],
               "type": {
@@ -4290,7 +4533,58 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "Product",
+                  "name": "ProductDataProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "inventory",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ProductInventory",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "price",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ProductPrice",
                   "ofType": null
                 }
               },
@@ -4323,6 +4617,23 @@
               "deprecationReason": null
             },
             {
+              "name": "shipping",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ProductShipping",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "totalInWishlist",
               "description": null,
               "args": [],
@@ -4341,7 +4652,14 @@
             }
           ],
           "inputFields": null,
-          "interfaces": [],
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "Identifiable",
+              "ofType": null
+            }
+          ],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null

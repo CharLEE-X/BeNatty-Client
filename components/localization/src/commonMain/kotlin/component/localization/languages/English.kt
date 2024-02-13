@@ -206,4 +206,5 @@ internal fun englishLanguage(
     Strings.Tag -> "Tag"
     Strings.InProducts -> "In products"
     Strings.AddImage -> "Add image"
+    Strings.DeleteExplain -> "Are you sure you want to delete this? You cannot undo this action."
 }

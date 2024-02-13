@@ -58,7 +58,11 @@ fun AdminTagListPage(
     }
     val state by vm.observeStates().collectAsState()
 
-    AdminLayout("Admin Tag List", router) {
+    AdminLayout(
+        title = "Admin Tag List",
+        router = router,
+        isLoading = false,
+    ) {
         ListPageLayout(state, vm)
     }
 }

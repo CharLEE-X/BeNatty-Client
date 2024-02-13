@@ -71,7 +71,7 @@ object AdminUserPageContract {
             data class UserById(val id: String) : Inputs
         }
 
-        sealed interface OnCLick : Inputs {
+        sealed interface OnClick : Inputs {
             data object Create : Inputs
             data object Delete : Inputs
             data object ResetPassword : Inputs
@@ -155,6 +155,7 @@ object AdminUserPageContract {
         val reset: String = getString(component.localization.Strings.Reset),
         val user: String = getString(component.localization.Strings.User),
         val id: String = getString(component.localization.Strings.Id),
+        val deleteExplain: String = getString(component.localization.Strings.DeleteExplain),
     )
 
     sealed interface ScreenState {

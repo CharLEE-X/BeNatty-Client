@@ -58,7 +58,11 @@ fun AdminCategoryListPage(
     }
     val state by vm.observeStates().collectAsState()
 
-    AdminLayout("Admin Category List", router) {
+    AdminLayout(
+        title = "Admin Category List",
+        router = router,
+        isLoading = state.isLoading
+    ) {
         ListPageLayout(state, vm)
     }
 }

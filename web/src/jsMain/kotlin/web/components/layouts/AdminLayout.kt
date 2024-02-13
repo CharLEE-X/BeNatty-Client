@@ -2,11 +2,10 @@ package web.components.layouts
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import com.copperleaf.ballast.navigation.routing.RouterContract
+import com.copperleaf.ballast.navigation.routing.currentDestinationOrNull
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.BoxScope
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -20,9 +19,11 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxHeight
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
+import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.width
+import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiCategory
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDashboard
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson
@@ -39,11 +40,14 @@ import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.widgets.Logo
+import web.compose.material3.component.CircularProgress
 
 @Composable
 fun AdminLayout(
+    modifier: Modifier = Modifier,
     title: String,
     router: RouterViewModel,
+    isLoading: Boolean,
     overlay: @Composable BoxScope.() -> Unit = {},
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -52,14 +56,14 @@ fun AdminLayout(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .backgroundColor(MaterialTheme.colors.mdSysColorSurface.value())
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(left = 18.em, top = 2.em, right = 2.em, bottom = 2.em)
+                .padding(left = 20.em, top = 2.em, right = 2.em, bottom = 2.em)
                 .gap(1.em)
         ) {
             content()
@@ -72,10 +76,26 @@ fun AdminLayout(
                 router = router,
                 modifier = Modifier
                     .fillMaxHeight()
-                    .width(15.em)
+                    .width(18.em)
                     .position(Position.Fixed)
             )
             overlay()
+        }
+        if (isLoading) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .backgroundColor(MaterialTheme.colors.mdSysColorSurfaceContainerHigh.value())
+                    .position(Position.Fixed)
+                    .zIndex(100)
+                    .onClick { it.preventDefault() }
+            ) {
+                CircularProgress(
+                    intermediate = true,
+                    fourColor = true,
+                )
+            }
         }
     }
 }
@@ -85,13 +105,19 @@ private fun AdminSideBar(
     router: RouterViewModel,
     modifier: Modifier,
 ) {
-    var currentItem by remember { mutableStateOf(AdminNavDest.Dashboard) }
+    val routerState by router.observeStates().collectAsState()
+    val currentDestination = routerState.currentDestinationOrNull
+    val routeFormat = currentDestination?.originalRoute?.matcher?.routeFormat
+
+    LaunchedEffect(currentDestination) {
+        println("currentDestination: $currentDestination")
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .padding(2.em)
-            .gap(1.em)
+            .gap(0.5.em)
             .backgroundColor(MaterialTheme.colors.mdSysColorSurfaceContainerHigh.value())
             .borderRadius(topRight = 2.em, bottomRight = 2.em)
     ) {
@@ -114,38 +140,73 @@ private fun AdminSideBar(
             )
         }
 
-        AdminNavDest.entries.forEach { item ->
-            SideNavItem(
-                label = item.name,
-                isCurrent = currentItem == item,
-                icon = { item.icon() },
+        with(AdminNavDest.Dashboard) {
+            SideNavMainItem(
+                label = name,
+                isCurrent = currentDestination?.originalRoute == RouterScreen.AdminDashboard,
+                icon = { MdiDashboard() },
                 onMenuItemClicked = {
-                    currentItem = item
-                    when (item) {
-                        AdminNavDest.Dashboard -> router.trySend(
-                            RouterContract.Inputs.GoToDestination(RouterScreen.AdminDashboard.matcher.routeFormat)
-                        )
-
-                        AdminNavDest.Users -> router.trySend(
-                            RouterContract.Inputs.GoToDestination(RouterScreen.AdminUserList.matcher.routeFormat)
-                        )
-
-                        AdminNavDest.Products -> router.trySend(
-                            RouterContract.Inputs.GoToDestination(RouterScreen.AdminProductList.matcher.routeFormat)
-                        )
-
-                        AdminNavDest.Orders -> router.trySend(
-                            RouterContract.Inputs.GoToDestination(RouterScreen.AdminOrderList.matcher.routeFormat)
-                        )
-
-                        AdminNavDest.Categories -> router.trySend(
-                            RouterContract.Inputs.GoToDestination(RouterScreen.AdminCategoryList.matcher.routeFormat)
-                        )
-
-                        AdminNavDest.Tags -> router.trySend(
-                            RouterContract.Inputs.GoToDestination(RouterScreen.AdminTagList.matcher.routeFormat)
-                        )
-                    }
+                    router.trySend(
+                        RouterContract.Inputs.GoToDestination(RouterScreen.AdminDashboard.matcher.routeFormat)
+                    )
+                }
+            )
+        }
+        with(AdminNavDest.Users) {
+            SideNavMainItem(
+                label = name,
+                isCurrent = currentDestination?.originalRoute == RouterScreen.AdminUserList,
+                icon = { MdiPerson() },
+                onMenuItemClicked = {
+                    router.trySend(
+                        RouterContract.Inputs.GoToDestination(RouterScreen.AdminUserList.matcher.routeFormat)
+                    )
+                }
+            )
+        }
+        with(AdminNavDest.Products) {
+            SideNavMainItem(
+                label = name,
+                isCurrent = currentDestination?.originalRoute == RouterScreen.AdminProductList,
+                icon = { MdiStyle() },
+                onMenuItemClicked = {
+                    router.trySend(
+                        RouterContract.Inputs.GoToDestination(RouterScreen.AdminProductList.matcher.routeFormat)
+                    )
+                }
+            )
+        }
+        with(AdminNavDest.Categories) {
+            SideNavSubItem(
+                label = name,
+                isSubCurrent = currentDestination?.originalRoute == RouterScreen.AdminCategoryList,
+                onMenuItemClicked = {
+                    router.trySend(
+                        RouterContract.Inputs.GoToDestination(RouterScreen.AdminCategoryList.matcher.routeFormat)
+                    )
+                }
+            )
+        }
+        with(AdminNavDest.Tags) {
+            SideNavSubItem(
+                label = name,
+                isSubCurrent = currentDestination?.originalRoute == RouterScreen.AdminTagList,
+                onMenuItemClicked = {
+                    router.trySend(
+                        RouterContract.Inputs.GoToDestination(RouterScreen.AdminTagList.matcher.routeFormat)
+                    )
+                }
+            )
+        }
+        with(AdminNavDest.Orders) {
+            SideNavMainItem(
+                label = name,
+                isCurrent = currentDestination?.originalRoute == RouterScreen.AdminOrderList,
+                icon = { MdiShoppingBasket() },
+                onMenuItemClicked = {
+                    router.trySend(
+                        RouterContract.Inputs.GoToDestination(RouterScreen.AdminOrderList.matcher.routeFormat)
+                    )
                 }
             )
         }

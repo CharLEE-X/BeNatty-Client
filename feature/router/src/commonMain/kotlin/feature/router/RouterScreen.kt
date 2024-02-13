@@ -60,17 +60,17 @@ enum class RouterScreen(
     AdminProductPageNew(ADMIN + PRODUCT + CREATE),
     AdminProductPageExisting(ADMIN + PRODUCT + PAGE + ID),
 
+    AdminCategoryList(ADMIN + PRODUCT + CATEGORY + LIST),
+    AdminCategoryPageNew(ADMIN + PRODUCT + CATEGORY + CREATE),
+    AdminCategoryPageExisting(ADMIN + PRODUCT + CATEGORY + PAGE + ID),
+
+    AdminTagList(ADMIN + PRODUCT + TAG + LIST),
+    AdminTagPageNew(ADMIN + PRODUCT + TAG + CREATE),
+    AdminTagPageExisting(ADMIN + PRODUCT + TAG + PAGE + ID),
+
     AdminOrderList(ADMIN + ORDER + LIST),
     AdminOrderPageNew(ADMIN + ORDER + CREATE),
     AdminOrderPageExisting(ADMIN + ORDER + PAGE + ID),
-
-    AdminCategoryList(ADMIN + CATEGORY + LIST),
-    AdminCategoryPageNew(ADMIN + CATEGORY + CREATE),
-    AdminCategoryPageExisting(ADMIN + CATEGORY + PAGE + ID),
-
-    AdminTagList(ADMIN + LIST + PAGE),
-    AdminTagPageNew(ADMIN + TAG + CREATE),
-    AdminTagPageExisting(ADMIN + TAG + PAGE + ID),
 
     // Auth
     Login(LOGIN),

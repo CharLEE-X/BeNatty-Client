@@ -7,6 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
+import com.varabyte.kobweb.compose.css.TextOverflow
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
@@ -23,9 +24,13 @@ import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
+import com.varabyte.kobweb.compose.ui.modifiers.opacity
 import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.textOverflow
 import com.varabyte.kobweb.compose.ui.modifiers.transition
+import com.varabyte.kobweb.compose.ui.modifiers.translateX
 import com.varabyte.kobweb.compose.ui.modifiers.width
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiEast
 import com.varabyte.kobweb.silk.components.style.common.SmoothColorTransitionDurationVar
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
@@ -82,7 +87,7 @@ private fun MenuItems(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         items.forEach { item ->
-            SideNavItem(
+            SideNavMainItem(
                 label = item.label(),
                 isCurrent = currentItem == item,
                 onMenuItemClicked = {
@@ -95,11 +100,11 @@ private fun MenuItems(
 }
 
 @Composable
-fun SideNavItem(
+fun SideNavMainItem(
     label: String,
     isCurrent: Boolean,
     icon: @Composable (() -> Unit)? = null,
-    onMenuItemClicked: () -> Unit
+    onMenuItemClicked: () -> Unit,
 ) {
     var hovered by remember { mutableStateOf(false) }
     val bgColor = when {
@@ -144,3 +149,64 @@ fun SideNavItem(
         }
     }
 }
+
+@Composable
+fun SideNavSubItem(
+    label: String,
+    isSubCurrent: Boolean,
+    onMenuItemClicked: () -> Unit
+) {
+    var hovered by remember { mutableStateOf(false) }
+    val bgColor = when {
+        isSubCurrent -> MaterialTheme.colors.mdSysColorPrimary.value()
+        !isSubCurrent && hovered -> MaterialTheme.colors.mdSysColorSurfaceContainerLow.value()
+        else -> Colors.Transparent
+    }
+    val contentColor = when {
+        isSubCurrent -> MaterialTheme.colors.mdSysColorOnPrimary.value()
+        else -> MaterialTheme.colors.mdSysColorOnSurface.value()
+    }
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .backgroundColor(bgColor)
+            .onClick { onMenuItemClicked() }
+            .onMouseEnter { hovered = true }
+            .onMouseLeave { hovered = false }
+            .borderRadius(3.em)
+            .transition(CSSTransition("background-color", SmoothColorTransitionDurationVar.value()))
+            .cursor(Cursor.Pointer)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .color(contentColor)
+                .padding(
+                    leftRight = 1.em,
+                    topBottom = 0.5.em,
+                )
+                .gap(0.5.em)
+        ) {
+            MdiEast(
+                modifier = Modifier
+                    .opacity(if (isSubCurrent) 1f else 0f)
+                    .translateX(if (isSubCurrent) 0.em else (-0.5).em)
+                    .transition(
+                        CSSTransition("opacity", SmoothColorTransitionDurationVar.value()),
+                        CSSTransition("translate", SmoothColorTransitionDurationVar.value()),
+                    )
+            )
+            SpanText(
+                text = label,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .textOverflow(TextOverflow.Ellipsis)
+            )
+            Spacer()
+        }
+    }
+}
+

@@ -1,59 +1,57 @@
 query ProductGetById($getProductByIdId: ObjectId!) {
   getProductById(id: $getProductByIdId) {
-    product {
-      common {
-        allowReviews
-        catalogVisibility
-        categories
-        createdAt
-        createdBy
-        isFeatured
-        updatedAt
-        name
-        relatedIds
-        shortDescription
-        tags
+    common {
+      allowReviews
+      catalogVisibility
+      categories
+      createdAt
+      createdBy
+      isFeatured
+      updatedAt
+      name
+      relatedIds
+      shortDescription
+      tags
+    }
+    data {
+      description
+      images {
+        altText
+        created
+        id
+        modified
+        blob
       }
-      data {
-        description
-        images {
-          altText
-          created
-          id
-          modified
-          url
-        }
-        isPurchasable
-        parentId
-        postStatus
-      }
-      id
-      inventory {
-        backorderStatus
-        canBackorder
-        isOnBackorder
-        lowStockThreshold
-        onePerOrder
-        remainingStock
-        stockStatus
-        trackInventory
-      }
-      price {
-        onSale
-        price
-        regularPrice
-        saleEnd
-        salePrice
-        saleStart
-      }
-      shipping {
-        presetId
-        height
-        length
-        requiresShipping
-        weight
-        width
-      }
+      isPurchasable
+      parentId
+      postStatus
+    }
+    id
+    inventory {
+      backorderStatus
+      canBackorder
+      isOnBackorder
+      lowStockThreshold
+      onePerOrder
+      remainingStock
+      stockStatus
+      trackInventory
+    }
+    price {
+      onSale
+      price
+      regularPrice
+      saleEnd
+      salePrice
+      saleStart
+    }
+    shipping {
+      presetId
+      height
+      length
+      requiresShipping
+      weight
+      width
     }
     creator {
       id

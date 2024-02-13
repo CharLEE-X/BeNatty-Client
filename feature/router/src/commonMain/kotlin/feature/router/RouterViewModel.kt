@@ -32,3 +32,5 @@ class RouterViewModel(
     eventHandler = RouterEventHandler(),
     coroutineScope = viewModelScope,
 )
+
+fun RouterViewModel.goBack() = trySend(RouterContract.Inputs.GoBack())

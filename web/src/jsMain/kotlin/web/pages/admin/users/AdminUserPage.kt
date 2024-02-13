@@ -3,8 +3,10 @@ package web.pages.admin.users
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.varabyte.kobweb.browser.dom.ElementTarget
 import com.varabyte.kobweb.compose.foundation.layout.Row
@@ -40,6 +42,7 @@ import web.components.layouts.AdminLayout
 import web.components.layouts.DetailPageLayout
 import web.components.widgets.CardSection
 import web.components.widgets.CommonTextField
+import web.components.widgets.DeleteDialog
 import web.components.widgets.FilterChipSection
 import web.components.widgets.HasChangesWidget
 import web.components.widgets.SectionHeader
@@ -69,17 +72,33 @@ fun AdminUserPagePage(
     }
     val state by vm.observeStates().collectAsState()
 
+    var dialogOpen by remember { mutableStateOf(false) }
+    var dialogClosing by remember { mutableStateOf(false) }
+
     AdminLayout(
-        router = router,
         title = state.strings.createUser,
+        router = router,
+        isLoading = state.isLoading,
         overlay = {
             HasChangesWidget(
                 hasChanges = state.wasEdited,
                 messageText = state.strings.unsavedChanges,
                 saveText = state.strings.saveChanges,
                 resetText = state.strings.reset,
-                onSave = { vm.trySend(AdminUserPageContract.Inputs.OnCLick.SaveEdit) },
-                onCancel = { vm.trySend(AdminUserPageContract.Inputs.OnCLick.CancelEdit) },
+                onSave = { vm.trySend(AdminUserPageContract.Inputs.OnClick.SaveEdit) },
+                onCancel = { vm.trySend(AdminUserPageContract.Inputs.OnClick.CancelEdit) },
+            )
+            DeleteDialog(
+                open = dialogOpen && !dialogClosing,
+                closing = dialogClosing,
+                title = state.strings.delete,
+                actionYesText = state.strings.delete,
+                actionNoText = state.strings.cancel,
+                contentText = state.strings.deleteExplain,
+                onOpen = { dialogOpen = it },
+                onClosing = { dialogClosing = it },
+                onYes = { vm.trySend(AdminUserPageContract.Inputs.OnClick.Delete) },
+                onNo = { dialogClosing = true },
             )
         }
     ) {
@@ -93,12 +112,11 @@ fun AdminUserPagePage(
             name = state.current.details.name.ifEmpty { null },
             showDelete = state.screenState is AdminUserPageContract.ScreenState.Existing,
             deleteText = state.strings.delete,
-            cancelText = state.strings.cancel,
             createdAtText = state.strings.createdAt,
             updatedAtText = state.strings.lastUpdatedAt,
             createdAtValue = state.current.createdAt,
             updatedAtValue = state.current.updatedAt,
-            onDeleteClick = { vm.trySend(AdminUserPageContract.Inputs.OnCLick.Delete) },
+            onDeleteClick = { dialogOpen = !dialogOpen },
         ) {
             PersonalDetails(vm, state)
             Address(vm, state)
@@ -157,7 +175,7 @@ private fun PersonalDetails(vm: AdminUserPageViewModel, state: AdminUserPageCont
             modifier = Modifier.fillMaxWidth(),
         )
         FilledTonalButton(
-            onClick = { vm.trySend(AdminUserPageContract.Inputs.OnCLick.ResetPassword) },
+            onClick = { vm.trySend(AdminUserPageContract.Inputs.OnClick.ResetPassword) },
             leadingIcon = { MdiLockReset() },
         ) {
             SpanText(state.strings.resetPassword)

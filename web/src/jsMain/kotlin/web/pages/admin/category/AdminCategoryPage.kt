@@ -3,8 +3,10 @@ package web.pages.admin.category
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.copperleaf.ballast.navigation.routing.build
 import com.copperleaf.ballast.navigation.routing.directions
@@ -22,6 +24,7 @@ import web.components.layouts.ImproveWithAiRow
 import web.components.widgets.CardSection
 import web.components.widgets.CommonTextField
 import web.components.widgets.CreatorSection
+import web.components.widgets.DeleteDialog
 import web.components.widgets.FilterChipSection
 import web.components.widgets.HasChangesWidget
 import web.components.widgets.SaveButton
@@ -81,9 +84,13 @@ fun AdminCategoryPage(
         state.strings.category
     }
 
+    var dialogOpen by remember { mutableStateOf(false) }
+    var dialogClosing by remember { mutableStateOf(false) }
+
     AdminLayout(
         title = title,
         router = router,
+        isLoading = state.isLoading,
         overlay = {
             HasChangesWidget(
                 hasChanges = state.wasEdited,
@@ -93,6 +100,18 @@ fun AdminCategoryPage(
                 onSave = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.SaveEdit) },
                 onCancel = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.CancelEdit) },
             )
+            DeleteDialog(
+                open = dialogOpen && !dialogClosing,
+                closing = dialogClosing,
+                title = state.strings.delete,
+                actionYesText = state.strings.delete,
+                actionNoText = state.strings.cancel,
+                contentText = state.strings.deleteExplain,
+                onOpen = { dialogOpen = it },
+                onClosing = { dialogClosing = it },
+                onYes = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.Delete) },
+                onNo = { dialogClosing = true },
+            )
         }
     ) {
         DetailPageLayout(
@@ -101,12 +120,11 @@ fun AdminCategoryPage(
             name = state.current.name.ifEmpty { null },
             showDelete = state.screenState !is AdminCategoryPageContract.ScreenState.New,
             deleteText = state.strings.delete,
-            cancelText = state.strings.cancel,
             createdAtText = state.strings.createdAt,
             updatedAtText = state.strings.lastUpdatedAt,
             createdAtValue = state.current.createdAt,
             updatedAtValue = state.current.updatedAt,
-            onDeleteClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.Delete) },
+            onDeleteClick = { dialogOpen = !dialogOpen },
         ) {
             Details(vm, state)
             if (state.screenState !is AdminCategoryPageContract.ScreenState.New) {

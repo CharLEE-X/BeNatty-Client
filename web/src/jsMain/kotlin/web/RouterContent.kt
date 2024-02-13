@@ -13,8 +13,8 @@ import com.copperleaf.ballast.navigation.routing.stringPath
 import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
 import feature.router.RouterScreen
 import feature.router.RouterViewModel
+import feature.router.goBack
 import web.components.layouts.AccountLayout
-import web.components.layouts.AdminLayout
 import web.components.layouts.AppLayout
 import web.components.sections.desktopNav.DesktopNavContract
 import web.pages.PageNotFoundPage
@@ -257,11 +257,10 @@ fun RouterContent(
                     PressPage()
                 }
 
-                RouterScreen.AdminDashboard -> AdminLayout("Admin Dashboard", router) {
-                    AdminDashboardPage(
-                        onError = onError,
-                    )
-                }
+                RouterScreen.AdminDashboard -> AdminDashboardPage(
+                    router = router,
+                    onError = onError,
+                )
 
                 RouterScreen.AdminUserList -> AdminUserListPage(
                     router = router,
@@ -365,7 +364,7 @@ fun RouterContent(
         notFound = { url ->
             PageNotFoundPage(
                 url = url,
-                onGoBackClick = { router.trySend(RouterContract.Inputs.GoBack()) }
+                onGoBackClick = { router.goBack() }
             )
         }
     )

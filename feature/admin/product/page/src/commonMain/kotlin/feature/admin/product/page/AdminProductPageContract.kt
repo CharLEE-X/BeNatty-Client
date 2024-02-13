@@ -48,54 +48,52 @@ object AdminProductPageContract {
         val presetCategory: GetCategoryByIdQuery.GetCategoryById? = null,
 
         val original: ProductGetByIdQuery.GetProductById = ProductGetByIdQuery.GetProductById(
-            product = ProductGetByIdQuery.Product(
-                id = "",
-                common = ProductGetByIdQuery.Common(
-                    name = "",
-                    shortDescription = "",
-                    allowReviews = true,
-                    catalogVisibility = CatalogVisibility.Everywhere,
-                    categories = emptyList(),
-                    isFeatured = false,
-                    relatedIds = emptyList(),
-                    tags = emptyList(),
-                    createdBy = "",
-                    createdAt = "",
-                    updatedAt = "",
-                ),
-                data = ProductGetByIdQuery.Data1(
-                    postStatus = PostStatus.Draft,
-                    description = "",
-                    isPurchasable = false,
-                    images = emptyList(),
-                    parentId = null,
-                ),
-                inventory = ProductGetByIdQuery.Inventory(
-                    onePerOrder = false,
-                    backorderStatus = BackorderStatus.Allowed,
-                    canBackorder = true,
-                    isOnBackorder = true,
-                    lowStockThreshold = 0,
-                    remainingStock = 0,
-                    stockStatus = StockStatus.OutOfStock,
-                    trackInventory = true,
-                ),
-                price = ProductGetByIdQuery.Price(
-                    price = null,
-                    regularPrice = null,
-                    salePrice = null,
-                    onSale = false,
-                    saleStart = null,
-                    saleEnd = null,
-                ),
-                shipping = ProductGetByIdQuery.Shipping(
-                    presetId = null,
-                    height = null,
-                    length = null,
-                    weight = null,
-                    width = null,
-                    requiresShipping = true,
-                ),
+            id = "",
+            common = ProductGetByIdQuery.Common(
+                name = "",
+                shortDescription = "",
+                allowReviews = true,
+                catalogVisibility = CatalogVisibility.Everywhere,
+                categories = emptyList(),
+                isFeatured = false,
+                relatedIds = emptyList(),
+                tags = emptyList(),
+                createdBy = "",
+                createdAt = "",
+                updatedAt = "",
+            ),
+            data = ProductGetByIdQuery.Data1(
+                postStatus = PostStatus.Draft,
+                description = "",
+                isPurchasable = false,
+                images = emptyList(),
+                parentId = null,
+            ),
+            inventory = ProductGetByIdQuery.Inventory(
+                onePerOrder = false,
+                backorderStatus = BackorderStatus.Allowed,
+                canBackorder = true,
+                isOnBackorder = true,
+                lowStockThreshold = 0,
+                remainingStock = 0,
+                stockStatus = StockStatus.OutOfStock,
+                trackInventory = true,
+            ),
+            price = ProductGetByIdQuery.Price(
+                price = null,
+                regularPrice = null,
+                salePrice = null,
+                onSale = false,
+                saleStart = null,
+                saleEnd = null,
+            ),
+            shipping = ProductGetByIdQuery.Shipping(
+                presetId = null,
+                height = null,
+                length = null,
+                weight = null,
+                width = null,
+                requiresShipping = true,
             ),
             creator = ProductGetByIdQuery.Creator(
                 id = "",
@@ -136,6 +134,7 @@ object AdminProductPageContract {
             data object ImproveShortDescription : Inputs
             data object ImproveDescription : Inputs
             data object ImproveTags : Inputs
+            data class DeleteImage(val imageId: String) : Inputs
         }
 
         sealed interface Set : Inputs {
@@ -296,7 +295,9 @@ object AdminProductPageContract {
         val shippingPresetDesc: String = getString(component.localization.Strings.ShippingPresetDesc),
         val improveWithAi: String = getString(component.localization.Strings.ImproveWithAi),
         val addImage: String = getString(component.localization.Strings.AddImage),
-    )
+        val deleteExplain: String = getString(component.localization.Strings.DeleteExplain),
+    ) {
+    }
 
     sealed interface ScreenState {
         data object New : ScreenState
