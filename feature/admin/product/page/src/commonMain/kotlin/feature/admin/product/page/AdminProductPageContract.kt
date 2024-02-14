@@ -13,6 +13,7 @@ import data.type.StockStatus
 object AdminProductPageContract {
     data class State(
         val isLoading: Boolean = false,
+        val isImagesLoading: Boolean = false,
         val screenState: ScreenState,
 
         val wasEdited: Boolean = false,
@@ -41,6 +42,7 @@ object AdminProductPageContract {
         val shakeLength: Boolean = false,
         val widthError: String? = null,
         val shakeWidth: Boolean = false,
+        val imageDropError: String? = null,
 
         val isCreateDisabled: Boolean = true,
         val allCategories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal> = emptyList(),
@@ -144,6 +146,7 @@ object AdminProductPageContract {
             data class AllTags(val tags: List<TagsGetAllMinimalQuery.GetTagsAllMinimal>) : Inputs
 
             data class Loading(val isLoading: Boolean) : Inputs
+            data class ImagesLoading(val isImagesLoading: Boolean) : Inputs
             data class StateOfScreen(val screenState: ScreenState) : Inputs
             data class OriginalProduct(val product: ProductGetByIdQuery.GetProductById) : Inputs
             data class CurrentProduct(val product: ProductGetByIdQuery.GetProductById) : Inputs
@@ -195,6 +198,7 @@ object AdminProductPageContract {
             data class Images(val images: List<ProductGetByIdQuery.Image>) : Inputs
             data class PresetCategory(val category: GetCategoryByIdQuery.GetCategoryById?) : Inputs
             data class ShippingPresetId(val presetId: String?) : Inputs
+            data class ImageDropError(val error: String?) : Inputs
         }
     }
 

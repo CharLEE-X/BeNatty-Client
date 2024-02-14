@@ -16,11 +16,11 @@ query ProductGetById($getProductByIdId: ObjectId!) {
     data {
       description
       images {
+        id
+        url
         altText
         created
-        id
         modified
-        blob
       }
       isPurchasable
       parentId

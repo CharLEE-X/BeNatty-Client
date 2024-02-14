@@ -163,7 +163,7 @@ internal class AdminListInputHandler :
                                 ListItem(
                                     id = product.id.toString(),
                                     slot1 = millisToDate(product.createdAt.toLong()),
-                                    slot2 = product.imageBlob,
+                                    slot2 = product.images.joinToString(","),
                                     slot3 = product.name,
                                     slot4 = product.price.toString(),
                                     slot5 = product.totalSold.toString(),

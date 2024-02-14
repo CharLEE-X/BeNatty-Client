@@ -3,7 +3,7 @@ mutation ProductUploadImage($input: ProductImageUploadInput!) {
       images {
         id
         altText
-        blob
+        url
         created
         modified
       }

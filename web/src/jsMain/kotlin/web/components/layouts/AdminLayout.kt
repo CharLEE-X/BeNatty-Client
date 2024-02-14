@@ -152,10 +152,14 @@ private fun AdminSideBar(
                 }
             )
         }
-        with(AdminNavDest.Users) {
+        with(AdminNavDest.Customers) {
             SideNavMainItem(
                 label = name,
-                isCurrent = currentDestination?.originalRoute == RouterScreen.AdminUserList,
+                isCurrent = listOf(
+                    RouterScreen.AdminUserList,
+                    RouterScreen.AdminUserPageNew,
+                    RouterScreen.AdminUserPageExisting
+                ).any { currentDestination?.originalRoute == it },
                 icon = { MdiPerson() },
                 onMenuItemClicked = {
                     router.trySend(
@@ -167,7 +171,11 @@ private fun AdminSideBar(
         with(AdminNavDest.Products) {
             SideNavMainItem(
                 label = name,
-                isCurrent = currentDestination?.originalRoute == RouterScreen.AdminProductList,
+                isCurrent = listOf(
+                    RouterScreen.AdminProductList,
+                    RouterScreen.AdminProductPageNew,
+                    RouterScreen.AdminProductPageExisting
+                ).any { currentDestination?.originalRoute == it },
                 icon = { MdiStyle() },
                 onMenuItemClicked = {
                     router.trySend(
@@ -215,7 +223,7 @@ private fun AdminSideBar(
 
 enum class AdminNavDest {
     Dashboard,
-    Users,
+    Customers,
     Products,
     Orders,
     Categories,
@@ -225,7 +233,7 @@ enum class AdminNavDest {
 @Composable
 fun AdminNavDest.icon() = when (this) {
     AdminNavDest.Dashboard -> MdiDashboard()
-    AdminNavDest.Users -> MdiPerson()
+    AdminNavDest.Customers -> MdiPerson()
     AdminNavDest.Products -> MdiStyle()
     AdminNavDest.Orders -> MdiShoppingBasket()
     AdminNavDest.Categories -> MdiCategory()

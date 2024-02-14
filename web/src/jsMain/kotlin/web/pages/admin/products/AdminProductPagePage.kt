@@ -24,6 +24,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
+import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.flexWrap
 import com.varabyte.kobweb.compose.ui.modifiers.gap
@@ -42,6 +43,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiAddAPhoto
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiCloudUpload
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
 import data.ProductGetByIdQuery
@@ -53,6 +55,7 @@ import feature.admin.product.page.AdminProductPageContract
 import feature.admin.product.page.AdminProductPageViewModel
 import feature.router.RouterScreen
 import feature.router.RouterViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.FlexWrap
 import org.jetbrains.compose.web.css.LineStyle
@@ -60,9 +63,9 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.css.value
-import org.w3c.dom.url.URL
 import org.w3c.files.File
 import theme.MaterialTheme
+import theme.roleStyle
 import web.components.layouts.AdminLayout
 import web.components.layouts.DetailPageLayout
 import web.components.layouts.ImproveWithAiRow
@@ -81,7 +84,6 @@ import web.compose.material3.component.Divider
 import web.compose.material3.component.TextFieldType
 import web.compose.material3.component.TonalIconButton
 import web.compose.material3.component.labs.FilledCard
-import web.util.convertBase64ToFile
 import web.util.convertImageToBase64
 import web.util.onEnterKeyDown
 
@@ -135,8 +137,12 @@ fun AdminProductPagePage(
     var previewDialogImage: ProductGetByIdQuery.Image? by remember { mutableStateOf(null) }
     var previewDialogOpen by remember { mutableStateOf(false) }
 
-    var dialogOpen by remember { mutableStateOf(false) }
-    var dialogClosing by remember { mutableStateOf(false) }
+    var deleteProductDialogOpen by remember { mutableStateOf(false) }
+    var deleteProductDialogClosing by remember { mutableStateOf(false) }
+
+    var deleteProductImageDialogOpen by remember { mutableStateOf(false) }
+    var deleteProductImageDialogClosing by remember { mutableStateOf(false) }
+    var deleteProductImageDialogImageId: String? by remember { mutableStateOf(null) }
 
     AdminLayout(
         title = state.strings.createProduct,
@@ -155,24 +161,39 @@ fun AdminProductPagePage(
                 previewDialogImage?.let { image ->
                     ImagePreviewDialog(
                         open = previewDialogOpen,
-                        imageUrl = image.blob,
+                        imageUrl = image.url,
                         alt = image.altText,
                         onClose = { previewDialogOpen = false }
                     )
                 }
             }
-
             DeleteDialog(
-                open = dialogOpen && !dialogClosing,
-                closing = dialogClosing,
+                open = deleteProductDialogOpen && !deleteProductDialogClosing,
+                closing = deleteProductDialogClosing,
                 title = state.strings.delete,
                 actionYesText = state.strings.delete,
                 actionNoText = state.strings.cancel,
                 contentText = state.strings.deleteExplain,
-                onOpen = { dialogOpen = it },
-                onClosing = { dialogClosing = it },
+                onOpen = { deleteProductDialogOpen = it },
+                onClosing = { deleteProductDialogClosing = it },
                 onYes = { vm.trySend(AdminProductPageContract.Inputs.OnClick.Delete) },
-                onNo = { dialogClosing = true },
+                onNo = { deleteProductDialogClosing = true },
+            )
+            DeleteDialog(
+                open = deleteProductImageDialogOpen && !deleteProductImageDialogClosing,
+                closing = deleteProductImageDialogClosing,
+                title = state.strings.delete,
+                actionYesText = state.strings.delete,
+                actionNoText = state.strings.cancel,
+                contentText = state.strings.deleteExplain,
+                onOpen = { deleteProductImageDialogOpen = it },
+                onClosing = { deleteProductImageDialogClosing = it },
+                onYes = {
+                    deleteProductImageDialogImageId?.let {
+                        vm.trySend(AdminProductPageContract.Inputs.OnClick.DeleteImage(it))
+                    }
+                },
+                onNo = { deleteProductImageDialogClosing = true },
             )
         },
     ) {
@@ -190,7 +211,7 @@ fun AdminProductPagePage(
             updatedAtText = state.strings.lastUpdatedAt,
             createdAtValue = state.current.common.createdAt,
             updatedAtValue = state.current.common.updatedAt,
-            onDeleteClick = { dialogOpen = !dialogOpen },
+            onDeleteClick = { deleteProductDialogOpen = !deleteProductDialogOpen },
         ) {
             CardSection(title = state.strings.details) {
                 Name(state, vm)
@@ -201,7 +222,7 @@ fun AdminProductPagePage(
                         onClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.Create) },
                     )
                 } else {
-                    ShortDescription(state, vm)
+                    Description(state, vm)
                     IsFeatured(vm, state)
                     AllowReviews(vm, state)
                     Divider()
@@ -219,7 +240,6 @@ fun AdminProductPagePage(
                 CardSection(title = state.strings.data) {
                     PostStatus(state, vm)
                     Divider()
-                    Description(state, vm)
                     IsPurchasable(vm, state)
                     Images(
                         vm = vm,
@@ -227,7 +247,11 @@ fun AdminProductPagePage(
                         onImageCLick = {
                             previewDialogImage = it
                             previewDialogOpen = true
-                        }
+                        },
+                        onImageDeleteClick = {
+                            deleteProductImageDialogImageId = it
+                            deleteProductImageDialogOpen = !deleteProductImageDialogOpen
+                        },
                     )
                 }
                 CardSection(title = state.strings.inventory) {
@@ -419,18 +443,9 @@ private fun Images(
     vm: AdminProductPageViewModel,
     state: AdminProductPageContract.State,
     onImageCLick: (ProductGetByIdQuery.Image) -> Unit,
+    onImageDeleteClick: (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-
-    var localImageFiles by remember { mutableStateOf(emptyList<ProductGetByIdQuery.Image>()) }
-
-
-    LaunchedEffect(state.current.data.images) {
-        localImageFiles = state.current.data.images.map {
-            val file = convertBase64ToFile(it.blob, it.id.toString())
-            it.copy(blob = URL.createObjectURL(file))
-        }
-    }
 
     SpanText(text = state.strings.images)
     AppTooltip(state.strings.imagesDesc)
@@ -441,30 +456,26 @@ private fun Images(
             .flexWrap(FlexWrap.Wrap)
             .gap(1.em)
     ) {
-        localImageFiles.forEachIndexed { index, image ->
+        state.current.data.images.forEachIndexed { index, image ->
             ImageSlot(
-                url = image.blob,
+                url = image.url,
                 alt = image.altText,
+                errorText = null,
                 onFileDropped = {},
                 onImageClick = { onImageCLick(image) },
-                onDeleteClick = {
-                    localImageFiles.getOrNull(index)?.id?.let { id ->
-                        vm.trySend(AdminProductPageContract.Inputs.OnClick.DeleteImage(id.toString()))
-                    }
-                },
+                onDeleteClick = { onImageDeleteClick(image.id.toString()) },
             )
         }
         ImageSlot(
             url = null,
             alt = null,
+            isImagesLoading = state.isImagesLoading,
+            errorText = state.imageDropError,
             onFileDropped = { file ->
                 scope.launch {
                     convertImageToBase64(file)?.let { imageString ->
                         vm.trySend(AdminProductPageContract.Inputs.UploadImage(imageString))
-                    } ?: run {
-                        println("Not PNG file")
-                        //TODO: Show error message
-                    }
+                    } ?: vm.trySend(AdminProductPageContract.Inputs.Set.ImageDropError(error = "Not a PNG?"))
                 }
             },
             onImageClick = {},
@@ -477,7 +488,9 @@ private fun Images(
 private fun ImageSlot(
     url: String?,
     alt: String?,
+    errorText: String?,
     cornerRadius: CSSLengthOrPercentageNumericValue = 14.px,
+    isImagesLoading: Boolean = false,
     onFileDropped: (File) -> Unit,
     onImageClick: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -557,24 +570,51 @@ private fun ImageSlot(
                 )
                 .transition(CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease))
         ) {
-            ImagePicker(
-                onFileSelected = { onFileDropped(it) },
-                modifier = Modifier
-                    .size(size)
-                    .onMouseOver { imageHovered = true }
-                    .onMouseOut { imageHovered = false }
-            )
-            MdiAddAPhoto(
-                modifier = Modifier
-                    .onMouseEnter { addIconHovered = true }
-                    .onMouseLeave { addIconHovered = false }
-                    .opacity(if (imageHovered || addIconHovered) 1.0 else 0.5)
-                    .scale(if (imageHovered || addIconHovered) 1.05 else 1.0)
-                    .transition(
-                        CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
-                        CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
+            if (isImagesLoading) {
+                var opacity by remember { mutableStateOf(1.0) }
+                LaunchedEffect(isImagesLoading) {
+                    while (isImagesLoading) {
+                        opacity = 0.5
+                        delay(600)
+                        opacity = 1.0
+                        delay(600)
+                    }
+                }
+                MdiCloudUpload(
+                    modifier = Modifier
+                        .opacity(opacity)
+                        .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
+                )
+            } else {
+                ImagePicker(
+                    onFileSelected = { onFileDropped(it) },
+                    modifier = Modifier
+                        .size(size)
+                        .onMouseOver { imageHovered = true }
+                        .onMouseOut { imageHovered = false }
+                )
+                MdiAddAPhoto(
+                    modifier = Modifier
+                        .onMouseEnter { addIconHovered = true }
+                        .onMouseLeave { addIconHovered = false }
+                        .opacity(if (imageHovered || addIconHovered) 1.0 else 0.5)
+                        .scale(if (imageHovered || addIconHovered) 1.05 else 1.0)
+                        .transition(
+                            CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                            CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
+                        )
+                )
+                errorText?.let { errorText ->
+                    SpanText(
+                        text = errorText,
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .roleStyle(MaterialTheme.typography.labelSmall)
+                            .color(MaterialTheme.colors.mdSysColorError.value())
+                            .margin(0.5.em)
                     )
-            )
+                }
+            }
         }
     }
 }

@@ -69,6 +69,9 @@ internal class AdminProductPageInputHandler :
         is AdminProductPageContract.Inputs.Set.AllCategories -> updateState { it.copy(allCategories = input.categories) }
         is AdminProductPageContract.Inputs.Set.AllTags -> updateState { it.copy(allTags = input.tags) }
         is AdminProductPageContract.Inputs.Set.Loading -> updateState { it.copy(isLoading = input.isLoading) }
+        is AdminProductPageContract.Inputs.Set.ImagesLoading ->
+            updateState { it.copy(isImagesLoading = input.isImagesLoading) }
+
         is AdminProductPageContract.Inputs.Set.OriginalProduct ->
             updateState { it.copy(original = input.product).wasEdited() }
 
@@ -80,7 +83,9 @@ internal class AdminProductPageInputHandler :
         is AdminProductPageContract.Inputs.Set.Name -> handleSetName(input.name)
         is AdminProductPageContract.Inputs.Set.NameShake -> updateState { it.copy(shakeName = input.shake) }
         is AdminProductPageContract.Inputs.Set.ShortDescription -> handleSetShortDescription(input.shortDescription)
-        is AdminProductPageContract.Inputs.Set.ShortDescriptionShake -> updateState { it.copy(shakeShortDescription = input.shake) }
+        is AdminProductPageContract.Inputs.Set.ShortDescriptionShake ->
+            updateState { it.copy(shakeShortDescription = input.shake) }
+
         is AdminProductPageContract.Inputs.Set.IsFeatured -> handleSetIsFeatured(input.isFeatured)
         is AdminProductPageContract.Inputs.Set.AllowReviews -> handleSetAllowReviews(input.allowReviews)
         is AdminProductPageContract.Inputs.Set.VisibilityInCatalog -> handleSetCatalogVisibility(input.catalogVisibility)
@@ -123,6 +128,7 @@ internal class AdminProductPageInputHandler :
         is AdminProductPageContract.Inputs.Set.HeightShake -> updateState { it.copy(shakeHeight = input.shake) }
         is AdminProductPageContract.Inputs.Set.PresetCategory -> handleSetPresetCategory(input.category)
         is AdminProductPageContract.Inputs.Set.ShippingPresetId -> handleSetShippingPresetId(input.presetId)
+        is AdminProductPageContract.Inputs.Set.ImageDropError -> updateState { it.copy(imageDropError = input.error) }
     }
 
     private suspend fun InputScope.handleOnClickCategory(name: String) {
@@ -545,7 +551,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleDeleteImage(imageId: String) {
         val state = getCurrentState()
         sideJob("handleDeleteImage") {
-            postInput(AdminProductPageContract.Inputs.Set.Loading(isLoading = true))
+            postInput(AdminProductPageContract.Inputs.Set.ImagesLoading(isImagesLoading = true))
             productService.deleteImage(state.current.id.toString(), imageId).fold(
                 onSuccess = {
                     val images = state.current.data.images.filter { it.id != imageId }
@@ -561,21 +567,22 @@ internal class AdminProductPageInputHandler :
                     postEvent(AdminProductPageContract.Events.OnError(it.message ?: "Error while deleting image"))
                 },
             )
-            postInput(AdminProductPageContract.Inputs.Set.Loading(isLoading = false))
+            postInput(AdminProductPageContract.Inputs.Set.ImagesLoading(isImagesLoading = false))
         }
     }
 
     private suspend fun InputScope.handleUploadImage(imageString: String) {
         val state = getCurrentState()
         sideJob("handleSaveDetailsUploadImage") {
-            postInput(AdminProductPageContract.Inputs.Set.Loading(isLoading = true))
+            postInput(AdminProductPageContract.Inputs.Set.ImageDropError(error = null))
+            postInput(AdminProductPageContract.Inputs.Set.ImagesLoading(isImagesLoading = true))
             productService.uploadImage(state.current.id.toString(), imageString).fold(
                 onSuccess = { data ->
                     println("Image uploaded successfully.\nMessage: ${data.uploadImageToProduct}")
                     val images = data.uploadImageToProduct.images.map {
                         ProductGetByIdQuery.Image(
                             id = it.id,
-                            blob = it.blob,
+                            url = it.url,
                             altText = it.altText,
                             created = it.created,
                             modified = it.modified,
@@ -594,7 +601,7 @@ internal class AdminProductPageInputHandler :
                     postEvent(AdminProductPageContract.Events.OnError(it.message ?: "Error while uploading image"))
                 },
             )
-            postInput(AdminProductPageContract.Inputs.Set.Loading(isLoading = false))
+            postInput(AdminProductPageContract.Inputs.Set.ImagesLoading(isImagesLoading = false))
         }
     }
 
@@ -691,7 +698,7 @@ internal class AdminProductPageInputHandler :
                             current.data.images.map {
                                 ProductImageInput(
                                     id = it.id,
-                                    blob = it.blob,
+                                    url = it.url,
                                     altText = it.altText,
                                     created = it.created,
                                     modified = it.modified,

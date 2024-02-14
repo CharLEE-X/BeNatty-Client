@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.ObjectFit
+import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -35,6 +36,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
+import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.rotateZ
@@ -278,18 +280,27 @@ fun Item(
             AdminListContract.DataType.PRODUCT -> {
                 SpanText(item.slot1)
                 item.slot2?.let {
-                    var hovered by remember { mutableStateOf(false) }
-                    Image(
-                        src = it,
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .size(40.px)
-                            .borderRadius(5.px)
-                            .objectFit(ObjectFit.Cover)
-                            .onMouseEnter { hovered = true }
-                            .onMouseLeave { hovered = false }
-                            .scale(if (hovered) 4 else 1.0)
-                            .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
-                    )
+                            .gap(0.25.em)
+                            .overflow(Overflow.Hidden)
+                    ) {
+                        it.split(",").forEach { url ->
+                            var hovered by remember { mutableStateOf(false) }
+                            Image(
+                                src = url,
+                                modifier = Modifier
+                                    .size(40.px)
+                                    .borderRadius(5.px)
+                                    .objectFit(ObjectFit.Cover)
+                                    .onMouseEnter { hovered = true }
+                                    .onMouseLeave { hovered = false }
+                                    .scale(if (hovered) 4 else 1.0)
+                                    .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
+                            )
+                        }
+                    }
                 } ?: MdiBrokenImage(Modifier.size(30.px))
                 SpanText(item.slot3 ?: "N/A")
                 SpanText(item.slot4 ?: "N/A")

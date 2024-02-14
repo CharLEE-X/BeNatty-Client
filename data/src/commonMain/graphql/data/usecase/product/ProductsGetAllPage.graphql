@@ -10,7 +10,7 @@ query ProductsGetAllPage($pageInput: PageInput!) {
       id
       name
       createdAt
-      imageBlob
+      images
       price
       totalSold
       catalogVisibility

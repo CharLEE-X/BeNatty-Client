@@ -5,7 +5,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
-import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onDragOver
 import com.varabyte.kobweb.compose.ui.modifiers.onDrop
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
@@ -33,10 +32,6 @@ fun ImagePicker(
                     val file = files[0]!!
                     onFileSelected(file)
                 }
-            }
-            .onClick {
-                // Trigger file input click on area click (optional)
-                // You might need to handle this with JavaScript interop or ensure the input is accessible for clicking
             }
     ) {
         Input(
