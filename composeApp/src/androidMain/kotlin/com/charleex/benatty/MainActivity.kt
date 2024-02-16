@@ -1,4 +1,4 @@
-package com.charleex.nataliashop
+package com.charleex.benatty
 
 import android.app.Activity
 import android.os.Bundle

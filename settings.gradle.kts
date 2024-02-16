@@ -1,4 +1,4 @@
-rootProject.name = "natalia-shop"
+rootProject.name = "BeNatty-Client"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

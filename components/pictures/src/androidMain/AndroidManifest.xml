@@ -9,7 +9,7 @@
     <application>
         <provider
             android:name="component.pictures.AppMediaFileProvider"
-            android:authorities="${applicationId}.nataliashop.media.provider"
+            android:authorities="${applicationId}.benatty.media.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

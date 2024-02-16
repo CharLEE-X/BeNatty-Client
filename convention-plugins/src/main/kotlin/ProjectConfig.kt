@@ -1,7 +1,7 @@
 import org.gradle.api.JavaVersion
 
 object ProjectConfig {
-    const val projectName = "nataliashop"
+    const val projectName = "benatty"
     const val packageName = "com.charleex.${projectName}"
 
     object Android {
