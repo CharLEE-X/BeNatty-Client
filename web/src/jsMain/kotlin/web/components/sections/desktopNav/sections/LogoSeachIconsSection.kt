@@ -23,6 +23,7 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
+import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.Span
 import web.components.sections.desktopNav.DesktopNavContract
 import web.components.sections.desktopNav.DesktopNavViewModel
@@ -63,7 +64,7 @@ fun LogoSearchButtonsSection(
             placeholder = DesktopNavContract.Strings.search,
             onEnterPress = {},
             onSearchIconClick = { },
-            containerShape = "30px",
+            containerShape = 30.px,
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,

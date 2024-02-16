@@ -2,6 +2,7 @@ package web.compose.material3.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.web.events.SyntheticMouseEvent
+import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.RowScope
@@ -9,7 +10,9 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.size
+import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
+import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.px
 import web.compose.material3.common.MdTagElement
 import web.compose.material3.common.jsRequire
@@ -61,15 +64,26 @@ fun ElevatedButton(
     trailingIcon: @Composable (() -> Unit)? = null,
     disabled: Boolean = false,
     modifier: Modifier = Modifier,
+    containerColor: CSSColorValue? = null,
+    labelTextColor: CSSColorValue? = null,
+    containerShape: CSSLengthOrPercentageNumericValue? = null,
+    labelTextFont: String? = null,
     content: @Composable RowScope.() -> Unit
 ) {
+    val tag = "elevated"
     MdButtonTagElement(
-        name = "elevated",
+        name = tag,
         onClick = onClick,
         disabled = disabled,
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
-        modifier = modifier,
+        modifier = modifier
+            .styleModifier {
+                containerColor?.let { property("--md-$tag-button-container-color", it.toString()) }
+                labelTextColor?.let { property("--md-$tag-button-label-text-color", it.toString()) }
+                containerShape?.let { property("--md-$tag-button-container-shape", it.toString()) }
+                labelTextFont?.let { property("--md-$tag-button-label-text-font", it) }
+            },
         content = content
     )
 }
@@ -81,15 +95,27 @@ fun FilledButton(
     trailingIcon: @Composable (() -> Unit)? = null,
     disabled: Boolean = false,
     modifier: Modifier = Modifier,
+    containerColor: CSSColorValue? = null,
+    disabledContainerColor: CSSColorValue? = null,
+    labelTextColor: CSSColorValue? = null,
+    containerShape: CSSLengthOrPercentageNumericValue? = null,
+    labelTextFont: String? = null,
     content: @Composable RowScope.() -> Unit
 ) {
+    val tag = "filled"
     MdButtonTagElement(
-        name = "filled",
+        name = tag,
         onClick = onClick,
         disabled = disabled,
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
-        modifier = modifier,
+        modifier = modifier.styleModifier {
+            containerColor?.let { property("--md-$tag-button-container-color", it.toString()) }
+            disabledContainerColor?.let { property("--md-$tag-button-disabled-container-color", it.toString()) }
+            labelTextColor?.let { property("--md-$tag-button-label-text-color", it.toString()) }
+            containerShape?.let { property("--md-$tag-button-container-shape", it.toString()) }
+            labelTextFont?.let { property("--md-$tag-button-label-text-font", it) }
+        },
         content = content
     )
 }
@@ -101,35 +127,25 @@ fun OutlinedButton(
     trailingIcon: @Composable (() -> Unit)? = null,
     disabled: Boolean = false,
     modifier: Modifier = Modifier,
+    containerColor: CSSColorValue? = null,
+    labelTextColor: CSSColorValue? = null,
+    containerShape: CSSLengthOrPercentageNumericValue? = null,
+    labelTextFont: String? = null,
     content: @Composable RowScope.() -> Unit
 ) {
+    val tag = "outlined"
     MdButtonTagElement(
-        name = "outlined",
+        name = tag,
         onClick = onClick,
         disabled = disabled,
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
-        modifier = modifier,
-        content = content
-    )
-}
-
-@Composable
-fun TextButton(
-    onClick: (SyntheticMouseEvent) -> Unit,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    trailingIcon: @Composable (() -> Unit)? = null,
-    disabled: Boolean = false,
-    modifier: Modifier = Modifier,
-    content: @Composable RowScope.() -> Unit
-) {
-    MdButtonTagElement(
-        name = "text",
-        onClick = onClick,
-        disabled = disabled,
-        leadingIcon = leadingIcon,
-        trailingIcon = trailingIcon,
-        modifier = modifier,
+        modifier = modifier.styleModifier {
+            containerColor?.let { property("--md-$tag-button-outline-color", it.toString()) }
+            labelTextColor?.let { property("--md-$tag-button-label-text-color", it.toString()) }
+            containerShape?.let { property("--md-$tag-button-container-shape", it.toString()) }
+            labelTextFont?.let { property("--md-$tag-button-label-text-font", it) }
+        },
         content = content
     )
 }
@@ -141,15 +157,51 @@ fun FilledTonalButton(
     trailingIcon: @Composable (() -> Unit)? = null,
     disabled: Boolean = false,
     modifier: Modifier = Modifier,
+    containerColor: CSSColorValue? = null,
+    labelTextColor: CSSColorValue? = null,
+    containerShape: CSSLengthOrPercentageNumericValue? = null,
+    labelTextFont: String? = null,
     content: @Composable RowScope.() -> Unit
 ) {
+    val tag = "filled-tonal"
     MdButtonTagElement(
-        name = "filled-tonal",
+        name = tag,
         onClick = onClick,
         disabled = disabled,
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
-        modifier = modifier,
+        modifier = modifier.styleModifier {
+            containerColor?.let { property("--md-$tag-button-outline-color", it.toString()) }
+            labelTextColor?.let { property("--md-$tag-button-label-text-color", it.toString()) }
+            containerShape?.let { property("--md-$tag-button-container-shape", it.toString()) }
+            labelTextFont?.let { property("--md-$tag-button-label-text-font", it) }
+        },
+        content = content
+    )
+}
+
+@Composable
+fun TextButton(
+    onClick: (SyntheticMouseEvent) -> Unit,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    disabled: Boolean = false,
+    modifier: Modifier = Modifier,
+    labelTextColor: CSSColorValue? = null,
+    labelTextFont: String? = null,
+    content: @Composable RowScope.() -> Unit
+) {
+    val tag = "text"
+    MdButtonTagElement(
+        name = "text",
+        onClick = onClick,
+        disabled = disabled,
+        leadingIcon = leadingIcon,
+        trailingIcon = trailingIcon,
+        modifier = modifier.styleModifier {
+            labelTextColor?.let { property("--md-$tag-button-label-text-color", it.toString()) }
+            labelTextFont?.let { property("--md-$tag-button-label-text-font", it) }
+        },
         content = content
     )
 }

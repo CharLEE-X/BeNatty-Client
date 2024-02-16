@@ -36,8 +36,8 @@ import theme.MaterialTheme
 import theme.roleStyle
 import web.compose.material3.component.Dialog
 import web.compose.material3.component.FilledButton
+import web.compose.material3.component.FilledTonalIconButton
 import web.compose.material3.component.TextButton
-import web.compose.material3.component.TonalIconButton
 import web.compose.material3.component.labs.FilledCard
 
 @Composable
@@ -91,7 +91,7 @@ fun ImagePreviewDialog(
                         )
                     }
                     Spacer()
-                    TonalIconButton(
+                    FilledTonalIconButton(
                         onClick = { onClose() },
                     ) {
                         MdiClose()

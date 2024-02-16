@@ -13,10 +13,10 @@ import web.compose.extras.text.LargeLabel
 import web.compose.extras.text.LargeTitle
 import web.compose.material3.common.slot
 import web.compose.material3.component.FilledIconButton
+import web.compose.material3.component.FilledTonalIconButton
 import web.compose.material3.component.Icon
 import web.compose.material3.component.IconButton
 import web.compose.material3.component.OutlinedIconButton
-import web.compose.material3.component.TonalIconButton
 
 @Composable
 fun IconButtonsShowcase() {
@@ -35,7 +35,7 @@ fun IconButtonsShowcase() {
         onClick = { clickedValue = "outlined icon button clicked" },
         modifier = Modifier.padding(5.px)
     ) { Icon(iconIdentifier = "login") }
-    TonalIconButton(
+    FilledTonalIconButton(
         onClick = { clickedValue = "tonal icon button clicked" },
         modifier = Modifier.padding(5.px)
     ) { Icon(iconIdentifier = "public") }

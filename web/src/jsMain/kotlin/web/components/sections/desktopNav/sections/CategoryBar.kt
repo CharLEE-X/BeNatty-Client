@@ -14,8 +14,8 @@ import web.Category
 import web.CategoryFilter
 import web.compose.material3.component.FilledButton
 import web.compose.material3.component.TextButton
+import web.compose.material3.component.labs.OutlinedSegmentedButtonSet
 import web.compose.material3.component.labs.SegmentedButton
-import web.compose.material3.component.labs.SegmentedButtonSet
 
 @Composable
 fun CategoryBar(
@@ -44,7 +44,7 @@ fun CategoryBar(
             }
         }
         Spacer()
-        SegmentedButtonSet {
+        OutlinedSegmentedButtonSet {
             categoryFilters.forEach { filter ->
                 SegmentedButton(
                     label = filter.name,

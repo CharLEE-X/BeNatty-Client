@@ -2,30 +2,30 @@ package web.compose.material3.component.labs
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
+import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
 import org.jetbrains.compose.web.css.CSSColorValue
+import org.jetbrains.compose.web.dom.ContentBuilder
+import web.compose.material3.common.MdElement
 import web.compose.material3.common.MdTagElement
 import web.compose.material3.common.jsRequire
 
 @Suppress("UnsafeCastFromDynamic")
 @Composable
-fun SegmentedButton(
-    label: String? = null,
-    selected: Boolean = false,
-    onClick: () -> Unit = {},
-    containerHeight: Height? = null,
+fun OutlinedSegmentedButtonSet(
+    modifier: Modifier = Modifier,
+    containerHeight: CSSLengthOrPercentageNumericValue? = null,
     disabledIconColor: CSSColorValue? = null,
     disabledLabelTextColor: CSSColorValue? = null,
     disabledOutlineColor: CSSColorValue? = null,
     hoverStateLayerOpacity: CSSLengthOrPercentageNumericValue? = null,
     labelTextFont: String? = null,
-    labelTextLineHeight: CSSLengthOrPercentageNumericValue? = null,
+    labelTextLineHeight: Height? = null,
     labelTextSize: CSSLengthOrPercentageNumericValue? = null,
-    labelTextWeight: Height? = null,
+    labelTextWeight: FontWeight? = null,
     outlineColor: CSSColorValue? = null,
     pressedStateLayerOpacity: CSSLengthOrPercentageNumericValue? = null,
     selectedContainerColor: CSSColorValue? = null,
@@ -51,15 +51,16 @@ fun SegmentedButton(
     iconSize: CSSLengthOrPercentageNumericValue? = null,
     selectedIconColor: CSSColorValue? = null,
     unselectedIconColor: CSSColorValue? = null,
-    spacingLeading: CSSLengthOrPercentageNumericValue? = null,
-    spacingTrailing: CSSLengthOrPercentageNumericValue? = null,
-    modifier: Modifier = Modifier,
+    shapeStartStart: CSSLengthOrPercentageNumericValue? = null,
+    shapeStartEnd: CSSLengthOrPercentageNumericValue? = null,
+    shapeEndEnd: CSSLengthOrPercentageNumericValue? = null,
+    shapeEndStart: CSSLengthOrPercentageNumericValue? = null,
+    content: ContentBuilder<MdElement>? = null
 ) {
-    val tag = "outlined-segmented-button"
+    val tag = "outlined-segmented-button-set"
     MdTagElement(
         tagName = "md-$tag",
         applyAttrs = modifier
-            .onClick { onClick() }
             .styleModifier {
                 containerHeight?.let { property("--md-$tag-container-height", it.toString()) }
                 disabledIconColor?.let { property("--md-$tag-disabled-icon-color", it.toString()) }
@@ -145,13 +146,12 @@ fun SegmentedButton(
                 iconSize?.let { property("--md-$tag-icon-size", it.toString()) }
                 selectedIconColor?.let { property("--md-$tag-selected-icon-color", it.toString()) }
                 unselectedIconColor?.let { property("--md-$tag-unselected-icon-color", it.toString()) }
-                spacingLeading?.let { property("--md-$tag-spacing-leading", it.toString()) }
-                spacingTrailing?.let { property("--md-$tag-spacing-trailing", it.toString()) }
+                shapeStartStart?.let { property("--md-$tag-shape-start-start", it.toString()) }
+                shapeStartEnd?.let { property("--md-$tag-shape-start-end", it.toString()) }
+                shapeEndEnd?.let { property("--md-$tag-shape-end-end", it.toString()) }
+                shapeEndStart?.let { property("--md-$tag-shape-end-start", it.toString()) }
             }
-            .toAttrs {
-                label?.let { attr("label", it) }
-                if (selected) attr("selected", "")
-            },
-        content = null
-    ).also { jsRequire("@material/web/labs/segmentedbutton/$tag.js") }
+            .toAttrs {},
+        content = content
+    ).also { jsRequire("@material/web/labs/segmentedbuttonset/$tag.js") }
 }

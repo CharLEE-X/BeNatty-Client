@@ -81,8 +81,8 @@ import web.components.widgets.ImagePreviewDialog
 import web.components.widgets.SaveButton
 import web.components.widgets.SwitchSection
 import web.compose.material3.component.Divider
+import web.compose.material3.component.FilledTonalIconButton
 import web.compose.material3.component.TextFieldType
-import web.compose.material3.component.TonalIconButton
 import web.compose.material3.component.labs.FilledCard
 import web.util.convertImageToBase64
 import web.util.onEnterKeyDown
@@ -536,7 +536,7 @@ private fun ImageSlot(
                         )
                         .transition(CSSTransition("backgroundColor", 0.3.s, TransitionTimingFunction.Ease))
                 ) {}
-                TonalIconButton(
+                FilledTonalIconButton(
                     onClick = { onDeleteClick() },
                     modifier = Modifier
                         .align(Alignment.TopEnd)

@@ -11,8 +11,8 @@ import org.jetbrains.compose.web.css.px
 import web.compose.extras.Row
 import web.compose.extras.text.LargeTitle
 import web.compose.material3.component.Badge
+import web.compose.material3.component.FilledTonalIconButton
 import web.compose.material3.component.Icon
-import web.compose.material3.component.TonalIconButton
 
 @Composable
 fun BadgeShowcase() {
@@ -21,14 +21,14 @@ fun BadgeShowcase() {
     LargeTitle("Badges")
 
     Row {
-        TonalIconButton(
+        FilledTonalIconButton(
             modifier = Modifier.padding(5.px)
         ) {
             Icon("public")
             Badge()
         }
 
-        TonalIconButton(
+        FilledTonalIconButton(
             onClick = { badgeValue++ },
             modifier = Modifier.padding(5.px)
         ) {
@@ -36,7 +36,7 @@ fun BadgeShowcase() {
             Badge(value = badgeValue.toString())
         }
 
-        TonalIconButton(
+        FilledTonalIconButton(
             modifier = Modifier.padding(5.px)
         ) {
             Icon("public")

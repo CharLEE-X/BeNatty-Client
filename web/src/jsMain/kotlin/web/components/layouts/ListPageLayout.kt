@@ -80,8 +80,8 @@ import web.compose.material3.component.FilledButton
 import web.compose.material3.component.OutlinedButton
 import web.compose.material3.component.labs.Menu
 import web.compose.material3.component.labs.MenuItem
+import web.compose.material3.component.labs.OutlinedSegmentedButtonSet
 import web.compose.material3.component.labs.SegmentedButton
-import web.compose.material3.component.labs.SegmentedButtonSet
 
 @Composable
 fun ListPageLayout(
@@ -391,7 +391,7 @@ fun Actions(
             placeholder = state.strings.search,
             onEnterPress = { vm.trySend(AdminListContract.Inputs.SendSearch) },
             onSearchIconClick = { },
-            containerShape = 30.px.toString(),
+            containerShape = 30.px,
             modifier = Modifier.height(50.px)
         )
         OutlinedButton(
@@ -449,7 +449,7 @@ private fun PageNavigator(
             contentAlignment = Alignment.Center,
             modifier = modifier.fillMaxWidth()
         ) {
-            SegmentedButtonSet(Modifier) {
+            OutlinedSegmentedButtonSet(Modifier) {
                 if (showPrevious) {
                     SegmentedButton(
                         label = prevText,

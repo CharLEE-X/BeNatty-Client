@@ -1,6 +1,7 @@
 package web.compose.material3.component
 
 import androidx.compose.runtime.Composable
+import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.styleModifier
@@ -24,7 +25,7 @@ fun MdTextFieldTagElement(
     placeholder: String?,
     leadingIcon: (@Composable () -> Unit)?,
     trailingIcon: (@Composable () -> Unit)?,
-    containerShape: String?,
+    containerShape: CSSLengthOrPercentageNumericValue?,
     outlineColor: CSSColorValue?,
     inputTextColor: CSSColorValue? = null,
     hasLeadingIcon: Boolean,
@@ -124,7 +125,7 @@ fun FilledTextField(
     placeholder: String? = null,
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
-    containerShape: String? = null,
+    containerShape: CSSLengthOrPercentageNumericValue? = null,
     outlineColor: Color.Rgb? = null,
     inputTextColor: Color.Rgb? = null,
     type: TextFieldType = TextFieldType.TEXT,
@@ -199,7 +200,7 @@ fun OutlinedTextField(
     trailingIcon: (@Composable () -> Unit)? = null,
     hasLeadingIcon: Boolean = false,
     hasTrailingIcon: Boolean = false,
-    containerShape: String? = null,
+    containerShape: CSSLengthOrPercentageNumericValue? = null,
     outlineColor: CSSColorValue? = null,
     inputTextColor: CSSColorValue? = null,
     type: TextFieldType = TextFieldType.TEXT,

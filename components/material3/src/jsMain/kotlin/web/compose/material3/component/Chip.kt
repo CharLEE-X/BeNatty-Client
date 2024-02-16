@@ -19,9 +19,9 @@ import web.compose.material3.common.jsRequire
 @Composable
 private fun BaseChip(
     label: String,
-    elevated: Boolean = false,
-    disabled: Boolean = false,
-    alwaysFocusable: Boolean = false,
+    elevated: Boolean,
+    disabled: Boolean,
+    alwaysFocusable: Boolean,
     tagName: String,
     modifier: Modifier = Modifier,
     selectedContainerColor: CSSColorValue?,
@@ -29,27 +29,29 @@ private fun BaseChip(
     labelTextColor: CSSColorValue?,
     containerShape: String?,
     iconSize: String?,
-    onClick: (SyntheticMouseEvent) -> Unit = {},
-    content: ContentBuilder<MdElement>? = null
-) = MdTagElement(
-    tagName = tagName,
-    applyAttrs = modifier
-        .onClick { onClick(it) }
-        .styleModifier {
-            selectedContainerColor?.let { property("--md-filter-chip-selected-container-color", it.toString()) }
-            outlineColor?.let { property("--md-outlined-text-field-outline-color", it.toString()) }
-            labelTextColor?.let { property("--md-filter-chip-label-text-color", it.toString()) }
-            containerShape?.let { property("--md-outlined-text-field-container-shape", it) }
-            iconSize?.let { property("--md-filter-chip-icon-size", it) }
-        }
-        .toAttrs {
-            if (elevated) attr("elevated", "")
-            if (disabled) attr("disabled", "")
-            if (alwaysFocusable) attr("alwaysFocusable", "")
-            attr("label", label)
-        },
-    content = content
-)
+    onClick: (SyntheticMouseEvent) -> Unit,
+    content: ContentBuilder<MdElement>?
+) {
+    MdTagElement(
+        tagName = "md-$tagName",
+        applyAttrs = modifier
+            .onClick { onClick(it) }
+            .styleModifier {
+                selectedContainerColor?.let { property("--md-filter-chip-selected-container-color", it.toString()) }
+                outlineColor?.let { property("--md-outlined-text-field-outline-color", it.toString()) }
+                labelTextColor?.let { property("--md-filter-chip-label-text-color", it.toString()) }
+                containerShape?.let { property("--md-outlined-text-field-container-shape", it) }
+                iconSize?.let { property("--md-filter-chip-icon-size", it) }
+            }
+            .toAttrs {
+                if (elevated) attr("elevated", "")
+                if (disabled) attr("disabled", "")
+                if (alwaysFocusable) attr("alwaysFocusable", "")
+                attr("label", label)
+            },
+        content = content
+    ).also { jsRequire("@material/web/chips/$tagName.js") }
+}
 
 @Composable
 fun InputChip(
@@ -69,7 +71,7 @@ fun InputChip(
     content: ContentBuilder<MdElement>? = null
 ) {
     BaseChip(
-        tagName = "md-input-chip",
+        tagName = "input-chip",
         onClick = onClick,
         content = content,
         label = label,
@@ -85,7 +87,7 @@ fun InputChip(
             if (avatar) attr("avatar", "")
             if (removeOnly) attr("removeOnly", "")
         }
-    ).also { jsRequire("@material/web/chips/input-chip.js") }
+    )
 }
 
 @Composable
@@ -104,7 +106,7 @@ fun SuggestionChip(
     content: ContentBuilder<MdElement>? = null
 ) {
     BaseChip(
-        tagName = "md-suggestion-chip",
+        tagName = "suggestion-chip",
         modifier = modifier,
         onClick = onClick,
         content = content,
@@ -117,7 +119,7 @@ fun SuggestionChip(
         labelTextColor = labelTextColor,
         containerShape = containerShape,
         iconSize = iconSize,
-    ).also { jsRequire("@material/web/chips/suggestion-chip.js") }
+    )
 }
 
 @Composable
@@ -138,7 +140,7 @@ fun FilterChip(
     content: ContentBuilder<MdElement>? = null
 ) {
     BaseChip(
-        tagName = "md-filter-chip",
+        tagName = "filter-chip",
         onClick = onClick,
         content = content,
         label = label,
@@ -154,7 +156,7 @@ fun FilterChip(
             if (removable) attr("removable", "")
             if (selected) attr("selected", "")
         }
-    ).also { jsRequire("@material/web/chips/filter-chip.js") }
+    )
 }
 
 @Composable
@@ -173,7 +175,7 @@ fun AssistChip(
     content: ContentBuilder<MdElement>? = null
 ) {
     BaseChip(
-        tagName = "md-assist-chip",
+        tagName = "assist-chip",
         modifier = modifier,
         onClick = onClick,
         content = content,
@@ -186,7 +188,7 @@ fun AssistChip(
         labelTextColor = labelTextColor,
         containerShape = containerShape,
         iconSize = iconSize
-    ).also { jsRequire("@material/web/chips/assist-chip.js") }
+    )
 }
 
 @Suppress("UnsafeCastFromDynamic")
@@ -194,9 +196,12 @@ fun AssistChip(
 fun ChipSet(
     modifier: Modifier = Modifier,
     content: ContentBuilder<MdElement>? = null
-) = MdTagElement(
-    tagName = "md-chip-set",
-    applyAttrs = modifier.toAttrs {
-    },
-    content = content
-).also { jsRequire("@material/web/chips/chip-set.js") }
+) {
+    val tag = "chip-set"
+    MdTagElement(
+        tagName = "md-$tag",
+        applyAttrs = modifier.toAttrs {
+        },
+        content = content
+    ).also { jsRequire("@material/web/chips/$tag.js") }
+}

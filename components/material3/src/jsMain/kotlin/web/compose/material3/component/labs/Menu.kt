@@ -26,10 +26,10 @@ fun Menu(
     open: Boolean = false,
     xOffset: Int = 0,
     yOffset: Int = 0,
-    typeaheadDelay: Int? = null,
+    typeAHeadDelay: Int? = null,
     anchorCorner: Corner? = null,
     stayOpenOnOutsideClick: Boolean = false,
-    stayOpenOnFocusout: Boolean = false,
+    stayOpenOnFocusOut: Boolean = false,
     skipRestoreFocus: Boolean = false,
     defaultFocusState: FocusState? = null,
     isSubmenu: Boolean = false,
@@ -45,7 +45,7 @@ fun Menu(
         applyAttrs = modifier
             .position(position)
             .onClick { evt ->
-                evt.stopPropagation()
+                evt.preventDefault()
             }
             .toAttrs {
                 anchor?.let { attr("anchor", it) }
@@ -54,10 +54,10 @@ fun Menu(
                 if (open) attr("open", "")
                 if (xOffset != 0) attr("xOffset", xOffset.toString())
                 if (yOffset != 0) attr("yOffset", yOffset.toString())
-                typeaheadDelay?.let { attr("typeaheadDelay", it.toString()) }
+                typeAHeadDelay?.let { attr("typeaheadDelay", it.toString()) }
                 anchorCorner?.let { attr("anchorCorner", it.value) }
                 if (stayOpenOnOutsideClick) attr("stayOpenOnOutsideClick", "")
-                if (stayOpenOnFocusout) attr("stayOpenOnFocusout", "")
+                if (stayOpenOnFocusOut) attr("stayOpenOnFocusout", "")
                 if (skipRestoreFocus) attr("skipRestoreFocus", "")
                 defaultFocusState?.let { attr("defaultFocusState", it.value) }
                 if (isSubmenu) attr("isSubmenu", "")

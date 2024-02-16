@@ -2,6 +2,7 @@ package web.components.widgets
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.onKeyDown
@@ -20,7 +21,7 @@ fun SearchBar(
     placeholder: String,
     onEnterPress: () -> Unit,
     onSearchIconClick: (Boolean) -> Unit,
-    containerShape: String? = null,
+    containerShape: CSSLengthOrPercentageNumericValue? = null,
 ) {
     val breakpoint = rememberBreakpoint()
 

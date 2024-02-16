@@ -16,8 +16,8 @@ import web.compose.extras.text.LargeTitle
 import web.compose.material3.component.labs.ElevatedCard
 import web.compose.material3.component.labs.FilledCard
 import web.compose.material3.component.labs.OutlinedCard
+import web.compose.material3.component.labs.OutlinedSegmentedButtonSet
 import web.compose.material3.component.labs.SegmentedButton
-import web.compose.material3.component.labs.SegmentedButtonSet
 
 @Composable
 fun CardShowcase() {
@@ -33,7 +33,7 @@ fun CardShowcase() {
         CardContent()
     }
 
-    SegmentedButtonSet {
+    OutlinedSegmentedButtonSet {
         SegmentedButton(
             label = "Button 1",
         )
