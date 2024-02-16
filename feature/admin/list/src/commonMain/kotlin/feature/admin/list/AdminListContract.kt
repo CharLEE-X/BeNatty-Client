@@ -7,18 +7,6 @@ object AdminListContract {
     data class State(
         val dataType: DataType,
 
-        val isSlot1Sortable: Boolean,
-        val showSlot2: Boolean,
-        val isSlot2Sortable: Boolean,
-        val showSlot3: Boolean,
-        val isSlot3Sortable: Boolean,
-        val showSlot4: Boolean,
-        val isSlot4Sortable: Boolean,
-        val showSlot5: Boolean,
-        val isSlot5Sortable: Boolean,
-        val showSlot6: Boolean,
-        val isSlot6Sortable: Boolean,
-
         val strings: ListStrings = ListStrings(
             title = when (dataType) {
                 DataType.USER -> getString(component.localization.Strings.Users)
@@ -27,44 +15,9 @@ object AdminListContract {
                 DataType.CATEGORY -> getString(component.localization.Strings.Categories)
                 DataType.TAG -> getString(component.localization.Strings.Tags)
             },
-            slot1Text = when (dataType) {
-                DataType.USER -> getString(component.localization.Strings.CreatedAt)
-                DataType.PRODUCT -> getString(component.localization.Strings.CreatedAt)
-                DataType.ORDER -> getString(component.localization.Strings.CreatedAt)
-                DataType.CATEGORY -> getString(component.localization.Strings.CreatedAt)
-                DataType.TAG -> getString(component.localization.Strings.CreatedAt)
-            },
-            slot2Text = when (dataType) {
-                DataType.USER -> getString(component.localization.Strings.Email)
-                DataType.PRODUCT -> getString(component.localization.Strings.Name)
-                DataType.ORDER -> getString(component.localization.Strings.Name)
-                DataType.CATEGORY -> getString(component.localization.Strings.Name)
-                DataType.TAG -> getString(component.localization.Strings.Name)
-            },
-            slot3Text = when (dataType) {
-                DataType.USER -> getString(component.localization.Strings.FullName)
-                DataType.PRODUCT -> getString(component.localization.Strings.Price)
-                DataType.ORDER -> getString(component.localization.Strings.Description)
-                DataType.CATEGORY -> getString(component.localization.Strings.Description)
-                DataType.TAG -> getString(component.localization.Strings.InProducts)
-            },
-            slot4Text = when (dataType) {
-                DataType.USER -> getString(component.localization.Strings.Orders)
-                DataType.PRODUCT -> getString(component.localization.Strings.Sold)
-                DataType.ORDER -> getString(component.localization.Strings.StockStatus)
-                DataType.CATEGORY -> getString(component.localization.Strings.Display)
-                DataType.TAG -> ""
-            },
-            slot5Text = when (dataType) {
-                DataType.USER -> ""
-                DataType.PRODUCT -> getString(component.localization.Strings.CatalogVisibility)
-                DataType.ORDER -> ""
-                DataType.CATEGORY -> getString(component.localization.Strings.InProducts)
-                DataType.TAG -> ""
-            },
         ),
 
-        val isLoading: Boolean = true,
+        val isLoading: Boolean = false,
 
         val items: List<ListItem> = emptyList(),
         val showList: Boolean = false,
@@ -111,14 +64,12 @@ object AdminListContract {
             data class PerPage(val perPage: Int) : OnChange
         }
 
-        sealed interface Click : Inputs {
-            data object Create : Click
-            data class Item(val id: String) : Click
-            data class Page(val page: Int) : Click
-            data object PreviousPage : Click
-            data object NextPage : Click
-            data class Slot(val slotName: String) : Click
-        }
+        data object OnCreateClick : Inputs
+        data class OnItemClick(val id: String) : Inputs
+        data class OnPageClick(val page: Int) : Inputs
+        data object OnPreviousPageClick : Inputs
+        data object OnNextPageClick : Inputs
+        data class OnTopBarSlotClick(val slotName: String) : Inputs
     }
 
     sealed interface Events {
@@ -132,11 +83,6 @@ object AdminListContract {
 
     data class ListStrings(
         val title: String,
-        val slot1Text: String,
-        val slot2Text: String,
-        val slot3Text: String,
-        val slot4Text: String,
-        val slot5Text: String,
         val press: String = getString(component.localization.Strings.Press),
         val create: String = getString(component.localization.Strings.Create),
         val toStart: String = getString(component.localization.Strings.ToStart),
@@ -152,7 +98,7 @@ object AdminListContract {
         PRODUCT,
         ORDER,
         CATEGORY,
-        TAG,
+        TAG;
     }
 
     enum class UserSlot {
@@ -167,12 +113,12 @@ object AdminListContract {
     }
 
     enum class ProductSlot {
-        CreatedAt, Image, Name, Price, Sold, CatalogVisibility;
+        CreatedAt, Image, Title, Price, Sold, CatalogVisibility;
 
         fun asString() = when (this) {
             CreatedAt -> getString(component.localization.Strings.CreatedAt)
             Image -> getString(component.localization.Strings.Image)
-            Name -> getString(component.localization.Strings.Name)
+            Title -> getString(component.localization.Strings.Title)
             Price -> getString(component.localization.Strings.Price)
             Sold -> getString(component.localization.Strings.Sold)
             CatalogVisibility -> getString(component.localization.Strings.CatalogVisibility)

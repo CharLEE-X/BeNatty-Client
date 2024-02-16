@@ -95,7 +95,7 @@ fun ListPageLayout(
         ) {
             PageHeader(strings.title) {
                 FilledButton(
-                    onClick = { vm.trySend(AdminListContract.Inputs.Click.Create) },
+                    onClick = { vm.trySend(AdminListContract.Inputs.OnCreateClick) },
                     leadingIcon = { MdiAdd() },
                 ) {
                     SpanText(text = strings.create)
@@ -134,9 +134,9 @@ fun ListPageLayout(
                     nextText = strings.next,
                     showPrevious = showPrevious,
                     showNext = showNext,
-                    onPageClick = { vm.trySend(AdminListContract.Inputs.Click.Page(it)) },
-                    onPreviousPageClick = { vm.trySend(AdminListContract.Inputs.Click.PreviousPage) },
-                    onNextPageClick = { vm.trySend(AdminListContract.Inputs.Click.NextPage) },
+                    onPageClick = { vm.trySend(AdminListContract.Inputs.OnPageClick(it)) },
+                    onPreviousPageClick = { vm.trySend(AdminListContract.Inputs.OnPreviousPageClick) },
+                    onNextPageClick = { vm.trySend(AdminListContract.Inputs.OnNextPageClick) },
                 )
             }
             Box(
@@ -148,7 +148,7 @@ fun ListPageLayout(
                         pressText = strings.press,
                         createText = strings.create,
                         toStartText = strings.toStart,
-                        onClick = { vm.trySend(AdminListContract.Inputs.Click.Create) }
+                        onClick = { vm.trySend(AdminListContract.Inputs.OnCreateClick) }
                     )
                 }
                 if (isLoading) {
@@ -187,7 +187,7 @@ fun ListTopBar(
                             isSelected = state.sortBy == slot.name,
                             isSortable = true,
                             sortDirection = state.sortDirection,
-                            onClick = { vm.trySend(AdminListContract.Inputs.Click.Slot(slot.name)) },
+                            onClick = { vm.trySend(AdminListContract.Inputs.OnTopBarSlotClick(slot.name)) },
                         )
                     }
                 }
@@ -199,7 +199,7 @@ fun ListTopBar(
                             isSelected = state.sortBy == slot.name,
                             isSortable = slot != AdminListContract.ProductSlot.Image,
                             sortDirection = state.sortDirection,
-                            onClick = { vm.trySend(AdminListContract.Inputs.Click.Slot(slot.name)) },
+                            onClick = { vm.trySend(AdminListContract.Inputs.OnTopBarSlotClick(slot.name)) },
                         )
                     }
                 }
@@ -211,7 +211,7 @@ fun ListTopBar(
                             isSelected = state.sortBy == slot.name,
                             isSortable = true,
                             sortDirection = state.sortDirection,
-                            onClick = { vm.trySend(AdminListContract.Inputs.Click.Slot(slot.name)) },
+                            onClick = { vm.trySend(AdminListContract.Inputs.OnTopBarSlotClick(slot.name)) },
                         )
                     }
                 }
@@ -223,7 +223,7 @@ fun ListTopBar(
                             isSelected = state.sortBy == slot.name,
                             isSortable = true,
                             sortDirection = state.sortDirection,
-                            onClick = { vm.trySend(AdminListContract.Inputs.Click.Slot(slot.name)) },
+                            onClick = { vm.trySend(AdminListContract.Inputs.OnTopBarSlotClick(slot.name)) },
                         )
                     }
                 }
@@ -235,7 +235,7 @@ fun ListTopBar(
                             isSelected = state.sortBy == slot.name,
                             isSortable = true,
                             sortDirection = state.sortDirection,
-                            onClick = { vm.trySend(AdminListContract.Inputs.Click.Slot(slot.name)) },
+                            onClick = { vm.trySend(AdminListContract.Inputs.OnTopBarSlotClick(slot.name)) },
                         )
                     }
                 }
@@ -262,7 +262,7 @@ fun Item(
             .onMouseLeave { isHovered = false }
             .thenIf(isHovered) { Modifier.backgroundColor(MaterialTheme.colors.mdSysColorSurfaceContainerHigh.value()) }
             .thenIf(isHovered) { Modifier.color(MaterialTheme.colors.mdSysColorOnSurfaceVariant.value()) }
-            .onClick { vm.trySend(AdminListContract.Inputs.Click.Item(item.id)) }
+            .onClick { vm.trySend(AdminListContract.Inputs.OnItemClick(item.id)) }
             .cursor(Cursor.Pointer)
             .transition(
                 CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease),
@@ -279,29 +279,7 @@ fun Item(
 
             AdminListContract.DataType.PRODUCT -> {
                 SpanText(item.slot1)
-                item.slot2?.let {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .gap(0.25.em)
-                            .overflow(Overflow.Hidden)
-                    ) {
-                        it.split(",").forEach { url ->
-                            var hovered by remember { mutableStateOf(false) }
-                            Image(
-                                src = url,
-                                modifier = Modifier
-                                    .size(40.px)
-                                    .borderRadius(5.px)
-                                    .objectFit(ObjectFit.Cover)
-                                    .onMouseEnter { hovered = true }
-                                    .onMouseLeave { hovered = false }
-                                    .scale(if (hovered) 4 else 1.0)
-                                    .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
-                            )
-                        }
-                    }
-                } ?: MdiBrokenImage(Modifier.size(30.px))
+                item.slot2?.let { url -> MiniImage(url) } ?: MdiBrokenImage(Modifier.size(30.px))
                 SpanText(item.slot3 ?: "N/A")
                 SpanText(item.slot4 ?: "N/A")
                 SpanText(item.slot5 ?: "N/A")
@@ -329,6 +307,29 @@ fun Item(
                 SpanText(item.slot3 ?: "N/A")
             }
         }
+    }
+}
+
+@Composable
+private fun MiniImage(url: String) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .gap(0.25.em)
+            .overflow(Overflow.Hidden)
+    ) {
+        var hovered by remember { mutableStateOf(false) }
+        Image(
+            src = url,
+            modifier = Modifier
+                .size(40.px)
+                .borderRadius(5.px)
+                .objectFit(ObjectFit.Cover)
+                .onMouseEnter { hovered = true }
+                .onMouseLeave { hovered = false }
+                .scale(if (hovered) 4 else 1.0)
+                .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
+        )
     }
 }
 

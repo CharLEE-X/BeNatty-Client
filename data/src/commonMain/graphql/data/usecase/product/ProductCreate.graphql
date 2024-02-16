@@ -1,11 +1,5 @@
-mutation ProductCreate($input: ProductCreateInput!) {
+mutation CreateProduct($input: ProductCreateInput!) {
   createProduct(input: $input) {
     id
-    name
-    creator {
-      id
-      name
-    }
-    createdAt
   }
 }

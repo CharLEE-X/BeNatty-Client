@@ -1,4 +1,4 @@
-query ProductsGetAllPage($pageInput: PageInput!) {
+query GetAllProductsPage($pageInput: PageInput!) {
   getAllProductsPage(pageInput: $pageInput) {
     info {
       count
@@ -7,13 +7,13 @@ query ProductsGetAllPage($pageInput: PageInput!) {
       prev
     }
     products {
-      id
-      name
+      categoryName
       createdAt
-      images
+      id
+      mediaUrl
       price
-      totalSold
-      catalogVisibility
+      sold
+      title
     }
   }
 }

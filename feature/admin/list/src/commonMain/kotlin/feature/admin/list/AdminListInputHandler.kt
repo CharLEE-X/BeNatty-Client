@@ -59,24 +59,13 @@ internal class AdminListInputHandler :
             is AdminListContract.Inputs.OnChange.PerPage -> handleOnChangePerPage(input.perPage)
         }
 
-        is AdminListContract.Inputs.Click -> when (input) {
-            AdminListContract.Inputs.Click.Create ->
-                postEvent(AdminListContract.Events.GoTo.Create)
-
-            is AdminListContract.Inputs.Click.Item ->
-                postEvent(AdminListContract.Events.GoTo.Detail(input.id))
-
-            is AdminListContract.Inputs.Click.Page -> handleGetPage(input.page)
-            AdminListContract.Inputs.Click.NextPage ->
-                getCurrentState().info.next?.let { handleGetPage(it) } ?: noOp()
-
-            AdminListContract.Inputs.Click.PreviousPage ->
-                getCurrentState().info.prev?.let { handleGetPage(it) } ?: noOp()
-
-            is AdminListContract.Inputs.Click.Slot -> handleClickSlot(input.slotName)
-        }
-
+        AdminListContract.Inputs.OnCreateClick -> postEvent(AdminListContract.Events.GoTo.Create)
+        is AdminListContract.Inputs.OnItemClick -> postEvent(AdminListContract.Events.GoTo.Detail(input.id))
+        is AdminListContract.Inputs.OnPageClick -> handleGetPage(input.page)
+        AdminListContract.Inputs.OnNextPageClick -> getCurrentState().info.next?.let { handleGetPage(it) } ?: noOp()
+        is AdminListContract.Inputs.OnTopBarSlotClick -> handleClickSlot(input.slotName)
         AdminListContract.Inputs.SendSearch -> handleGetPage(0)
+        AdminListContract.Inputs.OnPreviousPageClick -> getCurrentState().info.prev?.let { handleGetPage(it) } ?: noOp()
     }
 
     private suspend fun InputScope.handleClickSlot(slotName: String) {
@@ -163,11 +152,11 @@ internal class AdminListInputHandler :
                                 ListItem(
                                     id = product.id.toString(),
                                     slot1 = millisToDate(product.createdAt.toLong()),
-                                    slot2 = product.images.joinToString(","),
-                                    slot3 = product.name,
-                                    slot4 = product.price.toString(),
-                                    slot5 = product.totalSold.toString(),
-                                    slot6 = product.catalogVisibility.toString(),
+                                    slot2 = product.mediaUrl,
+                                    slot3 = product.title,
+                                    slot4 = product.price?.toString(),
+                                    slot5 = product.sold.toString(),
+                                    slot6 = null,
                                 )
                             }
                             postInput(AdminListContract.Inputs.Set.Items(items))

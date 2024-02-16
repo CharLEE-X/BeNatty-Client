@@ -25,17 +25,6 @@ fun AdminUserListPage(
     val vm = remember(scope) {
         AdminListViewModel(
             dataType = AdminListContract.DataType.USER,
-            isSlot1Sortable = true,
-            showSlot2 = true,
-            isSlot2Sortable = true,
-            showSlot3 = true,
-            isSlot3Sortable = true,
-            showSlot4 = false,
-            isSlot4Sortable = false,
-            showSlot5 = false,
-            isSlot5Sortable = false,
-            showSlot6 = false,
-            isSlot6Sortable = false,
             scope = scope,
             onError = onError,
             goToDetail = { id ->

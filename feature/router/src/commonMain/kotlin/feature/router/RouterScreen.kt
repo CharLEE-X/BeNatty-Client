@@ -112,6 +112,7 @@ enum class RouterScreen(
     ;
 
     override val matcher: RouteMatcher = RouteMatcher.create(routeFormat)
+    val route: String = matcher.routeFormat
 }
 
 val bottomBarRoutes = listOf(

@@ -1,11 +1,12 @@
-mutation ProductUploadImage($input: ProductImageUploadInput!) {
-  uploadImageToProduct(input: $input) {
-      images {
-        id
-        altText
-        url
-        created
-        modified
-      }
+mutation UploadMediaToProduct($input: ProductMediaUploadInput!) {
+  uploadMediaToProduct(input: $input) {
+    media {
+      altText
+      createdAt
+      id
+      mediaType
+      updatedAt
+      url
+    }
   }
 }

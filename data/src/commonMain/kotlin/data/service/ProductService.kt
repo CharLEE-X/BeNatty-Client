@@ -5,26 +5,25 @@ import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.watch
-import data.DeleteProductImageMutation
-import data.ProductCreateMutation
-import data.ProductDeleteMutation
-import data.ProductGetByIdQuery
-import data.ProductUpdateMutation
-import data.ProductUploadImageMutation
-import data.ProductsGetAllPageQuery
+import data.CreateProductMutation
+import data.DeleteProductMediaMutation
+import data.DeleteProductMutation
+import data.GetAllProductsPageQuery
+import data.GetProductByIdQuery
+import data.UpdateProductMutation
+import data.UploadMediaToProductMutation
 import data.type.BackorderStatus
-import data.type.CatalogVisibility
+import data.type.InventoryUpdateInput
+import data.type.MediaType
 import data.type.PageInput
 import data.type.PostStatus
-import data.type.ProductCommonInput
+import data.type.PricingUpdateInput
 import data.type.ProductCreateInput
-import data.type.ProductDataInput
-import data.type.ProductImageInput
-import data.type.ProductImageUploadInput
-import data.type.ProductInventoryInput
-import data.type.ProductPriceInput
-import data.type.ProductShippingInput
+import data.type.ProductDeleteInput
+import data.type.ProductMediaDeleteInput
+import data.type.ProductMediaUploadInput
 import data.type.ProductUpdateInput
+import data.type.ShippingUpdateInput
 import data.type.SortDirection
 import data.type.StockStatus
 import data.utils.handle
@@ -33,187 +32,134 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 interface ProductService {
-    suspend fun create(input: ProductCreateInput): Result<ProductCreateMutation.Data>
+    suspend fun create(input: ProductCreateInput): Result<CreateProductMutation.Data>
     suspend fun getAsPage(
         page: Int,
         size: Int,
         query: String?,
         sortBy: String?,
         sortDirection: SortDirection?,
-    ): Result<ProductsGetAllPageQuery.Data>
+    ): Result<GetAllProductsPageQuery.Data>
 
-    suspend fun getById(id: String): Flow<Result<ProductGetByIdQuery.Data>>
-    suspend fun deleteById(id: String): Result<ProductDeleteMutation.Data>
+    suspend fun getById(id: String): Flow<Result<GetProductByIdQuery.Data>>
+    suspend fun deleteById(id: String): Result<DeleteProductMutation.Data>
     suspend fun update(
         id: String,
         name: String?,
-        shortDescription: String?,
+        description: String?,
         isFeatured: Boolean?,
         allowReviews: Boolean?,
-        catalogVisibility: CatalogVisibility?,
-        categories: List<String>?,
+        categoryId: String?,
         tags: List<String>?,
-        description: String?,
         postStatus: PostStatus?,
-        images: List<ProductImageInput>?,
-        isPurchasable: Boolean?,
         backorderStatus: BackorderStatus?,
-        canBackorder: Boolean?,
-        isOnBackorder: Boolean?,
         lowStockThreshold: Int?,
-        onePerOrder: Boolean?,
         remainingStock: Int?,
         stockStatus: StockStatus?,
-        trackInventory: Boolean?,
-        onSale: Boolean?,
-        price: String?,
-        regularPrice: String?,
-        saleEnd: String?,
-        salePrice: String?,
-        saleStart: String?,
+        trackQuantity: Boolean?,
+        price: Double?,
+        regularPrice: Double?,
+        chargeTax: Boolean?,
         presetId: String?,
         height: String?,
         length: String?,
-        requiresShipping: Boolean?,
+        isPhysicalProduct: Boolean?,
         weight: String?,
         width: String?,
-    ): Result<ProductUpdateMutation.Data>
+    ): Result<UpdateProductMutation.Data>
 
     suspend fun uploadImage(
         productId: String,
-        imageString: String
-    ): Result<ProductUploadImageMutation.Data>
+        mediaString: String,
+        mediaType: MediaType,
+    ): Result<UploadMediaToProductMutation.Data>
 
-    suspend fun deleteImage(productId: String, imageId: String): Result<DeleteProductImageMutation.Data>
+    suspend fun deleteImage(productId: String, imageId: String): Result<DeleteProductMediaMutation.Data>
 }
 
 internal class ProductServiceImpl(
     private val apolloClient: ApolloClient,
 ) : ProductService {
-    override suspend fun deleteImage(productId: String, imageId: String): Result<DeleteProductImageMutation.Data> {
-        return apolloClient.mutation(DeleteProductImageMutation(productId, imageId)).handle()
+    override suspend fun deleteImage(productId: String, imageId: String): Result<DeleteProductMediaMutation.Data> {
+        val input = ProductMediaDeleteInput(
+            imageId = productId,
+            productId = imageId,
+        )
+        return apolloClient.mutation(DeleteProductMediaMutation(input)).handle()
     }
 
     override suspend fun uploadImage(
         productId: String,
-        imageString: String
-    ): Result<ProductUploadImageMutation.Data> {
-        val input = ProductImageUploadInput(
+        mediaString: String,
+        mediaType: MediaType,
+    ): Result<UploadMediaToProductMutation.Data> {
+        val input = ProductMediaUploadInput(
             productId = productId,
-            imageString = imageString,
+            blob = mediaString,
+            mediaType = mediaType,
         )
-        return apolloClient.mutation(ProductUploadImageMutation(input)).handle()
+        return apolloClient.mutation(UploadMediaToProductMutation(input)).handle()
     }
 
     override suspend fun update(
         id: String,
         name: String?,
-        shortDescription: String?,
+        description: String?,
         isFeatured: Boolean?,
         allowReviews: Boolean?,
-        catalogVisibility: CatalogVisibility?,
-        categories: List<String>?,
+        categoryId: String?,
         tags: List<String>?,
-        description: String?,
         postStatus: PostStatus?,
-        images: List<ProductImageInput>?,
-        isPurchasable: Boolean?,
         backorderStatus: BackorderStatus?,
-        canBackorder: Boolean?,
-        isOnBackorder: Boolean?,
         lowStockThreshold: Int?,
-        onePerOrder: Boolean?,
         remainingStock: Int?,
         stockStatus: StockStatus?,
-        trackInventory: Boolean?,
-        onSale: Boolean?,
-        price: String?,
-        regularPrice: String?,
-        saleEnd: String?,
-        salePrice: String?,
-        saleStart: String?,
+        trackQuantity: Boolean?,
+        price: Double?,
+        regularPrice: Double?,
+        chargeTax: Boolean?,
         presetId: String?,
         height: String?,
         length: String?,
-        requiresShipping: Boolean?,
+        isPhysicalProduct: Boolean?,
         weight: String?,
         width: String?,
-    ): Result<ProductUpdateMutation.Data> {
-        val common = if (
-            name != null || shortDescription != null || isFeatured != null || allowReviews != null ||
-            catalogVisibility != null || categories != null || tags != null
-        ) {
-            Optional.present(
-                ProductCommonInput(
-                    name = name.skipIfNull(),
-                    shortDescription = shortDescription.skipIfNull(),
-                    isFeatured = isFeatured.skipIfNull(),
-                    allowReviews = allowReviews.skipIfNull(),
-                    catalogVisibility = catalogVisibility.skipIfNull(),
-                    categories = categories.skipIfNull(),
-                    tags = tags.skipIfNull(),
-                )
-            )
-        } else Optional.absent()
-
-        val data = if (
-            postStatus != null || description != null || images != null || isPurchasable != null
-        ) {
-            Optional.present(
-                ProductDataInput(
-                    description = description.skipIfNull(),
-                    postStatus = postStatus.skipIfNull(),
-                    images = images.skipIfNull(),
-                    isPurchasable = isPurchasable.skipIfNull(),
-                    parentId = Optional.absent(),
-                )
-            )
-        } else Optional.absent()
-
+    ): Result<UpdateProductMutation.Data> {
         val inventory = if (
-            onePerOrder != null || backorderStatus != null || canBackorder != null || isOnBackorder != null ||
-            lowStockThreshold != null || remainingStock != null || stockStatus != null || trackInventory != null
+            backorderStatus != null || lowStockThreshold != null || remainingStock != null || stockStatus != null ||
+            trackQuantity != null
         ) {
             Optional.present(
-                ProductInventoryInput(
-                    onePerOrder = onePerOrder.skipIfNull(),
+                InventoryUpdateInput(
                     backorderStatus = backorderStatus.skipIfNull(),
-                    canBackorder = canBackorder.skipIfNull(),
-                    isOnBackorder = isOnBackorder.skipIfNull(),
                     lowStockThreshold = lowStockThreshold.skipIfNull(),
                     remainingStock = remainingStock.skipIfNull(),
                     stockStatus = stockStatus.skipIfNull(),
-                    trackInventory = trackInventory.skipIfNull(),
+                    trackQuantity = trackQuantity.skipIfNull(),
                 )
             )
         } else Optional.absent()
 
-        val productPrice = if (
-            onSale != null || price != null || regularPrice != null || saleEnd != null ||
-            salePrice != null || saleStart != null
-        ) {
+        val productPrice = if (price != null || regularPrice != null || chargeTax != null) {
             Optional.present(
-                ProductPriceInput(
-                    onSale = onSale.skipIfNull(),
+                PricingUpdateInput(
                     price = price.skipIfNull(),
                     regularPrice = regularPrice.skipIfNull(),
-                    saleEnd = saleEnd.skipIfNull(),
-                    salePrice = salePrice.skipIfNull(),
-                    saleStart = saleStart.skipIfNull(),
+                    chargeTax = chargeTax.skipIfNull(),
                 )
             )
         } else Optional.absent()
 
         val shipping = if (
-            presetId != null || height != null || length != null || requiresShipping != null || weight != null ||
+            presetId != null || height != null || length != null || isPhysicalProduct != null || weight != null ||
             width != null
         ) {
             Optional.present(
-                ProductShippingInput(
+                ShippingUpdateInput(
                     presetId = presetId.skipIfNull(),
                     height = height.skipIfNull(),
                     length = length.skipIfNull(),
-                    requiresShipping = requiresShipping.skipIfNull(),
+                    isPhysicalProduct = isPhysicalProduct.skipIfNull(),
                     weight = weight.skipIfNull(),
                     width = width.skipIfNull(),
                 )
@@ -222,20 +168,26 @@ internal class ProductServiceImpl(
 
         val input = ProductUpdateInput(
             id = id,
-            common = common,
-            data = data,
+            title = name.skipIfNull(),
+            isFeatured = isFeatured.skipIfNull(),
+            description = description.skipIfNull(),
+            allowReviews = allowReviews.skipIfNull(),
+            categoryId = categoryId.skipIfNull(),
+            tags = tags.skipIfNull(),
+            postStatus = postStatus.skipIfNull(),
+            media = Optional.absent(),
             inventory = inventory,
-            price = productPrice,
+            pricing = productPrice,
             shipping = shipping,
         )
 
-        return apolloClient.mutation(ProductUpdateMutation(input))
+        return apolloClient.mutation(UpdateProductMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }
 
-    override suspend fun create(input: ProductCreateInput): Result<ProductCreateMutation.Data> {
-        return apolloClient.mutation(ProductCreateMutation(input))
+    override suspend fun create(input: ProductCreateInput): Result<CreateProductMutation.Data> {
+        return apolloClient.mutation(CreateProductMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }
@@ -246,7 +198,7 @@ internal class ProductServiceImpl(
         query: String?,
         sortBy: String?,
         sortDirection: SortDirection?,
-    ): Result<ProductsGetAllPageQuery.Data> {
+    ): Result<GetAllProductsPageQuery.Data> {
         val pageInput = PageInput(
             page = page,
             size = size,
@@ -254,20 +206,23 @@ internal class ProductServiceImpl(
             sortBy = sortBy.skipIfNull(),
             sortDirection = sortDirection.skipIfNull(),
         )
-        return apolloClient.query(ProductsGetAllPageQuery(pageInput))
+        return apolloClient.query(GetAllProductsPageQuery(pageInput))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }
 
-    override suspend fun getById(id: String): Flow<Result<ProductGetByIdQuery.Data>> {
-        return apolloClient.query(ProductGetByIdQuery(id))
+    override suspend fun getById(id: String): Flow<Result<GetProductByIdQuery.Data>> {
+        return apolloClient.query(GetProductByIdQuery(id))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .watch()
             .map { it.handle() }
     }
 
-    override suspend fun deleteById(id: String): Result<ProductDeleteMutation.Data> {
-        return apolloClient.mutation(ProductDeleteMutation(id))
+    override suspend fun deleteById(id: String): Result<DeleteProductMutation.Data> {
+        val input = ProductDeleteInput(
+            id = id,
+        )
+        return apolloClient.mutation(DeleteProductMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }

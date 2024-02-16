@@ -1,19 +1,22 @@
 package feature.admin.product.page
 
+import com.apollographql.apollo3.api.Optional
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
 import core.util.millisToTime
 import data.GetCategoryByIdQuery
-import data.ProductGetByIdQuery
+import data.GetProductByIdQuery
 import data.service.CategoryService
 import data.service.ProductService
 import data.service.TagService
 import data.type.BackorderStatus
-import data.type.CatalogVisibility
+import data.type.InventoryInput
+import data.type.MediaType
 import data.type.PostStatus
+import data.type.PricingCreateInput
 import data.type.ProductCreateInput
-import data.type.ProductImageInput
+import data.type.ShippingInput
 import data.type.StockStatus
 import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
@@ -34,36 +37,32 @@ internal class AdminProductPageInputHandler :
 
     override suspend fun InputScope.handleInput(input: AdminProductPageContract.Inputs) = when (input) {
         is AdminProductPageContract.Inputs.Init -> handleInit(input.productId)
-        is AdminProductPageContract.Inputs.UploadImage -> handleUploadImage(input.imageString)
+        is AdminProductPageContract.Inputs.UploadMedia -> handleUploadImage(input.mediaString)
+        is AdminProductPageContract.Inputs.AddMedia -> handleAddMedia(input.mediaString)
+        is AdminProductPageContract.Inputs.DeleteMedia -> handleDeleteMedia(input.index)
 
         is AdminProductPageContract.Inputs.Get.ProductById -> handleGetProductById(input.id)
         AdminProductPageContract.Inputs.Get.AllCategories -> handleGetAllCategories()
         AdminProductPageContract.Inputs.Get.AllTags -> handleGetAllTags()
         is AdminProductPageContract.Inputs.Get.PresetCategory -> handleGetPresetCategory(input.categoryId)
 
-        AdminProductPageContract.Inputs.OnClick.Create -> handleCreateNewProduct()
-        AdminProductPageContract.Inputs.OnClick.Delete -> handleDeleteProduct()
-        AdminProductPageContract.Inputs.OnClick.SaveEdit -> handleSaveDetails()
-        AdminProductPageContract.Inputs.OnClick.CancelEdit -> handleCancelEdit()
-        is AdminProductPageContract.Inputs.OnClick.CategorySelected -> handleOnClickCategory(input.categoryName)
-        is AdminProductPageContract.Inputs.OnClick.TagSelected -> handleTagClick(input.tagName)
-        is AdminProductPageContract.Inputs.OnClick.GoToUserCreator -> {
+        AdminProductPageContract.Inputs.OnBackButtonClick -> postEvent(AdminProductPageContract.Events.GoBack)
+        AdminProductPageContract.Inputs.OnDeleteClick -> handleDelete()
+        AdminProductPageContract.Inputs.OnSaveClick -> handleSave()
+        AdminProductPageContract.Inputs.OnDiscardClick -> updateState { it.copy(current = it.original).wasEdited() }
+        is AdminProductPageContract.Inputs.OnCategorySelected -> handleOnClickCategory(input.categoryName)
+        is AdminProductPageContract.Inputs.OnTagSelected -> handleTagClick(input.tagName)
+        is AdminProductPageContract.Inputs.OnDeleteMediaClick -> handleDeleteImage(input.mediaId)
+        is AdminProductPageContract.Inputs.OnCreatorClick -> {
             val userId = getCurrentState().original.creator.id.toString()
             postEvent(AdminProductPageContract.Events.GoToUserDetails(userId))
         }
 
-        is AdminProductPageContract.Inputs.OnClick.DeleteImage -> handleDeleteImage(input.imageId)
-
-        AdminProductPageContract.Inputs.OnClick.ImproveName -> handleImproveName()
-        AdminProductPageContract.Inputs.OnClick.ImproveShortDescription -> handleImproveShortDescription()
-        AdminProductPageContract.Inputs.OnClick.ImproveDescription -> handleImproveDescription()
-        AdminProductPageContract.Inputs.OnClick.ImproveTags -> handleImproveTags()
-        AdminProductPageContract.Inputs.OnClick.GoToCreateTag ->
+        AdminProductPageContract.Inputs.OnCreateTagClick ->
             postEvent(AdminProductPageContract.Events.GoToCreateTag)
 
-
-        is AdminProductPageContract.Inputs.OnClick.PresetSelected -> handlePresetClick(input.preset)
-        AdminProductPageContract.Inputs.OnClick.GoToCreateCategory ->
+        is AdminProductPageContract.Inputs.OnPresetSelected -> handlePresetClick(input.presetName)
+        AdminProductPageContract.Inputs.OnCreateCategoryClick ->
             postEvent(AdminProductPageContract.Events.GoToCreateCategory)
 
         is AdminProductPageContract.Inputs.Set.AllCategories -> updateState { it.copy(allCategories = input.categories) }
@@ -80,73 +79,110 @@ internal class AdminProductPageInputHandler :
 
         is AdminProductPageContract.Inputs.Set.StateOfScreen -> updateState { it.copy(screenState = input.screenState) }
         is AdminProductPageContract.Inputs.Set.Id -> handleSetId(input.id)
-        is AdminProductPageContract.Inputs.Set.Name -> handleSetName(input.name)
-        is AdminProductPageContract.Inputs.Set.NameShake -> updateState { it.copy(shakeName = input.shake) }
-        is AdminProductPageContract.Inputs.Set.ShortDescription -> handleSetShortDescription(input.shortDescription)
-        is AdminProductPageContract.Inputs.Set.ShortDescriptionShake ->
-            updateState { it.copy(shakeShortDescription = input.shake) }
+        is AdminProductPageContract.Inputs.Set.Title -> handleSetTitle(input.title)
+        is AdminProductPageContract.Inputs.Set.TitleShake -> updateState { it.copy(titleShake = input.shake) }
 
         is AdminProductPageContract.Inputs.Set.IsFeatured -> handleSetIsFeatured(input.isFeatured)
         is AdminProductPageContract.Inputs.Set.AllowReviews -> handleSetAllowReviews(input.allowReviews)
-        is AdminProductPageContract.Inputs.Set.VisibilityInCatalog -> handleSetCatalogVisibility(input.catalogVisibility)
         is AdminProductPageContract.Inputs.Set.StatusOfPost -> handleSetStatusOfPost(input.postStatus)
         is AdminProductPageContract.Inputs.Set.Description -> handleSetDescription(input.description)
-        is AdminProductPageContract.Inputs.Set.DescriptionShake -> updateState { it.copy(shakeDescription = input.shake) }
-        is AdminProductPageContract.Inputs.Set.IsPurchasable -> handleSetIsPurchasable(input.isPurchasable)
-        is AdminProductPageContract.Inputs.Set.Categories -> handleSetCategories(input.categories)
+        is AdminProductPageContract.Inputs.Set.DescriptionShake -> updateState { it.copy(descriptionShake = input.shake) }
+        is AdminProductPageContract.Inputs.Set.CategoryId -> handleSetCategoryId(input.categoryId)
         is AdminProductPageContract.Inputs.Set.CreatedAt -> handleSetCreatedAt(input.createdAt)
         is AdminProductPageContract.Inputs.Set.Creator -> handleSetCreator(input.creator)
         is AdminProductPageContract.Inputs.Set.UpdatedAt -> handleSetUpdatedAt(input.updatedAt)
         is AdminProductPageContract.Inputs.Set.StatusOfBackorder -> handleSetStatusOfBackorder(input.backorderStatus)
-        is AdminProductPageContract.Inputs.Set.OnePerOrder -> handleSetOnePerOrder(input.onePerOrder)
-        is AdminProductPageContract.Inputs.Set.CanBackorder -> handleSetCanBackorder(input.canBackorder)
-        is AdminProductPageContract.Inputs.Set.Images -> handleSetImages(input.images)
-        is AdminProductPageContract.Inputs.Set.IsOnBackorder -> handleSetIsOnBackorder(input.isOnBackorder)
+        is AdminProductPageContract.Inputs.Set.Media -> handleSetMedia(input.media)
         is AdminProductPageContract.Inputs.Set.LowStockThreshold -> handleSetLowStockThreshold(input.lowStockThreshold)
-        is AdminProductPageContract.Inputs.Set.LowStockThresholdShake -> updateState { it.copy(shakeLowStockThreshold = input.shake) }
-        is AdminProductPageContract.Inputs.Set.OnSale -> handleSetOnSale(input.onSale)
+        is AdminProductPageContract.Inputs.Set.LowStockThresholdShake -> updateState { it.copy(lowStockThresholdShake = input.shake) }
         is AdminProductPageContract.Inputs.Set.Price -> handleSetPrice(input.price)
-        is AdminProductPageContract.Inputs.Set.PriceShake -> updateState { it.copy(shakePrice = input.shake) }
+        is AdminProductPageContract.Inputs.Set.PriceShake -> updateState { it.copy(priceShake = input.shake) }
         is AdminProductPageContract.Inputs.Set.RegularPrice -> handleSetRegularPrice(input.regularPrice)
-        is AdminProductPageContract.Inputs.Set.RegularPriceShake -> updateState { it.copy(shakeRegularPrice = input.shake) }
+        is AdminProductPageContract.Inputs.Set.RegularPriceShake -> updateState { it.copy(regularPriceShake = input.shake) }
         is AdminProductPageContract.Inputs.Set.RemainingStock -> handleSetRemainingStock(input.remainingStock)
-        is AdminProductPageContract.Inputs.Set.RemainingStockShake -> updateState { it.copy(shakeRemainingStock = input.shake) }
-        is AdminProductPageContract.Inputs.Set.RequiresShipping -> handleSetRequiresShipping(input.requiresShipping)
-        is AdminProductPageContract.Inputs.Set.SaleEnd -> handleSetSaleEnd(input.saleEnd)
-        is AdminProductPageContract.Inputs.Set.SalePrice -> handleSetSalePrice(input.salePrice)
-        is AdminProductPageContract.Inputs.Set.SalePriceShake -> updateState { it.copy(shakeSalePrice = input.shake) }
-        is AdminProductPageContract.Inputs.Set.SaleStart -> handleSetSaleStart(input.saleStart)
+        is AdminProductPageContract.Inputs.Set.RemainingStockShake -> updateState { it.copy(remainingStockShake = input.shake) }
+        is AdminProductPageContract.Inputs.Set.IsPhysicalProduct -> handleSetIsPhysicalProduct(input.isPhysicalProduct)
         is AdminProductPageContract.Inputs.Set.StatusOfStock -> handleSetStatusOfStock(input.stockStatus)
-        is AdminProductPageContract.Inputs.Set.TrackInventory -> handleSetTrackInventory(input.trackInventory)
+        is AdminProductPageContract.Inputs.Set.TrackQuantity -> handleSetTrackQuantity(input.trackQuantity)
         is AdminProductPageContract.Inputs.Set.Weight -> handleSetWeight(input.weight)
-        is AdminProductPageContract.Inputs.Set.WeightShake -> updateState { it.copy(shakeWeight = input.shake) }
+        is AdminProductPageContract.Inputs.Set.WeightShake -> updateState { it.copy(weightShake = input.shake) }
         is AdminProductPageContract.Inputs.Set.Length -> handleSetLength(input.length)
-        is AdminProductPageContract.Inputs.Set.LengthShake -> updateState { it.copy(shakeLength = input.shake) }
+        is AdminProductPageContract.Inputs.Set.LengthShake -> updateState { it.copy(lengthShake = input.shake) }
         is AdminProductPageContract.Inputs.Set.Width -> handleSetWidth(input.width)
-        is AdminProductPageContract.Inputs.Set.WidthShake -> updateState { it.copy(shakeWidth = input.shake) }
+        is AdminProductPageContract.Inputs.Set.WidthShake -> updateState { it.copy(widthShake = input.shake) }
         is AdminProductPageContract.Inputs.Set.Height -> handleSetHeight(input.height)
-        is AdminProductPageContract.Inputs.Set.HeightShake -> updateState { it.copy(shakeHeight = input.shake) }
+        is AdminProductPageContract.Inputs.Set.HeightShake -> updateState { it.copy(heightShake = input.shake) }
         is AdminProductPageContract.Inputs.Set.PresetCategory -> handleSetPresetCategory(input.category)
         is AdminProductPageContract.Inputs.Set.ShippingPresetId -> handleSetShippingPresetId(input.presetId)
         is AdminProductPageContract.Inputs.Set.ImageDropError -> updateState { it.copy(imageDropError = input.error) }
+        is AdminProductPageContract.Inputs.Set.ChargeTax -> handleSetChargeTax(input.chargeTax)
+        is AdminProductPageContract.Inputs.Set.UseGlobalTracking -> handleSetUseGlobalTracking(input.useGlobalTracking)
+        is AdminProductPageContract.Inputs.Set.LocalMedia -> updateState { it.copy(localMedia = input.media) }
     }
 
-    private suspend fun InputScope.handleOnClickCategory(name: String) {
+    private suspend fun InputScope.handleAddMedia(mediaString: String) {
+        val state = getCurrentState()
+        sideJob("handleAddMedia") {
+            when (state.screenState) {
+                AdminProductPageContract.ScreenState.Existing -> {
+                    postInput(AdminProductPageContract.Inputs.UploadMedia(mediaString))
+                }
+
+                AdminProductPageContract.ScreenState.New -> {
+                    val currentLocalMedia = state.localMedia
+                    val newMedia = GetProductByIdQuery.Medium(
+                        id = currentLocalMedia.size.toString(),
+                        url = mediaString,
+                        mediaType = MediaType.Image,
+                        altText = "",
+                        createdAt = "0",
+                        updatedAt = "0",
+                    )
+                    postInput(AdminProductPageContract.Inputs.Set.LocalMedia(currentLocalMedia + newMedia))
+                }
+            }
+        }
+    }
+
+    private suspend fun InputScope.handleDeleteMedia(index: Int) {
+        val state = getCurrentState()
+        sideJob("handleDeleteMedia") {
+            when (state.screenState) {
+                AdminProductPageContract.ScreenState.Existing -> {
+                    val id = state.current.media[index].id.toString()
+                    postInput(AdminProductPageContract.Inputs.OnDeleteMediaClick(id))
+                }
+
+                AdminProductPageContract.ScreenState.New -> {
+                    val newMedia = state.localMedia.toMutableList().drop(index)
+                    postInput(AdminProductPageContract.Inputs.Set.LocalMedia(newMedia))
+                }
+            }
+        }
+    }
+
+    private suspend fun InputScope.handleSetUseGlobalTracking(useGlobalTracking: Boolean) {
+        updateState {
+            it.copy(
+                current = it.current.copy(inventory = it.current.inventory.copy(useGlobalTracking = useGlobalTracking))
+            ).wasEdited()
+        }
+    }
+
+    private suspend fun InputScope.handleSetChargeTax(chargeTax: Boolean) {
+        updateState {
+            it.copy(current = it.current.copy(pricing = it.current.pricing.copy(chargeTax = chargeTax))).wasEdited()
+        }
+    }
+
+    private suspend fun InputScope.handleOnClickCategory(categoryName: String) {
         updateState { state ->
             state.allCategories
-                .find { category -> category.name == name }
+                .find { category -> category.name == categoryName }
                 ?.let { chosenCategory ->
-                    val id = chosenCategory.id
-                    val userCategories = state.current.common.categories
-                    val newCategories = userCategories.toMutableList()
-
-                    if (id in userCategories) newCategories.remove(id) else newCategories.add(id)
-
-                    state.copy(
-                        current = state.current.copy(
-                            common = state.current.common.copy(categories = newCategories)
-                        )
-                    ).wasEdited()
+                    val currentCategoryId = state.current.categoryId
+                    val newCategoryId = if (chosenCategory.id == currentCategoryId) null else chosenCategory.id
+                    state.copy(current = state.current.copy(categoryId = newCategoryId)).wasEdited()
                 } ?: state
         }
     }
@@ -157,34 +193,14 @@ internal class AdminProductPageInputHandler :
                 .find { tag -> tag.name == name }
                 ?.let { chosenTag ->
                     val id = chosenTag.id
-                    val userTags = state.current.common.tags
+                    val userTags = state.current.tags
                     val newTags = userTags.toMutableList()
 
                     if (id in userTags) newTags.remove(id) else newTags.add(id)
 
-                    state.copy(
-                        current = state.current.copy(
-                            common = state.current.common.copy(tags = newTags)
-                        )
-                    ).wasEdited()
+                    state.copy(current = state.current.copy(tags = newTags)).wasEdited()
                 } ?: state
         }
-    }
-
-    private fun InputScope.handleImproveName() {
-        noOp()
-    }
-
-    private fun InputScope.handleImproveShortDescription() {
-        noOp()
-    }
-
-    private fun InputScope.handleImproveDescription() {
-        noOp()
-    }
-
-    private fun InputScope.handleImproveTags() {
-        noOp()
     }
 
     private suspend fun InputScope.handleSetShippingPresetId(presetId: String?) {
@@ -204,8 +220,8 @@ internal class AdminProductPageInputHandler :
                         length = category?.shippingPreset?.length ?: it.current.shipping.length,
                         width = category?.shippingPreset?.width ?: it.current.shipping.width,
                         height = category?.shippingPreset?.height ?: it.current.shipping.height,
-                        requiresShipping = category?.shippingPreset?.requiresShipping
-                            ?: it.current.shipping.requiresShipping,
+                        isPhysicalProduct = category?.shippingPreset?.isPhysicalProduct
+                            ?: it.current.shipping.isPhysicalProduct,
                     )
                 )
             ).wasEdited()
@@ -257,30 +273,6 @@ internal class AdminProductPageInputHandler :
         }
     }
 
-    private suspend fun InputScope.handleSetOnePerOrder(onePerOrder: Boolean) {
-        updateState {
-            it.copy(
-                current = it.current.copy(inventory = it.current.inventory.copy(onePerOrder = onePerOrder))
-            ).wasEdited()
-        }
-    }
-
-    private suspend fun InputScope.handleSetCanBackorder(canBackorder: Boolean) {
-        updateState {
-            it.copy(
-                current = it.current.copy(inventory = it.current.inventory.copy(canBackorder = canBackorder))
-            ).wasEdited()
-        }
-    }
-
-    private suspend fun InputScope.handleSetIsOnBackorder(isOnBackorder: Boolean) {
-        updateState {
-            it.copy(
-                current = it.current.copy(inventory = it.current.inventory.copy(isOnBackorder = isOnBackorder))
-            ).wasEdited()
-        }
-    }
-
     private suspend fun InputScope.handleSetLowStockThreshold(lowStockThreshold: Int) {
         updateState {
             it.copy(
@@ -299,10 +291,10 @@ internal class AdminProductPageInputHandler :
         }
     }
 
-    private suspend fun InputScope.handleSetTrackInventory(trackInventory: Boolean) {
+    private suspend fun InputScope.handleSetTrackQuantity(trackQuantity: Boolean) {
         updateState {
             it.copy(
-                current = it.current.copy(inventory = it.current.inventory.copy(trackInventory = trackInventory))
+                current = it.current.copy(inventory = it.current.inventory.copy(trackQuantity = trackQuantity))
             ).wasEdited()
         }
     }
@@ -310,7 +302,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetPrice(price: String) {
         updateState {
             it.copy(
-                current = it.current.copy(price = it.current.price.copy(price = price)),
+                current = it.current.copy(pricing = it.current.pricing.copy(price = price.toDouble())),
                 priceError = if (it.wasEdited) inputValidator.validateNumberPositive(price.toInt()) else null
             ).wasEdited()
         }
@@ -319,39 +311,8 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetRegularPrice(regularPrice: String) {
         updateState {
             it.copy(
-                current = it.current.copy(price = it.current.price.copy(regularPrice = regularPrice)),
+                current = it.current.copy(pricing = it.current.pricing.copy(regularPrice = regularPrice.toDouble())),
                 regularPriceError = if (it.wasEdited) inputValidator.validateNumberPositive(regularPrice.toInt()) else null
-            ).wasEdited()
-        }
-    }
-
-    private suspend fun InputScope.handleSetSalePrice(salePrice: String) {
-        updateState {
-            it.copy(
-                current = it.current.copy(price = it.current.price.copy(salePrice = salePrice)),
-                salePriceError = if (it.wasEdited) inputValidator.validateNumberPositive(salePrice.toInt()) else null
-            ).wasEdited()
-        }
-    }
-
-    private suspend fun InputScope.handleSetOnSale(onSale: Boolean) {
-        updateState { it.copy(current = it.current.copy(price = it.current.price.copy(onSale = onSale))).wasEdited() }
-    }
-
-    private suspend fun InputScope.handleSetSaleStart(saleStart: String) {
-        updateState {
-            it.copy(current = it.current.copy(price = it.current.price.copy(saleStart = saleStart))).wasEdited()
-        }
-    }
-
-    private suspend fun InputScope.handleSetSaleEnd(saleEnd: String) {
-        updateState {
-            it.copy(
-                current = it.current.copy(
-                    price = it.current.price.copy(
-                        saleEnd = saleEnd
-                    )
-                )
             ).wasEdited()
         }
     }
@@ -359,11 +320,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetHeight(height: String) {
         updateState {
             it.copy(
-                current = it.current.copy(
-                    shipping = it.current.shipping.copy(
-                        height = height
-                    )
-                ),
+                current = it.current.copy(shipping = it.current.shipping.copy(height = height)),
                 heightError = if (it.wasEdited) inputValidator.validateNumberPositive(height.toInt()) else null
             ).wasEdited()
         }
@@ -372,11 +329,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetLength(length: String) {
         updateState {
             it.copy(
-                current = it.current.copy(
-                    shipping = it.current.shipping.copy(
-                        length = length
-                    )
-                ),
+                current = it.current.copy(shipping = it.current.shipping.copy(length = length)),
                 lengthError = if (it.wasEdited) inputValidator.validateNumberPositive(length.toInt()) else null
             ).wasEdited()
         }
@@ -385,11 +338,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetWeight(weight: String) {
         updateState {
             it.copy(
-                current = it.current.copy(
-                    shipping = it.current.shipping.copy(
-                        weight = weight
-                    )
-                ),
+                current = it.current.copy(shipping = it.current.shipping.copy(weight = weight)),
                 weightError = if (it.wasEdited) inputValidator.validateNumberPositive(weight.toInt()) else null
             ).wasEdited()
         }
@@ -405,16 +354,16 @@ internal class AdminProductPageInputHandler :
         }
     }
 
-    private suspend fun InputScope.handleSetRequiresShipping(requiresShipping: Boolean) {
+    private suspend fun InputScope.handleSetIsPhysicalProduct(isPhysicalProduct: Boolean) {
         updateState {
             it.copy(
-                current = it.current.copy(shipping = it.current.shipping.copy(requiresShipping = requiresShipping))
+                current = it.current.copy(shipping = it.current.shipping.copy(isPhysicalProduct = isPhysicalProduct))
             ).wasEdited()
         }
     }
 
-    private suspend fun InputScope.handleSetImages(images: List<ProductGetByIdQuery.Image>) {
-        updateState { it.copy(current = it.current.copy(data = it.current.data.copy(images = images))).wasEdited() }
+    private suspend fun InputScope.handleSetMedia(media: List<GetProductByIdQuery.Medium>) {
+        updateState { it.copy(current = it.current.copy(media = media)).wasEdited() }
     }
 
     private suspend fun InputScope.handleSetId(id: String) {
@@ -422,19 +371,15 @@ internal class AdminProductPageInputHandler :
     }
 
     private suspend fun InputScope.handleSetUpdatedAt(updatedAt: String) {
-        updateState {
-            it.copy(current = it.current.copy(common = it.current.common.copy(updatedAt = updatedAt))).wasEdited()
-        }
+        updateState { it.copy(current = it.current.copy(updatedAt = updatedAt)).wasEdited() }
     }
 
-    private suspend fun InputScope.handleSetCreator(creator: ProductGetByIdQuery.Creator) {
+    private suspend fun InputScope.handleSetCreator(creator: GetProductByIdQuery.Creator) {
         updateState { it.copy(current = it.current.copy(creator = creator)).wasEdited() }
     }
 
     private suspend fun InputScope.handleSetCreatedAt(createdAt: String) {
-        updateState {
-            it.copy(current = it.current.copy(common = it.current.common.copy(createdAt = createdAt))).wasEdited()
-        }
+        updateState { it.copy(current = it.current.copy(createdAt = createdAt)).wasEdited() }
     }
 
     private suspend fun InputScope.handleInit(id: String?) {
@@ -488,22 +433,27 @@ internal class AdminProductPageInputHandler :
             productService.getById(id).collect { result ->
                 result.fold(
                     onSuccess = { data ->
-                        val createdAt = millisToTime(data.getProductById.common.createdAt.toLong())
-                        val updatedAt = millisToTime(data.getProductById.common.updatedAt.toLong())
+                        val createdAt = millisToTime(data.getProductById.createdAt.toLong())
+                        val updatedAt = millisToTime(data.getProductById.updatedAt.toLong())
                         val originalProduct = data.getProductById.copy(
-                            common = data.getProductById.common.copy(
-                                shortDescription = data.getProductById.common.shortDescription ?: "",
-                                categories = data.getProductById.common.categories.map { it.toString() },
-                                createdAt = createdAt,
-                                updatedAt = updatedAt,
+                            title = data.getProductById.title,
+                            description = data.getProductById.description,
+                            postStatus = data.getProductById.postStatus,
+                            media = data.getProductById.media,
+                            categoryId = data.getProductById.categoryId,
+                            tags = data.getProductById.tags,
+                            isFeatured = data.getProductById.isFeatured,
+                            allowReviews = data.getProductById.allowReviews,
+                            creator = data.getProductById.creator.copy(
+                                id = data.getProductById.creator.id,
+                                name = data.getProductById.creator.name,
                             ),
-                            data = data.getProductById.data.copy(
-                                description = data.getProductById.data.description ?: ""
-                            ),
-                            price = data.getProductById.price.copy(
-                                price = data.getProductById.price.price ?: "",
-                                regularPrice = data.getProductById.price.regularPrice ?: "",
-                                salePrice = data.getProductById.price.salePrice ?: "",
+                            createdAt = createdAt,
+                            updatedAt = updatedAt,
+                            pricing = data.getProductById.pricing.copy(
+                                price = data.getProductById.pricing.price,
+                                regularPrice = data.getProductById.pricing.regularPrice,
+                                chargeTax = data.getProductById.pricing.chargeTax,
                             ),
                         )
                         postInput(AdminProductPageContract.Inputs.Set.OriginalProduct(originalProduct))
@@ -521,12 +471,46 @@ internal class AdminProductPageInputHandler :
 
     private suspend fun InputScope.handleCreateNewProduct() {
         val state = getCurrentState()
-        val input = ProductCreateInput(name = state.current.common.name)
+        val input = ProductCreateInput(
+            title = state.current.title,
+            description = state.current.description,
+            postStatus = state.current.postStatus,
+            media = state.current.media,
+            categoryId = Optional.present(state.current.categoryId),
+            tags = state.current.tags,
+            isFeatured = state.current.isFeatured,
+            allowReviews = state.current.allowReviews,
+            pricing = PricingCreateInput(
+                price = state.current.pricing.price ?: 0.0,
+                regularPrice = state.current.pricing.regularPrice ?: 0.0,
+                chargeTax = state.current.pricing.chargeTax,
+            ),
+            inventory = InventoryInput(
+                trackQuantity = state.current.inventory.trackQuantity,
+                useGlobalTracking = state.current.inventory.useGlobalTracking,
+                remainingStock = state.current.inventory.remainingStock,
+                stockStatus = state.current.inventory.stockStatus,
+                backorderStatus = state.current.inventory.backorderStatus,
+                lowStockThreshold = state.current.inventory.lowStockThreshold,
+            ),
+            shipping = ShippingInput(
+                isPhysicalProduct = state.current.shipping.isPhysicalProduct,
+                weight = Optional.present(state.current.shipping.weight),
+                length = Optional.present(state.current.shipping.length),
+                width = Optional.present(state.current.shipping.width),
+                height = Optional.present(state.current.shipping.height),
+            ),
+        )
 
-        sideJob("handleCreateNewUser") {
+        sideJob("handleCreateNewProduct") {
+            postInput(AdminProductPageContract.Inputs.Set.Loading(isLoading = true))
             productService.create(input).fold(
                 onSuccess = { data ->
-                    postEvent(AdminProductPageContract.Events.GoToProduct(data.createProduct.id))
+                    state.localMedia.forEach {
+                        postInput(AdminProductPageContract.Inputs.UploadMedia(it.url))
+                    }
+
+                    postEvent(AdminProductPageContract.Events.GoToProduct(data.createProduct.id.toString()))
                 },
                 onFailure = {
                     postEvent(
@@ -536,15 +520,7 @@ internal class AdminProductPageInputHandler :
                     )
                 },
             )
-        }
-    }
-
-    private suspend fun InputScope.handleCancelEdit() {
-        updateState {
-            it.copy(
-                wasEdited = false,
-                current = it.original,
-            )
+            postInput(AdminProductPageContract.Inputs.Set.Loading(isLoading = false))
         }
     }
 
@@ -554,11 +530,9 @@ internal class AdminProductPageInputHandler :
             postInput(AdminProductPageContract.Inputs.Set.ImagesLoading(isImagesLoading = true))
             productService.deleteImage(state.current.id.toString(), imageId).fold(
                 onSuccess = {
-                    val images = state.current.data.images.filter { it.id != imageId }
-                    val original =
-                        state.original.copy(data = state.original.data.copy(images = images))
-                    val current =
-                        state.current.copy(data = state.current.data.copy(images = images))
+                    val media = state.current.media.filter { it.id != imageId }
+                    val original = state.original.copy(media = media)
+                    val current = state.current.copy(media = media)
 
                     postInput(AdminProductPageContract.Inputs.Set.OriginalProduct(original))
                     postInput(AdminProductPageContract.Inputs.Set.CurrentProduct(current))
@@ -576,26 +550,22 @@ internal class AdminProductPageInputHandler :
         sideJob("handleSaveDetailsUploadImage") {
             postInput(AdminProductPageContract.Inputs.Set.ImageDropError(error = null))
             postInput(AdminProductPageContract.Inputs.Set.ImagesLoading(isImagesLoading = true))
-            productService.uploadImage(state.current.id.toString(), imageString).fold(
+            val mediaType = MediaType.Image
+            productService.uploadImage(state.current.id.toString(), imageString, mediaType).fold(
                 onSuccess = { data ->
-                    println("Image uploaded successfully.\nMessage: ${data.uploadImageToProduct}")
-                    val images = data.uploadImageToProduct.images.map {
-                        ProductGetByIdQuery.Image(
+                    println("Image uploaded successfully.\nMessage: ${data.uploadMediaToProduct}")
+                    val media = data.uploadMediaToProduct.media.map {
+                        GetProductByIdQuery.Medium(
                             id = it.id,
                             url = it.url,
+                            mediaType = it.mediaType,
                             altText = it.altText,
-                            created = it.created,
-                            modified = it.modified,
+                            createdAt = it.createdAt,
+                            updatedAt = it.updatedAt,
                         )
                     }
-                    val original = state.original.copy(
-                        data = state.original.data.copy(images = images)
-                    )
-                    val current = state.current.copy(
-                        data = state.current.data.copy(images = images)
-                    )
-                    postInput(AdminProductPageContract.Inputs.Set.OriginalProduct(original))
-                    postInput(AdminProductPageContract.Inputs.Set.CurrentProduct(current))
+                    postInput(AdminProductPageContract.Inputs.Set.OriginalProduct(state.original.copy(media = media)))
+                    postInput(AdminProductPageContract.Inputs.Set.CurrentProduct(state.current.copy(media = media)))
                 },
                 onFailure = {
                     postEvent(AdminProductPageContract.Events.OnError(it.message ?: "Error while uploading image"))
@@ -605,227 +575,119 @@ internal class AdminProductPageInputHandler :
         }
     }
 
-    private suspend fun InputScope.handleSaveDetails() {
+    private suspend fun InputScope.handleUpdateProduct() {
         with(getCurrentState()) {
-            val isNameError = nameError != null
-            val isShortDescriptionError = shortDescriptionError != null
-            val isDescriptionsError = descriptionError != null
-            val isLowStockThresholdError = lowStockThresholdError != null
-            val isRemainingStockError = remainingStockError != null
-            val isPriceError = priceError != null
-            val isRegularPriceError = regularPriceError != null
-            val isSalePriceError = salePriceError != null
-            val isWeightError = weightError != null
-            val isLengthError = lengthError != null
-            val isWidthError = widthError != null
-            val isHeightError = heightError != null
-            val isNoError = !isNameError && !isShortDescriptionError && !isDescriptionsError &&
-                !isLowStockThresholdError && !isRemainingStockError && !isPriceError &&
-                !isRegularPriceError && !isSalePriceError && !isWeightError && !isLengthError &&
-                !isWidthError && !isHeightError
-
-            if (!isNoError) {
-                sideJob("handleSaveDetailsShakes") {
-                    if (isNameError) postInput(AdminProductPageContract.Inputs.Set.NameShake(shake = true))
-                    if (isShortDescriptionError) {
-                        postInput(AdminProductPageContract.Inputs.Set.ShortDescriptionShake(shake = true))
-                    }
-                    if (isDescriptionsError) postInput(AdminProductPageContract.Inputs.Set.DescriptionShake(shake = true))
-                    if (isLowStockThresholdError) postInput(
-                        AdminProductPageContract.Inputs.Set.LowStockThresholdShake(
-                            shake = true
-                        )
-                    )
-                    if (isRemainingStockError) postInput(AdminProductPageContract.Inputs.Set.RemainingStockShake(shake = true))
-                    if (isPriceError) postInput(AdminProductPageContract.Inputs.Set.PriceShake(shake = true))
-                    if (isRegularPriceError) postInput(AdminProductPageContract.Inputs.Set.RegularPriceShake(shake = true))
-                    if (isSalePriceError) postInput(AdminProductPageContract.Inputs.Set.SalePriceShake(shake = true))
-                    if (isWeightError) postInput(AdminProductPageContract.Inputs.Set.WeightShake(shake = true))
-                    if (isLengthError) postInput(AdminProductPageContract.Inputs.Set.LengthShake(shake = true))
-                    if (isWidthError) postInput(AdminProductPageContract.Inputs.Set.WidthShake(shake = true))
-                    if (isHeightError) postInput(AdminProductPageContract.Inputs.Set.HeightShake(shake = true))
-
-                    delay(SHAKE_ANIM_DURATION)
-
-                    if (isNameError) postInput(AdminProductPageContract.Inputs.Set.NameShake(shake = false))
-                    if (isShortDescriptionError) {
-                        postInput(AdminProductPageContract.Inputs.Set.ShortDescriptionShake(shake = false))
-                    }
-                    if (isDescriptionsError) postInput(AdminProductPageContract.Inputs.Set.DescriptionShake(shake = false))
-                    if (isLowStockThresholdError) postInput(
-                        AdminProductPageContract.Inputs.Set.LowStockThresholdShake(
-                            shake = false
-                        )
-                    )
-                    if (isRemainingStockError) postInput(AdminProductPageContract.Inputs.Set.RemainingStockShake(shake = false))
-                    if (isPriceError) postInput(AdminProductPageContract.Inputs.Set.PriceShake(shake = false))
-                    if (isRegularPriceError) postInput(AdminProductPageContract.Inputs.Set.RegularPriceShake(shake = false))
-                    if (isSalePriceError) postInput(AdminProductPageContract.Inputs.Set.SalePriceShake(shake = false))
-                    if (isWeightError) postInput(AdminProductPageContract.Inputs.Set.WeightShake(shake = false))
-                    if (isLengthError) postInput(AdminProductPageContract.Inputs.Set.LengthShake(shake = false))
-                    if (isWidthError) postInput(AdminProductPageContract.Inputs.Set.WidthShake(shake = false))
-                    if (isHeightError) postInput(AdminProductPageContract.Inputs.Set.HeightShake(shake = false))
-                }
-            } else {
-                sideJob("handleSaveDetails") {
-                    productService.update(
-                        id = current.id.toString(),
-                        name = if (current.common.name != original.common.name) current.common.name else null,
-                        shortDescription = if (current.common.shortDescription != original.common.shortDescription) {
-                            current.common.shortDescription
-                        } else null,
-                        isFeatured = if (current.common.isFeatured != original.common.isFeatured) {
-                            current.common.isFeatured
-                        } else null,
-                        allowReviews = if (current.common.allowReviews != original.common.allowReviews) {
-                            current.common.allowReviews
-                        } else null,
-                        catalogVisibility = if (current.common.catalogVisibility != original.common.catalogVisibility) {
-                            current.common.catalogVisibility
-                        } else null,
-                        categories = if (current.common.categories.map { it.toString() } != original.common.categories.map { it.toString() }) {
-                            current.common.categories.map { it.toString() }
-                        } else null,
-                        tags = if (current.common.tags.map { it.toString() } != original.common.tags.map { it.toString() }) {
-                            current.common.tags.map { it.toString() }
-                        } else null,
-                        description = if (current.data.description != original.data.description)
-                            current.data.description else null,
-                        isPurchasable = if (current.data.isPurchasable != original.data.isPurchasable) {
-                            current.data.isPurchasable
-                        } else null,
-                        images = if (current.data.images.map { it.id } != original.data.images.map { it.id }) {
-                            current.data.images.map {
-                                ProductImageInput(
-                                    id = it.id,
-                                    url = it.url,
-                                    altText = it.altText,
-                                    created = it.created,
-                                    modified = it.modified,
-                                )
-                            }
-                        } else null,
-                        postStatus = if (current.data.postStatus != original.data.postStatus) {
-                            current.data.postStatus
-                        } else null,
-                        onePerOrder = if (current.inventory.onePerOrder != original.inventory.onePerOrder) {
-                            current.inventory.onePerOrder
-                        } else null,
-                        backorderStatus = if (current.inventory.backorderStatus != original.inventory.backorderStatus) {
-                            current.inventory.backorderStatus
-                        } else null,
-                        canBackorder = if (current.inventory.canBackorder != original.inventory.canBackorder) {
-                            current.inventory.canBackorder
-                        } else null,
-                        isOnBackorder = if (current.inventory.isOnBackorder != original.inventory.isOnBackorder) {
-                            current.inventory.isOnBackorder
-                        } else null,
-                        lowStockThreshold = if (current.inventory.lowStockThreshold != original.inventory.lowStockThreshold) {
-                            current.inventory.lowStockThreshold
-                        } else null,
-                        remainingStock = if (current.inventory.remainingStock != original.inventory.remainingStock) {
-                            current.inventory.remainingStock
-                        } else null,
-                        stockStatus = if (current.inventory.stockStatus != original.inventory.stockStatus) {
-                            current.inventory.stockStatus
-                        } else null,
-                        trackInventory = if (current.inventory.trackInventory != original.inventory.trackInventory) {
-                            current.inventory.trackInventory
-                        } else null,
-                        price = if (current.price.price != original.price.price) current.price.price else null,
-                        regularPrice = if (current.price.regularPrice != original.price.regularPrice) {
-                            current.price.regularPrice
-                        } else null,
-                        salePrice = if (current.price.salePrice != original.price.salePrice) current.price.salePrice else null,
-                        onSale = if (current.price.onSale != original.price.onSale) current.price.onSale else null,
-                        saleStart = if (current.price.saleStart != original.price.saleStart) current.price.saleStart else null,
-                        saleEnd = if (current.price.saleEnd != original.price.saleEnd) current.price.saleEnd else null,
-                        presetId = if (current.shipping.presetId != original.shipping.presetId) current.shipping.presetId?.toString() else null,
-                        height = if (current.shipping.height != original.shipping.height) current.shipping.height else null,
-                        length = if (current.shipping.length != original.shipping.length) current.shipping.length else null,
-                        weight = if (current.shipping.weight != original.shipping.weight) current.shipping.weight else null,
-                        width = if (current.shipping.width != original.shipping.width) current.shipping.width else null,
-                        requiresShipping = if (current.shipping.requiresShipping != original.shipping.requiresShipping) {
-                            current.shipping.requiresShipping
-                        } else null,
-                    ).fold(
-                        onSuccess = { data ->
-                            postInput(
-                                AdminProductPageContract.Inputs.Set.OriginalProduct(
-                                    product = ProductGetByIdQuery.GetProductById(
-                                        id = data.updateProduct.id,
-                                        common = ProductGetByIdQuery.Common(
-                                            name = data.updateProduct.common.name,
-                                            shortDescription = data.updateProduct.common.shortDescription,
-                                            isFeatured = data.updateProduct.common.isFeatured,
-                                            allowReviews = data.updateProduct.common.allowReviews,
-                                            catalogVisibility = data.updateProduct.common.catalogVisibility,
-                                            categories = data.updateProduct.common.categories.map { it.toString() },
-                                            createdBy = data.updateProduct.common.createdBy,
-                                            createdAt = data.updateProduct.common.createdAt,
-                                            updatedAt = data.updateProduct.common.updatedAt,
-                                            relatedIds = data.updateProduct.common.relatedIds,
-                                            tags = data.updateProduct.common.tags,
-                                        ),
-                                        data = ProductGetByIdQuery.Data1(
-                                            postStatus = data.updateProduct.data.postStatus,
-                                            description = data.updateProduct.data.description,
-                                            isPurchasable = data.updateProduct.data.isPurchasable,
-                                            images = current.data.images, // Not updating this actually
-                                            parentId = data.updateProduct.data.parentId,
-                                        ),
-                                        inventory = ProductGetByIdQuery.Inventory(
-                                            onePerOrder = data.updateProduct.inventory.onePerOrder,
-                                            backorderStatus = data.updateProduct.inventory.backorderStatus,
-                                            canBackorder = data.updateProduct.inventory.canBackorder,
-                                            isOnBackorder = data.updateProduct.inventory.isOnBackorder,
-                                            lowStockThreshold = data.updateProduct.inventory.lowStockThreshold,
-                                            remainingStock = data.updateProduct.inventory.remainingStock,
-                                            stockStatus = data.updateProduct.inventory.stockStatus,
-                                            trackInventory = data.updateProduct.inventory.trackInventory,
-                                        ),
-                                        price = ProductGetByIdQuery.Price(
-                                            price = data.updateProduct.price.price,
-                                            regularPrice = data.updateProduct.price.regularPrice,
-                                            salePrice = data.updateProduct.price.salePrice,
-                                            onSale = data.updateProduct.price.onSale,
-                                            saleStart = data.updateProduct.price.saleStart,
-                                            saleEnd = data.updateProduct.price.saleEnd,
-                                        ),
-                                        shipping = ProductGetByIdQuery.Shipping(
-                                            presetId = data.updateProduct.shipping.presetId,
-                                            height = data.updateProduct.shipping.height,
-                                            length = data.updateProduct.shipping.length,
-                                            weight = data.updateProduct.shipping.weight,
-                                            width = data.updateProduct.shipping.width,
-                                            requiresShipping = data.updateProduct.shipping.requiresShipping,
-                                        ),
-                                        creator = original.creator,
-                                        reviews = original.reviews,
-                                        totalInWishlist = original.totalInWishlist,
+            sideJob("handleUpdateDetails") {
+                productService.update(
+                    id = current.id.toString(),
+                    name = if (current.title != original.title) current.title else null,
+                    description = if (current.description != original.description)
+                        current.description else null,
+                    isFeatured = if (current.isFeatured != original.isFeatured) {
+                        current.isFeatured
+                    } else null,
+                    allowReviews = if (current.allowReviews != original.allowReviews) {
+                        current.allowReviews
+                    } else null,
+                    categoryId = if (current.categoryId != original.categoryId) current.categoryId?.toString() else null,
+                    tags = if (current.tags.map { it.toString() } != original.tags.map { it.toString() }) {
+                        current.tags.map { it.toString() }
+                    } else null,
+                    postStatus = if (current.postStatus != original.postStatus) {
+                        current.postStatus
+                    } else null,
+                    backorderStatus = if (current.inventory.backorderStatus != original.inventory.backorderStatus) {
+                        current.inventory.backorderStatus
+                    } else null,
+                    lowStockThreshold = if (current.inventory.lowStockThreshold != original.inventory.lowStockThreshold) {
+                        current.inventory.lowStockThreshold
+                    } else null,
+                    remainingStock = if (current.inventory.remainingStock != original.inventory.remainingStock) {
+                        current.inventory.remainingStock
+                    } else null,
+                    stockStatus = if (current.inventory.stockStatus != original.inventory.stockStatus) {
+                        current.inventory.stockStatus
+                    } else null,
+                    trackQuantity = if (current.inventory.trackQuantity != original.inventory.trackQuantity) {
+                        current.inventory.trackQuantity
+                    } else null,
+                    price = if (current.pricing.price != original.pricing.price) current.pricing.price else null,
+                    regularPrice = if (current.pricing.regularPrice != original.pricing.regularPrice) {
+                        current.pricing.regularPrice
+                    } else null,
+                    chargeTax = if (current.pricing.chargeTax != original.pricing.chargeTax) {
+                        current.pricing.chargeTax
+                    } else null,
+                    presetId = if (current.shipping.presetId != original.shipping.presetId) current.shipping.presetId?.toString() else null,
+                    isPhysicalProduct = if (current.shipping.isPhysicalProduct != original.shipping.isPhysicalProduct) {
+                        current.shipping.isPhysicalProduct
+                    } else null,
+                    height = if (current.shipping.height != original.shipping.height) current.shipping.height else null,
+                    length = if (current.shipping.length != original.shipping.length) current.shipping.length else null,
+                    weight = if (current.shipping.weight != original.shipping.weight) current.shipping.weight else null,
+                    width = if (current.shipping.width != original.shipping.width) current.shipping.width else null,
+                ).fold(
+                    onSuccess = { data ->
+                        postInput(
+                            AdminProductPageContract.Inputs.Set.OriginalProduct(
+                                product = GetProductByIdQuery.GetProductById(
+                                    id = data.updateProduct.id,
+                                    title = data.updateProduct.title,
+                                    description = data.updateProduct.description,
+                                    media = current.media, // Updating this alsewhere
+                                    postStatus = data.updateProduct.postStatus,
+                                    categoryId = data.updateProduct.categoryId,
+                                    tags = data.updateProduct.tags,
+                                    isFeatured = data.updateProduct.isFeatured,
+                                    allowReviews = data.updateProduct.allowReviews,
+                                    pricing = GetProductByIdQuery.Pricing(
+                                        price = data.updateProduct.pricing.price,
+                                        regularPrice = data.updateProduct.pricing.regularPrice,
+                                        chargeTax = data.updateProduct.pricing.chargeTax,
                                     ),
-                                )
+                                    inventory = GetProductByIdQuery.Inventory(
+                                        trackQuantity = data.updateProduct.inventory.trackQuantity,
+                                        useGlobalTracking = data.updateProduct.inventory.useGlobalTracking,
+                                        backorderStatus = data.updateProduct.inventory.backorderStatus,
+                                        lowStockThreshold = data.updateProduct.inventory.lowStockThreshold,
+                                        remainingStock = data.updateProduct.inventory.remainingStock,
+                                        stockStatus = data.updateProduct.inventory.stockStatus,
+                                    ),
+                                    shipping = GetProductByIdQuery.Shipping(
+                                        presetId = data.updateProduct.shipping.presetId,
+                                        isPhysicalProduct = data.updateProduct.shipping.isPhysicalProduct,
+                                        height = data.updateProduct.shipping.height,
+                                        length = data.updateProduct.shipping.length,
+                                        weight = data.updateProduct.shipping.weight,
+                                        width = data.updateProduct.shipping.width,
+                                    ),
+                                    creator = original.creator,
+                                    reviews = original.reviews,
+                                    totalInWishlist = original.totalInWishlist,
+                                    createdAt = original.createdAt,
+                                    updatedAt = original.updatedAt,
+                                ),
                             )
-                        },
-                        onFailure = {
-                            postEvent(
-                                AdminProductPageContract.Events.OnError(
-                                    it.message ?: "Error while updating product details"
-                                )
+                        )
+                    },
+                    onFailure = {
+                        postEvent(
+                            AdminProductPageContract.Events.OnError(
+                                it.message ?: "Error while updating product details"
                             )
-                        },
-                    )
-                }
+                        )
+                    },
+                )
             }
         }
     }
 
-    private suspend fun InputScope.handleDeleteProduct() {
+    private suspend fun InputScope.handleDelete() {
         val id = getCurrentState().current.id.toString()
         sideJob("handleDeleteUser") {
             productService.deleteById(id).fold(
                 onSuccess = {
-                    postEvent(AdminProductPageContract.Events.GoToProductList)
+                    postEvent(AdminProductPageContract.Events.GoBack)
                 },
                 onFailure = {
                     postEvent(
@@ -838,70 +700,123 @@ internal class AdminProductPageInputHandler :
         }
     }
 
-    private suspend fun InputScope.handleSetName(name: String) {
+    private suspend fun InputScope.handleSetTitle(title: String) {
         updateState {
-            val isValidated = inputValidator.validateText(name)
+            val isValidated = inputValidator.validateText(title)
             it.copy(
-                current = it.current.copy(common = it.current.common.copy(name = name)),
-                nameError = if (!it.wasEdited) null else isValidated,
+                current = it.current.copy(title = title),
+                titleError = if (!it.wasEdited) null else isValidated,
                 isCreateDisabled = isValidated != null
             ).wasEdited()
         }
     }
 
-    private suspend fun InputScope.handleSetShortDescription(shortDescription: String) {
-        updateStateAndGet {
-            it.copy(
-                current = it.current.copy(common = it.current.common.copy(shortDescription = shortDescription)),
-                shortDescriptionError = if (it.wasEdited) null else inputValidator.validateText(shortDescription),
-            ).wasEdited()
+    private suspend fun InputScope.handleSave() {
+        with(getCurrentState()) {
+            val isTitleError = titleError != null
+            val isDescriptionsError = descriptionError != null
+            val isLowStockThresholdError = lowStockThresholdError != null
+            val isRemainingStockError = remainingStockError != null
+            val isPriceError = priceError != null
+            val isRegularPriceError = regularPriceError != null
+            val isWeightError = weightError != null
+            val isLengthError = lengthError != null
+            val isWidthError = widthError != null
+            val isHeightError = heightError != null
+            val isNoError = !isTitleError && !isDescriptionsError &&
+                !isLowStockThresholdError && !isRemainingStockError && !isPriceError &&
+                !isRegularPriceError && !isWeightError && !isLengthError &&
+                !isWidthError && !isHeightError
+
+            if (!isNoError) {
+                shakeErrors(
+                    isTitleError,
+                    isDescriptionsError,
+                    isLowStockThresholdError,
+                    isRemainingStockError,
+                    isPriceError,
+                    isRegularPriceError,
+                    isWeightError,
+                    isLengthError,
+                    isWidthError,
+                    isHeightError
+                )
+            } else {
+                when (screenState) {
+                    AdminProductPageContract.ScreenState.New -> handleCreateNewProduct()
+                    AdminProductPageContract.ScreenState.Existing -> handleUpdateProduct()
+                }
+            }
         }
     }
+}
 
-    private suspend fun InputScope.handleSetIsFeatured(featured: Boolean) {
-        updateState {
-            it.copy(current = it.current.copy(common = it.current.common.copy(isFeatured = featured))).wasEdited()
-        }
+private suspend fun InputScope.handleSetIsFeatured(featured: Boolean) {
+    updateState { it.copy(current = it.current.copy(isFeatured = featured)).wasEdited() }
+}
+
+private suspend fun InputScope.handleSetAllowReviews(allowReviews: Boolean) {
+    updateState { it.copy(current = it.current.copy(allowReviews = allowReviews)).wasEdited() }
+}
+
+private suspend fun InputScope.handleSetStatusOfPost(postStatus: PostStatus) {
+    updateState { it.copy(current = it.current.copy(postStatus = postStatus)).wasEdited() }
+}
+
+private suspend fun InputScope.handleSetDescription(description: String) {
+    updateState { it.copy(current = it.current.copy(description = description)).wasEdited() }
+}
+
+private suspend fun InputScope.handleSetCategoryId(categoryId: String) {
+    updateState { it.copy(current = it.current.copy(categoryId = categoryId)).wasEdited() }
+}
+
+private fun AdminProductPageContract.State.wasEdited(): AdminProductPageContract.State =
+    copy(wasEdited = current != original)
+
+private fun InputScope.shakeErrors(
+    isTitleError: Boolean,
+    isDescriptionsError: Boolean,
+    isLowStockThresholdError: Boolean,
+    isRemainingStockError: Boolean,
+    isPriceError: Boolean,
+    isRegularPriceError: Boolean,
+    isWeightError: Boolean,
+    isLengthError: Boolean,
+    isWidthError: Boolean,
+    isHeightError: Boolean
+) {
+    sideJob("handleSaveDetailsShakes") {
+        if (isTitleError) postInput(AdminProductPageContract.Inputs.Set.TitleShake(shake = true))
+        if (isDescriptionsError) postInput(AdminProductPageContract.Inputs.Set.DescriptionShake(shake = true))
+        if (isLowStockThresholdError) postInput(
+            AdminProductPageContract.Inputs.Set.LowStockThresholdShake(
+                shake = true
+            )
+        )
+        if (isRemainingStockError) postInput(AdminProductPageContract.Inputs.Set.RemainingStockShake(shake = true))
+        if (isPriceError) postInput(AdminProductPageContract.Inputs.Set.PriceShake(shake = true))
+        if (isRegularPriceError) postInput(AdminProductPageContract.Inputs.Set.RegularPriceShake(shake = true))
+        if (isWeightError) postInput(AdminProductPageContract.Inputs.Set.WeightShake(shake = true))
+        if (isLengthError) postInput(AdminProductPageContract.Inputs.Set.LengthShake(shake = true))
+        if (isWidthError) postInput(AdminProductPageContract.Inputs.Set.WidthShake(shake = true))
+        if (isHeightError) postInput(AdminProductPageContract.Inputs.Set.HeightShake(shake = true))
+
+        delay(SHAKE_ANIM_DURATION)
+
+        if (isTitleError) postInput(AdminProductPageContract.Inputs.Set.TitleShake(shake = false))
+        if (isDescriptionsError) postInput(AdminProductPageContract.Inputs.Set.DescriptionShake(shake = false))
+        if (isLowStockThresholdError) postInput(
+            AdminProductPageContract.Inputs.Set.LowStockThresholdShake(
+                shake = false
+            )
+        )
+        if (isRemainingStockError) postInput(AdminProductPageContract.Inputs.Set.RemainingStockShake(shake = false))
+        if (isPriceError) postInput(AdminProductPageContract.Inputs.Set.PriceShake(shake = false))
+        if (isRegularPriceError) postInput(AdminProductPageContract.Inputs.Set.RegularPriceShake(shake = false))
+        if (isWeightError) postInput(AdminProductPageContract.Inputs.Set.WeightShake(shake = false))
+        if (isLengthError) postInput(AdminProductPageContract.Inputs.Set.LengthShake(shake = false))
+        if (isWidthError) postInput(AdminProductPageContract.Inputs.Set.WidthShake(shake = false))
+        if (isHeightError) postInput(AdminProductPageContract.Inputs.Set.HeightShake(shake = false))
     }
-
-    private suspend fun InputScope.handleSetAllowReviews(allowReviews: Boolean) {
-        updateState {
-            it.copy(current = it.current.copy(common = it.current.common.copy(allowReviews = allowReviews))).wasEdited()
-        }
-    }
-
-    private suspend fun InputScope.handleSetCatalogVisibility(catalogVisibility: CatalogVisibility) {
-        updateState {
-            it.copy(
-                current = it.current.copy(common = it.current.common.copy(catalogVisibility = catalogVisibility))
-            ).wasEdited()
-        }
-    }
-
-    private suspend fun InputScope.handleSetStatusOfPost(postStatus: PostStatus) {
-        updateState {
-            it.copy(current = it.current.copy(data = it.current.data.copy(postStatus = postStatus))).wasEdited()
-        }
-    }
-
-    private suspend fun InputScope.handleSetDescription(description: String) {
-        updateState {
-            it.copy(current = it.current.copy(data = it.current.data.copy(description = description))).wasEdited()
-        }
-    }
-
-    private suspend fun InputScope.handleSetIsPurchasable(isPurchasable: Boolean) {
-        updateState {
-            it.copy(current = it.current.copy(data = it.current.data.copy(isPurchasable = isPurchasable))).wasEdited()
-        }
-    }
-
-    private suspend fun InputScope.handleSetCategories(categories: List<String>) {
-        updateState {
-            it.copy(current = it.current.copy(common = it.current.common.copy(categories = categories))).wasEdited()
-        }
-    }
-
-    private fun AdminProductPageContract.State.wasEdited(): AdminProductPageContract.State =
-        copy(wasEdited = current != original)
 }

@@ -5,6 +5,7 @@ import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
+import com.varabyte.kobweb.compose.foundation.layout.RowScope
 import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -14,11 +15,13 @@ import com.varabyte.kobweb.compose.ui.modifiers.fontFamily
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiAdd
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiArrowBack
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
 import theme.MaterialTheme
 import theme.roleStyle
 import web.FONT_CUSTOM
+import web.components.widgets.AppOutlinedIconButton
 import web.compose.material3.component.Divider
 import web.compose.material3.component.FilledButton
 
@@ -104,5 +107,35 @@ fun DetailPageLayout(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun NavTopSection(
+    title: String,
+    hasBackButton: Boolean,
+    onGoBack: () -> Unit,
+    actions: @Composable RowScope.() -> Unit,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .gap(1.em)
+    ) {
+        if (hasBackButton) {
+            AppOutlinedIconButton(
+                onClick = { onGoBack() },
+            ) {
+                MdiArrowBack()
+            }
+        }
+
+        SpanText(
+            text = title,
+            modifier = Modifier.roleStyle(MaterialTheme.typography.displaySmall)
+        )
+        Spacer()
+        actions()
     }
 }

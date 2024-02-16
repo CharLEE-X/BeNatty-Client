@@ -87,7 +87,7 @@ internal class AdminUserPageInputHandler :
         updateState {
             it.copy(
                 current = it.current.copy(
-                    shippingPreset = it.current.shippingPreset?.copy(requiresShipping = requiresShipping)
+                    shippingPreset = it.current.shippingPreset?.copy(isPhysicalProduct = requiresShipping)
                 ),
             ).wasEdited()
         }
@@ -301,7 +301,7 @@ internal class AdminUserPageInputHandler :
                         length = if (current.shippingPreset?.length != original.shippingPreset?.length) current.shippingPreset?.length else null,
                         width = if (current.shippingPreset?.width != original.shippingPreset?.width) current.shippingPreset?.width else null,
                         height = if (current.shippingPreset?.height != original.shippingPreset?.height) current.shippingPreset?.height else null,
-                        requiresShipping = if (current.shippingPreset?.requiresShipping != original.shippingPreset?.requiresShipping) current.shippingPreset?.requiresShipping else null,
+                        requiresShipping = if (current.shippingPreset?.isPhysicalProduct != original.shippingPreset?.isPhysicalProduct) current.shippingPreset?.isPhysicalProduct else null,
                     ).fold(
                         onSuccess = { data ->
                             postInput(
@@ -322,7 +322,7 @@ internal class AdminUserPageInputHandler :
                                             length = data.updateCategory.shippingPreset.length ?: "",
                                             width = data.updateCategory.shippingPreset.width ?: "",
                                             height = data.updateCategory.shippingPreset.height ?: "",
-                                            requiresShipping = data.updateCategory.shippingPreset.requiresShipping,
+                                            isPhysicalProduct = data.updateCategory.shippingPreset.isPhysicalProduct,
                                         ),
                                     )
                                 )
@@ -376,6 +376,6 @@ internal class AdminUserPageInputHandler :
             current.shippingPreset?.length != original.shippingPreset?.length ||
             current.shippingPreset?.width != original.shippingPreset?.width ||
             current.shippingPreset?.height != original.shippingPreset?.height ||
-            current.shippingPreset?.requiresShipping != original.shippingPreset?.requiresShipping
+            current.shippingPreset?.isPhysicalProduct != original.shippingPreset?.isPhysicalProduct
     )
 }

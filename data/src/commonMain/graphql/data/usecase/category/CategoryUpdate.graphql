@@ -13,7 +13,7 @@ mutation UpdateCategory($input: CategoryUpdateInput!) {
       length
       width
       height
-      requiresShipping
+      isPhysicalProduct
     }
   }
 }

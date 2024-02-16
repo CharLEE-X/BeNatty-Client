@@ -1,5 +1,5 @@
-mutation DeleteProductImage($productId: ObjectId!, $imageId: ObjectId!) {
-  deleteProductImage(productId: $productId, imageId: $imageId) {
+mutation DeleteProductMedia($input: ProductMediaDeleteInput!) {
+  deleteProductMedia(input: $input) {
     deleted
   }
 }

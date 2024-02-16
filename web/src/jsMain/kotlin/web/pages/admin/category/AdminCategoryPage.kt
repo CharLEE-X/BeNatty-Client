@@ -24,11 +24,11 @@ import web.components.layouts.ImproveWithAiRow
 import web.components.widgets.CardSection
 import web.components.widgets.CommonTextField
 import web.components.widgets.CreatorSection
-import web.components.widgets.DeleteDialog
 import web.components.widgets.FilterChipSection
 import web.components.widgets.HasChangesWidget
 import web.components.widgets.SaveButton
 import web.components.widgets.SwitchSection
+import web.components.widgets.TakeActionDialog
 import web.compose.material3.component.TextFieldType
 import web.util.onEnterKeyDown
 
@@ -100,7 +100,7 @@ fun AdminCategoryPage(
                 onSave = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.SaveEdit) },
                 onCancel = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.CancelEdit) },
             )
-            DeleteDialog(
+            TakeActionDialog(
                 open = dialogOpen && !dialogClosing,
                 closing = dialogClosing,
                 title = state.strings.delete,
@@ -138,12 +138,12 @@ fun AdminCategoryPage(
 private fun ShippingPreset(vm: AdminCategoryPageViewModel, state: AdminCategoryPageContract.State) {
     CardSection(title = state.strings.shipping) {
         SwitchSection(
-            title = state.strings.requiresShipping,
-            selected = state.current.shippingPreset?.requiresShipping ?: false,
+            title = state.strings.isPhysicalProduct,
+            selected = state.current.shippingPreset?.isPhysicalProduct ?: false,
             onClick = {
                 vm.trySend(
                     AdminCategoryPageContract.Inputs.Set.RequiresShipping(
-                        !(state.current.shippingPreset?.requiresShipping ?: false)
+                        !(state.current.shippingPreset?.isPhysicalProduct ?: false)
                     )
                 )
             },
@@ -155,7 +155,7 @@ private fun ShippingPreset(vm: AdminCategoryPageViewModel, state: AdminCategoryP
             errorMsg = state.weightError,
             icon = null,
             shake = state.shakeWeight,
-            required = state.current.shippingPreset?.requiresShipping == true,
+            required = state.current.shippingPreset?.isPhysicalProduct == true,
             type = TextFieldType.NUMBER,
             suffixText = state.strings.kg,
             modifier = Modifier.fillMaxWidth(),
@@ -167,7 +167,7 @@ private fun ShippingPreset(vm: AdminCategoryPageViewModel, state: AdminCategoryP
             errorMsg = state.lengthError,
             icon = null,
             shake = state.shakeLength,
-            required = state.current.shippingPreset?.requiresShipping ?: false,
+            required = state.current.shippingPreset?.isPhysicalProduct ?: false,
             type = TextFieldType.NUMBER,
             suffixText = state.strings.cm,
             modifier = Modifier.fillMaxWidth(),
@@ -179,7 +179,7 @@ private fun ShippingPreset(vm: AdminCategoryPageViewModel, state: AdminCategoryP
             errorMsg = state.widthError,
             icon = null,
             shake = state.shakeWidth,
-            required = state.current.shippingPreset?.requiresShipping ?: false,
+            required = state.current.shippingPreset?.isPhysicalProduct ?: false,
             type = TextFieldType.NUMBER,
             suffixText = state.strings.cm,
             modifier = Modifier.fillMaxWidth(),
@@ -191,7 +191,7 @@ private fun ShippingPreset(vm: AdminCategoryPageViewModel, state: AdminCategoryP
             errorMsg = state.heightError,
             icon = null,
             shake = state.shakeHeight,
-            required = state.current.shippingPreset?.requiresShipping ?: false,
+            required = state.current.shippingPreset?.isPhysicalProduct ?: false,
             type = TextFieldType.NUMBER,
             suffixText = state.strings.cm,
             modifier = Modifier.fillMaxWidth(),
@@ -263,7 +263,6 @@ private fun ParentCategory(
     state: AdminCategoryPageContract.State,
 ) {
     FilterChipSection(
-        title = "${state.strings.parentCategory}: ${state.current.parent?.name ?: state.strings.none}",
         chips = state.allCategories.map { it.name },
         selectedChips = state.current.parent?.let { listOf(it.name) } ?: emptyList(),
         onChipClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.ParentCategorySelected(it)) },

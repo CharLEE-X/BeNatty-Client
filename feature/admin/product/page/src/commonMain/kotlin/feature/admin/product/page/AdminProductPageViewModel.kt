@@ -15,11 +15,11 @@ class AdminProductPageViewModel(
     productId: String?,
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
-    goToProductList: () -> Unit,
+    goBack: () -> Unit,
     goToCreateCategory: () -> Unit,
     goToCreateTag: () -> Unit,
     goToUserDetails: (String) -> Unit,
-    goToProduct: (String) -> Unit,
+    goToProductDetail: (String) -> Unit,
 ) : BasicViewModel<
     AdminProductPageContract.Inputs,
     AdminProductPageContract.Events,
@@ -50,11 +50,11 @@ class AdminProductPageViewModel(
         .build(),
     eventHandler = AdminProductPageEventHandler(
         onError = onError,
-        goToProductList = goToProductList,
+        goBack = goBack,
         goToCreateCategory = goToCreateCategory,
         goToCreateTag = goToCreateTag,
         goToUserDetails = goToUserDetails,
-        goToProduct = goToProduct,
+        goToProduct = goToProductDetail,
     ),
     coroutineScope = scope,
 ) {

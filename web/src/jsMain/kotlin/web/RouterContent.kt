@@ -7,13 +7,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import com.copperleaf.ballast.navigation.browser.BrowserHashNavigationInterceptor
 import com.copperleaf.ballast.navigation.routing.RouterContract
+import com.copperleaf.ballast.navigation.routing.RouterContract.Inputs.ReplaceTopDestination
 import com.copperleaf.ballast.navigation.routing.currentDestinationOrNull
 import com.copperleaf.ballast.navigation.routing.renderCurrentDestination
 import com.copperleaf.ballast.navigation.routing.stringPath
 import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
 import feature.router.RouterScreen
 import feature.router.RouterViewModel
-import feature.router.goBack
 import web.components.layouts.AccountLayout
 import web.components.layouts.AppLayout
 import web.components.sections.desktopNav.DesktopNavContract
@@ -89,6 +89,9 @@ fun RouterContent(
         onError = onError,
         content = content,
     )
+
+    val goBack: () -> Unit = { router.trySend(RouterContract.Inputs.GoBack()) }
+    val goToAdminHome: () -> Unit = { router.trySend(ReplaceTopDestination(RouterScreen.AdminDashboard.route)) }
 
     routerState.renderCurrentDestination(
         route = { routerScreen: RouterScreen ->
@@ -291,6 +294,8 @@ fun RouterContent(
                     productId = null,
                     router = router,
                     onError = onError,
+                    goBack = goBack,
+                    goToAdminHome = goToAdminHome,
                 )
 
                 RouterScreen.AdminProductPageExisting -> {
@@ -299,6 +304,8 @@ fun RouterContent(
                         productId = id,
                         router = router,
                         onError = onError,
+                        goBack = goBack,
+                        goToAdminHome = goToAdminHome,
                     )
                 }
 
@@ -364,7 +371,7 @@ fun RouterContent(
         notFound = { url ->
             PageNotFoundPage(
                 url = url,
-                onGoBackClick = { router.goBack() }
+                onGoBackClick = { goBack() }
             )
         }
     )

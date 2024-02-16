@@ -42,10 +42,10 @@ import web.components.layouts.AdminLayout
 import web.components.layouts.DetailPageLayout
 import web.components.widgets.CardSection
 import web.components.widgets.CommonTextField
-import web.components.widgets.DeleteDialog
 import web.components.widgets.FilterChipSection
 import web.components.widgets.HasChangesWidget
 import web.components.widgets.SectionHeader
+import web.components.widgets.TakeActionDialog
 import web.compose.material3.component.FilledTonalButton
 import web.compose.material3.component.TextFieldType
 
@@ -88,7 +88,7 @@ fun AdminUserPagePage(
                 onSave = { vm.trySend(AdminUserPageContract.Inputs.OnClick.SaveEdit) },
                 onCancel = { vm.trySend(AdminUserPageContract.Inputs.OnClick.CancelEdit) },
             )
-            DeleteDialog(
+            TakeActionDialog(
                 open = dialogOpen && !dialogClosing,
                 closing = dialogClosing,
                 title = state.strings.delete,
@@ -181,7 +181,6 @@ private fun PersonalDetails(vm: AdminUserPageViewModel, state: AdminUserPageCont
             SpanText(state.strings.resetPassword)
         }
         FilterChipSection(
-            title = state.strings.role,
             chips = Role.entries.filter { it != Role.UNKNOWN__ }.map { it.name.enumCapitalized() },
             selectedChips = listOf(state.current.role.name),
             onChipClick = { vm.trySend(AdminUserPageContract.Inputs.Set.UserRole(Role.valueOf(it.uppercase()))) },

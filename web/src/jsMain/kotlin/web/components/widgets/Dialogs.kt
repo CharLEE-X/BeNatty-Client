@@ -23,7 +23,9 @@ import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.scaleY
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.silk.components.graphics.Image
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiCancel
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiClose
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
@@ -35,10 +37,6 @@ import org.jetbrains.compose.web.dom.Text
 import theme.MaterialTheme
 import theme.roleStyle
 import web.compose.material3.component.Dialog
-import web.compose.material3.component.FilledButton
-import web.compose.material3.component.FilledTonalIconButton
-import web.compose.material3.component.TextButton
-import web.compose.material3.component.labs.FilledCard
 
 @Composable
 fun ImagePreviewDialog(
@@ -62,7 +60,7 @@ fun ImagePreviewDialog(
                 .onClick { onClose() }
                 .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease)),
         )
-        FilledCard(
+        AppFilledCard(
             modifier = Modifier
                 .fillMaxSize(70.percent)
                 .opacity(if (open) 1.0 else 0.0)
@@ -91,7 +89,7 @@ fun ImagePreviewDialog(
                         )
                     }
                     Spacer()
-                    FilledTonalIconButton(
+                    AppFilledTonalIconButton(
                         onClick = { onClose() },
                     ) {
                         MdiClose()
@@ -112,7 +110,7 @@ fun ImagePreviewDialog(
 }
 
 @Composable
-fun DeleteDialog(
+fun TakeActionDialog(
     open: Boolean,
     title: String,
     actionYesText: String,
@@ -136,21 +134,24 @@ fun DeleteDialog(
                 Text(title)
             },
             actions = {
-                TextButton(
-                    onClick = {
-                        onYes()
-                        onClosing(true)
-                    }
-                ) {
-                    Text(actionYesText)
-                }
-                FilledButton(
+                AppFilledTonalButton(
                     onClick = {
                         onNo()
                         onClosing(true)
-                    }
+                    },
+                    leadingIcon = { MdiCancel() }
                 ) {
                     Text(actionNoText)
+                }
+                AppFilledButton(
+                    onClick = {
+                        onYes()
+                        onClosing(true)
+                    },
+                    leadingIcon = { MdiDelete() },
+                    containerColor = MaterialTheme.colors.mdSysColorError.value()
+                ) {
+                    Text(actionYesText)
                 }
             }
         ) {

@@ -17,7 +17,7 @@ query GetCategoryById($getCategoryByIdId: ObjectId!) {
       length
       width
       height
-      requiresShipping
+      isPhysicalProduct
     }
     createdAt
     updatedAt

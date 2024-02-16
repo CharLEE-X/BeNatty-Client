@@ -25,17 +25,6 @@ fun AdminTagListPage(
     val vm = remember(scope) {
         AdminListViewModel(
             dataType = AdminListContract.DataType.TAG,
-            isSlot1Sortable = true,
-            showSlot2 = true,
-            isSlot2Sortable = true,
-            showSlot3 = false,
-            isSlot3Sortable = false,
-            showSlot4 = false,
-            isSlot4Sortable = false,
-            showSlot5 = false,
-            isSlot5Sortable = false,
-            showSlot6 = false,
-            isSlot6Sortable = false,
             scope = scope,
             onError = onError,
             goToCreate = {

@@ -33,11 +33,11 @@ object AdminCategoryPageContract {
             parent = null,
             display = false,
             shippingPreset = GetCategoryByIdQuery.ShippingPreset(
+                isPhysicalProduct = true,
                 weight = "",
                 length = "",
                 width = "",
                 height = "",
-                requiresShipping = true,
             ),
             creator = GetCategoryByIdQuery.Creator(
                 id = "",
@@ -137,7 +137,7 @@ object AdminCategoryPageContract {
         val length: String = getString(component.localization.Strings.Length),
         val weight: String = getString(component.localization.Strings.Weight),
         val width: String = getString(component.localization.Strings.Width),
-        val requiresShipping: String = getString(component.localization.Strings.RequiresShipping),
+        val isPhysicalProduct: String = getString(component.localization.Strings.IsPhysicalProduct),
         val shipping: String = getString(component.localization.Strings.Shipping),
         val kg: String? = getString(component.localization.Strings.Kg),
         val cm: String? = getString(component.localization.Strings.Cm),
