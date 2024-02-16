@@ -1,49 +1,50 @@
-query GetProductById($getProductByIdId: ObjectId!) {
+query ProductGetById($getProductByIdId: ObjectId!) {
   getProductById(id: $getProductByIdId) {
-    allowReviews
-    categoryId
-    createdAt
-    creator {
-      id
-      name
-    }
-    description
     id
-    inventory {
-      backorderStatus
-      lowStockThreshold
-      remainingStock
-      stockStatus
-      trackQuantity
-      useGlobalTracking
-    }
-    isFeatured
+    title
+    description
+    postStatus
     media {
+      id
+      url
+      mediaType
       altText
       createdAt
-      id
-      mediaType
       updatedAt
-      url
     }
-    postStatus
+    categoryId
+    tags
+    isFeatured
+    allowReviews
+    creator {
+      id
+      firstName
+      lastName
+    }
+    createdAt
+    updatedAt
     pricing {
-      chargeTax
       price
       regularPrice
+      chargeTax
+    }
+    inventory {
+      trackQuantity
+      useGlobalTracking
+      remainingStock
+      stockStatus
+      lowStockThreshold
+      backorderStatus
+    }
+    shipping {
+      presetId
+      isPhysicalProduct
+      weight
+      length
+      width
+      height
     }
     reviews
-    shipping {
-      height
-      isPhysicalProduct
-      length
-      presetId
-      weight
-      width
-    }
-    tags
-    title
     totalInWishlist
-    updatedAt
   }
 }

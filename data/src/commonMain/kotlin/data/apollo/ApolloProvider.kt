@@ -30,7 +30,7 @@ internal class ApolloProviderImpl(
             WebSocketNetworkTransport.Builder()
                 .protocol(GraphQLWsProtocol.Factory())
                 .serverUrl(baseUrlSubscriptions)
-                .reopenWhen { e, attempt ->
+                .reopenWhen { _, attempt ->
                     delay(2.0.pow(attempt.toDouble()).toLong())
                     // retry after the delay
                     true

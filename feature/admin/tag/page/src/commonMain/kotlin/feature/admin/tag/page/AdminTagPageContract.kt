@@ -21,7 +21,8 @@ object AdminTagPageContract {
             name = "",
             creator = GetTagByIdQuery.Creator(
                 id = "",
-                name = "",
+                firstName = "",
+                lastName = "",
             ),
             createdAt = "",
             updatedAt = "",
@@ -76,7 +77,7 @@ object AdminTagPageContract {
     data class Strings(
         val save: String = getString(component.localization.Strings.Save),
         val edit: String = getString(component.localization.Strings.Edit),
-        val cancel: String = getString(component.localization.Strings.Cancel),
+        val discard: String = getString(component.localization.Strings.Discard),
         val delete: String = getString(component.localization.Strings.Delete),
         val createdBy: String = getString(component.localization.Strings.CreatedBy),
         val createdAt: String = getString(component.localization.Strings.CreatedAt),
@@ -91,7 +92,7 @@ object AdminTagPageContract {
         val noOtherTagsToChooseFrom: String = getString(component.localization.Strings.NoOtherTagsToChooseFrom),
         val unsavedChanges: String = getString(component.localization.Strings.UnsavedChanges),
         val saveChanges: String = getString(component.localization.Strings.SaveChanges),
-        val reset: String = getString(component.localization.Strings.Reset),
+        val dismiss: String = getString(component.localization.Strings.Dismiss),
         val improveWithAi: String = getString(component.localization.Strings.ImproveWithAi),
     )
 

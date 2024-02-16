@@ -1,11 +1,10 @@
-package feature.admin.user.page
+package feature.admin.user.create
 
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
 import core.util.millisToTime
 import data.UserGetByIdQuery
-import data.service.AuthService
 import data.service.UserService
 import data.type.CreateUserInput
 import data.type.Role
@@ -15,59 +14,45 @@ import org.koin.core.component.inject
 import kotlin.time.Duration.Companion.seconds
 
 val SHAKE_ANIM_DURATION = (.25).seconds
-private typealias InputScope = InputHandlerScope<AdminUserPageContract.Inputs, AdminUserPageContract.Events, AdminUserPageContract.State>
+private typealias InputScope = InputHandlerScope<AdminUserCreateContract.Inputs, AdminUserCreateContract.Events, AdminUserCreateContract.State>
 
-internal class AdminUserPageInputHandler :
+internal class AdminUserCreateInputHandler :
     KoinComponent,
-    InputHandler<AdminUserPageContract.Inputs, AdminUserPageContract.Events, AdminUserPageContract.State> {
+    InputHandler<AdminUserCreateContract.Inputs, AdminUserCreateContract.Events, AdminUserCreateContract.State> {
 
-    private val authService: AuthService by inject()
     private val userService: UserService by inject()
     private val inputValidator: InputValidator by inject()
 
-    override suspend fun InputHandlerScope<AdminUserPageContract.Inputs, AdminUserPageContract.Events, AdminUserPageContract.State>.handleInput(
-        input: AdminUserPageContract.Inputs,
+    override suspend fun InputHandlerScope<AdminUserCreateContract.Inputs, AdminUserCreateContract.Events, AdminUserCreateContract.State>.handleInput(
+        input: AdminUserCreateContract.Inputs,
     ) = when (input) {
-        is AdminUserPageContract.Inputs.Init -> handleInit(input.id)
+        is AdminUserCreateContract.Inputs.Init -> handleInit(input.id)
 
-        is AdminUserPageContract.Inputs.Get.UserById -> handleGetUserById(input.id)
+        is AdminUserCreateContract.Inputs.Get.UserById -> handleGetUserById(input.id)
 
-        AdminUserPageContract.Inputs.OnClick.Create -> handleCreateNewUser()
-        is AdminUserPageContract.Inputs.OnClick.Delete -> handleDeleteUser()
-        is AdminUserPageContract.Inputs.OnClick.ResetPassword -> handleResetPassword()
-        is AdminUserPageContract.Inputs.OnClick.SaveEdit -> handleSavePersonalDetails()
-        AdminUserPageContract.Inputs.OnClick.CancelEdit -> handleCancelEdit()
+        AdminUserCreateContract.Inputs.OnClick.Create -> handleCreateNewUser()
+        is AdminUserCreateContract.Inputs.OnClick.Delete -> handleDeleteUser()
+        is AdminUserCreateContract.Inputs.OnClick.Save -> handleSavePersonalDetails()
+        AdminUserCreateContract.Inputs.OnClick.Discard -> handleCancelEdit()
 
-        is AdminUserPageContract.Inputs.Set.OriginalUser -> updateState { it.copy(original = input.user).wasEdited() }
-        is AdminUserPageContract.Inputs.Set.CurrentUser -> updateState { it.copy(current = input.user).wasEdited() }
-        is AdminUserPageContract.Inputs.Set.Loading -> updateState { it.copy(isLoading = input.isLoading) }
-        is AdminUserPageContract.Inputs.Set.StateOfScreen -> updateState { it.copy(screenState = input.screenState) }
+        is AdminUserCreateContract.Inputs.Set.OriginalUser -> updateState { it.copy(original = input.user).wasEdited() }
+        is AdminUserCreateContract.Inputs.Set.CurrentUser -> updateState { it.copy(current = input.user).wasEdited() }
+        is AdminUserCreateContract.Inputs.Set.Loading -> updateState { it.copy(isLoading = input.isLoading) }
+        is AdminUserCreateContract.Inputs.Set.StateOfScreen -> updateState { it.copy(screenState = input.screenState) }
 
-        is AdminUserPageContract.Inputs.Set.Id -> updateState { it.copy(current = it.current.copy(id = input.id)) }
-        is AdminUserPageContract.Inputs.Set.FullName -> handleSetName(input.fullName)
-        is AdminUserPageContract.Inputs.Set.NameShake -> updateState { it.copy(shakeFullName = input.shake) }
-        is AdminUserPageContract.Inputs.Set.Email -> handleSetEmail(input.email)
-        is AdminUserPageContract.Inputs.Set.EmailShake -> updateState { it.copy(shakeEmail = input.shake) }
-        is AdminUserPageContract.Inputs.Set.Phone -> handleSetPhone(input.phone)
-        is AdminUserPageContract.Inputs.Set.PhoneShake -> updateState { it.copy(shakePhone = input.shake) }
-        is AdminUserPageContract.Inputs.Set.Address -> handleSetAddress(input.address)
-        is AdminUserPageContract.Inputs.Set.AddressShake -> updateState { it.copy(shakeAddress = input.shake) }
-        is AdminUserPageContract.Inputs.Set.AdditionalInformation -> handleSetAdditionalInfo(input.additionalInformation)
-        is AdminUserPageContract.Inputs.Set.City -> handleSetCity(input.city)
-        is AdminUserPageContract.Inputs.Set.CityShake -> updateState { it.copy(shakeCity = input.shake) }
-        is AdminUserPageContract.Inputs.Set.Country -> handleSetCountry(input.country)
-        is AdminUserPageContract.Inputs.Set.CountryShake -> updateState { it.copy(shakeCountry = input.shake) }
-        is AdminUserPageContract.Inputs.Set.Postcode -> handleSetPostcode(input.postcode)
-        is AdminUserPageContract.Inputs.Set.PostcodeShake -> updateState { it.copy(shakePostcode = input.shake) }
-        is AdminUserPageContract.Inputs.Set.State -> handleSetState(input.state)
-        is AdminUserPageContract.Inputs.Set.StateShake -> updateState { it.copy(shakeState = input.shake) }
-        is AdminUserPageContract.Inputs.Set.UserRole -> handleSetRole(input.role)
-        is AdminUserPageContract.Inputs.Set.IsEmailVerified -> updateState { it.copy(emailVerified = input.isVerified) }
-        is AdminUserPageContract.Inputs.Set.CreatedAt -> updateState { it.copy(createdAt = input.createdAt) }
-        is AdminUserPageContract.Inputs.Set.CreatedBy -> updateState { it.copy(createdBy = input.createdBy) }
-        is AdminUserPageContract.Inputs.Set.LastActive -> updateState { it.copy(lastActive = input.lastActive) }
-        is AdminUserPageContract.Inputs.Set.UpdatedAt -> updateState { it.copy(updatedAt = input.updatedAt) }
-        is AdminUserPageContract.Inputs.Set.WishlistSize -> updateState { it.copy(wishlistSize = input.size) }
+        is AdminUserCreateContract.Inputs.Set.Id -> updateState { it.copy(current = it.current.copy(id = input.id)) }
+        is AdminUserCreateContract.Inputs.Set.DetailFirstName -> handleSetName(input.firstName)
+        is AdminUserCreateContract.Inputs.Set.Email -> handleSetEmail(input.email)
+        is AdminUserCreateContract.Inputs.Set.Phone -> handleSetPhone(input.phone)
+        is AdminUserCreateContract.Inputs.Set.Address -> handleSetAddress(input.address)
+        is AdminUserCreateContract.Inputs.Set.Company -> handleSetAdditionalInfo(input.company)
+        is AdminUserCreateContract.Inputs.Set.City -> handleSetCity(input.city)
+        is AdminUserCreateContract.Inputs.Set.Country -> handleSetCountry(input.country)
+        is AdminUserCreateContract.Inputs.Set.Postcode -> handleSetPostcode(input.postcode)
+        is AdminUserCreateContract.Inputs.Set.Apartment -> handleSetState(input.apartment)
+        is AdminUserCreateContract.Inputs.Set.CreatedAt -> updateState { it.copy(createdAt = input.createdAt) }
+        is AdminUserCreateContract.Inputs.Set.CreatedBy -> updateState { it.copy(createdBy = input.createdBy) }
+        is AdminUserCreateContract.Inputs.Set.UpdatedAt -> updateState { it.copy(updatedAt = input.updatedAt) }
     }
 
     private suspend fun InputScope.handleCancelEdit() {
@@ -83,29 +68,15 @@ internal class AdminUserPageInputHandler :
         updateState { it.copy(current = it.current.copy(role = role)).wasEdited() }
     }
 
-    private suspend fun InputScope.handleResetPassword() {
-        val state = getCurrentState()
-        sideJob("handleResetPassword") {
-            authService.forgotPassword(state.current.email).fold(
-                onSuccess = {
-                    postEvent(AdminUserPageContract.Events.OnError("Password reset successfully"))
-                },
-                onFailure = {
-                    postEvent(AdminUserPageContract.Events.OnError(it.message ?: "Error while resetting password"))
-                },
-            )
-        }
-    }
-
     private suspend fun InputScope.handleDeleteUser() {
         val state = getCurrentState()
         sideJob("handleDeleteUser") {
             userService.deleteById(state.current.id.toString()).fold(
                 onSuccess = {
-                    postEvent(AdminUserPageContract.Events.GoToUserList)
+                    postEvent(AdminUserCreateContract.Events.GoToUserList)
                 },
                 onFailure = {
-                    postEvent(AdminUserPageContract.Events.OnError(it.message ?: "Error while deleting user"))
+                    postEvent(AdminUserCreateContract.Events.OnError(it.message ?: "Error while deleting user"))
                 },
             )
         }
@@ -115,13 +86,13 @@ internal class AdminUserPageInputHandler :
     private suspend fun InputScope.handleInit(id: String?) {
         sideJob("handleInit") {
             if (id == null) {
-                postInput(AdminUserPageContract.Inputs.Set.StateOfScreen(AdminUserPageContract.ScreenState.New))
+                postInput(AdminUserCreateContract.Inputs.Set.StateOfScreen(AdminUserCreateContract.ScreenState.New))
             } else {
-                postInput(AdminUserPageContract.Inputs.Set.Loading(isLoading = true))
-                postInput(AdminUserPageContract.Inputs.Set.Id(id))
-                postInput(AdminUserPageContract.Inputs.Set.StateOfScreen(AdminUserPageContract.ScreenState.Existing))
-                postInput(AdminUserPageContract.Inputs.Get.UserById(id))
-                postInput(AdminUserPageContract.Inputs.Set.Loading(isLoading = false))
+                postInput(AdminUserCreateContract.Inputs.Set.Loading(isLoading = true))
+                postInput(AdminUserCreateContract.Inputs.Set.Id(id))
+                postInput(AdminUserCreateContract.Inputs.Set.StateOfScreen(AdminUserCreateContract.ScreenState.Existing))
+                postInput(AdminUserCreateContract.Inputs.Get.UserById(id))
+                postInput(AdminUserCreateContract.Inputs.Set.Loading(isLoading = false))
             }
         }
     }
@@ -137,7 +108,7 @@ internal class AdminUserPageInputHandler :
             userService.create(input).fold(
                 onSuccess = { data ->
                     postInput(
-                        AdminUserPageContract.Inputs.Set.OriginalUser(
+                        AdminUserCreateContract.Inputs.Set.OriginalUser(
                             user = state.original.copy(
                                 id = data.createUser.id,
                                 email = data.createUser.email,
@@ -147,10 +118,10 @@ internal class AdminUserPageInputHandler :
                             )
                         )
                     )
-                    postInput(AdminUserPageContract.Inputs.Set.StateOfScreen(AdminUserPageContract.ScreenState.New))
+                    postInput(AdminUserCreateContract.Inputs.Set.StateOfScreen(AdminUserCreateContract.ScreenState.New))
                 },
                 onFailure = {
-                    postEvent(AdminUserPageContract.Events.OnError(it.message ?: "Error while creating new user"))
+                    postEvent(AdminUserCreateContract.Events.OnError(it.message ?: "Error while creating new user"))
                 },
             )
         }
@@ -160,7 +131,7 @@ internal class AdminUserPageInputHandler :
         updateState {
             it.copy(
                 current = it.current.copy(details = it.current.details.copy(name = name)),
-                nameError = if (it.wasEdited) null else inputValidator.validateText(name),
+                firstNameError = if (it.wasEdited) null else inputValidator.validateText(name),
             ).wasEdited()
         }
     }
@@ -185,7 +156,7 @@ internal class AdminUserPageInputHandler :
 
     private suspend fun InputScope.handleSavePersonalDetails() {
         with(getCurrentState()) {
-            val isNameError = nameError != null
+            val isNameError = firstNameError != null
             val isEmailError = emailError != null
             val isPhoneError = phoneError != null
             val isAddressError = addressError != null
@@ -198,25 +169,25 @@ internal class AdminUserPageInputHandler :
 
             if (!isNoError) {
                 sideJob("handleSavePersonalDetailsShakes") {
-                    if (isNameError) postInput(AdminUserPageContract.Inputs.Set.NameShake(shake = true))
-                    if (isEmailError) postInput(AdminUserPageContract.Inputs.Set.EmailShake(shake = true))
-                    if (isPhoneError) postInput(AdminUserPageContract.Inputs.Set.PhoneShake(shake = true))
-                    if (isAddressError) postInput(AdminUserPageContract.Inputs.Set.AddressShake(shake = true))
-                    if (isPostcodeError) postInput(AdminUserPageContract.Inputs.Set.PostcodeShake(shake = true))
-                    if (isCityError) postInput(AdminUserPageContract.Inputs.Set.CityShake(shake = true))
-                    if (isStateError) postInput(AdminUserPageContract.Inputs.Set.StateShake(shake = true))
-                    if (isCountryError) postInput(AdminUserPageContract.Inputs.Set.CountryShake(shake = true))
+                    if (isNameError) postInput(AdminUserCreateContract.Inputs.Set.NameShake(shake = true))
+                    if (isEmailError) postInput(AdminUserCreateContract.Inputs.Set.EmailShake(shake = true))
+                    if (isPhoneError) postInput(AdminUserCreateContract.Inputs.Set.PhoneShake(shake = true))
+                    if (isAddressError) postInput(AdminUserCreateContract.Inputs.Set.AddressShake(shake = true))
+                    if (isPostcodeError) postInput(AdminUserCreateContract.Inputs.Set.PostcodeShake(shake = true))
+                    if (isCityError) postInput(AdminUserCreateContract.Inputs.Set.CityShake(shake = true))
+                    if (isStateError) postInput(AdminUserCreateContract.Inputs.Set.StateShake(shake = true))
+                    if (isCountryError) postInput(AdminUserCreateContract.Inputs.Set.CountryShake(shake = true))
 
                     delay(SHAKE_ANIM_DURATION)
 
-                    if (isNameError) postInput(AdminUserPageContract.Inputs.Set.NameShake(shake = false))
-                    if (isEmailError) postInput(AdminUserPageContract.Inputs.Set.EmailShake(shake = false))
-                    if (isPhoneError) postInput(AdminUserPageContract.Inputs.Set.PhoneShake(shake = false))
-                    if (isAddressError) postInput(AdminUserPageContract.Inputs.Set.AddressShake(shake = false))
-                    if (isPostcodeError) postInput(AdminUserPageContract.Inputs.Set.PostcodeShake(shake = false))
-                    if (isCityError) postInput(AdminUserPageContract.Inputs.Set.CityShake(shake = false))
-                    if (isStateError) postInput(AdminUserPageContract.Inputs.Set.StateShake(shake = false))
-                    if (isCountryError) postInput(AdminUserPageContract.Inputs.Set.CountryShake(shake = false))
+                    if (isNameError) postInput(AdminUserCreateContract.Inputs.Set.NameShake(shake = false))
+                    if (isEmailError) postInput(AdminUserCreateContract.Inputs.Set.EmailShake(shake = false))
+                    if (isPhoneError) postInput(AdminUserCreateContract.Inputs.Set.PhoneShake(shake = false))
+                    if (isAddressError) postInput(AdminUserCreateContract.Inputs.Set.AddressShake(shake = false))
+                    if (isPostcodeError) postInput(AdminUserCreateContract.Inputs.Set.PostcodeShake(shake = false))
+                    if (isCityError) postInput(AdminUserCreateContract.Inputs.Set.CityShake(shake = false))
+                    if (isStateError) postInput(AdminUserCreateContract.Inputs.Set.StateShake(shake = false))
+                    if (isCountryError) postInput(AdminUserCreateContract.Inputs.Set.CountryShake(shake = false))
                 }
             } else {
                 sideJob("handleSavePersonalDetails") {
@@ -228,7 +199,7 @@ internal class AdminUserPageInputHandler :
                     ).fold(
                         onSuccess = { data ->
                             postInput(
-                                AdminUserPageContract.Inputs.Set.OriginalUser(
+                                AdminUserCreateContract.Inputs.Set.OriginalUser(
                                     user = this@with.original.copy(
                                         email = data.updateUser.email,
                                         details = UserGetByIdQuery.Details(
@@ -241,7 +212,7 @@ internal class AdminUserPageInputHandler :
                         },
                         onFailure = {
                             postEvent(
-                                AdminUserPageContract.Events.OnError(
+                                AdminUserCreateContract.Events.OnError(
                                     it.message ?: "Error while updating personal details"
                                 )
                             )
@@ -265,7 +236,7 @@ internal class AdminUserPageInputHandler :
         updateState {
             it.copy(
                 current = it.current.copy(address = it.current.address.copy(additionalInfo = info)),
-                additionalInformationError = null,
+                companyError = null,
             ).wasEdited()
         }
     }
@@ -319,12 +290,12 @@ internal class AdminUserPageInputHandler :
                             createdAt = createdAt,
                             updatedAt = updatedAt,
                         )
-                        postInput(AdminUserPageContract.Inputs.Set.OriginalUser(user))
-                        postInput(AdminUserPageContract.Inputs.Set.CurrentUser(user))
+                        postInput(AdminUserCreateContract.Inputs.Set.OriginalUser(user))
+                        postInput(AdminUserCreateContract.Inputs.Set.CurrentUser(user))
                     },
                     onFailure = {
                         postEvent(
-                            AdminUserPageContract.Events.OnError(it.message ?: "Error while getting user profile")
+                            AdminUserCreateContract.Events.OnError(it.message ?: "Error while getting user profile")
                         )
                     },
                 )
@@ -332,6 +303,6 @@ internal class AdminUserPageInputHandler :
         }
     }
 
-    private fun AdminUserPageContract.State.wasEdited(): AdminUserPageContract.State =
+    private fun AdminUserCreateContract.State.wasEdited(): AdminUserCreateContract.State =
         copy(wasEdited = current != original)
 }

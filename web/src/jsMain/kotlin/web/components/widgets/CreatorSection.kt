@@ -7,7 +7,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
-import web.compose.material3.component.OutlinedButton
 
 
 @Composable
@@ -23,7 +22,7 @@ fun CreatorSection(
     ) {
         SpanText(text = title)
         afterTitle()
-        OutlinedButton(
+        AppOutlinedButton(
             onClick = { onClick() },
         ) {
             SpanText(text = creatorName)

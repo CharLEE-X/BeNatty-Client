@@ -20,17 +20,17 @@ import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibilityOff
 import com.varabyte.kobweb.silk.components.text.SpanText
-import feature.router.RouterScreen
 import feature.router.RouterViewModel
+import feature.router.Screen
 import feature.updatepassword.UpdatePasswordContract
 import feature.updatepassword.UpdatePasswordViewModel
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import theme.MaterialTheme
 import theme.roleStyle
-import web.compose.material3.component.FilledButton
-import web.compose.material3.component.OutlinedTextField
-import web.compose.material3.component.TextButton
+import web.components.widgets.AppFilledButton
+import web.components.widgets.AppOutlinedTextField
+import web.components.widgets.AppTextButton
 import web.compose.material3.component.TextFieldType
 
 @Composable
@@ -44,7 +44,7 @@ fun UpdatePasswordPage(
             scope = scope,
             onError = onError,
             goToLogin = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Login.matcher.routeFormat))
+                router.trySend(RouterContract.Inputs.GoToDestination(Screen.Login.matcher.routeFormat))
             },
         )
     }
@@ -88,9 +88,9 @@ fun UpdatingPassword(
             .roleStyle(MaterialTheme.typography.labelLarge)
     )
 
-    OutlinedTextField(
+    AppOutlinedTextField(
         value = state.password,
-        onInput = {
+        onValueChange = {
             password = it
             vm.trySend(UpdatePasswordContract.Inputs.SetPassword(it))
         },
@@ -108,7 +108,7 @@ fun UpdatingPassword(
             .margin(top = 0.5.em)
     )
 
-    FilledButton(
+    AppFilledButton(
         onClick = { vm.trySend(UpdatePasswordContract.Inputs.OnLoginClick) },
         modifier = Modifier.margin(top = 1.em)
     ) {
@@ -130,7 +130,7 @@ fun UpdatingPassword(
                 .margin(top = 1.em)
                 .roleStyle(MaterialTheme.typography.labelLarge)
         )
-        TextButton(
+        AppTextButton(
             onClick = { vm.trySend(UpdatePasswordContract.Inputs.OnLoginClick) },
         ) {
             SpanText(
@@ -157,7 +157,7 @@ private fun PasswordUpdated(
             .margin(top = 1.em)
             .roleStyle(MaterialTheme.typography.labelLarge)
     )
-    FilledButton(
+    AppFilledButton(
         onClick = { vm.trySend(UpdatePasswordContract.Inputs.OnLoginClick) },
         modifier = Modifier.margin(top = 1.em)
     ) {

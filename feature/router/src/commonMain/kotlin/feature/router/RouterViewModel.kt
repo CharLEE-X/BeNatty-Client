@@ -11,20 +11,20 @@ import com.copperleaf.ballast.navigation.vm.BasicRouter
 import com.copperleaf.ballast.navigation.vm.withRouter
 import kotlinx.coroutines.CoroutineScope
 
-typealias RouterInterceptor = BallastInterceptor<RouterContract.Inputs<RouterScreen>, RouterContract.Events<RouterScreen>, RouterContract.State<RouterScreen>>
+typealias RouterInterceptor = BallastInterceptor<RouterContract.Inputs<Screen>, RouterContract.Events<Screen>, RouterContract.State<Screen>>
 
 class RouterViewModel(
     viewModelScope: CoroutineScope,
-    initialRoute: RouterScreen,
+    initialRoute: Screen,
     extraInterceptors: List<RouterInterceptor> = emptyList(),
-) : BasicRouter<RouterScreen>(
+) : BasicRouter<Screen>(
     config = BallastViewModelConfiguration.Builder()
         .apply {
 //            this += LoggingInterceptor()
             logger = ::PrintlnLogger
         }
         .withRouter(
-            routingTable = RoutingTable.fromEnum(RouterScreen.entries.toTypedArray()),
+            routingTable = RoutingTable.fromEnum(Screen.entries.toTypedArray()),
             initialRoute = initialRoute,
         )
         .apply { interceptors += extraInterceptors }
@@ -33,4 +33,5 @@ class RouterViewModel(
     coroutineScope = viewModelScope,
 )
 
-fun RouterViewModel.goBack() = trySend(RouterContract.Inputs.GoBack())
+fun RouterViewModel.goHome() =
+    trySend(RouterContract.Inputs.GoToDestination(Screen.Home.matcher.routeFormat))

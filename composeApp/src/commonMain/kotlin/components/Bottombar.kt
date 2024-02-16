@@ -28,14 +28,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import feature.router.RouterScreen
+import feature.router.Screen
 
 @Composable
 internal fun BottomBar(
     modifier: Modifier = Modifier,
-    routes: List<RouterScreen>,
-    currentRoute: RouterScreen,
-    onDestinationClick: (RouterScreen) -> Unit,
+    routes: List<Screen>,
+    currentRoute: Screen,
+    onDestinationClick: (Screen) -> Unit,
     show: Boolean,
 ) {
     AnimatedVisibility(
@@ -73,7 +73,7 @@ internal fun BottomBar(
 
 @Composable
 private fun BottomBarItem(
-    route: RouterScreen,
+    route: Screen,
     isCurrentRoute: Boolean,
     onClick: () -> Unit,
     hasNotification: Boolean,

@@ -14,8 +14,8 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
 import theme.MaterialTheme
 import theme.roleStyle
+import web.components.widgets.AppFilledTonalButton
 import web.compose.material3.component.Divider
-import web.compose.material3.component.FilledTonalButton
 
 @Composable
 fun ColumnScope.SocialButtonsLoginSection(
@@ -33,7 +33,7 @@ fun ColumnScope.SocialButtonsLoginSection(
             .align(Alignment.Start)
             .margin(top = 1.5.em)
     )
-    FilledTonalButton(
+    AppFilledTonalButton(
         onClick = { onGoogleClick() },
         leadingIcon = {
             Image(
@@ -53,7 +53,7 @@ fun ColumnScope.SocialButtonsLoginSection(
                 .roleStyle(MaterialTheme.typography.headlineSmall)
         )
     }
-    FilledTonalButton(
+    AppFilledTonalButton(
         onClick = { onFacebookClick() },
         leadingIcon = {
             Image(

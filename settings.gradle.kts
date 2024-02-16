@@ -53,7 +53,7 @@ include(
 
     ":feature:admin:dashboard",
     ":feature:admin:list",
-    ":feature:admin:user:page",
+    ":feature:admin:user:create",
     ":feature:admin:product:page",
     ":feature:admin:order:page",
     ":feature:admin:category:page",

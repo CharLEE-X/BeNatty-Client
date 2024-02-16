@@ -12,10 +12,10 @@ import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.Text
 import web.Category
 import web.CategoryFilter
-import web.compose.material3.component.FilledButton
-import web.compose.material3.component.TextButton
-import web.compose.material3.component.labs.OutlinedSegmentedButtonSet
-import web.compose.material3.component.labs.SegmentedButton
+import web.components.widgets.AppFilledButton
+import web.components.widgets.AppOutlinedSegmentedButtonSet
+import web.components.widgets.AppSegmentedButton
+import web.components.widgets.AppTextButton
 
 @Composable
 fun CategoryBar(
@@ -32,21 +32,21 @@ fun CategoryBar(
     ) {
         categories.forEach { category ->
             if (category == Category.Promos) {
-                FilledButton(
+                AppFilledButton(
                     onClick = { onCategoryClick(category) },
                     content = { Text(category.name) }
                 )
             } else {
-                TextButton(
+                AppTextButton(
                     onClick = { onCategoryClick(category) },
                     content = { Text(category.name) }
                 )
             }
         }
         Spacer()
-        OutlinedSegmentedButtonSet {
+        AppOutlinedSegmentedButtonSet {
             categoryFilters.forEach { filter ->
-                SegmentedButton(
+                AppSegmentedButton(
                     label = filter.name,
                     selected = currentCategoryFilter == filter,
                     onClick = { onCategoryFilterClick(filter) },

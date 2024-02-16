@@ -9,9 +9,9 @@ import data.CreateProductMutation
 import data.DeleteProductMediaMutation
 import data.DeleteProductMutation
 import data.GetAllProductsPageQuery
-import data.GetProductByIdQuery
-import data.UpdateProductMutation
-import data.UploadMediaToProductMutation
+import data.ProductGetByIdQuery
+import data.ProductUpdateMutation
+import data.ProductUploadImageMutation
 import data.type.BackorderStatus
 import data.type.InventoryUpdateInput
 import data.type.MediaType
@@ -41,8 +41,8 @@ interface ProductService {
         sortDirection: SortDirection?,
     ): Result<GetAllProductsPageQuery.Data>
 
-    suspend fun getById(id: String): Flow<Result<GetProductByIdQuery.Data>>
-    suspend fun deleteById(id: String): Result<DeleteProductMutation.Data>
+    suspend fun getById(id: String): Flow<Result<ProductGetByIdQuery.Data>>
+    suspend fun delete(id: String): Result<DeleteProductMutation.Data>
     suspend fun update(
         id: String,
         name: String?,
@@ -66,13 +66,13 @@ interface ProductService {
         isPhysicalProduct: Boolean?,
         weight: String?,
         width: String?,
-    ): Result<UpdateProductMutation.Data>
+    ): Result<ProductUpdateMutation.Data>
 
     suspend fun uploadImage(
         productId: String,
         mediaString: String,
         mediaType: MediaType,
-    ): Result<UploadMediaToProductMutation.Data>
+    ): Result<ProductUploadImageMutation.Data>
 
     suspend fun deleteImage(productId: String, imageId: String): Result<DeleteProductMediaMutation.Data>
 }
@@ -81,10 +81,7 @@ internal class ProductServiceImpl(
     private val apolloClient: ApolloClient,
 ) : ProductService {
     override suspend fun deleteImage(productId: String, imageId: String): Result<DeleteProductMediaMutation.Data> {
-        val input = ProductMediaDeleteInput(
-            imageId = productId,
-            productId = imageId,
-        )
+        val input = ProductMediaDeleteInput(imageId = productId, productId = imageId)
         return apolloClient.mutation(DeleteProductMediaMutation(input)).handle()
     }
 
@@ -92,13 +89,13 @@ internal class ProductServiceImpl(
         productId: String,
         mediaString: String,
         mediaType: MediaType,
-    ): Result<UploadMediaToProductMutation.Data> {
+    ): Result<ProductUploadImageMutation.Data> {
         val input = ProductMediaUploadInput(
             productId = productId,
             blob = mediaString,
             mediaType = mediaType,
         )
-        return apolloClient.mutation(UploadMediaToProductMutation(input)).handle()
+        return apolloClient.mutation(ProductUploadImageMutation(input)).handle()
     }
 
     override suspend fun update(
@@ -124,7 +121,7 @@ internal class ProductServiceImpl(
         isPhysicalProduct: Boolean?,
         weight: String?,
         width: String?,
-    ): Result<UpdateProductMutation.Data> {
+    ): Result<ProductUpdateMutation.Data> {
         val inventory = if (
             backorderStatus != null || lowStockThreshold != null || remainingStock != null || stockStatus != null ||
             trackQuantity != null
@@ -181,7 +178,7 @@ internal class ProductServiceImpl(
             shipping = shipping,
         )
 
-        return apolloClient.mutation(UpdateProductMutation(input))
+        return apolloClient.mutation(ProductUpdateMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }
@@ -211,17 +208,15 @@ internal class ProductServiceImpl(
             .handle()
     }
 
-    override suspend fun getById(id: String): Flow<Result<GetProductByIdQuery.Data>> {
-        return apolloClient.query(GetProductByIdQuery(id))
+    override suspend fun getById(id: String): Flow<Result<ProductGetByIdQuery.Data>> {
+        return apolloClient.query(ProductGetByIdQuery(id))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .watch()
             .map { it.handle() }
     }
 
-    override suspend fun deleteById(id: String): Result<DeleteProductMutation.Data> {
-        val input = ProductDeleteInput(
-            id = id,
-        )
+    override suspend fun delete(id: String): Result<DeleteProductMutation.Data> {
+        val input = ProductDeleteInput(id)
         return apolloClient.mutation(DeleteProductMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()

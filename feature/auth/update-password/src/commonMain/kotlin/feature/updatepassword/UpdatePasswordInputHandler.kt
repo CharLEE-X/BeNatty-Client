@@ -36,7 +36,27 @@ internal class UpdatePasswordInputHandler :
         sideJob("handleOnChangePasswordClick") {
             if (validatePassword(state.password)) {
                 authService.userId?.let { userId ->
-                    userService.update(userId, password = state.password).fold(
+                    userService.update(
+                        id = userId,
+                        password = state.password,
+                        email = null,
+                        detailsFirstName = null,
+                        detailsLastName = null,
+                        language = null,
+                        detailPhone = null,
+                        country = null,
+                        addressFirstName = null,
+                        addressLastName = null,
+                        addressPhone = null,
+                        company = null,
+                        address = null,
+                        apartment = null,
+                        city = null,
+                        postcode = null,
+                        collectTax = null,
+                        marketingEmails = null,
+                        marketingSms = null,
+                    ).fold(
                         onSuccess = {
                             postInput(
                                 UpdatePasswordContract.Inputs.SetScreenState(UpdatePasswordContract.ScreenState.Success)

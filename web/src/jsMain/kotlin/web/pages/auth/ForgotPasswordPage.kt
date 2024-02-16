@@ -26,17 +26,17 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiError
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.forgotpassword.ForgotPasswordContract
 import feature.forgotpassword.ForgotPasswordViewModel
-import feature.router.RouterScreen
 import feature.router.RouterViewModel
+import feature.router.Screen
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import theme.MaterialTheme
 import theme.roleStyle
+import web.components.widgets.AppFilledButton
+import web.components.widgets.AppFilledTonalButton
+import web.components.widgets.AppOutlinedTextField
+import web.components.widgets.AppTextButton
 import web.compose.material3.component.CircularProgress
-import web.compose.material3.component.FilledButton
-import web.compose.material3.component.FilledTonalButton
-import web.compose.material3.component.OutlinedTextField
-import web.compose.material3.component.TextButton
 import web.compose.material3.component.TextFieldType
 
 @Composable
@@ -48,7 +48,7 @@ fun ForgotPasswordPage(
         ForgotPasswordViewModel(
             scope = scope,
             goToLogin = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Login.matcher.routeFormat))
+                router.trySend(RouterContract.Inputs.GoToDestination(Screen.Login.matcher.routeFormat))
             },
         )
     }
@@ -90,9 +90,9 @@ private fun ForgotPassword(
         text = state.strings.forgotPasswordDescription,
         modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
     )
-    OutlinedTextField(
+    AppOutlinedTextField(
         value = email,
-        onInput = {
+        onValueChange = {
             email = it
             vm.trySend(ForgotPasswordContract.Inputs.SetEmail(it))
         },
@@ -107,7 +107,7 @@ private fun ForgotPassword(
             .fillMaxWidth()
             .margin(top = 1.em)
     )
-    FilledButton(
+    AppFilledButton(
         disabled = state.buttonDisabled,
         onClick = { if (!state.isLoading) vm.trySend(ForgotPasswordContract.Inputs.OnGetLinkClick) },
         modifier = Modifier.fillMaxWidth()
@@ -122,7 +122,7 @@ private fun ForgotPassword(
             )
         } else {
             SpanText(
-                text = state.strings.getResetLink,
+                text = state.strings.getAResetLink,
                 modifier = Modifier.roleStyle(MaterialTheme.typography.headlineSmall)
             )
         }
@@ -147,7 +147,7 @@ private fun CheckEmail(
             .gap(1.em)
             .margin(top = 1.em)
     ) {
-        FilledTonalButton(
+        AppFilledTonalButton(
             onClick = { vm.trySend(ForgotPasswordContract.Inputs.OpenGmail) },
             leadingIcon = {
                 Image(
@@ -163,7 +163,7 @@ private fun CheckEmail(
                     .roleStyle(MaterialTheme.typography.headlineSmall)
             )
         }
-        FilledTonalButton(
+        AppFilledTonalButton(
             onClick = { vm.trySend(ForgotPasswordContract.Inputs.OpenOutlook) },
             leadingIcon = {
                 Image(
@@ -194,7 +194,7 @@ private fun GoBackToLogin(
             text = state.strings.backTo,
             modifier = Modifier.roleStyle(MaterialTheme.typography.headlineSmall)
         )
-        TextButton(
+        AppTextButton(
             onClick = { vm.trySend(ForgotPasswordContract.Inputs.OnGoToLoginClick) },
         ) {
             SpanText(

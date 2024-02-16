@@ -19,9 +19,9 @@ import theme.MaterialTheme
 import theme.roleStyle
 import web.components.sections.footer.FooterContract
 import web.components.sections.footer.FooterViewModel
-import web.compose.material3.component.IconButton
-import web.compose.material3.component.OutlinedIconButton
-import web.compose.material3.component.OutlinedTextField
+import web.components.widgets.AppIconButton
+import web.components.widgets.AppOutlinedIconButton
+import web.components.widgets.AppOutlinedTextField
 
 
 @Composable
@@ -39,14 +39,14 @@ fun FooterSubscribe(
                 .roleStyle(MaterialTheme.typography.labelLarge)
                 .fontWeight(FontWeight.Bold)
         )
-        OutlinedTextField(
+        AppOutlinedTextField(
             value = state.email,
-            onInput = { vm.trySend(FooterContract.Inputs.SetEmail(it)) },
+            onValueChange = { vm.trySend(FooterContract.Inputs.SetEmail(it)) },
             label = state.strings.email,
             errorText = state.emailError,
             error = state.emailError != null,
             trailingIcon = {
-                IconButton(
+                AppIconButton(
                     onClick = { vm.trySend(FooterContract.Inputs.OnEmailSend) },
                 ) {
                     MdiSend()
@@ -66,7 +66,7 @@ fun FooterSubscribe(
                 .gap(1.em)
                 .margin(top = 1.em)
         ) {
-            OutlinedIconButton(
+            AppOutlinedIconButton(
                 onClick = { },
             ) {
                 Image(
@@ -75,7 +75,7 @@ fun FooterSubscribe(
                     modifier = Modifier.size(1.em)
                 )
             }
-            OutlinedIconButton(
+            AppOutlinedIconButton(
                 onClick = { },
             ) {
                 Image(
@@ -84,7 +84,7 @@ fun FooterSubscribe(
                     modifier = Modifier.size(1.em)
                 )
             }
-            OutlinedIconButton(
+            AppOutlinedIconButton(
                 onClick = { },
             ) {
                 Image(

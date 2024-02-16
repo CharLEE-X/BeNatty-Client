@@ -1,20 +1,31 @@
-mutation UserUpdate($input: UserUpdateInput!) {
+mutation UpdateUser($input: UserUpdateInput!) {
   updateUser(input: $input) {
-    id
-    email
-    role
-    details {
-      name
-      phone
-    }
     address {
       address
-      additionalInfo
-      postcode
+      apartment
       city
-      state
+      company
       country
+      firstName
+      lastName
+      phone
+      postcode
     }
+    collectTax
+    createdAt
+    details {
+      email
+      firstName
+      language
+      lastName
+      phone
+    }
+    emailVerified
+    id
+    marketingEmails
+    marketingSms
+    role
+    updatedAt
     wishlist
   }
 }

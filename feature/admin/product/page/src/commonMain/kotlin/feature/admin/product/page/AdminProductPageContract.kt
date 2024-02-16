@@ -3,7 +3,7 @@ package feature.admin.product.page
 import component.localization.getString
 import data.GetCategoriesAllMinimalQuery
 import data.GetCategoryByIdQuery
-import data.GetProductByIdQuery
+import data.ProductGetByIdQuery
 import data.TagsGetAllMinimalQuery
 import data.type.BackorderStatus
 import data.type.PostStatus
@@ -15,7 +15,7 @@ object AdminProductPageContract {
         val isImagesLoading: Boolean = false,
         val screenState: ScreenState,
 
-        val localMedia: List<GetProductByIdQuery.Medium> = emptyList(),
+        val localMedia: List<ProductGetByIdQuery.Medium> = emptyList(),
 
         val wasEdited: Boolean = false,
 
@@ -46,7 +46,7 @@ object AdminProductPageContract {
         val allTags: List<TagsGetAllMinimalQuery.GetTagsAllMinimal> = emptyList(),
         val presetCategory: GetCategoryByIdQuery.GetCategoryById? = null,
 
-        val original: GetProductByIdQuery.GetProductById = GetProductByIdQuery.GetProductById(
+        val original: ProductGetByIdQuery.GetProductById = ProductGetByIdQuery.GetProductById(
             id = "",
             title = "",
             description = "",
@@ -56,18 +56,19 @@ object AdminProductPageContract {
             tags = emptyList(),
             allowReviews = true,
             isFeatured = false,
-            creator = GetProductByIdQuery.Creator(
+            creator = ProductGetByIdQuery.Creator(
                 id = "",
-                name = "",
+                firstName = "",
+                lastName = "",
             ),
             createdAt = "",
             updatedAt = "",
-            pricing = GetProductByIdQuery.Pricing(
+            pricing = ProductGetByIdQuery.Pricing(
                 price = null,
                 regularPrice = null,
                 chargeTax = true,
             ),
-            inventory = GetProductByIdQuery.Inventory(
+            inventory = ProductGetByIdQuery.Inventory(
                 trackQuantity = true,
                 useGlobalTracking = true,
                 backorderStatus = BackorderStatus.Allowed,
@@ -75,7 +76,7 @@ object AdminProductPageContract {
                 remainingStock = 0,
                 stockStatus = StockStatus.OutOfStock,
             ),
-            shipping = GetProductByIdQuery.Shipping(
+            shipping = ProductGetByIdQuery.Shipping(
                 presetId = null,
                 isPhysicalProduct = true,
                 height = null,
@@ -87,7 +88,7 @@ object AdminProductPageContract {
             totalInWishlist = 0,
         ),
 
-        val current: GetProductByIdQuery.GetProductById = original,
+        val current: ProductGetByIdQuery.GetProductById = original,
 
         val strings: Strings = Strings()
     )
@@ -105,17 +106,18 @@ object AdminProductPageContract {
             data class PresetCategory(val categoryId: String) : Inputs
         }
 
-        data object OnBackButtonClick : Inputs
-        data object OnDeleteClick : Inputs
-        data object OnSaveClick : Inputs
-        data object OnDiscardClick : Inputs
-        data class OnCategorySelected(val categoryName: String) : Inputs
-        data class OnTagSelected(val tagName: String) : Inputs
-        data class OnPresetSelected(val presetName: String) : Inputs
-        data object OnCreateCategoryClick : Inputs
-        data object OnCreateTagClick : Inputs
-        data object OnCreatorClick : Inputs
-        data class OnDeleteMediaClick(val mediaId: String) : Inputs
+        sealed interface OnClick : Inputs {
+            data object Delete : OnClick
+            data object Save : Inputs
+            data object Discard : OnClick
+            data class CategorySelected(val categoryName: String) : Inputs
+            data class TagSelected(val tagName: String) : Inputs
+            data object GoToCreateCategory : Inputs
+            data object GoToCreateTag : Inputs
+            data object GoToUserCreator : Inputs
+            data class PresetSelected(val preset: String) : Inputs
+            data class DeleteImage(val imageId: String) : Inputs
+        }
 
         sealed interface Set : Inputs {
             data class AllCategories(val categories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal>) :
@@ -126,9 +128,9 @@ object AdminProductPageContract {
             data class Loading(val isLoading: Boolean) : Inputs
             data class ImagesLoading(val isImagesLoading: Boolean) : Inputs
             data class StateOfScreen(val screenState: ScreenState) : Inputs
-            data class OriginalProduct(val product: GetProductByIdQuery.GetProductById) : Inputs
-            data class CurrentProduct(val product: GetProductByIdQuery.GetProductById) : Inputs
-            data class LocalMedia(val media: List<GetProductByIdQuery.Medium>) : Inputs
+            data class OriginalProduct(val product: ProductGetByIdQuery.GetProductById) : Inputs
+            data class CurrentProduct(val product: ProductGetByIdQuery.GetProductById) : Inputs
+            data class LocalMedia(val media: List<ProductGetByIdQuery.Medium>) : Inputs
 
             data class Id(val id: String) : Inputs
             data class Title(val title: String) : Inputs
@@ -136,12 +138,12 @@ object AdminProductPageContract {
             data class Description(val description: String) : Inputs
             data class DescriptionShake(val shake: Boolean) : Inputs
             data class StatusOfPost(val postStatus: PostStatus) : Inputs
-            data class Media(val media: List<GetProductByIdQuery.Medium>) : Inputs
+            data class Media(val media: List<ProductGetByIdQuery.Medium>) : Inputs
             data class ImageDropError(val error: String?) : Inputs
             data class CategoryId(val categoryId: String) : Inputs
             data class IsFeatured(val isFeatured: Boolean) : Inputs
             data class AllowReviews(val allowReviews: Boolean) : Inputs
-            data class Creator(val creator: GetProductByIdQuery.Creator) : Inputs
+            data class Creator(val creator: ProductGetByIdQuery.Creator) : Inputs
             data class CreatedAt(val createdAt: String) : Inputs
             data class UpdatedAt(val updatedAt: String) : Inputs
 
@@ -283,7 +285,8 @@ object AdminProductPageContract {
         val insights: String = getString(component.localization.Strings.Insights),
         val noInsights: String = getString(component.localization.Strings.NoInsights),
         val productOrganization: String = getString(component.localization.Strings.ProductOrganization),
-    )
+    ) {
+    }
 
     sealed interface ScreenState {
         data object New : ScreenState

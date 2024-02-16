@@ -12,8 +12,8 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.silk.components.forms.Button
 import com.varabyte.kobweb.silk.components.text.SpanText
-import feature.router.RouterScreen
 import feature.router.RouterViewModel
+import feature.router.Screen
 
 @Suppress("UNUSED_PARAMETER")
 @Composable
@@ -34,7 +34,7 @@ fun CataloguePage(
                 onClick = {
                     router.trySend(
                         RouterContract.Inputs.GoToDestination(
-                            RouterScreen.Product
+                            Screen.Product
                                 .directions()
                                 .pathParameter("id", "1")
                                 .build()

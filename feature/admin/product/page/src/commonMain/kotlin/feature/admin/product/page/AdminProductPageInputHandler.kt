@@ -6,7 +6,7 @@ import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
 import core.util.millisToTime
 import data.GetCategoryByIdQuery
-import data.GetProductByIdQuery
+import data.ProductGetByIdQuery
 import data.service.CategoryService
 import data.service.ProductService
 import data.service.TagService
@@ -46,23 +46,23 @@ internal class AdminProductPageInputHandler :
         AdminProductPageContract.Inputs.Get.AllTags -> handleGetAllTags()
         is AdminProductPageContract.Inputs.Get.PresetCategory -> handleGetPresetCategory(input.categoryId)
 
-        AdminProductPageContract.Inputs.OnBackButtonClick -> postEvent(AdminProductPageContract.Events.GoBack)
-        AdminProductPageContract.Inputs.OnDeleteClick -> handleDelete()
-        AdminProductPageContract.Inputs.OnSaveClick -> handleSave()
-        AdminProductPageContract.Inputs.OnDiscardClick -> updateState { it.copy(current = it.original).wasEdited() }
-        is AdminProductPageContract.Inputs.OnCategorySelected -> handleOnClickCategory(input.categoryName)
-        is AdminProductPageContract.Inputs.OnTagSelected -> handleTagClick(input.tagName)
-        is AdminProductPageContract.Inputs.OnDeleteMediaClick -> handleDeleteImage(input.mediaId)
-        is AdminProductPageContract.Inputs.OnCreatorClick -> {
+        AdminProductPageContract.Inputs.OnClick.Delete -> handleDelete()
+        AdminProductPageContract.Inputs.OnClick.Save -> handleSave()
+        AdminProductPageContract.Inputs.OnClick.Discard -> updateState { it.copy(current = it.original).wasEdited() }
+        is AdminProductPageContract.Inputs.OnClick.CategorySelected -> handleOnClickCategory(input.categoryName)
+        is AdminProductPageContract.Inputs.OnClick.TagSelected -> handleTagClick(input.tagName)
+        is AdminProductPageContract.Inputs.OnClick.DeleteImage -> handleDeleteImage(input.imageId)
+        is AdminProductPageContract.Inputs.OnClick.GoToUserCreator -> {
             val userId = getCurrentState().original.creator.id.toString()
             postEvent(AdminProductPageContract.Events.GoToUserDetails(userId))
         }
 
-        AdminProductPageContract.Inputs.OnCreateTagClick ->
+        AdminProductPageContract.Inputs.OnClick.GoToCreateTag ->
             postEvent(AdminProductPageContract.Events.GoToCreateTag)
 
-        is AdminProductPageContract.Inputs.OnPresetSelected -> handlePresetClick(input.presetName)
-        AdminProductPageContract.Inputs.OnCreateCategoryClick ->
+
+        is AdminProductPageContract.Inputs.OnClick.PresetSelected -> handlePresetClick(input.preset)
+        AdminProductPageContract.Inputs.OnClick.GoToCreateCategory ->
             postEvent(AdminProductPageContract.Events.GoToCreateCategory)
 
         is AdminProductPageContract.Inputs.Set.AllCategories -> updateState { it.copy(allCategories = input.categories) }
@@ -130,7 +130,7 @@ internal class AdminProductPageInputHandler :
 
                 AdminProductPageContract.ScreenState.New -> {
                     val currentLocalMedia = state.localMedia
-                    val newMedia = GetProductByIdQuery.Medium(
+                    val newMedia = ProductGetByIdQuery.Medium(
                         id = currentLocalMedia.size.toString(),
                         url = mediaString,
                         mediaType = MediaType.Image,
@@ -150,7 +150,7 @@ internal class AdminProductPageInputHandler :
             when (state.screenState) {
                 AdminProductPageContract.ScreenState.Existing -> {
                     val id = state.current.media[index].id.toString()
-                    postInput(AdminProductPageContract.Inputs.OnDeleteMediaClick(id))
+                    postInput(AdminProductPageContract.Inputs.OnClick.DeleteImage(id))
                 }
 
                 AdminProductPageContract.ScreenState.New -> {
@@ -362,7 +362,7 @@ internal class AdminProductPageInputHandler :
         }
     }
 
-    private suspend fun InputScope.handleSetMedia(media: List<GetProductByIdQuery.Medium>) {
+    private suspend fun InputScope.handleSetMedia(media: List<ProductGetByIdQuery.Medium>) {
         updateState { it.copy(current = it.current.copy(media = media)).wasEdited() }
     }
 
@@ -374,7 +374,7 @@ internal class AdminProductPageInputHandler :
         updateState { it.copy(current = it.current.copy(updatedAt = updatedAt)).wasEdited() }
     }
 
-    private suspend fun InputScope.handleSetCreator(creator: GetProductByIdQuery.Creator) {
+    private suspend fun InputScope.handleSetCreator(creator: ProductGetByIdQuery.Creator) {
         updateState { it.copy(current = it.current.copy(creator = creator)).wasEdited() }
     }
 
@@ -446,7 +446,8 @@ internal class AdminProductPageInputHandler :
                             allowReviews = data.getProductById.allowReviews,
                             creator = data.getProductById.creator.copy(
                                 id = data.getProductById.creator.id,
-                                name = data.getProductById.creator.name,
+                                firstName = data.getProductById.creator.firstName,
+                                lastName = data.getProductById.creator.lastName,
                             ),
                             createdAt = createdAt,
                             updatedAt = updatedAt,
@@ -553,9 +554,8 @@ internal class AdminProductPageInputHandler :
             val mediaType = MediaType.Image
             productService.uploadImage(state.current.id.toString(), imageString, mediaType).fold(
                 onSuccess = { data ->
-                    println("Image uploaded successfully.\nMessage: ${data.uploadMediaToProduct}")
                     val media = data.uploadMediaToProduct.media.map {
-                        GetProductByIdQuery.Medium(
+                        ProductGetByIdQuery.Medium(
                             id = it.id,
                             url = it.url,
                             mediaType = it.mediaType,
@@ -630,7 +630,7 @@ internal class AdminProductPageInputHandler :
                     onSuccess = { data ->
                         postInput(
                             AdminProductPageContract.Inputs.Set.OriginalProduct(
-                                product = GetProductByIdQuery.GetProductById(
+                                product = ProductGetByIdQuery.GetProductById(
                                     id = data.updateProduct.id,
                                     title = data.updateProduct.title,
                                     description = data.updateProduct.description,
@@ -640,12 +640,12 @@ internal class AdminProductPageInputHandler :
                                     tags = data.updateProduct.tags,
                                     isFeatured = data.updateProduct.isFeatured,
                                     allowReviews = data.updateProduct.allowReviews,
-                                    pricing = GetProductByIdQuery.Pricing(
+                                    pricing = ProductGetByIdQuery.Pricing(
                                         price = data.updateProduct.pricing.price,
                                         regularPrice = data.updateProduct.pricing.regularPrice,
                                         chargeTax = data.updateProduct.pricing.chargeTax,
                                     ),
-                                    inventory = GetProductByIdQuery.Inventory(
+                                    inventory = ProductGetByIdQuery.Inventory(
                                         trackQuantity = data.updateProduct.inventory.trackQuantity,
                                         useGlobalTracking = data.updateProduct.inventory.useGlobalTracking,
                                         backorderStatus = data.updateProduct.inventory.backorderStatus,
@@ -653,7 +653,7 @@ internal class AdminProductPageInputHandler :
                                         remainingStock = data.updateProduct.inventory.remainingStock,
                                         stockStatus = data.updateProduct.inventory.stockStatus,
                                     ),
-                                    shipping = GetProductByIdQuery.Shipping(
+                                    shipping = ProductGetByIdQuery.Shipping(
                                         presetId = data.updateProduct.shipping.presetId,
                                         isPhysicalProduct = data.updateProduct.shipping.isPhysicalProduct,
                                         height = data.updateProduct.shipping.height,
@@ -685,7 +685,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleDelete() {
         val id = getCurrentState().current.id.toString()
         sideJob("handleDeleteUser") {
-            productService.deleteById(id).fold(
+            productService.delete(id).fold(
                 onSuccess = {
                     postEvent(AdminProductPageContract.Events.GoBack)
                 },
@@ -749,6 +749,10 @@ internal class AdminProductPageInputHandler :
             }
         }
     }
+}
+
+private suspend fun InputScope.handleDiscard() {
+    postEvent(AdminProductPageContract.Events.GoBack)
 }
 
 private suspend fun InputScope.handleSetIsFeatured(featured: Boolean) {

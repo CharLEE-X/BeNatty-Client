@@ -1,65 +1,53 @@
-package feature.admin.user.page
+package feature.admin.user.create
 
 import com.apollographql.apollo3.mpp.currentTimeMillis
 import component.localization.getString
 import data.UserGetByIdQuery
-import data.type.Role
 
-object AdminUserPageContract {
+object AdminUserCreateContract {
     data class State(
         val isLoading: Boolean = false,
         val wasEdited: Boolean = false,
         val screenState: ScreenState = ScreenState.New,
 
         val original: UserGetByIdQuery.GetUserById = UserGetByIdQuery.GetUserById(
-            id = "",
-            email = "",
-            role = Role.User,
-            emailVerified = false,
-            details = UserGetByIdQuery.Details(
-                name = "",
-                phone = "",
+            user = UserGetByIdQuery.User(
+                id = "",
+                details = UserGetByIdQuery.Details(
+                    email = "",
+                    firstName = "",
+                    lastName = "",
+                    language = "",
+                    phone = "",
+                ),
+                address = UserGetByIdQuery.Address(
+                    country = "",
+                    firstName = "",
+                    lastName = "",
+                    company = "",
+                    address = "",
+                    apartment = "",
+                    postcode = "",
+                    city = "",
+                ),
+                collectTax = true,
+                marketingEmails = false,
+                marketingSms = false,
+                emailVerified = false,
+                wishlist = emptyList(),
+                createdAt = "",
+                updatedAt = "",
+                __typename = "",
             ),
-            address = UserGetByIdQuery.Address(
-                address = "",
-                additionalInfo = "",
-                postcode = "",
-                city = "",
-                state = "",
-                country = "",
-            ),
-            wishlist = emptyList(),
-            lastActive = null,
-            createdBy = null,
-            createdAt = "",
-            updatedAt = "",
         ),
         val current: UserGetByIdQuery.GetUserById = original,
 
-        // Personal details
-        val nameError: String? = null,
-        val shakeFullName: Boolean = false,
         val emailError: String? = null,
-        val shakeEmail: Boolean = false,
-        val emailVerified: Boolean = false,
-        val phoneError: String? = null,
-        val shakePhone: Boolean = false,
-        val addressError: String? = null,
-        val shakeAddress: Boolean = false,
-        val additionalInformationError: String? = null,
-        val postcodeError: String? = null,
-        val shakePostcode: Boolean = false,
-        val cityError: String? = null,
-        val shakeCity: Boolean = false,
-        val stateError: String? = null,
-        val shakeState: Boolean = false,
-        val countryError: String? = null,
-        val shakeCountry: Boolean = false,
-        val lastActive: String? = null,
+        val emailShake: Boolean = false,
+
         val createdBy: String? = null,
         val createdAt: Long = currentTimeMillis(),
         val updatedAt: Long = currentTimeMillis(),
-        val wishlistSize: Int = 0,
 
         val strings: Strings = Strings()
     )
@@ -74,39 +62,36 @@ object AdminUserPageContract {
         sealed interface OnClick : Inputs {
             data object Create : Inputs
             data object Delete : Inputs
-            data object ResetPassword : Inputs
-            data object SaveEdit : Inputs
-            data object CancelEdit : Inputs
+            data object Save : Inputs
+            data object Discard : Inputs
         }
 
         sealed interface Set : Inputs {
+            data class Loading(val isLoading: Boolean) : Inputs
+
             data class OriginalUser(val user: UserGetByIdQuery.GetUserById) : Inputs
             data class CurrentUser(val user: UserGetByIdQuery.GetUserById) : Inputs
-            data class Loading(val isLoading: Boolean) : Inputs
-            data class StateOfScreen(val screenState: ScreenState) : Inputs
 
             data class Id(val id: String) : Inputs
-            data class FullName(val fullName: String) : Inputs
-            data class NameShake(val shake: Boolean) : Inputs
             data class Email(val email: String) : Inputs
-            data class IsEmailVerified(val isVerified: Boolean) : Inputs
-            data class EmailShake(val shake: Boolean) : Inputs
+            data class DetailFirstName(val firstName: String) : Inputs
+            data class DetailLastName(val lastName: String) : Inputs
+            data class Language(val language: String) : Inputs
             data class Phone(val phone: String) : Inputs
-            data class PhoneShake(val shake: Boolean) : Inputs
-            data class UserRole(val role: Role) : Inputs
-            data class Address(val address: String) : Inputs
-            data class AddressShake(val shake: Boolean) : Inputs
-            data class AdditionalInformation(val additionalInformation: String) : Inputs
-            data class Postcode(val postcode: String) : Inputs
-            data class PostcodeShake(val shake: Boolean) : Inputs
-            data class City(val city: String) : Inputs
-            data class CityShake(val shake: Boolean) : Inputs
-            data class State(val state: String) : Inputs
-            data class StateShake(val shake: Boolean) : Inputs
+
             data class Country(val country: String) : Inputs
-            data class CountryShake(val shake: Boolean) : Inputs
-            data class WishlistSize(val size: Int) : Inputs
-            data class LastActive(val lastActive: String?) : Inputs
+            data class AddressFirstName(val firstName: String) : Inputs
+            data class AddressLastName(val lastName: String) : Inputs
+            data class Company(val company: String) : Inputs
+            data class Address(val address: String) : Inputs
+            data class Apartment(val apartment: String) : Inputs
+            data class City(val city: String) : Inputs
+            data class Postcode(val postcode: String) : Inputs
+
+            data class CollectTax(val collectTax: String) : Inputs
+            data class MarketingEmail(val marketingEmail: String) : Inputs
+            data class MarketingSMS(val marketingSms: String) : Inputs
+
             data class CreatedBy(val createdBy: String?) : Inputs
             data class CreatedAt(val createdAt: Long) : Inputs
             data class UpdatedAt(val updatedAt: Long) : Inputs
@@ -149,14 +134,19 @@ object AdminUserPageContract {
         val wishlist: String = getString(component.localization.Strings.Wishlist),
         val lastActive: String = getString(component.localization.Strings.LastActive),
         val registered: String = getString(component.localization.Strings.Registered),
-        val createUser: String = getString(component.localization.Strings.CreateUser),
+        val newCustomer: String = getString(component.localization.Strings.NewCustomer),
         val unsavedChanges: String = getString(component.localization.Strings.UnsavedChanges),
         val saveChanges: String = getString(component.localization.Strings.SaveChanges),
-        val reset: String = getString(component.localization.Strings.Reset),
+        val dismiss: String = getString(component.localization.Strings.Dismiss),
         val user: String = getString(component.localization.Strings.User),
         val id: String = getString(component.localization.Strings.Id),
         val deleteExplain: String = getString(component.localization.Strings.DeleteExplain),
-    )
+        val addressDesc: String = getString(component.localization.Strings.AddressDesc),
+        val collectTax: String = getString(component.localization.Strings.CollectTax),
+        val marketingEmailsAgreed: String = getString(component.localization.Strings.MarketingEmailsAgreed),
+        val marketingSMSAgreed: String = getString(component.localization.Strings.MarketingSMSAgreed),
+    ) {
+    }
 
     sealed interface ScreenState {
         data object New : ScreenState

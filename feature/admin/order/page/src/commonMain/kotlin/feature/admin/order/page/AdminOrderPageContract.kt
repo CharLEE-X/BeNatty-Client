@@ -16,6 +16,6 @@ object AdminOrderPageContract {
     }
 
     data class Strings(
-        val fullName: String = getString(component.localization.Strings.FullName),
+        val firstName: String = getString(component.localization.Strings.FirstName),
     )
 }

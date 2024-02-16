@@ -42,7 +42,7 @@ kotlin {
 
                 implementation(feature.admin.dashboard)
                 implementation(feature.admin.list)
-                implementation(feature.admin.user.page)
+                implementation(feature.admin.user.create)
                 implementation(feature.admin.product.page)
                 implementation(feature.admin.order.page)
                 implementation(feature.admin.category.page)

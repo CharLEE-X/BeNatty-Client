@@ -7,7 +7,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
-import web.compose.material3.component.FilledButton
 
 
 @Composable
@@ -16,7 +15,7 @@ fun SaveButton(
     disabled: Boolean,
     onClick: () -> Unit,
 ) {
-    FilledButton(
+    AppFilledButton(
         disabled = disabled,
         onClick = { onClick() },
         modifier = Modifier

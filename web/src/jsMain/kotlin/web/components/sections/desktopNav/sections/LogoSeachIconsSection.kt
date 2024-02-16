@@ -28,10 +28,10 @@ import org.jetbrains.compose.web.dom.Span
 import web.components.sections.desktopNav.DesktopNavContract
 import web.components.sections.desktopNav.DesktopNavViewModel
 import web.components.sections.desktopNav.label
+import web.components.widgets.AppIconButton
+import web.components.widgets.AppTextButton
 import web.components.widgets.Logo
 import web.components.widgets.SearchBar
-import web.compose.material3.component.IconButton
-import web.compose.material3.component.TextButton
 import web.compose.material3.component.labs.Menu
 import web.compose.material3.component.labs.MenuItem
 
@@ -51,17 +51,21 @@ fun LogoSearchButtonsSection(
     var showAccountMenu by remember { mutableStateOf(false) }
     val accountMenuAnchor = "account-button"
 
+    val size = 3.em
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.gap(1.em),
     ) {
         Logo(
+            size = size,
             onClick = { onLogoClick() },
         )
         SearchBar(
             value = searchValue,
             onValueChange = onSearchValueChanged,
             placeholder = DesktopNavContract.Strings.search,
+            height = size,
             onEnterPress = {},
             onSearchIconClick = { },
             containerShape = 30.px,
@@ -71,7 +75,7 @@ fun LogoSearchButtonsSection(
             modifier = Modifier.gap(.25.em)
         ) {
             Span(Modifier.position(Position.Relative).toAttrs()) {
-                TextButton(
+                AppTextButton(
                     onClick = {
                         if (!isAuthenticated) onLoginClick() else {
                             showAccountMenu = true
@@ -101,19 +105,19 @@ fun LogoSearchButtonsSection(
                 }
             }
 
-            IconButton(
+            AppIconButton(
                 onClick = { onWishlistClick() },
             ) {
                 MdiFavorite()
             }
 
-            IconButton(
+            AppIconButton(
                 onClick = { onCartClick() },
             ) {
                 MdiShoppingBasket()
             }
 
-            IconButton(
+            AppIconButton(
                 onClick = { colorMode = colorMode.opposite },
             ) {
                 if (colorMode.isLight) MoonIcon() else SunIcon()

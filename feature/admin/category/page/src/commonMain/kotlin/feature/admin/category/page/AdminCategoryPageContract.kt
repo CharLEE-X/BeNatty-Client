@@ -33,15 +33,16 @@ object AdminCategoryPageContract {
             parent = null,
             display = false,
             shippingPreset = GetCategoryByIdQuery.ShippingPreset(
-                isPhysicalProduct = true,
                 weight = "",
                 length = "",
                 width = "",
                 height = "",
+                isPhysicalProduct = true,
             ),
             creator = GetCategoryByIdQuery.Creator(
                 id = "",
-                name = "",
+                firstName = "",
+                lastName = "",
             ),
             createdAt = "",
             updatedAt = "",
@@ -65,7 +66,7 @@ object AdminCategoryPageContract {
             data object SaveEdit : Inputs
             data object CancelEdit : Inputs
             data object GoToParent : Inputs
-            data object GotToUserCreator : Inputs
+            data object GoToUserCreator : Inputs
             data class ParentCategorySelected(val categoryName: String) : Inputs
             data object GoToCreateCategory : Inputs
             data object ImproveDescription : Inputs
@@ -114,7 +115,7 @@ object AdminCategoryPageContract {
     data class Strings(
         val save: String = getString(component.localization.Strings.Save),
         val edit: String = getString(component.localization.Strings.Edit),
-        val cancel: String = getString(component.localization.Strings.Cancel),
+        val discard: String = getString(component.localization.Strings.Discard),
         val delete: String = getString(component.localization.Strings.Delete),
         val createdBy: String = getString(component.localization.Strings.CreatedBy),
         val createdAt: String = getString(component.localization.Strings.CreatedAt),
@@ -128,10 +129,10 @@ object AdminCategoryPageContract {
         val display: String = getString(component.localization.Strings.Display),
         val parentCategory: String = getString(component.localization.Strings.ParentCategory),
         val none: String = getString(component.localization.Strings.None),
-        val noOtherCategoriesToChooseFrom: String = getString(component.localization.Strings.NoOtherCategoriesToChooseFrom),
+        val noCategories: String = getString(component.localization.Strings.NoCategories),
         val unsavedChanges: String = getString(component.localization.Strings.UnsavedChanges),
         val saveChanges: String = getString(component.localization.Strings.SaveChanges),
-        val reset: String = getString(component.localization.Strings.Reset),
+        val dismiss: String = getString(component.localization.Strings.Dismiss),
         val shippingPreset: String = getString(component.localization.Strings.ShippingPreset),
         val height: String = getString(component.localization.Strings.Height),
         val length: String = getString(component.localization.Strings.Length),
@@ -143,7 +144,14 @@ object AdminCategoryPageContract {
         val cm: String? = getString(component.localization.Strings.Cm),
         val improveWithAi: String = getString(component.localization.Strings.ImproveWithAi),
         val deleteExplain: String = getString(component.localization.Strings.DeleteExplain),
-    )
+        val status: String = getString(component.localization.Strings.Status),
+        val insights: String = getString(component.localization.Strings.Insights),
+        val noInsights: String = getString(component.localization.Strings.NoInsights),
+        val info: String = getString(component.localization.Strings.Info),
+        val createdByDesc: String = getString(component.localization.Strings.CreatedByDesc),
+        val categoryOrganization: String = getString(component.localization.Strings.CategoryOrganization),
+    ) {
+    }
 
     sealed interface ScreenState {
         data object New : ScreenState

@@ -1,7 +1,5 @@
-mutation CreateUser($createUserInput: CreateUserInput!) {
-  createUser(createUserInput: $createUserInput) {
-    email
+mutation CreateUser($input: UserCreateInput!) {
+  createUser(input: $input) {
     id
-    createdAt
   }
 }

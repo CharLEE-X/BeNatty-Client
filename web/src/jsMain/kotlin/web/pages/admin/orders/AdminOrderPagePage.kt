@@ -20,6 +20,7 @@ import web.compose.material3.component.Divider
 fun AdminOrderPagePage(
     router: RouterViewModel,
     onError: suspend (String) -> Unit,
+    goToAdminHome: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -35,7 +36,12 @@ fun AdminOrderPagePage(
     AdminLayout(
         title = "Admin Order Page",
         router = router,
-        isLoading = false
+        isLoading = false,
+        showEditedButtons = false,
+        unsavedChangesText = "",
+        saveText = "state.strings.save",
+        discardText = "state.strings.cancel",
+        goToAdminHome = goToAdminHome,
     ) {
         Column(
             modifier = Modifier

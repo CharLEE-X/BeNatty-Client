@@ -1,4 +1,4 @@
-package feature.admin.user.page
+package feature.admin.user.create
 
 import com.copperleaf.ballast.BallastViewModelConfiguration
 import com.copperleaf.ballast.build
@@ -11,15 +11,15 @@ import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
-class AdminUserPageViewModel(
+class AdminUserCreateViewModel(
     userId: String?,
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
     goToUserList: suspend () -> Unit,
 ) : BasicViewModel<
-    AdminUserPageContract.Inputs,
-    AdminUserPageContract.Events,
-    AdminUserPageContract.State,
+    AdminUserCreateContract.Inputs,
+    AdminUserCreateContract.Events,
+    AdminUserCreateContract.State,
     >(
     config = BallastViewModelConfiguration.Builder()
         .apply {
@@ -27,8 +27,8 @@ class AdminUserPageViewModel(
             logger = { PrintlnLogger() }
         }
         .withViewModel(
-            initialState = AdminUserPageContract.State(),
-            inputHandler = AdminUserPageInputHandler(),
+            initialState = AdminUserCreateContract.State(),
+            inputHandler = AdminUserCreateInputHandler(),
             name = TAG,
         )
         .dispatchers(
@@ -38,14 +38,14 @@ class AdminUserPageViewModel(
             interceptorDispatcher = Dispatchers.Default,
         )
         .build(),
-    eventHandler = AdminUserPageEventHandler(
+    eventHandler = AdminUserCreateEventHandler(
         onError = onError,
         goToUserList = goToUserList,
     ),
     coroutineScope = scope,
 ) {
     init {
-        trySend(AdminUserPageContract.Inputs.Init(id = userId))
+        trySend(AdminUserCreateContract.Inputs.Init(id = userId))
     }
 
     companion object {

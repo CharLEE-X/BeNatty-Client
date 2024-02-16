@@ -31,9 +31,9 @@ import components.BottomSheet
 import components.ModalSheet
 import feature.login.LoginContent
 import feature.profile.ProfileContent
-import feature.router.RouterScreen.Home
-import feature.router.RouterScreen.Login
-import feature.router.RouterScreen.Product
+import feature.router.Screen.Home
+import feature.router.Screen.Login
+import feature.router.Screen.Product
 import feature.router.sheets.MenuDrawer
 import feature.updateProfile.UpdateProfileContent
 import theme.safePaddingValues
@@ -44,21 +44,21 @@ internal fun RouterContent(
     snackbarHostState: SnackbarHostState,
     isAuthenticated: Boolean,
     onLogOut: () -> Unit,
-    homeScreen: RouterScreen = Home,
-    loginScreen: RouterScreen = Login,
+    homeScreen: Screen = Home,
+    loginScreen: Screen = Login,
 ) {
     val scope = rememberCoroutineScope()
     val initialRoute = when (isAuthenticated) {
         true -> homeScreen
         false -> loginScreen
     }
-    val router: Router<RouterScreen> = remember(scope) {
+    val router: Router<Screen> = remember(scope) {
         RouterViewModel(
             viewModelScope = scope,
             initialRoute = initialRoute,
         )
     }
-    val routerState: Backstack<RouterScreen> by router.observeStates().collectAsState()
+    val routerState: Backstack<Screen> by router.observeStates().collectAsState()
     val onError: suspend (String) -> Unit = { snackbarHostState.showSnackbar(it) }
 
     LaunchedEffect(isAuthenticated) {
@@ -114,8 +114,8 @@ internal fun RouterContent(
                 .fillMaxSize(),
         ) {
             routerState.renderCurrentDestination(
-                route = { routerScreen: RouterScreen ->
-                    when (routerScreen) {
+                route = { screen: Screen ->
+                    when (screen) {
                         Login -> LoginContent(
                             onError = onError,
                             onAuthenticated = { router.trySend(ReplaceTopDestination(homeScreen.matcher.routeFormat)) },
@@ -131,17 +131,17 @@ internal fun RouterContent(
                             isModalShowing = { isModalShowing = it },
                         )
 
-                        RouterScreen.Catalogue -> TODO()
-                        RouterScreen.Cart -> TODO()
-                        RouterScreen.Checkout -> TODO()
-                        RouterScreen.Order -> TODO()
-                        RouterScreen.Payment -> TODO()
-                        RouterScreen.Profile -> TODO()
-                        RouterScreen.Settings -> TODO()
-                        RouterScreen.About -> TODO()
-                        RouterScreen.Contact -> TODO()
-                        RouterScreen.HelpAndFAQ -> TODO()
-                        RouterScreen.Blog -> TODO()
+                        Screen.Catalogue -> TODO()
+                        Screen.Cart -> TODO()
+                        Screen.Checkout -> TODO()
+                        Screen.Order -> TODO()
+                        Screen.Payment -> TODO()
+                        Screen.Profile -> TODO()
+                        Screen.Settings -> TODO()
+                        Screen.About -> TODO()
+                        Screen.Contact -> TODO()
+                        Screen.HelpAndFAQ -> TODO()
+                        Screen.Blog -> TODO()
                     }
                 },
                 notFound = { router.trySend(GoToDestination(Login.matcher.routeFormat)) },

@@ -7,7 +7,6 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiCancel
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEdit
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.px
-import web.compose.material3.component.FilledButton
 
 
 @Composable
@@ -19,7 +18,7 @@ fun EditCancelButton(
     cancel: () -> Unit,
     width: Int = 150,
 ) {
-    FilledButton(
+    AppFilledButton(
         onClick = { if (isEditing) cancel() else edit() },
         leadingIcon = { if (isEditing) MdiCancel() else MdiEdit() },
         modifier = Modifier.width(width.px),

@@ -5,7 +5,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import com.copperleaf.ballast.navigation.routing.RouterContract
+import com.copperleaf.ballast.navigation.routing.RouterContract.Inputs.GoToDestination
+import com.copperleaf.ballast.navigation.routing.RouterContract.Inputs.ReplaceTopDestination
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -13,8 +14,8 @@ import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.padding
-import feature.router.RouterScreen
 import feature.router.RouterViewModel
+import feature.router.Screen
 import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.value
@@ -31,49 +32,24 @@ import web.compose.material3.component.Divider
 fun Footer(
     router: RouterViewModel,
     onError: suspend (String) -> Unit,
-    onGoToAdminDashboard: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
         FooterViewModel(
             scope = scope,
             onError = onError,
-            goToAboutUs = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.About.matcher.routeFormat))
-            },
-            goToAccessibility = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Accessibility.matcher.routeFormat))
-            },
-            goToCareer = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Career.matcher.routeFormat))
-            },
-            goToContactUs = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Contact.matcher.routeFormat))
-            },
-            goToCyberSecurity = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.CyberSecurity.matcher.routeFormat))
-            },
-            goToFAQs = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.HelpAndFAQ.matcher.routeFormat))
-            },
-            goToPress = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Press.matcher.routeFormat))
-            },
-            goToPrivacyPolicy = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.PrivacyPolicy.matcher.routeFormat))
-            },
-            goToReturns = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Returns.matcher.routeFormat))
-            },
-            goToShipping = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Shipping.matcher.routeFormat))
-            },
-            goToTermsOfService = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.TC.matcher.routeFormat))
-            },
-            goToTrackOrder = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.TrackOrder.matcher.routeFormat))
-            },
+            goToAboutUs = { router.trySend(GoToDestination(Screen.About.route)) },
+            goToAccessibility = { router.trySend(GoToDestination(Screen.Accessibility.route)) },
+            goToCareer = { router.trySend(GoToDestination(Screen.Career.route)) },
+            goToContactUs = { router.trySend(GoToDestination(Screen.Contact.route)) },
+            goToCyberSecurity = { router.trySend(GoToDestination(Screen.CyberSecurity.route)) },
+            goToFAQs = { router.trySend(GoToDestination(Screen.HelpAndFAQ.route)) },
+            goToPress = { router.trySend(GoToDestination(Screen.Press.route)) },
+            goToPrivacyPolicy = { router.trySend(GoToDestination(Screen.PrivacyPolicy.route)) },
+            goToReturns = { router.trySend(GoToDestination(Screen.Returns.route)) },
+            goToShipping = { router.trySend(GoToDestination(Screen.Shipping.route)) },
+            goToTermsOfService = { router.trySend(GoToDestination(Screen.TC.route)) },
+            goToTrackOrder = { router.trySend(GoToDestination(Screen.TrackOrder.route)) },
         )
     }
     val state by vm.observeStates().collectAsState()
@@ -107,7 +83,7 @@ fun Footer(
                 vm = vm,
                 state = state,
                 modifier = Modifier.weight(1f),
-                onGoToAdminDashboard = onGoToAdminDashboard,
+                onGoToAdminDashboard = { router.trySend(ReplaceTopDestination(Screen.AdminHome.route)) }
             )
             FooterDeliverTo(
                 vm = vm,

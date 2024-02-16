@@ -9,8 +9,8 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.silk.components.forms.Button
 import com.varabyte.kobweb.silk.components.text.SpanText
-import feature.router.RouterScreen
 import feature.router.RouterViewModel
+import feature.router.Screen
 
 @Suppress("UNUSED_PARAMETER")
 @Composable
@@ -22,7 +22,7 @@ fun CartPage(
     val goBack = { router.trySend(RouterContract.Inputs.GoBack()) }
     val goToCheckout = {
         router.trySend(
-            RouterContract.Inputs.GoToDestination(RouterScreen.Checkout.matcher.routeFormat)
+            RouterContract.Inputs.GoToDestination(Screen.Checkout.matcher.routeFormat)
         )
     }
     Box(

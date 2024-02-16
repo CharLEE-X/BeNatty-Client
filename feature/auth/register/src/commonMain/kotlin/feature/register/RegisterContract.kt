@@ -66,7 +66,7 @@ object RegisterContract : KoinComponent {
         val signUp: String = getString(component.localization.Strings.SignUp),
         val signUpWithGoogle: String = getString(component.localization.Strings.SignUpWithGoogle),
         val signUpWithFacebook: String = getString(component.localization.Strings.SignUpWithFacebook),
-        val name: String = getString(component.localization.Strings.FullName),
+        val name: String = getString(component.localization.Strings.FirstName),
         val repeatPassword: String = getString(component.localization.Strings.RepeatPassword),
         val newsletter: String = getString(component.localization.Strings.Newsletter),
         val alreadyHaveAnAccount: String = getString(component.localization.Strings.AlreadyHaveAnAccount),

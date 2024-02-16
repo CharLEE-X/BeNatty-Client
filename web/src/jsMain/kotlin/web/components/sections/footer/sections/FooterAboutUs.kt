@@ -12,7 +12,7 @@ import theme.MaterialTheme
 import theme.roleStyle
 import web.components.sections.footer.FooterContract
 import web.components.sections.footer.FooterViewModel
-import web.compose.material3.component.TextButton
+import web.components.widgets.AppTextButton
 
 @Composable
 fun FooterAboutUs(
@@ -31,27 +31,27 @@ fun FooterAboutUs(
                 .fontWeight(FontWeight.Bold)
                 .margin(bottom = 1.em, left = 1.em),
         )
-        TextButton(
+        AppTextButton(
             onClick = { vm.trySend(FooterContract.Inputs.OnAboutUsClick) },
         ) {
             SpanText(state.strings.aboutUs)
         }
-        TextButton(
+        AppTextButton(
             onClick = { vm.trySend(FooterContract.Inputs.OnCareerClick) },
         ) {
             SpanText(state.strings.career)
         }
-        TextButton(
+        AppTextButton(
             onClick = { vm.trySend(FooterContract.Inputs.OnCyberSecurityClick) },
         ) {
             SpanText(state.strings.cyberSecurity)
         }
-        TextButton(
+        AppTextButton(
             onClick = { vm.trySend(FooterContract.Inputs.OnPressClick) },
         ) {
             SpanText(state.strings.press)
         }
-        TextButton(
+        AppTextButton(
             onClick = { onGoToAdminDashboard() },
         ) {
             SpanText("Admin")

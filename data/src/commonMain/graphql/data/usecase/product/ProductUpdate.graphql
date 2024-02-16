@@ -1,37 +1,34 @@
-mutation UpdateProduct($input: ProductUpdateInput!) {
+mutation ProductUpdate($input: ProductUpdateInput!) {
   updateProduct(input: $input) {
-    allowReviews
-    categoryId
-    createdAt
-    createdBy
-    description
     id
-    inventory {
-      backorderStatus
-      lowStockThreshold
-      remainingStock
-      stockStatus
-      trackQuantity
-      useGlobalTracking
-    }
-    isFeatured
-    media
+    title
+    description
     postStatus
+    media
+    categoryId
+    tags
+    isFeatured
+    allowReviews
     pricing {
-      chargeTax
       price
       regularPrice
+      chargeTax
+    }
+    inventory {
+      trackQuantity
+      useGlobalTracking
+      remainingStock
+      stockStatus
+      lowStockThreshold
+      backorderStatus
     }
     shipping {
-      height
-      isPhysicalProduct
-      length
       presetId
+      isPhysicalProduct
       weight
+      length
       width
+      height
     }
-    tags
-    title
-    updatedAt
   }
 }

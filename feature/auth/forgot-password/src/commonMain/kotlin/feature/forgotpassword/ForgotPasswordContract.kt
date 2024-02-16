@@ -37,7 +37,7 @@ object ForgotPasswordContract : KoinComponent {
         val forgotPassword: String = getString(component.localization.Strings.ForgotPassword),
         val forgotPasswordDescription: String = getString(component.localization.Strings.ForgotPasswordDescription),
         val email: String = getString(component.localization.Strings.Email),
-        val getResetLink: String = getString(component.localization.Strings.GetResetLink),
+        val getAResetLink: String = getString(component.localization.Strings.GetAResetLink),
         val backTo: String = getString(component.localization.Strings.BackTo),
         val login: String = getString(component.localization.Strings.Login),
         val checkEmail: String = "Check your email",

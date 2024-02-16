@@ -1,23 +1,18 @@
 package data.service
 
 import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.watch
 import data.CreateUserMutation
 import data.DeleteUserByIdMutation
+import data.GetUserByIdQuery
+import data.UpdateUserMutation
 import data.UserCheckPasswordMatchQuery
-import data.UserGetByIdQuery
-import data.UserGetQuery
-import data.UserUpdateMutation
 import data.UsersGetAllPageQuery
-import data.type.AddressInput
-import data.type.CreateUserInput
 import data.type.PageInput
-import data.type.PersonalDetailsInput
-import data.type.Role
 import data.type.SortDirection
+import data.type.UserCreateInput
 import data.type.UserUpdateInput
 import data.utils.handle
 import data.utils.skipIfNull
@@ -25,9 +20,27 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 interface UserService {
-    suspend fun create(input: CreateUserInput): Result<CreateUserMutation.Data>
-    suspend fun get(): Flow<Result<UserGetQuery.Data>>
-    suspend fun getById(id: String): Flow<Result<UserGetByIdQuery.Data>>
+    suspend fun create(
+        email: String,
+        detailsFirstName: String?,
+        detailsLastName: String?,
+        language: String?,
+        detailPhone: String?,
+        country: String?,
+        addressFirstName: String?,
+        addressLastName: String?,
+        addressPhone: String?,
+        company: String?,
+        address: String?,
+        apartment: String?,
+        city: String?,
+        postcode: String?,
+        collectTax: Boolean,
+        marketingEmails: Boolean,
+        marketingSms: Boolean,
+    ): Result<CreateUserMutation.Data>
+
+    suspend fun getById(id: String): Flow<Result<GetUserByIdQuery.Data>>
     suspend fun getAsPage(
         page: Int,
         size: Int,
@@ -40,39 +53,75 @@ interface UserService {
 
     suspend fun update(
         id: String,
-        email: String? = null,
-        password: String? = null,
-        role: Role? = null,
-        name: String? = null,
-        phone: String? = null,
-        address: String? = null,
-        additionalInfo: String? = null,
-        postcode: String? = null,
-        city: String? = null,
-        state: String? = null,
-        country: String? = null,
-    ): Result<UserUpdateMutation.Data>
+        email: String?,
+        detailsFirstName: String?,
+        detailsLastName: String?,
+        language: String?,
+        detailPhone: String?,
+        country: String?,
+        addressFirstName: String?,
+        addressLastName: String?,
+        addressPhone: String?,
+        company: String?,
+        address: String?,
+        apartment: String?,
+        city: String?,
+        postcode: String?,
+        collectTax: Boolean?,
+        marketingEmails: Boolean?,
+        marketingSms: Boolean?,
+        password: String?,
+    ): Result<UpdateUserMutation.Data>
 
     suspend fun checkPasswordMatch(oldPassword: String, newPassword: String): Result<UserCheckPasswordMatchQuery.Data>
 }
 
 internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserService {
-
-    override suspend fun create(input: CreateUserInput): Result<CreateUserMutation.Data> {
+    override suspend fun create(
+        email: String,
+        detailsFirstName: String?,
+        detailsLastName: String?,
+        language: String?,
+        detailPhone: String?,
+        country: String?,
+        addressFirstName: String?,
+        addressLastName: String?,
+        addressPhone: String?,
+        company: String?,
+        address: String?,
+        apartment: String?,
+        city: String?,
+        postcode: String?,
+        collectTax: Boolean,
+        marketingEmails: Boolean,
+        marketingSms: Boolean,
+    ): Result<CreateUserMutation.Data> {
+        val input = UserCreateInput(
+            email = email,
+            detailFirstName = detailsFirstName.skipIfNull(),
+            detailLastName = detailsLastName.skipIfNull(),
+            language = language.skipIfNull(),
+            detailPhone = detailPhone.skipIfNull(),
+            country = country.skipIfNull(),
+            addressFirstName = addressFirstName.skipIfNull(),
+            addressLastName = addressLastName.skipIfNull(),
+            addressPhone = addressPhone.skipIfNull(),
+            company = company.skipIfNull(),
+            address = address.skipIfNull(),
+            apartment = apartment.skipIfNull(),
+            city = city.skipIfNull(),
+            postcode = postcode.skipIfNull(),
+            collectTax = collectTax,
+            marketingEmails = marketingEmails,
+            marketingSms = marketingSms,
+        )
         return apolloClient.mutation(CreateUserMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }
 
-    override suspend fun get(): Flow<Result<UserGetQuery.Data>> {
-        return apolloClient.query(UserGetQuery())
-            .fetchPolicy(FetchPolicy.CacheAndNetwork)
-            .watch()
-            .map { it.handle() }
-    }
-
-    override suspend fun getById(id: String): Flow<Result<UserGetByIdQuery.Data>> {
-        return apolloClient.query(UserGetByIdQuery(id))
+    override suspend fun getById(id: String): Flow<Result<GetUserByIdQuery.Data>> {
+        return apolloClient.query(GetUserByIdQuery(id))
             .fetchPolicy(FetchPolicy.CacheAndNetwork)
             .watch()
             .map { it.handle() }
@@ -106,54 +155,46 @@ internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserSer
     override suspend fun update(
         id: String,
         email: String?,
-        password: String?,
-        role: Role?,
-        name: String?,
-        phone: String?,
-        address: String?,
-        additionalInfo: String?,
-        postcode: String?,
-        city: String?,
-        state: String?,
+        detailsFirstName: String?,
+        detailsLastName: String?,
+        language: String?,
+        detailPhone: String?,
         country: String?,
-    ): Result<UserUpdateMutation.Data> {
-        val detailsInput = if (name == null && phone == null) {
-            Optional.absent()
-        } else {
-            Optional.present(
-                PersonalDetailsInput(
-                    name = name.skipIfNull(),
-                    phone = phone.skipIfNull(),
-                )
-            )
-        }
-        val addressInput = if (
-            address == null && additionalInfo == null && postcode == null &&
-            city == null && state == null && country == null
-        ) {
-            Optional.absent()
-        } else {
-            Optional.present(
-                AddressInput(
-                    address = address.skipIfNull(),
-                    additionalInfo = additionalInfo.skipIfNull(),
-                    postcode = postcode.skipIfNull(),
-                    city = city.skipIfNull(),
-                    state = state.skipIfNull(),
-                    country = country.skipIfNull(),
-                )
-            )
-        }
+        addressFirstName: String?,
+        addressLastName: String?,
+        addressPhone: String?,
+        company: String?,
+        address: String?,
+        apartment: String?,
+        city: String?,
+        postcode: String?,
+        collectTax: Boolean?,
+        marketingEmails: Boolean?,
+        marketingSms: Boolean?,
+        password: String?,
+    ): Result<UpdateUserMutation.Data> {
         val input = UserUpdateInput(
             id = id,
             email = email.skipIfNull(),
             password = password.skipIfNull(),
-            role = role.skipIfNull(),
-            details = detailsInput,
-            address = addressInput,
+            address = address.skipIfNull(),
+            addressFirstName = addressFirstName.skipIfNull(),
+            addressLastName = addressLastName.skipIfNull(),
+            apartment = apartment.skipIfNull(),
+            city = city.skipIfNull(),
+            collectTax = collectTax.skipIfNull(),
+            company = company.skipIfNull(),
+            country = country.skipIfNull(),
+            detailsFirstName = detailsFirstName.skipIfNull(),
+            detailsLastName = detailsLastName.skipIfNull(),
+            marketingEmails = marketingEmails.skipIfNull(),
+            marketingSms = marketingSms.skipIfNull(),
+            detailsPhone = detailPhone.skipIfNull(),
+            postcode = postcode.skipIfNull(),
+            addressPhone = addressPhone.skipIfNull(),
         )
 
-        return apolloClient.mutation(UserUpdateMutation(input))
+        return apolloClient.mutation(UpdateUserMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }

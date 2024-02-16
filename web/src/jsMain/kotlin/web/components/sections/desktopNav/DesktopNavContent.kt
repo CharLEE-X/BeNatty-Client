@@ -17,8 +17,9 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.translateY
-import feature.router.RouterScreen
 import feature.router.RouterViewModel
+import feature.router.Screen
+import feature.router.goHome
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.CSSSizeValue
 import org.jetbrains.compose.web.css.CSSUnit
@@ -53,10 +54,10 @@ fun DesktopNav(
         DesktopNavViewModel(
             scope = scope,
             onError = onError,
-            goToOrders = { router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Order.matcher.routeFormat)) },
-            goToProfile = { router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Profile.matcher.routeFormat)) },
-            goToReturns = { router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Returns.matcher.routeFormat)) },
-            goToWishlist = { router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Wishlist.matcher.routeFormat)) },
+            goToOrders = { router.trySend(RouterContract.Inputs.GoToDestination(Screen.Order.matcher.routeFormat)) },
+            goToProfile = { router.trySend(RouterContract.Inputs.GoToDestination(Screen.Profile.matcher.routeFormat)) },
+            goToReturns = { router.trySend(RouterContract.Inputs.GoToDestination(Screen.Returns.matcher.routeFormat)) },
+            goToWishlist = { router.trySend(RouterContract.Inputs.GoToDestination(Screen.Wishlist.matcher.routeFormat)) },
             logOut = logOut,
         )
     }
@@ -73,7 +74,7 @@ fun DesktopNav(
         PromoSpace(
             currentLanguageImageUrl = currentLanguageImageUrl,
             onHelpAndFaqClick = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.HelpAndFAQ.matcher.routeFormat))
+                router.trySend(RouterContract.Inputs.GoToDestination(Screen.HelpAndFAQ.matcher.routeFormat))
             },
             onCurrentAndLanguageClick = onCurrencyAndLanguageClick,
             bgColor = MaterialTheme.colors.mdSysColorSecondaryContainer.value(),
@@ -88,17 +89,15 @@ fun DesktopNav(
             isAuthenticated = isAuthenticated,
             searchValue = searchValue,
             onSearchValueChanged = onSearchValueChanged,
-            onLogoClick = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Home.matcher.routeFormat))
-            },
+            onLogoClick = { router.goHome() },
             onLoginClick = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Login.matcher.routeFormat))
+                router.trySend(RouterContract.Inputs.GoToDestination(Screen.Login.matcher.routeFormat))
             },
             onWishlistClick = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Wishlist.matcher.routeFormat))
+                router.trySend(RouterContract.Inputs.GoToDestination(Screen.Wishlist.matcher.routeFormat))
             },
             onCartClick = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Cart.matcher.routeFormat))
+                router.trySend(RouterContract.Inputs.GoToDestination(Screen.Cart.matcher.routeFormat))
             },
             modifier = Modifier
                 .fillMaxWidth(70.percent)

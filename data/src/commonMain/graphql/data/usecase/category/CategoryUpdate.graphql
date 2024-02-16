@@ -9,6 +9,7 @@ mutation UpdateCategory($input: CategoryUpdateInput!) {
     parentId
     updatedAt
     shippingPreset {
+      isPhysicalProduct
       weight
       length
       width

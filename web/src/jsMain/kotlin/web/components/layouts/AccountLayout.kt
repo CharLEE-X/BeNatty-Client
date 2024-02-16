@@ -125,7 +125,7 @@ fun SideNavMainItem(
             .onClick { onMenuItemClicked() }
             .onMouseEnter { hovered = true }
             .onMouseLeave { hovered = false }
-            .borderRadius(3.em)
+            .borderRadius(0.5.em)
             .transition(CSSTransition("background-color", SmoothColorTransitionDurationVar.value()))
             .cursor(Cursor.Pointer)
     ) {
@@ -175,7 +175,7 @@ fun SideNavSubItem(
             .onClick { onMenuItemClicked() }
             .onMouseEnter { hovered = true }
             .onMouseLeave { hovered = false }
-            .borderRadius(3.em)
+            .borderRadius(0.5.em)
             .transition(CSSTransition("background-color", SmoothColorTransitionDurationVar.value()))
             .cursor(Cursor.Pointer)
     ) {

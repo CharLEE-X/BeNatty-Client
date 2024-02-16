@@ -49,7 +49,7 @@ fun AppEntry(content: @Composable () -> Unit) {
             modules(rootModule)
         }
 
-        @Suppress("unused")
+        @Suppress("UNUSED_VARIABLE")
         val colorScheme = when (colorMode) {
             ColorMode.LIGHT -> appLightColorScheme
             ColorMode.DARK -> appDarkColorScheme

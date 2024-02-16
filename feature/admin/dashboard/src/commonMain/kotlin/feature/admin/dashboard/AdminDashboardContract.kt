@@ -27,7 +27,7 @@ object AdminDashboardContract {
 
     data class Strings(
         val users: String = getString(component.localization.Strings.Users),
-        val dashboard: String = getString(component.localization.Strings.Dashboard),
+        val home: String = getString(component.localization.Strings.Home),
         val stats: String = getString(component.localization.Strings.Stats),
         val products: String = getString(component.localization.Strings.Products),
         val orders: String = getString(component.localization.Strings.Orders),

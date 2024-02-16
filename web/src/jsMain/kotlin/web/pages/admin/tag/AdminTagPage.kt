@@ -14,13 +14,13 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.thenIf
 import feature.admin.tag.page.AdminTagPageContract
 import feature.admin.tag.page.AdminTagPageViewModel
-import feature.router.RouterScreen
 import feature.router.RouterViewModel
+import feature.router.Screen
 import web.components.layouts.AdminLayout
 import web.components.layouts.DetailPageLayout
-import web.components.layouts.ImproveWithAiRow
+import web.components.layouts.ImproveWithButton
+import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.CardSection
-import web.components.widgets.CommonTextField
 import web.components.widgets.CreatorSection
 import web.components.widgets.HasChangesWidget
 import web.components.widgets.SaveButton
@@ -31,6 +31,7 @@ fun AdminTagPage(
     router: RouterViewModel,
     id: String?,
     onError: suspend (String) -> Unit,
+    goToAdminHome: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -41,14 +42,14 @@ fun AdminTagPage(
             goToUserList = {
                 router.trySend(
                     RouterContract.Inputs.GoToDestination(
-                        RouterScreen.AdminTagList.matcher.routeFormat
+                        Screen.AdminTagList.matcher.routeFormat
                     )
                 )
             },
             goToUser = { id ->
                 router.trySend(
                     RouterContract.Inputs.GoToDestination(
-                        RouterScreen.AdminUserPageExisting.directions()
+                        Screen.AdminCustomerProfile.directions()
                             .pathParameter("id", id)
                             .build()
                     )
@@ -57,7 +58,7 @@ fun AdminTagPage(
             goToTag = { id ->
                 router.trySend(
                     RouterContract.Inputs.GoToDestination(
-                        RouterScreen.AdminTagPageExisting.directions()
+                        Screen.AdminTagPageExisting.directions()
                             .pathParameter("id", id)
                             .build()
                     )
@@ -77,12 +78,20 @@ fun AdminTagPage(
         title = title,
         router = router,
         isLoading = state.isLoading,
+        showEditedButtons = state.wasEdited || state.screenState is AdminTagPageContract.ScreenState.New,
+        isSaveEnabled = state.wasEdited,
+        unsavedChangesText = state.strings.unsavedChanges,
+        saveText = state.strings.save,
+        discardText = state.strings.discard,
+        onCancel = { vm.trySend(AdminTagPageContract.Inputs.OnClick.CancelEdit) },
+        onSave = { vm.trySend(AdminTagPageContract.Inputs.OnClick.SaveEdit) },
+        goToAdminHome = goToAdminHome,
         overlay = {
             HasChangesWidget(
                 hasChanges = state.wasEdited,
                 messageText = state.strings.unsavedChanges,
                 saveText = state.strings.save,
-                resetText = state.strings.reset,
+                resetText = state.strings.dismiss,
                 onSave = { vm.trySend(AdminTagPageContract.Inputs.OnClick.SaveEdit) },
                 onCancel = { vm.trySend(AdminTagPageContract.Inputs.OnClick.CancelEdit) },
             )
@@ -90,8 +99,6 @@ fun AdminTagPage(
     ) {
         DetailPageLayout(
             title = title,
-            id = state.current.id.toString(),
-            name = state.current.name.ifEmpty { null },
             showDelete = state.screenState !is AdminTagPageContract.ScreenState.New,
             deleteText = state.strings.delete,
             createdAtText = state.strings.createdAt,
@@ -99,28 +106,36 @@ fun AdminTagPage(
             createdAtValue = state.current.createdAt,
             updatedAtValue = state.current.updatedAt,
             onDeleteClick = { vm.trySend(AdminTagPageContract.Inputs.OnClick.Delete) },
+            onGoBack = {
+                router.trySend(
+                    RouterContract.Inputs.GoToDestination(
+                        Screen.AdminCategoryList.matcher.routeFormat
+                    )
+                )
+            }
         ) {
             CardSection(title = state.strings.details) {
-                ImproveWithAiRow(
-                    tooltipText = state.strings.improveWithAi,
-                    onImproveClick = { vm.trySend(AdminTagPageContract.Inputs.OnClick.ImproveName) }
-                ) {
-                    CommonTextField(
-                        value = state.current.name,
-                        onValueChange = { vm.trySend(AdminTagPageContract.Inputs.Set.Name(it)) },
-                        label = state.strings.name,
-                        errorMsg = state.nameError,
-                        icon = null,
-                        shake = state.shakeName,
-                        required = true,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .thenIf(
-                                state.screenState is AdminTagPageContract.ScreenState.New,
-                                Modifier.onEnterKeyDown { vm.trySend(AdminTagPageContract.Inputs.OnClick.Create) }
-                            )
-                    )
-                }
+                AppOutlinedTextField(
+                    value = state.current.name,
+                    onValueChange = { vm.trySend(AdminTagPageContract.Inputs.Set.Name(it)) },
+                    label = state.strings.name,
+                    errorText = state.nameError,
+                    leadingIcon = null,
+                    shake = state.shakeName,
+                    required = true,
+                    trailingIcon = {
+                        ImproveWithButton(
+                            tooltipText = state.strings.improveWithAi,
+                            onImproveClick = { vm.trySend(AdminTagPageContract.Inputs.OnClick.ImproveName) }
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .thenIf(
+                            state.screenState is AdminTagPageContract.ScreenState.New,
+                            Modifier.onEnterKeyDown { vm.trySend(AdminTagPageContract.Inputs.OnClick.Create) }
+                        )
+                )
                 if (state.screenState is AdminTagPageContract.ScreenState.New) {
                     SaveButton(
                         text = state.strings.create,
@@ -130,7 +145,7 @@ fun AdminTagPage(
                 } else {
                     CreatorSection(
                         title = state.strings.createdBy,
-                        creatorName = state.current.creator.name,
+                        creatorName = "${state.current.creator.firstName} ${state.current.creator.lastName}",
                         onClick = { vm.trySend(AdminTagPageContract.Inputs.OnClick.GotToUserCreator) },
                     )
                 }

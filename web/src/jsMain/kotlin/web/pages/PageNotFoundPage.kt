@@ -12,7 +12,7 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 @Composable
 fun PageNotFoundPage(
     url: String,
-    onGoBackClick: () -> Unit,
+    goBack: () -> Unit,
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -25,7 +25,7 @@ fun PageNotFoundPage(
             SpanText("Ups.. we couldn't find the page you were looking for.")
             SpanText(url)
             Button(
-                onClick = { onGoBackClick() }
+                onClick = { goBack() }
             ) {
                 SpanText("Go back")
             }

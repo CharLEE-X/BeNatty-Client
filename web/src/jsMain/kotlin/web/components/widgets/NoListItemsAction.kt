@@ -7,10 +7,10 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
-import web.compose.material3.component.OutlinedButton
 
 @Composable
 fun NoItemsListAction(
+    modifier: Modifier,
     pressText: String,
     createText: String,
     toStartText: String,
@@ -18,10 +18,10 @@ fun NoItemsListAction(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.gap(0.5.em)
+        modifier = modifier.gap(0.5.em)
     ) {
         SpanText(text = pressText)
-        OutlinedButton(
+        AppOutlinedButton(
             onClick = { onClick() },
         ) {
             SpanText(text = createText.lowercase())

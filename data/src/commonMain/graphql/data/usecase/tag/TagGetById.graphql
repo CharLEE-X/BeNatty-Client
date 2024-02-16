@@ -4,7 +4,8 @@ query GetTagById($getTagByIdId: ObjectId!) {
     name
     creator {
       id
-      name
+      firstName
+      lastName
     }
     createdAt
     updatedAt

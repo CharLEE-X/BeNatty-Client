@@ -12,7 +12,7 @@ import theme.MaterialTheme
 import theme.roleStyle
 import web.components.sections.footer.FooterContract
 import web.components.sections.footer.FooterViewModel
-import web.compose.material3.component.TextButton
+import web.components.widgets.AppTextButton
 
 @Composable
 fun FooterHelp(vm: FooterViewModel, state: FooterContract.State, modifier: Modifier = Modifier) {
@@ -26,27 +26,27 @@ fun FooterHelp(vm: FooterViewModel, state: FooterContract.State, modifier: Modif
                 .fontWeight(FontWeight.Bold)
                 .margin(bottom = 1.em, left = 1.em),
         )
-        TextButton(
+        AppTextButton(
             onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
         ) {
             SpanText(state.strings.trackOrder)
         }
-        TextButton(
+        AppTextButton(
             onClick = { vm.trySend(FooterContract.Inputs.OnShippingClick) },
         ) {
             SpanText(state.strings.shipping)
         }
-        TextButton(
+        AppTextButton(
             onClick = { vm.trySend(FooterContract.Inputs.OnReturnsClick) },
         ) {
             SpanText(state.strings.returns)
         }
-        TextButton(
+        AppTextButton(
             onClick = { vm.trySend(FooterContract.Inputs.OnFAQsClick) },
         ) {
             SpanText(state.strings.faQs)
         }
-        TextButton(
+        AppTextButton(
             onClick = { vm.trySend(FooterContract.Inputs.OnContactUsClick) },
         ) {
             SpanText(state.strings.contactUs)

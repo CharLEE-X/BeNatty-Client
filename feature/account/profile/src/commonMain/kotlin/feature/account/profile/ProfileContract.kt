@@ -1,12 +1,13 @@
 package feature.account.profile
 
 import component.localization.getString
-import data.UserGetQuery
+import data.GetUserByIdQuery
+import data.type.Role
 
 object ProfileContract {
     data class State(
         // Personal details
-        val fullName: String = "",
+        val detailsFirstName: String = "",
         val fullNameError: String? = null,
         val shakeFullName: Boolean = false,
 
@@ -59,22 +60,37 @@ object ProfileContract {
         val isAddressEditing: Boolean = false,
         val isSaveAddressButtonDisabled: Boolean = true,
 
-        val original: UserGetQuery.GetUser = UserGetQuery.GetUser(
-            id = "",
-            email = email,
-            details = UserGetQuery.Details(
-                name = fullName,
-                phone = phone,
+        val original: GetUserByIdQuery.GetUserById = GetUserByIdQuery.GetUserById(
+            user = GetUserByIdQuery.User(
+                id = "",
+                details = GetUserByIdQuery.Details(
+                    email = email,
+                    firstName = detailsFirstName,
+                    lastName = "lastName",
+                    language = "language",
+                    phone = phone,
+                ),
+                address = GetUserByIdQuery.Address(
+                    address = address,
+                    postcode = postcode,
+                    city = city,
+                    country = country,
+                    apartment = "apartment",
+                    company = "company",
+                    firstName = "firstName",
+                    lastName = "lastName", phone = null,
+
+                    ),
+                createdAt = "createdAt",
+                collectTax = true,
+                marketingEmails = true,
+                marketingSms = true,
+                emailVerified = true,
+                updatedAt = "updatedAt",
+                wishlist = emptyList(),
+                role = Role.User,
+                __typename = "__typename",
             ),
-            address = UserGetQuery.Address(
-                address = address,
-                additionalInfo = additionalInformation,
-                postcode = postcode,
-                city = city,
-                state = state,
-                country = country,
-            ),
-            __typename = "",
         ),
 
         val strings: Strings = Strings()
@@ -82,9 +98,9 @@ object ProfileContract {
 
     sealed interface Inputs {
         data object GetUserProfile : Inputs
-        data class SetUserProfile(val user: UserGetQuery.GetUser) : Inputs
+        data class SetUserProfile(val user: GetUserByIdQuery.GetUserById) : Inputs
 
-        data class SetFullName(val fullName: String) : Inputs
+        data class SetDetailsFullName(val fullName: String) : Inputs
         data class SetFullNameShake(val shake: Boolean) : Inputs
         data class SetEmail(val email: String) : Inputs
         data class SetEmailShake(val shake: Boolean) : Inputs
@@ -126,8 +142,8 @@ object ProfileContract {
     data class Strings(
         val save: String = getString(component.localization.Strings.Save),
         val edit: String = getString(component.localization.Strings.Edit),
-        val cancel: String = getString(component.localization.Strings.Cancel),
-        val fullName: String = getString(component.localization.Strings.FullName),
+        val discard: String = getString(component.localization.Strings.Discard),
+        val firstName: String = getString(component.localization.Strings.FirstName),
         val email: String = getString(component.localization.Strings.Email),
         val phone: String = getString(component.localization.Strings.Phone),
         val personalDetails: String = getString(component.localization.Strings.PersonalDetails),
@@ -135,10 +151,10 @@ object ProfileContract {
         val oldPassword: String = getString(component.localization.Strings.OldPassword),
         val newPassword: String = getString(component.localization.Strings.NewPassword),
         val address: String = getString(component.localization.Strings.Address),
-        val additionalInformation: String = getString(component.localization.Strings.AdditionalInformation),
-        val postcode: String = getString(component.localization.Strings.PostalCode),
+        val company: String = getString(component.localization.Strings.Company),
+        val postcode: String = getString(component.localization.Strings.PostCode),
         val city: String = getString(component.localization.Strings.City),
-        val state: String = getString(component.localization.Strings.State),
+        val apartment: String = getString(component.localization.Strings.Apartment),
         val country: String = getString(component.localization.Strings.Country),
         val password: String = getString(component.localization.Strings.Password),
     )

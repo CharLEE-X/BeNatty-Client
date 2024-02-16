@@ -32,7 +32,7 @@ fun PageHeader(
 @Composable
 fun SectionHeader(
     text: String,
-    style: TypeScaleTokens.Role = MaterialTheme.typography.headlineLarge,
+    style: TypeScaleTokens.Role = MaterialTheme.typography.headlineMedium,
     content: @Composable RowScope.() -> Unit = {}
 ) {
     Row(

@@ -33,7 +33,7 @@ internal class AdminUserPageInputHandler :
         AdminCategoryPageContract.Inputs.OnClick.Delete -> handleDelete()
         AdminCategoryPageContract.Inputs.OnClick.CancelEdit -> handleCancel()
         AdminCategoryPageContract.Inputs.OnClick.GoToParent -> handleGoToParent()
-        AdminCategoryPageContract.Inputs.OnClick.GotToUserCreator -> handleGoToCreator()
+        AdminCategoryPageContract.Inputs.OnClick.GoToUserCreator -> handleGoToCreator()
         is AdminCategoryPageContract.Inputs.OnClick.ParentCategorySelected -> handleOnClickParentPicker(input.categoryName)
         AdminCategoryPageContract.Inputs.OnClick.GoToCreateCategory -> postEvent(AdminCategoryPageContract.Events.GoToCreateCategory)
         AdminCategoryPageContract.Inputs.OnClick.ImproveDescription -> handleImproveDescription()
@@ -83,11 +83,11 @@ internal class AdminUserPageInputHandler :
         updateState { it.copy(current = it.current.copy(display = display)).wasEdited() }
     }
 
-    private suspend fun InputScope.handleSetRequiresShipping(requiresShipping: Boolean) {
+    private suspend fun InputScope.handleSetRequiresShipping(isPhysicalProduct: Boolean) {
         updateState {
             it.copy(
                 current = it.current.copy(
-                    shippingPreset = it.current.shippingPreset?.copy(isPhysicalProduct = requiresShipping)
+                    shippingPreset = it.current.shippingPreset?.copy(isPhysicalProduct = isPhysicalProduct)
                 ),
             ).wasEdited()
         }
@@ -162,7 +162,8 @@ internal class AdminUserPageInputHandler :
                 if (currentParent == null || currentParent.id != chosenCategory.id) {
                     val newParent = GetCategoryByIdQuery.Parent(
                         id = chosenCategory.id,
-                        name = chosenCategory.name,
+                        firstName = chosenCategory.name,
+                        lastName = chosenCategory.name
                     )
                     postInput(AdminCategoryPageContract.Inputs.Set.Parent(newParent))
                 } else {
@@ -312,7 +313,8 @@ internal class AdminUserPageInputHandler :
                                         parent = data.updateCategory.parentId?.toString()?.let { id ->
                                             GetCategoryByIdQuery.Parent(
                                                 id = id,
-                                                name = data.updateCategory.name
+                                                firstName = original.parent?.firstName ?: "",
+                                                lastName = original.parent?.lastName ?: ""
                                             )
                                         },
                                         display = data.updateCategory.display,

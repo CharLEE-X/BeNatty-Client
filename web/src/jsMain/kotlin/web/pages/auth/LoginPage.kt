@@ -30,19 +30,20 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibilityOff
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.login.LoginContract
 import feature.login.LoginViewModel
-import feature.router.RouterScreen
 import feature.router.RouterViewModel
+import feature.router.Screen
+import feature.router.goHome
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import theme.MaterialTheme
 import theme.roleStyle
+import web.components.widgets.AppElevatedCard
+import web.components.widgets.AppFilledButton
+import web.components.widgets.AppOutlinedTextField
+import web.components.widgets.AppTextButton
 import web.compose.material3.component.CircularProgress
-import web.compose.material3.component.FilledButton
-import web.compose.material3.component.OutlinedTextField
-import web.compose.material3.component.TextButton
 import web.compose.material3.component.TextFieldType
-import web.compose.material3.component.labs.ElevatedCard
 import web.pages.auth.components.LogoSection
 import web.pages.auth.components.SocialButtonsLoginSection
 
@@ -56,25 +57,23 @@ fun LoginPage(
         LoginViewModel(
             scope = scope,
             onError = onError,
-            onAuthenticated = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Home.matcher.routeFormat))
-            },
+            onAuthenticated = { router.goHome() },
             goToRegister = {
                 router.trySend(
-                    RouterContract.Inputs.GoToDestination(RouterScreen.Register.matcher.routeFormat)
+                    RouterContract.Inputs.GoToDestination(Screen.Register.matcher.routeFormat)
                 )
             },
             goToPrivacyPolicy = {
                 router.trySend(
-                    RouterContract.Inputs.GoToDestination(RouterScreen.PrivacyPolicy.matcher.routeFormat)
+                    RouterContract.Inputs.GoToDestination(Screen.PrivacyPolicy.matcher.routeFormat)
                 )
             },
             goToTnC = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.TC.matcher.routeFormat))
+                router.trySend(RouterContract.Inputs.GoToDestination(Screen.TC.matcher.routeFormat))
             },
             goToForgotPassword = {
                 router.trySend(
-                    RouterContract.Inputs.GoToDestination(RouterScreen.ForgotPassword.matcher.routeFormat)
+                    RouterContract.Inputs.GoToDestination(Screen.ForgotPassword.matcher.routeFormat)
                 )
             },
         )
@@ -86,7 +85,7 @@ fun LoginPage(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        ElevatedCard(
+        AppElevatedCard(
             modifier = Modifier
 //                .fillMaxHeight(80.percent)
                 .fillMaxWidth(50.percent)
@@ -126,9 +125,9 @@ private fun FieldsSection(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    OutlinedTextField(
+    AppOutlinedTextField(
         value = email,
-        onInput = {
+        onValueChange = {
             email = it
             vm.trySend(LoginContract.Inputs.SetEmail(it))
         },
@@ -142,9 +141,9 @@ private fun FieldsSection(
             .fillMaxWidth()
             .margin(top = 0.5.em)
     )
-    OutlinedTextField(
+    AppOutlinedTextField(
         value = password,
-        onInput = {
+        onValueChange = {
             password = it
             vm.trySend(LoginContract.Inputs.SetPassword(it))
         },
@@ -175,7 +174,7 @@ private fun FieldsSection(
 
 @Composable
 private fun ColumnScope.ForgotPasswordSection(vm: LoginViewModel, state: LoginContract.State) {
-    TextButton(
+    AppTextButton(
         onClick = { vm.trySend(LoginContract.Inputs.OnForgotPasswordClick) },
         modifier = Modifier
             .align(Alignment.End)
@@ -199,7 +198,7 @@ private fun DontHaveAccountSection(vm: LoginViewModel, state: LoginContract.Stat
             text = state.strings.dontHaveAccount,
             modifier = Modifier.roleStyle(MaterialTheme.typography.headlineSmall)
         )
-        TextButton(
+        AppTextButton(
             onClick = { vm.trySend(LoginContract.Inputs.OnDontHaveAccountClick) },
         ) {
             SpanText(
@@ -214,7 +213,7 @@ private fun DontHaveAccountSection(vm: LoginViewModel, state: LoginContract.Stat
 
 @Composable
 private fun LoginButton(vm: LoginViewModel, state: LoginContract.State) {
-    FilledButton(
+    AppFilledButton(
         onClick = { if (!state.isLoading) vm.trySend(LoginContract.Inputs.OnLoginClick) },
         modifier = Modifier
             .fillMaxWidth()

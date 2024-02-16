@@ -16,8 +16,8 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.minHeight
-import feature.router.RouterScreen
 import feature.router.RouterViewModel
+import feature.router.Screen
 import feature.router.pageTitle
 import kotlinx.browser.document
 import org.jetbrains.compose.web.css.percent
@@ -29,7 +29,7 @@ import web.components.sections.footer.Footer
 @Composable
 fun AppLayout(
     router: RouterViewModel,
-    state: RouterContract.State<RouterScreen>,
+    state: RouterContract.State<Screen>,
     isAuthenticated: Boolean,
     onLogOut: () -> Unit,
     onError: (String) -> Unit,
@@ -81,9 +81,6 @@ fun AppLayout(
             Footer(
                 router = router,
                 onError = onError,
-                onGoToAdminDashboard = {
-                    router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.AdminDashboard.matcher.routeFormat))
-                },
             )
         },
         content = content

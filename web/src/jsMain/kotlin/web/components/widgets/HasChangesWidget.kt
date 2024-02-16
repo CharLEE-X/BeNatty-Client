@@ -28,16 +28,17 @@ import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translateY
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiCancel
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiSave
 import com.varabyte.kobweb.silk.components.text.SpanText
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
+import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import web.compose.material3.component.FilledButton
-import web.compose.material3.component.TextButton
-import web.compose.material3.component.labs.OutlinedCard
+import org.jetbrains.compose.web.css.value
+import theme.MaterialTheme
 
 @Composable
 fun HasChangesWidget(
@@ -76,7 +77,7 @@ fun HasChangesWidget(
             .pointerEvents(PointerEvents.None)
     ) {
         if (show) {
-            OutlinedCard(
+            AppOutlinedCard(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .opacity(opacity)
@@ -101,14 +102,17 @@ fun HasChangesWidget(
                             .userSelect(UserSelect.None)
                     )
                     Spacer()
-                    TextButton(
+                    AppFilledTonalButton(
                         onClick = { onCancel() },
+                        leadingIcon = { MdiCancel() },
                     ) {
                         SpanText(resetText)
                     }
-                    FilledButton(
+                    AppFilledButton(
                         onClick = { onSave() },
-                        leadingIcon = { MdiSave() }
+                        leadingIcon = { MdiSave() },
+                        containerShape = 12.px,
+                        containerColor = MaterialTheme.colors.mdSysColorTertiary.value(),
                     ) {
                         SpanText(saveText)
                     }

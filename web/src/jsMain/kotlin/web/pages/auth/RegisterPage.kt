@@ -31,20 +31,21 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibilityOff
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.register.RegisterContract
 import feature.register.RegisterViewModel
-import feature.router.RouterScreen
 import feature.router.RouterViewModel
+import feature.router.Screen
+import feature.router.goHome
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import theme.MaterialTheme
 import theme.roleStyle
+import web.components.widgets.AppElevatedCard
+import web.components.widgets.AppFilledButton
+import web.components.widgets.AppOutlinedTextField
+import web.components.widgets.AppTextButton
 import web.compose.material3.component.Checkbox
 import web.compose.material3.component.CircularProgress
-import web.compose.material3.component.FilledButton
-import web.compose.material3.component.OutlinedTextField
-import web.compose.material3.component.TextButton
 import web.compose.material3.component.TextFieldType
-import web.compose.material3.component.labs.ElevatedCard
 import web.pages.auth.components.LogoSection
 import web.pages.auth.components.SocialButtonsLoginSection
 
@@ -58,17 +59,15 @@ fun RegisterPage(
         RegisterViewModel(
             scope = scope,
             onError = onError,
-            onAuthenticated = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Home.matcher.routeFormat))
-            },
+            onAuthenticated = { router.goHome() },
             goToPrivacyPolicy = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.About.matcher.routeFormat))
+                router.trySend(RouterContract.Inputs.GoToDestination(Screen.About.matcher.routeFormat))
             },
             goToTnC = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.About.matcher.routeFormat))
+                router.trySend(RouterContract.Inputs.GoToDestination(Screen.About.matcher.routeFormat))
             },
             goToLogin = {
-                router.trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Login.matcher.routeFormat))
+                router.trySend(RouterContract.Inputs.GoToDestination(Screen.Login.matcher.routeFormat))
             },
         )
     }
@@ -79,7 +78,7 @@ fun RegisterPage(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        ElevatedCard(
+        AppElevatedCard(
             modifier = Modifier
 //                .fillMaxHeight(80.percent)
                 .fillMaxWidth(50.percent)
@@ -122,9 +121,9 @@ private fun FieldsSection(
     var password by remember { mutableStateOf("") }
     var repeatPassword by remember { mutableStateOf("") }
 
-    OutlinedTextField(
+    AppOutlinedTextField(
         value = name,
-        onInput = {
+        onValueChange = {
             name = it
             vm.trySend(RegisterContract.Inputs.SetName(it))
         },
@@ -136,9 +135,9 @@ private fun FieldsSection(
         errorText = state.nameError,
         modifier = Modifier.fillMaxWidth()
     )
-    OutlinedTextField(
+    AppOutlinedTextField(
         value = email,
-        onInput = {
+        onValueChange = {
             email = it
             vm.trySend(RegisterContract.Inputs.SetEmail(it))
         },
@@ -152,9 +151,9 @@ private fun FieldsSection(
             .fillMaxWidth()
             .margin(top = 0.5.em)
     )
-    OutlinedTextField(
+    AppOutlinedTextField(
         value = password,
-        onInput = {
+        onValueChange = {
             password = it
             vm.trySend(RegisterContract.Inputs.SetPassword(it))
         },
@@ -181,9 +180,9 @@ private fun FieldsSection(
             .fillMaxWidth()
             .margin(top = 0.5.em)
     )
-    OutlinedTextField(
+    AppOutlinedTextField(
         value = repeatPassword,
-        onInput = {
+        onValueChange = {
             repeatPassword = it
             vm.trySend(RegisterContract.Inputs.SetRepeatPassword(it))
         },
@@ -242,7 +241,7 @@ private fun NewsletterSection(state: RegisterContract.State, vm: RegisterViewMod
 
 @Composable
 private fun RegisterButton(vm: RegisterViewModel, state: RegisterContract.State) {
-    FilledButton(
+    AppFilledButton(
         disabled = state.isButtonDisabled,
         onClick = { if (!state.isLoading) vm.trySend(RegisterContract.Inputs.OnRegisterClick) },
         modifier = Modifier
@@ -277,7 +276,7 @@ private fun DontHaveAccountSection(vm: RegisterViewModel, state: RegisterContrac
             text = state.strings.alreadyHaveAnAccount,
             modifier = Modifier.roleStyle(MaterialTheme.typography.headlineSmall)
         )
-        TextButton(
+        AppTextButton(
             onClick = { vm.trySend(RegisterContract.Inputs.OnAlreadyHaveAccountClick) },
         ) {
             SpanText(
@@ -301,7 +300,7 @@ private fun AgreeToPrivacySection(vm: RegisterViewModel, state: RegisterContract
             modifier = Modifier
                 .roleStyle(MaterialTheme.typography.labelLarge)
         )
-        TextButton(
+        AppTextButton(
             onClick = { vm.trySend(RegisterContract.Inputs.OnPrivacyPolicyClick) },
         ) {
             SpanText(
@@ -313,7 +312,7 @@ private fun AgreeToPrivacySection(vm: RegisterViewModel, state: RegisterContract
             text = state.strings.and,
             modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
         )
-        TextButton(
+        AppTextButton(
             onClick = { vm.trySend(RegisterContract.Inputs.OnTnCClick) },
         ) {
             SpanText(

@@ -13,7 +13,7 @@ import theme.MaterialTheme
 import theme.roleStyle
 import web.components.sections.footer.FooterContract
 import web.components.sections.footer.FooterViewModel
-import web.compose.material3.component.TextButton
+import web.components.widgets.AppTextButton
 
 @Composable
 fun FooterBottomSection(
@@ -31,7 +31,7 @@ fun FooterBottomSection(
             modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium),
         )
         Spacer()
-        TextButton(
+        AppTextButton(
             onClick = { vm.trySend(FooterContract.Inputs.OnPrivacyPolicyClicked) },
         ) {
             SpanText(
@@ -39,7 +39,7 @@ fun FooterBottomSection(
                 modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium),
             )
         }
-        TextButton(
+        AppTextButton(
             onClick = { vm.trySend(FooterContract.Inputs.OnTermsOfServiceClicked) },
         ) {
             SpanText(
@@ -47,7 +47,7 @@ fun FooterBottomSection(
                 modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium),
             )
         }
-        TextButton(
+        AppTextButton(
             onClick = { vm.trySend(FooterContract.Inputs.OnAccessibilityClicked) },
         ) {
             SpanText(

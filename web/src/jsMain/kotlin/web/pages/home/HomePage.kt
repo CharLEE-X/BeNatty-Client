@@ -21,8 +21,8 @@ import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
+import web.components.widgets.AppFilledCard
 import web.compose.example.components.ChipShowcase
-import web.compose.material3.component.labs.FilledCard
 
 @Suppress("UNUSED_PARAMETER")
 @Composable
@@ -40,7 +40,7 @@ fun HomeContent(
                 .borderRadius(1.em)
                 .backgroundColor(MaterialTheme.colors.mdSysColorSurfaceContainer.value())
         ) {
-            FilledCard(
+            AppFilledCard(
                 modifier = Modifier
                     .fillMaxWidth(70.percent)
                     .margin(1.5.em)

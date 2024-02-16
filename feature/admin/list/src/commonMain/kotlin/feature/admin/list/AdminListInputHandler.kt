@@ -59,13 +59,24 @@ internal class AdminListInputHandler :
             is AdminListContract.Inputs.OnChange.PerPage -> handleOnChangePerPage(input.perPage)
         }
 
-        AdminListContract.Inputs.OnCreateClick -> postEvent(AdminListContract.Events.GoTo.Create)
-        is AdminListContract.Inputs.OnItemClick -> postEvent(AdminListContract.Events.GoTo.Detail(input.id))
-        is AdminListContract.Inputs.OnPageClick -> handleGetPage(input.page)
-        AdminListContract.Inputs.OnNextPageClick -> getCurrentState().info.next?.let { handleGetPage(it) } ?: noOp()
-        is AdminListContract.Inputs.OnTopBarSlotClick -> handleClickSlot(input.slotName)
+        is AdminListContract.Inputs.Click -> when (input) {
+            AdminListContract.Inputs.Click.Create ->
+                postEvent(AdminListContract.Events.GoTo.Create)
+
+            is AdminListContract.Inputs.Click.Item ->
+                postEvent(AdminListContract.Events.GoTo.Detail(input.id))
+
+            is AdminListContract.Inputs.Click.Page -> handleGetPage(input.page)
+            AdminListContract.Inputs.Click.NextPage ->
+                getCurrentState().info.next?.let { handleGetPage(it) } ?: noOp()
+
+            AdminListContract.Inputs.Click.PreviousPage ->
+                getCurrentState().info.prev?.let { handleGetPage(it) } ?: noOp()
+
+            is AdminListContract.Inputs.Click.Slot -> handleClickSlot(input.slotName)
+        }
+
         AdminListContract.Inputs.SendSearch -> handleGetPage(0)
-        AdminListContract.Inputs.OnPreviousPageClick -> getCurrentState().info.prev?.let { handleGetPage(it) } ?: noOp()
     }
 
     private suspend fun InputScope.handleClickSlot(slotName: String) {
@@ -102,7 +113,10 @@ internal class AdminListInputHandler :
 
     private suspend fun InputScope.handleGetPage(page: Int) {
         val state = getCurrentState()
-        sideJob("handleGetItemsPage") {
+        sideJob("handleGetPage") {
+
+            println("DEBUG Getting page: $page")
+
             postInput(AdminListContract.Inputs.Set.Loading(true))
             when (state.dataType) {
                 AdminListContract.DataType.USER -> {
@@ -140,6 +154,8 @@ internal class AdminListInputHandler :
                 }
 
                 AdminListContract.DataType.PRODUCT -> {
+                    println("DEBUG Getting Products page")
+
                     productService.getAsPage(
                         page = page,
                         size = state.perPage,
@@ -148,6 +164,8 @@ internal class AdminListInputHandler :
                         sortDirection = state.sortDirection
                     ).fold(
                         onSuccess = {
+                            println("DEBUG Got Products page: $it")
+
                             val items = it.getAllProductsPage.products.map { product ->
                                 ListItem(
                                     id = product.id.toString(),

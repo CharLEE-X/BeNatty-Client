@@ -11,6 +11,7 @@ group = COMPONENTS + project.name
 kotlin {
     sourceSets {
         commonMain.dependencies {
+            implementation(projects.components.core)
             implementation(libs.kotlin.datetime)
         }
     }

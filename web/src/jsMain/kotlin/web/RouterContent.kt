@@ -1,19 +1,23 @@
 package web
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import com.copperleaf.ballast.navigation.browser.BrowserHashNavigationInterceptor
 import com.copperleaf.ballast.navigation.routing.RouterContract
-import com.copperleaf.ballast.navigation.routing.RouterContract.Inputs.ReplaceTopDestination
+import com.copperleaf.ballast.navigation.routing.RouterContract.Inputs.GoToDestination
+import com.copperleaf.ballast.navigation.routing.build
 import com.copperleaf.ballast.navigation.routing.currentDestinationOrNull
+import com.copperleaf.ballast.navigation.routing.directions
+import com.copperleaf.ballast.navigation.routing.pathParameter
 import com.copperleaf.ballast.navigation.routing.renderCurrentDestination
 import com.copperleaf.ballast.navigation.routing.stringPath
 import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
-import feature.router.RouterScreen
 import feature.router.RouterViewModel
+import feature.router.Screen
 import web.components.layouts.AccountLayout
 import web.components.layouts.AppLayout
 import web.components.sections.desktopNav.DesktopNavContract
@@ -32,8 +36,8 @@ import web.pages.admin.products.AdminProductListPage
 import web.pages.admin.products.AdminProductPagePage
 import web.pages.admin.tag.AdminTagListPage
 import web.pages.admin.tag.AdminTagPage
-import web.pages.admin.users.AdminUserListPage
-import web.pages.admin.users.AdminUserPagePage
+import web.pages.admin.users.AdminCustomerCreatePage
+import web.pages.admin.users.AdminCustomersPage
 import web.pages.auth.ForgotPasswordPage
 import web.pages.auth.LoginPage
 import web.pages.auth.RegisterPage
@@ -62,8 +66,8 @@ fun RouterContent(
     isAuthenticated: Boolean,
     onLogOut: () -> Unit,
     onError: (String) -> Unit,
-    homeScreen: RouterScreen = RouterScreen.Home,
-    loginScreen: RouterScreen = RouterScreen.Login,
+    homeScreen: Screen = Screen.Home,
+    loginScreen: Screen = Screen.Login,
 ) {
     val scope = rememberCoroutineScope()
     val initialRoute = when (isAuthenticated) {
@@ -80,6 +84,10 @@ fun RouterContent(
     val routerState by router.observeStates().collectAsState()
     val currentDestination = routerState.currentDestinationOrNull
 
+    LaunchedEffect(routerState.backstack) {
+        println("DEBUG backstack: ${routerState.backstack}")
+    }
+
     @Composable
     fun appRoute(content: @Composable ColumnScope.() -> Unit) = AppLayout(
         router = router,
@@ -91,49 +99,49 @@ fun RouterContent(
     )
 
     val goBack: () -> Unit = { router.trySend(RouterContract.Inputs.GoBack()) }
-    val goToAdminHome: () -> Unit = { router.trySend(ReplaceTopDestination(RouterScreen.AdminDashboard.route)) }
+    val goToAdminHome: () -> Unit = { router.trySend(GoToDestination(Screen.AdminHome.route)) }
 
     routerState.renderCurrentDestination(
-        route = { routerScreen: RouterScreen ->
-            when (routerScreen) {
-                RouterScreen.Home -> appRoute {
+        route = { screen: Screen ->
+            when (screen) {
+                Screen.Home -> appRoute {
                     HomeContent(
                         onError = onError,
                         router = router,
                     )
                 }
 
-                RouterScreen.Login -> LoginPage(
+                Screen.Login -> LoginPage(
                     router = router,
                     onError = onError,
                 )
 
-                RouterScreen.Register -> RegisterPage(
+                Screen.Register -> RegisterPage(
                     router = router,
                     onError = onError,
                 )
 
-                RouterScreen.ForgotPassword -> appRoute {
+                Screen.ForgotPassword -> appRoute {
                     ForgotPasswordPage(
                         router = router,
                     )
                 }
 
-                RouterScreen.UpdateEmail -> appRoute {
+                Screen.UpdateEmail -> appRoute {
                     UpdatePasswordPage(
                         router = router,
                         onError = onError,
                     )
                 }
 
-                RouterScreen.Catalogue -> appRoute {
+                Screen.Catalogue -> appRoute {
                     CataloguePage(
                         router = router,
                         onError = onError,
                     )
                 }
 
-                RouterScreen.Product -> appRoute {
+                Screen.Product -> appRoute {
                     val id: String by currentDestination!!.stringPath("id")
                     ProductPage(
                         router = router,
@@ -142,27 +150,27 @@ fun RouterContent(
                     )
                 }
 
-                RouterScreen.Cart -> appRoute {
+                Screen.Cart -> appRoute {
                     CartPage(
                         router = router,
                         onError = onError,
                     )
                 }
 
-                RouterScreen.Checkout -> appRoute {
+                Screen.Checkout -> appRoute {
                     CheckoutPage(
                         router = router,
                         onError = onError,
                     )
                 }
 
-                RouterScreen.Payment -> appRoute {
+                Screen.Payment -> appRoute {
                     PaymentPage(
                         onError = onError,
                     )
                 }
 
-                RouterScreen.Order -> appRoute {
+                Screen.Order -> appRoute {
                     AccountLayout(
                         item = DesktopNavContract.AccountMenuItem.ORDERS,
                         onMenuItemClicked = { router.route(it) },
@@ -171,7 +179,7 @@ fun RouterContent(
                     }
                 }
 
-                RouterScreen.Profile -> appRoute {
+                Screen.Profile -> appRoute {
                     AccountLayout(
                         item = DesktopNavContract.AccountMenuItem.PROFILE,
                         onMenuItemClicked = { router.route(it) },
@@ -180,7 +188,7 @@ fun RouterContent(
                     }
                 }
 
-                RouterScreen.Wishlist -> appRoute {
+                Screen.Wishlist -> appRoute {
                     AccountLayout(
                         item = DesktopNavContract.AccountMenuItem.WISHLIST,
                         onMenuItemClicked = { router.route(it) },
@@ -189,7 +197,7 @@ fun RouterContent(
                     }
                 }
 
-                RouterScreen.Returns -> appRoute {
+                Screen.Returns -> appRoute {
                     AccountLayout(
                         item = DesktopNavContract.AccountMenuItem.RETURNS,
                         onMenuItemClicked = { router.route(it) },
@@ -198,172 +206,190 @@ fun RouterContent(
                     }
                 }
 
-                RouterScreen.Settings -> appRoute {
+                Screen.Settings -> appRoute {
                     SettingsPage(
                         onError = onError,
                     )
                 }
 
-                RouterScreen.About -> appRoute {
+                Screen.About -> appRoute {
                     AboutPage(
                         onError = onError,
                     )
                 }
 
-                RouterScreen.Contact -> appRoute {
+                Screen.Contact -> appRoute {
                     ContactPage(
                         onError = onError,
                     )
                 }
 
-                RouterScreen.HelpAndFAQ -> appRoute {
+                Screen.HelpAndFAQ -> appRoute {
                     HelpAndFAQPage(
                         onError = onError,
                     )
                 }
 
-                RouterScreen.Blog -> appRoute {
+                Screen.Blog -> appRoute {
                     BlogPage(
                         onError = onError,
                     )
                 }
 
-                RouterScreen.PrivacyPolicy -> appRoute {
+                Screen.PrivacyPolicy -> appRoute {
                     PrivacyPolicyPage()
                 }
 
-                RouterScreen.TC -> appRoute {
+                Screen.TC -> appRoute {
                     TermsOfServicePage()
                 }
 
-                RouterScreen.TrackOrder -> appRoute {
+                Screen.TrackOrder -> appRoute {
                     TrackOrderPage()
                 }
 
-                RouterScreen.Shipping -> appRoute {
+                Screen.Shipping -> appRoute {
                     ShippingPage()
                 }
 
-                RouterScreen.Career -> appRoute {
+                Screen.Career -> appRoute {
                     CareerPage()
                 }
 
-                RouterScreen.CyberSecurity -> appRoute {
+                Screen.CyberSecurity -> appRoute {
                     CyberSecurityPage()
                 }
 
-                RouterScreen.Accessibility -> appRoute {
+                Screen.Accessibility -> appRoute {
                     AccessibilityPage()
                 }
 
-                RouterScreen.Press -> appRoute {
+                Screen.Press -> appRoute {
                     PressPage()
                 }
 
-                RouterScreen.AdminDashboard -> AdminDashboardPage(
+                Screen.AdminHome -> AdminDashboardPage(
                     router = router,
                     onError = onError,
+                    goToAdminHome = goToAdminHome,
                 )
 
-                RouterScreen.AdminUserList -> AdminUserListPage(
+                Screen.AdminCustomers -> AdminCustomersPage(
                     router = router,
                     onError = onError,
+                    goToAdminHome = goToAdminHome,
                 )
 
-                RouterScreen.AdminUserPageNew -> AdminUserPagePage(
+                Screen.AdminCustomerCreate -> AdminCustomerCreatePage(
                     router = router,
-                    userId = null,
                     onError = onError,
+                    goToAdminHome = goToAdminHome,
                 )
 
-                RouterScreen.AdminUserPageExisting -> {
+                Screen.AdminCustomerProfile -> {
                     val id by stringPath()
-                    AdminUserPagePage(
+                    AdminCustomerCreatePage(
                         router = router,
-                        userId = id,
+//                        userId = id,
                         onError = onError,
+                        goToAdminHome = goToAdminHome,
                     )
                 }
 
-                RouterScreen.AdminProductList -> AdminProductListPage(
-                    router = router,
-                    onError = onError,
-                )
-
-                RouterScreen.AdminProductPageNew -> AdminProductPagePage(
-                    productId = null,
+                Screen.AdminProducts -> AdminProductListPage(
                     router = router,
                     onError = onError,
                     goBack = goBack,
                     goToAdminHome = goToAdminHome,
+                    goToProductCreate = { router.trySend(GoToDestination(Screen.AdminProductCreate.route)) },
+                    goToProductDetail = { id ->
+                        router.trySend(
+                            GoToDestination(Screen.AdminProductPage.directions().pathParameter("id", id).build())
+                        )
+                    }
                 )
 
-                RouterScreen.AdminProductPageExisting -> {
+                Screen.AdminProductCreate -> AdminProductPagePage(
+                    productId = null,
+                    router = router,
+                    onError = onError,
+                    goToAdminHome = goToAdminHome,
+                )
+
+                Screen.AdminProductPage -> {
                     val id: String by stringPath()
                     AdminProductPagePage(
                         productId = id,
                         router = router,
                         onError = onError,
-                        goBack = goBack,
                         goToAdminHome = goToAdminHome,
                     )
                 }
 
-                RouterScreen.AdminOrderList -> AdminOrderListPage(
+                Screen.AdminOrderList -> AdminOrderListPage(
                     router = router,
                     onError = onError,
+                    goToAdminHome = goToAdminHome,
                 )
 
-                RouterScreen.AdminOrderPageNew -> AdminOrderPagePage(
+                Screen.AdminOrderPageNew -> AdminOrderPagePage(
                     router = router,
                     onError = onError,
+                    goToAdminHome = goToAdminHome,
                 )
 
-                RouterScreen.AdminOrderPageExisting -> {
+                Screen.AdminOrderPageExisting -> {
                     val id: String by stringPath()
                     AdminOrderPagePage(
                         router = router,
                         onError = onError,
+                        goToAdminHome = goToAdminHome,
                     )
                 }
 
-                RouterScreen.AdminCategoryList -> AdminCategoryListPage(
+                Screen.AdminCategoryList -> AdminCategoryListPage(
                     router = router,
                     onError = onError,
+                    goToAdminHome = goToAdminHome,
                 )
 
-                RouterScreen.AdminCategoryPageNew -> AdminCategoryPage(
+                Screen.AdminCategoryPageNew -> AdminCategoryPage(
                     router = router,
                     id = null,
                     onError = onError,
+                    goToAdminHome = goToAdminHome,
                 )
 
-                RouterScreen.AdminCategoryPageExisting -> {
+                Screen.AdminCategoryPageExisting -> {
                     val id: String by stringPath()
                     AdminCategoryPage(
                         router = router,
                         id = id,
                         onError = onError,
+                        goToAdminHome = goToAdminHome,
                     )
                 }
 
-                RouterScreen.AdminTagList -> AdminTagListPage(
+                Screen.AdminTagList -> AdminTagListPage(
                     router = router,
                     onError = onError,
+                    goToAdminHome = goToAdminHome,
                 )
 
-                RouterScreen.AdminTagPageNew -> AdminTagPage(
+                Screen.AdminTagCreate -> AdminTagPage(
                     router = router,
                     id = null,
                     onError = onError,
+                    goToAdminHome = goToAdminHome,
                 )
 
-                RouterScreen.AdminTagPageExisting -> {
+                Screen.AdminTagPageExisting -> {
                     val id: String by currentDestination!!.stringPath("id")
                     AdminTagPage(
                         router = router,
                         id = id,
                         onError = onError,
+                        goToAdminHome = goToAdminHome,
                     )
                 }
             }
@@ -371,7 +397,7 @@ fun RouterContent(
         notFound = { url ->
             PageNotFoundPage(
                 url = url,
-                onGoBackClick = { goBack() }
+                goBack = goBack,
             )
         }
     )
@@ -380,19 +406,19 @@ fun RouterContent(
 private fun RouterViewModel.route(item: DesktopNavContract.AccountMenuItem) {
     when (item) {
         DesktopNavContract.AccountMenuItem.PROFILE -> {
-            trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Profile.matcher.routeFormat))
+            trySend(GoToDestination(Screen.Profile.matcher.routeFormat))
         }
 
         DesktopNavContract.AccountMenuItem.ORDERS -> {
-            trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Order.matcher.routeFormat))
+            trySend(GoToDestination(Screen.Order.matcher.routeFormat))
         }
 
         DesktopNavContract.AccountMenuItem.RETURNS -> {
-            trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Returns.matcher.routeFormat))
+            trySend(GoToDestination(Screen.Returns.matcher.routeFormat))
         }
 
         DesktopNavContract.AccountMenuItem.WISHLIST -> {
-            trySend(RouterContract.Inputs.GoToDestination(RouterScreen.Wishlist.matcher.routeFormat))
+            trySend(GoToDestination(Screen.Wishlist.matcher.routeFormat))
         }
 
         else -> {

@@ -6,20 +6,20 @@ import com.copperleaf.ballast.navigation.routing.RouterContract
 
 internal class RouterEventHandler :
     EventHandler<
-        RouterContract.Inputs<RouterScreen>,
-        RouterContract.Events<RouterScreen>,
-        RouterContract.State<RouterScreen>,
+        RouterContract.Inputs<Screen>,
+        RouterContract.Events<Screen>,
+        RouterContract.State<Screen>,
         > {
     override suspend fun EventHandlerScope<
-        RouterContract.Inputs<RouterScreen>,
-        RouterContract.Events<RouterScreen>,
-        RouterContract.State<RouterScreen>,
+        RouterContract.Inputs<Screen>,
+        RouterContract.Events<Screen>,
+        RouterContract.State<Screen>,
         >.handleEvent(
-        event: RouterContract.Events<RouterScreen>,
+        event: RouterContract.Events<Screen>,
     ) {
         when {
             event is RouterContract.Events.BackstackEmptied ->
-                postInput(RouterContract.Inputs.GoToDestination(RouterScreen.Login.matcher.routeFormat))
+                postInput(RouterContract.Inputs.GoToDestination(Screen.Login.matcher.routeFormat))
         }
     }
 }

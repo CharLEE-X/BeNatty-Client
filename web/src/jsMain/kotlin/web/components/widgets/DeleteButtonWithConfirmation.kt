@@ -14,8 +14,6 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiCancel
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
-import web.compose.material3.component.FilledButton
-import web.compose.material3.component.FilledTonalButton
 
 @Composable
 fun DeleteButtonWithConfirmation(
@@ -26,7 +24,7 @@ fun DeleteButtonWithConfirmation(
     var showDeleteConfirmation by remember { mutableStateOf(false) }
 
     if (!showDeleteConfirmation) {
-        FilledButton(
+        AppFilledButton(
             onClick = { showDeleteConfirmation = true },
             leadingIcon = { MdiAdd() },
         ) {
@@ -37,7 +35,7 @@ fun DeleteButtonWithConfirmation(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.gap(1.em)
         ) {
-            FilledTonalButton(
+            AppFilledTonalButton(
                 onClick = {
                     onDelete()
                     showDeleteConfirmation = false
@@ -46,7 +44,7 @@ fun DeleteButtonWithConfirmation(
             ) {
                 SpanText(text = deleteText)
             }
-            FilledButton(
+            AppFilledButton(
                 onClick = { showDeleteConfirmation = false },
                 leadingIcon = { MdiCancel() },
             ) {

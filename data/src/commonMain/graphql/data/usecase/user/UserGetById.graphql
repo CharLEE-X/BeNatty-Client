@@ -1,25 +1,33 @@
-query UserGetById($id: ObjectId!) {
-  getUserById(id: $id) {
-    id
-    email
-    role
-    emailVerified
-    details {
-      name
-      phone
+query GetUserById($getUserByIdId: ObjectId!) {
+  getUserById(id: $getUserByIdId) {
+    user {
+      address {
+        address
+        apartment
+        city
+        company
+        country
+        firstName
+        lastName
+        phone
+        postcode
+      }
+      collectTax
+      createdAt
+      details {
+        email
+        firstName
+        language
+        lastName
+        phone
+      }
+      emailVerified
+      id
+      marketingEmails
+      marketingSms
+      role
+      updatedAt
+      wishlist
     }
-    address {
-      address
-      additionalInfo
-      postcode
-      city
-      state
-      country
-    }
-    wishlist
-    lastActive
-    createdBy
-    createdAt
-    updatedAt
   }
 }

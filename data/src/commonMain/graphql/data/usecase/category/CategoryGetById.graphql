@@ -6,13 +6,16 @@ query GetCategoryById($getCategoryByIdId: ObjectId!) {
     display
     parent {
       id
-      name
+      firstName
+      lastName
     }
     creator {
       id
-      name
+      firstName
+      lastName
     }
     shippingPreset {
+      isPhysicalProduct
       weight
       length
       width
