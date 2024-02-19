@@ -95,6 +95,7 @@ import theme.MaterialTheme
 import theme.OldColorsJs
 import web.components.layouts.oneLayoutMaxWidth
 import web.components.sections.desktopNav.sections.TickerSection
+import web.components.sections.desktopNav.sections.tickerHeight
 import web.components.widgets.Logo
 import web.components.widgets.SearchBar
 
@@ -139,6 +140,7 @@ fun DesktopNav(
         modifier = Modifier
             .position(Position.Fixed)
             .display(DisplayStyle.Block)
+            .backgroundColor(Colors.White)
             .fillMaxWidth()
             .boxSizing(BoxSizing.BorderBox)
             .zIndex(10)
@@ -147,11 +149,11 @@ fun DesktopNav(
             tickerText = state.strings.ticker,
             onClick = { vm.trySend(DesktopNavContract.Inputs.OnTickerClick) },
             modifier = Modifier
-                .zIndex(20)
-//                .position(if (showTicker) Position.Fixed else Position.Absolute)
+                .zIndex(100)
+                .position(if (showTicker) Position.Relative else Position.Static)
 //                .display(DisplayStyle.Block)
 //                .top(0.px)
-//                .translateY(if (showTicker) 0.px else (-40).px)
+                .translateY(if (showTicker) 0.px else (-tickerHeight.value - 4).px)
                 .transition(
                     CSSTransition("translate", SmoothColorTransitionDurationVar.value()),
                     CSSTransition("position", SmoothColorTransitionDurationVar.value()),
