@@ -25,5 +25,6 @@ internal class NavbarEventHandler(
         DesktopNavContract.Events.GoToCatalogue -> desktopNavRoutes.goToCatalogue()
         DesktopNavContract.Events.GoToAbout -> desktopNavRoutes.goToAbout()
         DesktopNavContract.Events.GoToShippingAndReturns -> desktopNavRoutes.goToShippingAndReturns()
+        is DesktopNavContract.Events.ShowCartSidebar -> desktopNavRoutes.showCartSidebar(event.showCartSidebar)
     }
 }

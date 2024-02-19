@@ -31,6 +31,8 @@ object DesktopNavContract : KoinComponent {
         data object OnStoreClick : Inputs
         data object OnAboutClick : Inputs
         data object OnShippingAndReturnsClick : Inputs
+        data object OnProfileClick : Inputs
+        data object OnBasketClick : Inputs
 
         data class SetIsLoading(val isLoading: Boolean) : Inputs
         data class SetBasketCount(val count: Int) : Inputs
@@ -48,6 +50,7 @@ object DesktopNavContract : KoinComponent {
         data object GoToCatalogue : Events
         data object GoToAbout : Events
         data object GoToShippingAndReturns : Events
+        data class ShowCartSidebar(val showCartSidebar: Boolean) : Events
     }
 
     data class Strings(
@@ -89,6 +92,7 @@ data class DesktopNavRoutes(
     val goToCatalogue: () -> Unit,
     val goToAbout: () -> Unit,
     val goToShippingAndReturns: () -> Unit,
+    val showCartSidebar: (Boolean) -> Unit,
 )
 
 fun DesktopNavContract.AccountMenuItem.label(): String {

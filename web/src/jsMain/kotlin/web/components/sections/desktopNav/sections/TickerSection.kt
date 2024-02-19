@@ -48,11 +48,13 @@ val TickerAnimation by Keyframes {
 }
 
 private const val CHAR_WIDTH = 10
+val tickerHeight = 40.px
 
 @Composable
 fun TickerSection(
+    modifier: Modifier = Modifier,
     tickerText: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     var repeatCount by remember { mutableStateOf(5) }
 
@@ -63,11 +65,11 @@ fun TickerSection(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .boxSizing(BoxSizing.BorderBox)
             .display(DisplayStyle.Block)
-            .minHeight(40.px)
+            .minHeight(tickerHeight)
             .padding(topBottom = 0.5.em)
             .backgroundColor(MaterialTheme.colors.mdSysColorOnBackground.value())
             .color(MaterialTheme.colors.mdSysColorBackground.value())

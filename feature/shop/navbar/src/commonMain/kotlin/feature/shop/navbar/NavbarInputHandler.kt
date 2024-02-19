@@ -35,6 +35,8 @@ internal class NavbarInputHandler :
         DesktopNavContract.Inputs.OnStoreClick -> postEvent(DesktopNavContract.Events.GoToCatalogue)
         DesktopNavContract.Inputs.OnAboutClick -> postEvent(DesktopNavContract.Events.GoToAbout)
         DesktopNavContract.Inputs.OnShippingAndReturnsClick -> postEvent(DesktopNavContract.Events.GoToShippingAndReturns)
+        DesktopNavContract.Inputs.OnProfileClick -> postEvent(DesktopNavContract.Events.GoToProfile)
+        DesktopNavContract.Inputs.OnBasketClick -> postEvent(DesktopNavContract.Events.ShowCartSidebar(true))
 
         is DesktopNavContract.Inputs.SetIsLoading -> updateState { it.copy(isLoading = input.isLoading) }
         is DesktopNavContract.Inputs.SetBasketCount -> updateState { it.copy(basketCount = input.count) }

@@ -2,6 +2,10 @@ package web.components.layouts
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
@@ -47,6 +51,8 @@ fun ShopMainLayout(
     mainParams: MainParams,
     content: @Composable ColumnScope.() -> Unit,
 ) {
+    var showCartSidebar by remember { mutableStateOf(false) }
+
     val desktopNavRoutes = DesktopNavRoutes(
         goToHome = mainParams.goToHome,
         goToLogin = mainParams.goToLogin,
@@ -58,6 +64,7 @@ fun ShopMainLayout(
         goToCatalogue = mainParams.goToCatalogue,
         goToAbout = mainParams.goToAboutUs,
         goToShippingAndReturns = mainParams.goToShipping, // FIXME: Change to 'ShippingAndReturns'
+        showCartSidebar = { showCartSidebar = true },
     )
     val footerRoutes = FooterRoutes(
         goToAboutUs = mainParams.goToAboutUs,
@@ -111,7 +118,8 @@ private fun PageLayout(
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
         ) {
             topBar()
             content()

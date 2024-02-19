@@ -70,11 +70,13 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiMenu
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson2
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiShoppingBasket
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
+import com.varabyte.kobweb.silk.components.style.common.SmoothColorTransitionDurationVar
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import feature.shop.navbar.DesktopNavContract
 import feature.shop.navbar.DesktopNavRoutes
 import feature.shop.navbar.NavbarViewModel
+import kotlinx.browser.window
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -96,6 +98,8 @@ import web.components.sections.desktopNav.sections.TickerSection
 import web.components.widgets.Logo
 import web.components.widgets.SearchBar
 
+private enum class ScrollDirection { UP, DOWN }
+
 @Composable
 fun DesktopNav(
     onError: suspend (String) -> Unit,
@@ -110,55 +114,144 @@ fun DesktopNav(
         )
     }
     val state by vm.observeStates().collectAsState()
-    var searchValue by remember { mutableStateOf("") }
+
+    var lastScrollPosition by remember { mutableStateOf(0.0) }
+    var scrollDirection: ScrollDirection by remember { mutableStateOf(ScrollDirection.DOWN) }
+
+    var showTicker by remember { mutableStateOf(true) }
+    var showNavBar by remember { mutableStateOf(true) }
+    var showNavBarShadow by remember { mutableStateOf(true) }
+
+    window.addEventListener("scroll", {
+        val currentScroll = window.scrollY
+        scrollDirection = if (lastScrollPosition < currentScroll) ScrollDirection.DOWN else ScrollDirection.UP
+        lastScrollPosition = currentScroll
+
+        showTicker = lastScrollPosition < 50.0
+        showNavBar = scrollDirection == ScrollDirection.UP || lastScrollPosition < 60.0
+        showNavBarShadow = scrollDirection == ScrollDirection.UP && !showTicker
+
+        println("scrollPosition: $lastScrollPosition, scrollDirection: $scrollDirection, showNavbar: $showNavBar, showTicker: $showTicker, showNavBarShadow: $showNavBarShadow")
+    })
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
+            .position(Position.Fixed)
+            .display(DisplayStyle.Block)
             .fillMaxWidth()
             .boxSizing(BoxSizing.BorderBox)
-            .position(Position.Relative)
-            .zIndex(1)
+            .zIndex(10)
     ) {
         TickerSection(
             tickerText = state.strings.ticker,
             onClick = { vm.trySend(DesktopNavContract.Inputs.OnTickerClick) },
-        )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .fillMaxWidth()
-                .maxWidth(oneLayoutMaxWidth)
-                .padding(leftRight = 20.px, topBottom = 20.px)
-                .gap(20.px)
-                .display(DisplayStyle.Grid)
-                .styleModifier { property("grid-template-columns", "1fr auto 1fr") }
-        ) {
-            ListMenu(
-                storeText = state.strings.store,
-                aboutText = state.strings.about,
-                shippingReturnsText = state.strings.shippingReturns,
-                storeMenuItems = state.storeMenuItems,
-                onStoreClick = { vm.trySend(DesktopNavContract.Inputs.OnStoreClick) },
-                onAboutClick = { vm.trySend(DesktopNavContract.Inputs.OnAboutClick) },
-                onShippingReturnsClick = { vm.trySend(DesktopNavContract.Inputs.OnShippingAndReturnsClick) },
-                onStoreMenuItemSelected = { vm.trySend(DesktopNavContract.Inputs.OnStoreMenuItemSelected(it)) },
-            )
-            Logo(
-                onClick = { vm.trySend(DesktopNavContract.Inputs.OnLogoClick) },
-                modifier = Modifier.margin(leftRight = 1.em)
-            )
-            RightSection(
-                searchPlaceholder = state.strings.search,
-                searchValue = searchValue,
-                basketCount = state.basketCount,
-                onSearchValueChanged = {
-                    searchValue = it
-                    vm.trySend(DesktopNavContract.Inputs.OnSearchValueChanged(it))
-                },
-                onEnterPress = { vm.trySend(DesktopNavContract.Inputs.OnSearchEnterPress) },
-            )
-        }
+                .zIndex(20)
+//                .position(if (showTicker) Position.Fixed else Position.Absolute)
+//                .display(DisplayStyle.Block)
+//                .top(0.px)
+//                .translateY(if (showTicker) 0.px else (-40).px)
+                .transition(
+                    CSSTransition("translate", SmoothColorTransitionDurationVar.value()),
+                    CSSTransition("position", SmoothColorTransitionDurationVar.value()),
+                )
+        )
+        NavBar(
+            storeText = state.strings.store,
+            aboutText = state.strings.about,
+            shippingReturnsText = state.strings.shippingReturns,
+            searchPlaceholder = state.strings.search,
+            basketCount = state.basketCount,
+            storeMenuItems = state.storeMenuItems,
+            onStoreClick = { vm.trySend(DesktopNavContract.Inputs.OnStoreClick) },
+            onAboutClick = { vm.trySend(DesktopNavContract.Inputs.OnAboutClick) },
+            onShippingReturnsClick = { vm.trySend(DesktopNavContract.Inputs.OnShippingAndReturnsClick) },
+            onStoreMenuItemSelected = { vm.trySend(DesktopNavContract.Inputs.OnStoreMenuItemSelected(it)) },
+            onLogoClick = { vm.trySend(DesktopNavContract.Inputs.OnLogoClick) },
+            onSearchValueChanged = { vm.trySend(DesktopNavContract.Inputs.OnSearchValueChanged(it)) },
+            onEnterPress = { vm.trySend(DesktopNavContract.Inputs.OnSearchEnterPress) },
+            onProfileClick = { vm.trySend(DesktopNavContract.Inputs.OnProfileClick) },
+            onBasketClick = { vm.trySend(DesktopNavContract.Inputs.OnBasketClick) },
+            modifier = Modifier
+                .zIndex(5)
+//                .position(if (showNavBar) Position.Fixed else Position.Relative)
+//                .display(DisplayStyle.Block)
+//                .top(if (showTicker) tickerHeight else 0.px)
+//                .translateY(if (showNavBar) 0.px else (-100).px)
+                .boxShadow(
+                    offsetY = 0.px,
+                    blurRadius = if (showNavBarShadow) 20.px else 0.px,
+                    color = OldColorsJs.neutral200,
+                )
+                .transition(
+                    CSSTransition("translate", SmoothColorTransitionDurationVar.value()),
+                    CSSTransition("box-shadow", SmoothColorTransitionDurationVar.value()),
+                    CSSTransition("position", SmoothColorTransitionDurationVar.value()),
+                )
+        )
+    }
+}
+
+@Composable
+fun NavBar(
+    modifier: Modifier = Modifier,
+    storeText: String,
+    aboutText: String,
+    searchPlaceholder: String,
+    shippingReturnsText: String,
+    basketCount: Int,
+    storeMenuItems: List<String>,
+    onStoreMenuItemSelected: (String) -> Unit,
+    onStoreClick: () -> Unit,
+    onAboutClick: () -> Unit,
+    onShippingReturnsClick: () -> Unit,
+    onLogoClick: () -> Unit,
+    onSearchValueChanged: (String) -> Unit,
+    onEnterPress: () -> Unit,
+    onProfileClick: () -> Unit,
+    onBasketClick: () -> Unit,
+) {
+    var searchValue by remember { mutableStateOf("") }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .position(Position.Fixed)
+            .fillMaxWidth()
+            .maxWidth(oneLayoutMaxWidth)
+            .backgroundColor(Colors.White)
+            .padding(leftRight = 20.px, topBottom = 20.px)
+            .gap(20.px)
+            .display(DisplayStyle.Grid)
+            .styleModifier { property("grid-template-columns", "1fr auto 1fr") }
+    ) {
+        ListMenu(
+            storeText = storeText,
+            aboutText = aboutText,
+            shippingReturnsText = shippingReturnsText,
+            storeMenuItems = storeMenuItems,
+            onStoreClick = onStoreClick,
+            onAboutClick = onAboutClick,
+            onShippingReturnsClick = onShippingReturnsClick,
+            onStoreMenuItemSelected = onStoreMenuItemSelected,
+        )
+        Logo(
+            onClick = onLogoClick,
+            modifier = Modifier.margin(leftRight = 1.em)
+        )
+        RightSection(
+            searchPlaceholder = searchPlaceholder,
+            searchValue = searchValue,
+            basketCount = basketCount,
+            onSearchValueChanged = {
+                searchValue = it
+                onSearchValueChanged(it)
+            },
+            onEnterPress = onEnterPress,
+            onProfileClick = onProfileClick,
+            onBasketClick = onBasketClick,
+        )
     }
 }
 
@@ -171,6 +264,8 @@ private fun RightSection(
     searchPlaceholder: String,
     onSearchValueChanged: (String) -> Unit,
     onEnterPress: () -> Unit,
+    onProfileClick: () -> Unit,
+    onBasketClick: () -> Unit,
 ) {
     val breakpoint = rememberBreakpoint()
 
@@ -223,7 +318,7 @@ private fun RightSection(
                 ) {
                     NavIcon(
                         icon = { MdiPerson2(style = IconStyle.OUTLINED) },
-                        onClick = { }
+                        onClick = onProfileClick
                     )
                     Box(
                         modifier = Modifier
@@ -234,7 +329,7 @@ private fun RightSection(
                     )
                     NavIcon(
                         icon = { MdiShoppingBasket(style = IconStyle.OUTLINED) },
-                        onClick = { }
+                        onClick = onBasketClick
                     )
                 }
             }
@@ -255,6 +350,7 @@ private fun NavIcon(
             .onMouseLeave { hovered = false }
             .onClick { onClick() }
             .opacity(if (hovered) 0.6 else 1.0)
+            .fontSize(24.px)
             .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
             .cursor(Cursor.Pointer)
             .toAttrs()
@@ -285,8 +381,6 @@ private fun ListMenu(
     var isShippingButtonHovered by remember { mutableStateOf(false) }
     var isMenuHovered by remember { mutableStateOf(isStoreButtonHovered) }
     var open by remember { mutableStateOf(isStoreButtonHovered) }
-
-    println("StoreSubMenu: isButtonHovered: $isStoreButtonHovered, isMenuHovered: $isMenuHovered, open: $open")
 
     fun scheduleCloseMenu() {
         scheduled = scope.launch {
@@ -490,7 +584,10 @@ private fun ListMenuItem(
                         .translateY((-6).px)
                         .color(MaterialTheme.colors.mdSysColorOnBackground.value())
                         .fontWeight(if (hovered) FontWeight.Bold else FontWeight.Normal)
-                        .transition(CSSTransition("font-weight", 0.3.s, TransitionTimingFunction.Ease))
+                        .transition(
+                            CSSTransition("font-weight", 0.3.s, TransitionTimingFunction.Ease),
+                            CSSTransition("rotate", 0.3.s, TransitionTimingFunction.Ease),
+                        )
                 )
             }
         }
