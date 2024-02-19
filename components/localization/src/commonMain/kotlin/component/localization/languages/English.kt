@@ -233,4 +233,13 @@ internal fun englishLanguage(
     Strings.LeavingThisPageWillDiscardAllUnsavedChanges -> "Leaving this page will discard all unsaved changes."
     Strings.LeavePage -> key.name.enumCapitalized()
     Strings.Stay -> key.name.enumCapitalized()
+    Strings.Ticker -> "ECO-FRIENDLY CLOTHING. 100% COTTON"
+    Strings.UnitedKingdom -> "United Kingdom"
+    Strings.Admin -> key.name.enumCapitalized()
+    Strings.Store -> key.name.enumCapitalized()
+    Strings.Woman -> key.name.enumCapitalized()
+    Strings.Man -> key.name.enumCapitalized()
+    Strings.ShippingReturns -> "Shipping & Returns"
+    Strings.About -> key.name.enumCapitalized()
+    Strings.Sale -> key.name.enumCapitalized()
 }

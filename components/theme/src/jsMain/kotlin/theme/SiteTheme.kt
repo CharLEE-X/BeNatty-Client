@@ -26,9 +26,7 @@ fun initTheme(ctx: InitSilkContext) {
     ctx.theme.palettes.dark.color = appDarkColorScheme.sysColorOnBackground
 }
 
-fun Modifier.roleStyle(role: TypeScaleTokens.Role): Modifier = Modifier.styleModifier {
-    this.applyStyle(role)
-}
+fun Modifier.roleStyle(role: TypeScaleTokens.Role): Modifier = styleModifier { applyStyle(role) }
 
 object MaterialTheme {
     @Suppress("ClassName")
@@ -89,7 +87,5 @@ object MaterialTheme {
         object labelLarge : Role("label-large")
         object labelMedium : Role("label-medium")
         object labelSmall : Role("label-small")
-
     }
-
 }

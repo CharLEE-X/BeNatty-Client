@@ -33,12 +33,12 @@ import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEast
 import com.varabyte.kobweb.silk.components.style.common.SmoothColorTransitionDurationVar
 import com.varabyte.kobweb.silk.components.text.SpanText
+import feature.shop.navbar.DesktopNavContract
+import feature.shop.navbar.label
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
-import web.components.sections.desktopNav.DesktopNavContract
-import web.components.sections.desktopNav.label
 
 @Composable
 fun AccountLayout(

@@ -4,6 +4,10 @@ import com.apollographql.apollo3.ApolloCall
 import com.apollographql.apollo3.api.ApolloResponse
 import com.apollographql.apollo3.api.Operation
 import com.apollographql.apollo3.api.Optional
+import data.service.AuthService
+import io.ktor.http.HttpStatusCode
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 
 /**
  * Wrapper to handle apollo calls. Returns Data for this call wrapped in kotlin's Result.
@@ -17,6 +21,16 @@ internal suspend fun <T : Operation.Data> ApolloCall<T>.handle(
     val errors = response.errors
     if (!errors.isNullOrEmpty()) {
         val errorsAsString = errors.joinToString { it.message }
+
+        if (
+            errorsAsString.contains(HttpStatusCode.Forbidden.description, ignoreCase = true) ||
+            errorsAsString.contains(HttpStatusCode.Unauthorized.description, ignoreCase = true)
+        ) {
+            val authService = object : KoinComponent {}
+            authService.get<AuthService>().signOut()
+            error("Unauthorized. Logging out.")
+        }
+
         error("$operationName: $errorsAsString")
     }
 

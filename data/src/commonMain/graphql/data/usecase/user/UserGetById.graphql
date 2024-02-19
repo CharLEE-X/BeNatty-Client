@@ -1,6 +1,6 @@
-query GetUserById($getUserByIdId: ObjectId!) {
-  getUserById(id: $getUserByIdId) {
-    user {
+query GetCustomer($getUserByIdId: String!) {
+  getCustomer(id: $getUserByIdId) {
+    customer {
       address {
         address
         apartment

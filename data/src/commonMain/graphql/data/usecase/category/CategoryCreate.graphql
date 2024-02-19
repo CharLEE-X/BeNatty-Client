@@ -1,12 +1,5 @@
 mutation CreateCategory($input: CategoryCreateInput!) {
   createCategory(input: $input) {
     id
-    name
-    creator {
-      id
-      firstName
-      lastName
-    }
-    createdAt
   }
 }

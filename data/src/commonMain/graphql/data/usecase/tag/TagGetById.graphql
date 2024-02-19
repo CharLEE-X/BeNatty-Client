@@ -1,4 +1,4 @@
-query GetTagById($getTagByIdId: ObjectId!) {
+query GetTagById($getTagByIdId: String!) {
   getTagById(id: $getTagByIdId) {
     id
     name

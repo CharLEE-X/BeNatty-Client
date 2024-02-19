@@ -17,8 +17,6 @@ import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.em
 import theme.MaterialTheme
 import theme.roleStyle
-import web.components.sections.footer.FooterContract
-import web.components.sections.footer.FooterViewModel
 import web.components.widgets.AppIconButton
 import web.components.widgets.AppOutlinedIconButton
 import web.components.widgets.AppOutlinedTextField
@@ -27,37 +25,40 @@ import web.components.widgets.AppOutlinedTextField
 @Composable
 fun FooterSubscribe(
     modifier: Modifier = Modifier,
-    state: FooterContract.State,
-    vm: FooterViewModel,
+    subscribeText: String,
+    emailText: String,
+    emailPlaceholder: String,
+    emailError: String?,
+    onEmailSend: () -> Unit,
+    onEmailChange: (String) -> Unit,
 ) {
     Column(
         modifier = modifier
     ) {
         SpanText(
-            text = state.strings.subscribe,
+            text = subscribeText,
             modifier = Modifier
                 .roleStyle(MaterialTheme.typography.labelLarge)
                 .fontWeight(FontWeight.Bold)
         )
         AppOutlinedTextField(
-            value = state.email,
-            onValueChange = { vm.trySend(FooterContract.Inputs.SetEmail(it)) },
-            label = state.strings.email,
-            errorText = state.emailError,
-            error = state.emailError != null,
+            value = emailText,
+            onValueChange = { onEmailChange(it) },
+            label = emailPlaceholder,
+            errorText = emailError,
+            error = emailError != null,
             trailingIcon = {
                 AppIconButton(
-                    onClick = { vm.trySend(FooterContract.Inputs.OnEmailSend) },
+                    onClick = { onEmailSend() },
                 ) {
                     MdiSend()
                 }
             },
             modifier = Modifier
-//                .fillMaxWidth()
                 .margin(top = 1.cssRem)
                 .onKeyDown {
                     if (it.key == "Enter") {
-                        vm.trySend(FooterContract.Inputs.OnEmailSend)
+                        onEmailSend()
                     }
                 }
         )

@@ -4,9 +4,13 @@ import com.copperleaf.ballast.BallastInterceptor
 import com.copperleaf.ballast.BallastViewModelConfiguration
 import com.copperleaf.ballast.build
 import com.copperleaf.ballast.core.PrintlnLogger
+import com.copperleaf.ballast.navigation.routing.Route
 import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.copperleaf.ballast.navigation.routing.RoutingTable
+import com.copperleaf.ballast.navigation.routing.build
+import com.copperleaf.ballast.navigation.routing.directions
 import com.copperleaf.ballast.navigation.routing.fromEnum
+import com.copperleaf.ballast.navigation.routing.pathParameter
 import com.copperleaf.ballast.navigation.vm.BasicRouter
 import com.copperleaf.ballast.navigation.vm.withRouter
 import kotlinx.coroutines.CoroutineScope
@@ -35,3 +39,5 @@ class RouterViewModel(
 
 fun RouterViewModel.goHome() =
     trySend(RouterContract.Inputs.GoToDestination(Screen.Home.matcher.routeFormat))
+
+fun <T : Route> T.idPath(id: String): String = this.directions().pathParameter("id", id).build()

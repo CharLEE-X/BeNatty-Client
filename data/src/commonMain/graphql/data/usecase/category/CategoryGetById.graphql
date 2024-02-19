@@ -1,4 +1,4 @@
-query GetCategoryById($getCategoryByIdId: ObjectId!) {
+query GetCategoryById($getCategoryByIdId: String!) {
   getCategoryById(id: $getCategoryByIdId) {
     id
     name

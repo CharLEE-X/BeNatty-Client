@@ -72,6 +72,7 @@ val dataModule = module {
     single<ProductService> {
         ProductServiceImpl(
             apolloClient = get(),
+            authService = get(),
         )
     }
     single<AdminService> {

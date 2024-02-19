@@ -8,11 +8,11 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.silk.components.text.SpanText
+import feature.shop.footer.FooterContract
+import feature.shop.footer.FooterViewModel
 import org.jetbrains.compose.web.css.em
 import theme.MaterialTheme
 import theme.roleStyle
-import web.components.sections.footer.FooterContract
-import web.components.sections.footer.FooterViewModel
 import web.components.widgets.AppTextButton
 
 @Composable

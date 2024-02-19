@@ -6,6 +6,7 @@ import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.ScrollBehavior
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.minHeight
 import com.varabyte.kobweb.compose.ui.modifiers.scrollBehavior
@@ -18,7 +19,6 @@ import com.varabyte.kobweb.silk.init.InitSilkContext
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import feature.root.rootModule
 import kotlinx.browser.localStorage
-import org.jetbrains.compose.web.css.value
 import org.jetbrains.compose.web.css.vh
 import org.koin.core.context.startKoin
 import theme.appDarkColorScheme
@@ -61,7 +61,7 @@ fun AppEntry(content: @Composable () -> Unit) {
                 modifier = Modifier
                     .minHeight(100.vh)
                     .scrollBehavior(ScrollBehavior.Smooth)
-                    .backgroundColor(theme.MaterialTheme.colors.mdSysColorBackground.value())
+                    .backgroundColor(Colors.White)
                     .transition(CSSTransition("background-color", SmoothColorTransitionDurationVar.value()))
             ) {
                 content()

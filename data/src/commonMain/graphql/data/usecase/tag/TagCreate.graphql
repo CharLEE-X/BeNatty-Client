@@ -1,12 +1,5 @@
 mutation CreateTag($input: TagCreateInput!) {
   createTag(input: $input) {
     id
-    name
-    creator {
-      id
-      firstName
-      lastName
-    }
-    createdAt
   }
 }

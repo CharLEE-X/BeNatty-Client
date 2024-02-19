@@ -19,7 +19,6 @@ import data.type.PageInput
 import data.type.PostStatus
 import data.type.PricingUpdateInput
 import data.type.ProductCreateInput
-import data.type.ProductDeleteInput
 import data.type.ProductMediaDeleteInput
 import data.type.ProductMediaUploadInput
 import data.type.ProductUpdateInput
@@ -57,8 +56,8 @@ interface ProductService {
         remainingStock: Int?,
         stockStatus: StockStatus?,
         trackQuantity: Boolean?,
-        price: Double?,
-        regularPrice: Double?,
+        price: String?,
+        regularPrice: String?,
         chargeTax: Boolean?,
         presetId: String?,
         height: String?,
@@ -79,6 +78,7 @@ interface ProductService {
 
 internal class ProductServiceImpl(
     private val apolloClient: ApolloClient,
+    private val authService: AuthService,
 ) : ProductService {
     override suspend fun deleteImage(productId: String, imageId: String): Result<DeleteProductMediaMutation.Data> {
         val input = ProductMediaDeleteInput(imageId = productId, productId = imageId)
@@ -112,8 +112,8 @@ internal class ProductServiceImpl(
         remainingStock: Int?,
         stockStatus: StockStatus?,
         trackQuantity: Boolean?,
-        price: Double?,
-        regularPrice: Double?,
+        price: String?,
+        regularPrice: String?,
         chargeTax: Boolean?,
         presetId: String?,
         height: String?,
@@ -216,8 +216,7 @@ internal class ProductServiceImpl(
     }
 
     override suspend fun delete(id: String): Result<DeleteProductMutation.Data> {
-        val input = ProductDeleteInput(id)
-        return apolloClient.mutation(DeleteProductMutation(input))
+        return apolloClient.mutation(DeleteProductMutation(id))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }

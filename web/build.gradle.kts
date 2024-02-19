@@ -39,6 +39,21 @@ kotlin {
                 implementation(components.localization)
 
                 implementation(feature.debug)
+                implementation(feature.root)
+                implementation(feature.router)
+
+                implementation(feature.auth.login)
+                implementation(feature.auth.register)
+                implementation(feature.auth.forgotPassword)
+                implementation(feature.auth.updatePassword)
+
+                implementation(feature.shop.navbar)
+                implementation(feature.shop.footer)
+                implementation(feature.shop.home)
+                implementation(feature.shop.account.profile)
+                implementation(feature.shop.account.orders)
+                implementation(feature.shop.account.returns)
+                implementation(feature.shop.account.wishlist)
 
                 implementation(feature.admin.dashboard)
                 implementation(feature.admin.list)
@@ -48,18 +63,6 @@ kotlin {
                 implementation(feature.admin.category.page)
                 implementation(feature.admin.tag.page)
 
-                implementation(feature.root)
-                implementation(feature.router)
-
-                implementation(feature.auth.login)
-                implementation(feature.auth.register)
-                implementation(feature.auth.forgotPassword)
-                implementation(feature.auth.updatePassword)
-
-                implementation(feature.account.profile)
-                implementation(feature.account.orders)
-                implementation(feature.account.returns)
-                implementation(feature.account.wishlist)
             }
             implementation(compose.runtime)
             implementation(compose.html.core)

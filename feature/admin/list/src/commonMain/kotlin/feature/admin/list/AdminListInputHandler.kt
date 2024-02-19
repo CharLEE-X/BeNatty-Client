@@ -128,9 +128,9 @@ internal class AdminListInputHandler :
                         sortDirection = state.sortDirection
                     ).fold(
                         onSuccess = {
-                            val items = it.getAllUsersPage.users.map { user ->
+                            val items = it.getAllCustomersPage.users.map { user ->
                                 ListItem(
-                                    id = user.id.toString(),
+                                    id = user.id,
                                     slot1 = millisToDate(user.createdAt.toLong()),
                                     slot2 = user.email,
                                     slot3 = user.name,
@@ -142,10 +142,10 @@ internal class AdminListInputHandler :
                             postInput(AdminListContract.Inputs.Set.Items(items))
 
                             val info = PageInfo(
-                                count = it.getAllUsersPage.info.count,
-                                pages = it.getAllUsersPage.info.pages,
-                                prev = it.getAllUsersPage.info.prev,
-                                next = it.getAllUsersPage.info.next,
+                                count = it.getAllCustomersPage.info.count,
+                                pages = it.getAllCustomersPage.info.pages,
+                                prev = it.getAllCustomersPage.info.prev,
+                                next = it.getAllCustomersPage.info.next,
                             )
                             postInput(AdminListContract.Inputs.Set.Info(info))
                         },
@@ -164,15 +164,13 @@ internal class AdminListInputHandler :
                         sortDirection = state.sortDirection
                     ).fold(
                         onSuccess = {
-                            println("DEBUG Got Products page: $it")
-
                             val items = it.getAllProductsPage.products.map { product ->
                                 ListItem(
-                                    id = product.id.toString(),
+                                    id = product.id,
                                     slot1 = millisToDate(product.createdAt.toLong()),
                                     slot2 = product.mediaUrl,
                                     slot3 = product.title,
-                                    slot4 = product.price?.toString(),
+                                    slot4 = product.price,
                                     slot5 = product.sold.toString(),
                                     slot6 = null,
                                 )
@@ -203,7 +201,7 @@ internal class AdminListInputHandler :
                         onSuccess = {
                             val items = it.getCategoriesAsPage.categories.map { order ->
                                 ListItem(
-                                    id = order.id.toString(),
+                                    id = order.id,
                                     slot1 = order.name, // millisToMonthYear(order.createdAt.toLong())
                                     slot2 = order.name,
                                     slot3 = order.name,
@@ -237,7 +235,7 @@ internal class AdminListInputHandler :
                         onSuccess = {
                             val items = it.getCategoriesAsPage.categories.map { category ->
                                 ListItem(
-                                    id = category.id.toString(),
+                                    id = category.id,
                                     slot1 = millisToDate(category.createdAt.toLong()),
                                     slot2 = category.name,
                                     slot3 = category.description,
@@ -272,7 +270,7 @@ internal class AdminListInputHandler :
                         onSuccess = {
                             val items = it.getTagsAsPage.tags.map { tag ->
                                 ListItem(
-                                    id = tag.id.toString(),
+                                    id = tag.id,
                                     slot1 = millisToDate(tag.createdAt.toLong()),
                                     slot2 = tag.name,
                                     slot3 = tag.usedInProducts.toString(),

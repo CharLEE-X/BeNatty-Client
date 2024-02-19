@@ -4,12 +4,12 @@ import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.watch
-import data.CreateUserMutation
-import data.DeleteUserByIdMutation
-import data.GetUserByIdQuery
-import data.UpdateUserMutation
-import data.UserCheckPasswordMatchQuery
-import data.UsersGetAllPageQuery
+import data.CreateCustomerMutation
+import data.CustomerCheckPasswordMatchQuery
+import data.CustomerGetAllPageQuery
+import data.DeleteCustomerByIdMutation
+import data.GetCustomerQuery
+import data.UpdateCustomerMutation
 import data.type.PageInput
 import data.type.SortDirection
 import data.type.UserCreateInput
@@ -38,18 +38,18 @@ interface UserService {
         collectTax: Boolean,
         marketingEmails: Boolean,
         marketingSms: Boolean,
-    ): Result<CreateUserMutation.Data>
+    ): Result<CreateCustomerMutation.Data>
 
-    suspend fun getById(id: String): Flow<Result<GetUserByIdQuery.Data>>
+    suspend fun getById(id: String): Flow<Result<GetCustomerQuery.Data>>
     suspend fun getAsPage(
         page: Int,
         size: Int,
         query: String?,
         sortBy: String?,
         sortDirection: SortDirection?,
-    ): Result<UsersGetAllPageQuery.Data>
+    ): Result<CustomerGetAllPageQuery.Data>
 
-    suspend fun deleteById(id: String): Result<DeleteUserByIdMutation.Data>
+    suspend fun deleteById(id: String): Result<DeleteCustomerByIdMutation.Data>
 
     suspend fun update(
         id: String,
@@ -71,9 +71,12 @@ interface UserService {
         marketingEmails: Boolean?,
         marketingSms: Boolean?,
         password: String?,
-    ): Result<UpdateUserMutation.Data>
+    ): Result<UpdateCustomerMutation.Data>
 
-    suspend fun checkPasswordMatch(oldPassword: String, newPassword: String): Result<UserCheckPasswordMatchQuery.Data>
+    suspend fun checkPasswordMatch(
+        oldPassword: String,
+        newPassword: String
+    ): Result<CustomerCheckPasswordMatchQuery.Data>
 }
 
 internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserService {
@@ -95,7 +98,7 @@ internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserSer
         collectTax: Boolean,
         marketingEmails: Boolean,
         marketingSms: Boolean,
-    ): Result<CreateUserMutation.Data> {
+    ): Result<CreateCustomerMutation.Data> {
         val input = UserCreateInput(
             email = email,
             detailFirstName = detailsFirstName.skipIfNull(),
@@ -115,13 +118,13 @@ internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserSer
             marketingEmails = marketingEmails,
             marketingSms = marketingSms,
         )
-        return apolloClient.mutation(CreateUserMutation(input))
+        return apolloClient.mutation(CreateCustomerMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }
 
-    override suspend fun getById(id: String): Flow<Result<GetUserByIdQuery.Data>> {
-        return apolloClient.query(GetUserByIdQuery(id))
+    override suspend fun getById(id: String): Flow<Result<GetCustomerQuery.Data>> {
+        return apolloClient.query(GetCustomerQuery(id))
             .fetchPolicy(FetchPolicy.CacheAndNetwork)
             .watch()
             .map { it.handle() }
@@ -133,7 +136,7 @@ internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserSer
         query: String?,
         sortBy: String?,
         sortDirection: SortDirection?,
-    ): Result<UsersGetAllPageQuery.Data> {
+    ): Result<CustomerGetAllPageQuery.Data> {
         val pageInput = PageInput(
             page = page,
             size = size,
@@ -141,13 +144,13 @@ internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserSer
             sortBy = sortBy.skipIfNull(),
             sortDirection = sortDirection.skipIfNull(),
         )
-        return apolloClient.query(UsersGetAllPageQuery(pageInput))
+        return apolloClient.query(CustomerGetAllPageQuery(pageInput))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }
 
-    override suspend fun deleteById(id: String): Result<DeleteUserByIdMutation.Data> {
-        return apolloClient.mutation(DeleteUserByIdMutation(id))
+    override suspend fun deleteById(id: String): Result<DeleteCustomerByIdMutation.Data> {
+        return apolloClient.mutation(DeleteCustomerByIdMutation(id))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }
@@ -172,7 +175,7 @@ internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserSer
         marketingEmails: Boolean?,
         marketingSms: Boolean?,
         password: String?,
-    ): Result<UpdateUserMutation.Data> {
+    ): Result<UpdateCustomerMutation.Data> {
         val input = UserUpdateInput(
             id = id,
             email = email.skipIfNull(),
@@ -194,7 +197,7 @@ internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserSer
             addressPhone = addressPhone.skipIfNull(),
         )
 
-        return apolloClient.mutation(UpdateUserMutation(input))
+        return apolloClient.mutation(UpdateCustomerMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }
@@ -202,8 +205,8 @@ internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserSer
     override suspend fun checkPasswordMatch(
         oldPassword: String,
         newPassword: String
-    ): Result<UserCheckPasswordMatchQuery.Data> {
-        return apolloClient.query(UserCheckPasswordMatchQuery(oldPassword, newPassword))
+    ): Result<CustomerCheckPasswordMatchQuery.Data> {
+        return apolloClient.query(CustomerCheckPasswordMatchQuery(oldPassword, newPassword))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }

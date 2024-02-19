@@ -153,7 +153,9 @@ fun AdminCustomerCreatePage(
                     Apartment(state, vm) // TODO: Replace with company
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .gap(1.em)
                     ) {
                         City(state, vm)
                         Postcode(state, vm)

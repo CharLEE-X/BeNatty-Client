@@ -10,44 +10,46 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
 import theme.MaterialTheme
 import theme.roleStyle
-import web.components.sections.desktopNav.DesktopNavContract
-import web.components.sections.footer.FooterContract
-import web.components.sections.footer.FooterViewModel
 import web.components.widgets.CurrencyDropdown
 import web.components.widgets.SimpleDropdown
 
 @Composable
 fun FooterDeliverTo(
-    vm: FooterViewModel,
-    state: FooterContract.State,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    currentCountryText: String,
+    countryImageUrl: String,
+    languageText: String,
+    currentLanguageText: String,
+    deliverToText: String,
+    onCurrencyClick: () -> Unit,
+    onLanguageClick: () -> Unit,
 ) {
     Column(
         modifier = modifier
     ) {
         SpanText(
-            text = state.strings.deliverTo,
+            text = deliverToText,
             modifier = Modifier
                 .roleStyle(MaterialTheme.typography.bodyMedium)
                 .fontWeight(FontWeight.Bold)
                 .margin(bottom = 1.em),
         )
         CurrencyDropdown(
-            countryText = DesktopNavContract.Strings.currencyEnUs,
-            countryImageUrl = state.languageImageUrl,
-            countryImageAlt = DesktopNavContract.Strings.currencyEnUs,
-            onClick = { vm.trySend(FooterContract.Inputs.OnCurrencyClick) },
+            countryText = currentCountryText,
+            countryImageUrl = countryImageUrl,
+            countryImageAlt = currentCountryText,
+            onClick = onCurrencyClick,
         )
         SpanText(
-            text = state.strings.language,
+            text = languageText,
             modifier = Modifier
                 .roleStyle(MaterialTheme.typography.bodyMedium)
                 .fontWeight(FontWeight.Bold)
                 .margin(top = 2.em, bottom = 1.em),
         )
         SimpleDropdown(
-            text = state.strings.english,
-            onClick = { vm.trySend(FooterContract.Inputs.OnLanguageClick) },
+            text = currentLanguageText,
+            onClick = onLanguageClick,
         )
     }
 }

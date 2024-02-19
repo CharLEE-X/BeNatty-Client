@@ -8,7 +8,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import com.varabyte.kobweb.core.Page
 import feature.root.RootContract
 import feature.root.RootViewModel
-import web.RouterContent
 
 @Suppress("unused")
 @Page

@@ -41,28 +41,28 @@ internal class AdminProductPageInputHandler :
         is AdminProductPageContract.Inputs.AddMedia -> handleAddMedia(input.mediaString)
         is AdminProductPageContract.Inputs.DeleteMedia -> handleDeleteMedia(input.index)
 
-        is AdminProductPageContract.Inputs.Get.ProductById -> handleGetProductById(input.id)
-        AdminProductPageContract.Inputs.Get.AllCategories -> handleGetAllCategories()
-        AdminProductPageContract.Inputs.Get.AllTags -> handleGetAllTags()
-        is AdminProductPageContract.Inputs.Get.PresetCategory -> handleGetPresetCategory(input.categoryId)
+        is AdminProductPageContract.Inputs.GetProductById -> handleGetProductById(input.id)
+        AdminProductPageContract.Inputs.GetAllCategories -> handleGetAllCategories()
+        AdminProductPageContract.Inputs.GetAllTags -> handleGetAllTags()
+        is AdminProductPageContract.Inputs.GetPresetCategory -> handleGetPresetCategory(input.categoryId)
 
-        AdminProductPageContract.Inputs.OnClick.Delete -> handleDelete()
-        AdminProductPageContract.Inputs.OnClick.Save -> handleSave()
-        AdminProductPageContract.Inputs.OnClick.Discard -> updateState { it.copy(current = it.original).wasEdited() }
-        is AdminProductPageContract.Inputs.OnClick.CategorySelected -> handleOnClickCategory(input.categoryName)
-        is AdminProductPageContract.Inputs.OnClick.TagSelected -> handleTagClick(input.tagName)
-        is AdminProductPageContract.Inputs.OnClick.DeleteImage -> handleDeleteImage(input.imageId)
-        is AdminProductPageContract.Inputs.OnClick.GoToUserCreator -> {
+        AdminProductPageContract.Inputs.OnDeleteClick -> handleDelete()
+        AdminProductPageContract.Inputs.OnSaveClick -> handleSave()
+        AdminProductPageContract.Inputs.OnDiscardClick -> updateState { it.copy(current = it.original).wasEdited() }
+        is AdminProductPageContract.Inputs.OnCategorySelected -> handleOnClickCategory(input.categoryName)
+        is AdminProductPageContract.Inputs.OnTagSelected -> handleTagClick(input.tagName)
+        is AdminProductPageContract.Inputs.OnDeleteImageClick -> handleDeleteImage(input.imageId)
+        is AdminProductPageContract.Inputs.OnUserCreatorClick -> {
             val userId = getCurrentState().original.creator.id.toString()
             postEvent(AdminProductPageContract.Events.GoToUserDetails(userId))
         }
 
-        AdminProductPageContract.Inputs.OnClick.GoToCreateTag ->
+        AdminProductPageContract.Inputs.OnCreateTagClick ->
             postEvent(AdminProductPageContract.Events.GoToCreateTag)
 
 
-        is AdminProductPageContract.Inputs.OnClick.PresetSelected -> handlePresetClick(input.preset)
-        AdminProductPageContract.Inputs.OnClick.GoToCreateCategory ->
+        is AdminProductPageContract.Inputs.OnPresetSelected -> handlePresetClick(input.preset)
+        AdminProductPageContract.Inputs.OnCreateCategoryClick ->
             postEvent(AdminProductPageContract.Events.GoToCreateCategory)
 
         is AdminProductPageContract.Inputs.Set.AllCategories -> updateState { it.copy(allCategories = input.categories) }
@@ -150,7 +150,7 @@ internal class AdminProductPageInputHandler :
             when (state.screenState) {
                 AdminProductPageContract.ScreenState.Existing -> {
                     val id = state.current.media[index].id.toString()
-                    postInput(AdminProductPageContract.Inputs.OnClick.DeleteImage(id))
+                    postInput(AdminProductPageContract.Inputs.OnDeleteImageClick(id))
                 }
 
                 AdminProductPageContract.ScreenState.New -> {
@@ -252,7 +252,7 @@ internal class AdminProductPageInputHandler :
             if (state.current.shipping.presetId == presetId) {
                 postInput(AdminProductPageContract.Inputs.Set.PresetCategory(null))
             } else {
-                postInput(AdminProductPageContract.Inputs.Get.PresetCategory(presetId))
+                postInput(AdminProductPageContract.Inputs.GetPresetCategory(presetId))
             }
         }
     }
@@ -302,7 +302,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetPrice(price: String) {
         updateState {
             it.copy(
-                current = it.current.copy(pricing = it.current.pricing.copy(price = price.toDouble())),
+                current = it.current.copy(pricing = it.current.pricing.copy(price = price)),
                 priceError = if (it.wasEdited) inputValidator.validateNumberPositive(price.toInt()) else null
             ).wasEdited()
         }
@@ -311,7 +311,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetRegularPrice(regularPrice: String) {
         updateState {
             it.copy(
-                current = it.current.copy(pricing = it.current.pricing.copy(regularPrice = regularPrice.toDouble())),
+                current = it.current.copy(pricing = it.current.pricing.copy(regularPrice = regularPrice)),
                 regularPriceError = if (it.wasEdited) inputValidator.validateNumberPositive(regularPrice.toInt()) else null
             ).wasEdited()
         }
@@ -388,12 +388,12 @@ internal class AdminProductPageInputHandler :
                 postInput(AdminProductPageContract.Inputs.Set.StateOfScreen(AdminProductPageContract.ScreenState.New))
             } else {
                 postInput(AdminProductPageContract.Inputs.Set.Loading(isLoading = true))
-                postInput(AdminProductPageContract.Inputs.Get.ProductById(id))
+                postInput(AdminProductPageContract.Inputs.GetProductById(id))
                 postInput(AdminProductPageContract.Inputs.Set.StateOfScreen(AdminProductPageContract.ScreenState.Existing))
                 postInput(AdminProductPageContract.Inputs.Set.Loading(isLoading = false))
             }
-            postInput(AdminProductPageContract.Inputs.Get.AllCategories)
-            postInput(AdminProductPageContract.Inputs.Get.AllTags)
+            postInput(AdminProductPageContract.Inputs.GetAllCategories)
+            postInput(AdminProductPageContract.Inputs.GetAllTags)
         }
     }
 
@@ -476,14 +476,14 @@ internal class AdminProductPageInputHandler :
             title = state.current.title,
             description = state.current.description,
             postStatus = state.current.postStatus,
-            media = state.current.media,
+            media = state.current.media.map { it.id },
             categoryId = Optional.present(state.current.categoryId),
             tags = state.current.tags,
             isFeatured = state.current.isFeatured,
             allowReviews = state.current.allowReviews,
             pricing = PricingCreateInput(
-                price = state.current.pricing.price ?: 0.0,
-                regularPrice = state.current.pricing.regularPrice ?: 0.0,
+                price = state.current.pricing.price ?: "",
+                regularPrice = state.current.pricing.regularPrice ?: "",
                 chargeTax = state.current.pricing.chargeTax,
             ),
             inventory = InventoryInput(
@@ -687,7 +687,7 @@ internal class AdminProductPageInputHandler :
         sideJob("handleDeleteUser") {
             productService.delete(id).fold(
                 onSuccess = {
-                    postEvent(AdminProductPageContract.Events.GoBack)
+                    postEvent(AdminProductPageContract.Events.GoBackToProducts)
                 },
                 onFailure = {
                     postEvent(
@@ -752,7 +752,7 @@ internal class AdminProductPageInputHandler :
 }
 
 private suspend fun InputScope.handleDiscard() {
-    postEvent(AdminProductPageContract.Events.GoBack)
+    postEvent(AdminProductPageContract.Events.GoBackToProducts)
 }
 
 private suspend fun InputScope.handleSetIsFeatured(featured: Boolean) {

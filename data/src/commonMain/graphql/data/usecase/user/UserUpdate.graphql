@@ -1,5 +1,5 @@
-mutation UpdateUser($input: UserUpdateInput!) {
-  updateUser(input: $input) {
+mutation UpdateCustomer($input: UserUpdateInput!) {
+  updateCustomer(input: $input) {
     address {
       address
       apartment

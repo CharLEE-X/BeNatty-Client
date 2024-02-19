@@ -8,9 +8,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.copperleaf.ballast.navigation.routing.RouterContract
-import com.copperleaf.ballast.navigation.routing.build
-import com.copperleaf.ballast.navigation.routing.directions
-import com.copperleaf.ballast.navigation.routing.pathParameter
 import com.varabyte.kobweb.compose.css.Resize
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
@@ -20,7 +17,6 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.admin.category.page.AdminCategoryPageContract
 import feature.admin.category.page.AdminCategoryPageViewModel
 import feature.router.RouterViewModel
-import feature.router.Screen
 import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import theme.roleStyle
@@ -43,6 +39,10 @@ fun AdminCategoryPage(
     id: String?,
     onError: suspend (String) -> Unit,
     goToAdminHome: () -> Unit,
+    goToCustomers: () -> Unit,
+    goToCustomer: (String) -> Unit,
+    goToCreateCategory: () -> Unit,
+    goToCategory: (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -50,36 +50,10 @@ fun AdminCategoryPage(
             id = id,
             scope = scope,
             onError = onError,
-            goToUserList = {
-                router.trySend(
-                    RouterContract.Inputs.GoToDestination(
-                        Screen.AdminCategoryList.matcher.routeFormat
-                    )
-                )
-            },
-            goToUser = { id ->
-                router.trySend(
-                    RouterContract.Inputs.GoToDestination(
-                        Screen.AdminCustomerProfile.directions()
-                            .pathParameter("id", id)
-                            .build()
-                    )
-                )
-            },
-            goToCreateCategory = {
-                router.trySend(
-                    RouterContract.Inputs.GoToDestination(Screen.AdminCategoryPageNew.matcher.routeFormat)
-                )
-            },
-            goToCategory = { id ->
-                router.trySend(
-                    RouterContract.Inputs.GoToDestination(
-                        Screen.AdminCategoryPageExisting.directions()
-                            .pathParameter("id", id)
-                            .build()
-                    )
-                )
-            },
+            goToUserList = goToCustomers,
+            goToUser = goToCustomer,
+            goToCreateCategory = goToCreateCategory,
+            goToCategory = goToCategory,
         )
     }
     val state by vm.observeStates().collectAsState()

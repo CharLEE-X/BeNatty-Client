@@ -10,51 +10,60 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
 import theme.MaterialTheme
 import theme.roleStyle
-import web.components.sections.footer.FooterContract
-import web.components.sections.footer.FooterViewModel
 import web.components.widgets.AppTextButton
 
 @Composable
 fun FooterAboutUs(
-    vm: FooterViewModel,
-    state: FooterContract.State,
+    showAdminButton: Boolean,
+    aboutUsSmallText: String,
+    aboutUsText: String,
+    careerText: String,
+    cyberSecurityText: String,
+    pressText: String,
+    adminTextText: String,
+    onAboutUsClick: () -> Unit,
+    onCareerClick: () -> Unit,
+    onCyberSecurityClick: () -> Unit,
+    onPressClick: () -> Unit,
+    onGoToAdminHome: () -> Unit,
     modifier: Modifier = Modifier,
-    onGoToAdminDashboard: () -> Unit,
 ) {
     Column(
         modifier = modifier
     ) {
         SpanText(
-            text = state.strings.aboutUsSmall,
+            text = aboutUsSmallText,
             modifier = Modifier
                 .roleStyle(MaterialTheme.typography.bodyMedium)
                 .fontWeight(FontWeight.Bold)
                 .margin(bottom = 1.em, left = 1.em),
         )
         AppTextButton(
-            onClick = { vm.trySend(FooterContract.Inputs.OnAboutUsClick) },
+            onClick = { onAboutUsClick() },
         ) {
-            SpanText(state.strings.aboutUs)
+            SpanText(aboutUsText)
         }
         AppTextButton(
-            onClick = { vm.trySend(FooterContract.Inputs.OnCareerClick) },
+            onClick = { onCareerClick() },
         ) {
-            SpanText(state.strings.career)
+            SpanText(careerText)
         }
         AppTextButton(
-            onClick = { vm.trySend(FooterContract.Inputs.OnCyberSecurityClick) },
+            onClick = { onCyberSecurityClick() },
         ) {
-            SpanText(state.strings.cyberSecurity)
+            SpanText(cyberSecurityText)
         }
         AppTextButton(
-            onClick = { vm.trySend(FooterContract.Inputs.OnPressClick) },
+            onClick = { onPressClick() },
         ) {
-            SpanText(state.strings.press)
+            SpanText(pressText)
         }
-        AppTextButton(
-            onClick = { onGoToAdminDashboard() },
-        ) {
-            SpanText("Admin")
+        if (showAdminButton) {
+            AppTextButton(
+                onClick = { onGoToAdminHome() },
+            ) {
+                SpanText(adminTextText)
+            }
         }
     }
 }

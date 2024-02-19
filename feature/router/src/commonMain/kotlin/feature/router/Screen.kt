@@ -54,9 +54,9 @@ enum class Screen(routeFormat: String, override val annotations: Set<RouteAnnota
     AdminProductCreate(ADMIN + PRODUCTS + NEW),
     AdminProductPage(ADMIN + PRODUCTS + ID),
 
-    AdminCategoryList(ADMIN + PRODUCTS + CATEGORIES),
-    AdminCategoryPageNew(ADMIN + PRODUCTS + CATEGORIES + NEW),
-    AdminCategoryPageExisting(ADMIN + PRODUCTS + CATEGORIES + ID),
+    AdminCategoryList(ADMIN + CATEGORIES),
+    AdminCategoryPageNew(ADMIN + CATEGORIES + NEW),
+    AdminCategoryProfile(ADMIN + CATEGORIES + ID),
 
     AdminTagList(ADMIN + TAGS),
     AdminTagCreate(ADMIN + TAGS + NEW),
@@ -70,7 +70,7 @@ enum class Screen(routeFormat: String, override val annotations: Set<RouteAnnota
     Login(LOGIN),
     Register(REGISTER),
     ForgotPassword(FORGOT_PASSWORD),
-    UpdateEmail(UPDATE_EMAIL),
+    UpdatePassword(UPDATE_EMAIL),
 
     // Account
     Order(ACCOUNT + ORDERS),
@@ -133,7 +133,7 @@ fun Screen.pageTitle(shopName: String = "Natalia's Shop"): String {
         Screen.Blog -> "Blog"
         Screen.Register -> "Register"
         Screen.ForgotPassword -> "Forgot Password"
-        Screen.UpdateEmail -> "Update Email"
+        Screen.UpdatePassword -> "Update Email"
         Screen.PrivacyPolicy -> "Privacy Policy"
         Screen.TC -> "Terms and Conditions"
         Screen.Wishlist -> "Wishlist"
@@ -161,7 +161,7 @@ fun Screen.pageTitle(shopName: String = "Natalia's Shop"): String {
         Screen.AdminOrderPageNew -> "Order Create"
         Screen.AdminCategoryList -> "Categories"
         Screen.AdminCategoryPageNew -> "Category Create"
-        Screen.AdminCategoryPageExisting -> "Category details"
+        Screen.AdminCategoryProfile -> "Category details"
         Screen.AdminTagList -> "Tags"
         Screen.AdminTagCreate -> "Tag Create"
         Screen.AdminTagPageExisting -> "Tag details"

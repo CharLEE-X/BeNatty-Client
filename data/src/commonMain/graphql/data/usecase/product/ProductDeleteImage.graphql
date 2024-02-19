@@ -1,5 +1,3 @@
 mutation DeleteProductMedia($input: ProductMediaDeleteInput!) {
-  deleteProductMedia(input: $input) {
-    deleted
-  }
+  deleteProductMedia(input: $input)
 }

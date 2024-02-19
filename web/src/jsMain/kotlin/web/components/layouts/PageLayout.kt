@@ -2,12 +2,6 @@ package web.components.layouts
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import com.copperleaf.ballast.navigation.routing.RouterContract
-import com.copperleaf.ballast.navigation.routing.currentRouteOrNull
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
@@ -16,71 +10,83 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.minHeight
-import feature.router.RouterViewModel
-import feature.router.Screen
-import feature.router.pageTitle
+import feature.shop.footer.FooterRoutes
+import feature.shop.navbar.DesktopNavRoutes
 import kotlinx.browser.document
 import org.jetbrains.compose.web.css.percent
-import web.Category
-import web.CategoryFilter
 import web.components.sections.desktopNav.DesktopNav
 import web.components.sections.footer.Footer
 
+data class MainParams(
+    val goToHome: () -> Unit,
+    val goToLogin: () -> Unit,
+    val goToOrders: () -> Unit,
+    val goToProfile: () -> Unit,
+    val goToReturns: () -> Unit,
+    val goToWishlist: () -> Unit,
+    val goToHelpAndFaq: () -> Unit,
+    val goToCatalogue: () -> Unit,
+    val goToAboutUs: () -> Unit,
+    val goToAccessibility: () -> Unit,
+    val goToCareer: () -> Unit,
+    val goToContactUs: () -> Unit,
+    val goToCyberSecurity: () -> Unit,
+    val goToFAQs: () -> Unit,
+    val goToPress: () -> Unit,
+    val goToPrivacyPolicy: () -> Unit,
+    val goToShipping: () -> Unit,
+    val goToTermsOfService: () -> Unit,
+    val goToTrackOrder: () -> Unit,
+    val goToAdminHome: () -> Unit,
+    val onError: suspend (String) -> Unit,
+)
+
 @Composable
-fun AppLayout(
-    router: RouterViewModel,
-    state: RouterContract.State<Screen>,
-    isAuthenticated: Boolean,
-    onLogOut: () -> Unit,
-    onError: (String) -> Unit,
+fun ShopMainLayout(
+    title: String,
+    mainParams: MainParams,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    var searchValue by remember { mutableStateOf("") }
-
-    val categories = Category.entries.toList()
-    var currentCategory by remember { mutableStateOf<Category?>(null) }
-
-    val categoryFilters = listOf(
-        CategoryFilter("1", "All"),
-        CategoryFilter("2", "Women"),
-        CategoryFilter("3", "Men"),
-        CategoryFilter("4", "Kids"),
+    val desktopNavRoutes = DesktopNavRoutes(
+        goToHome = mainParams.goToHome,
+        goToLogin = mainParams.goToLogin,
+        goToOrders = mainParams.goToOrders,
+        goToProfile = mainParams.goToProfile,
+        goToReturns = mainParams.goToReturns,
+        goToWishlist = mainParams.goToWishlist,
+        goToHelpAndFaq = mainParams.goToHelpAndFaq,
+        goToCatalogue = mainParams.goToCatalogue,
+        goToAbout = mainParams.goToAboutUs,
+        goToShippingAndReturns = mainParams.goToShipping, // FIXME: Change to 'ShippingAndReturns'
+    )
+    val footerRoutes = FooterRoutes(
+        goToAboutUs = mainParams.goToAboutUs,
+        goToAccessibility = mainParams.goToAccessibility,
+        goToCareer = mainParams.goToCareer,
+        goToContactUs = mainParams.goToContactUs,
+        goToCyberSecurity = mainParams.goToCyberSecurity,
+        goToFAQs = mainParams.goToFAQs,
+        goToPress = mainParams.goToPress,
+        goToPrivacyPolicy = mainParams.goToPrivacyPolicy,
+        goToShipping = mainParams.goToShipping,
+        goToTermsOfService = mainParams.goToTermsOfService,
+        goToTrackOrder = mainParams.goToTrackOrder,
+        goToAdminHome = mainParams.goToAdminHome,
+        goToReturns = mainParams.goToReturns,
     )
 
-    var currentCategoryFilter by remember { mutableStateOf<CategoryFilter?>(null) }
-
     PageLayout(
-        title = state.currentRouteOrNull?.pageTitle() ?: "",
+        title = title,
         topBar = {
             DesktopNav(
-                router = router,
-                isAuthenticated = isAuthenticated,
-                currentLanguageImageUrl = "https://m.media-amazon.com/images/I/61msrRHflnL._AC_SL1500_.jpg",
-                searchValue = searchValue,
-                onSearchValueChanged = { searchValue = it },
-                categories = categories,
-                categoryFilters = categoryFilters,
-                currentCategoryFilter = currentCategoryFilter,
-                onCategoryClick = {
-                    currentCategory = it
-                    currentCategoryFilter = categoryFilters.firstOrNull()
-                },
-                onCategoryFilterClick = { currentCategoryFilter = it },
-                onCurrencyAndLanguageClick = {
-
-                },
-                logOut = {
-                    currentCategory = null
-                    currentCategoryFilter = null
-                    onLogOut()
-                },
-                onError = onError,
+                desktopNavRoutes = desktopNavRoutes,
+                onError = mainParams.onError,
             )
         },
         footer = {
             Footer(
-                router = router,
-                onError = onError,
+                onError = mainParams.onError,
+                footerRoutes = footerRoutes,
             )
         },
         content = content
@@ -88,14 +94,14 @@ fun AppLayout(
 }
 
 @Composable
-fun PageLayout(
+private fun PageLayout(
     title: String,
     topBar: @Composable ColumnScope.() -> Unit,
     footer: @Composable ColumnScope.() -> Unit,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     LaunchedEffect(title) {
-        document.title = title
+        document.title = "BeNatty - $title"
     }
     Box(
         modifier = Modifier

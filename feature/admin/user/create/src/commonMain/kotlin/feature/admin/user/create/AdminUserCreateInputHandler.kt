@@ -152,7 +152,7 @@ internal class AdminUserCreateInputHandler :
                 marketingSms = state.marketingSms,
             ).fold(
                 onSuccess = { data ->
-                    postEvent(AdminCustomerCreateContract.Events.GoToUser(data.createUser.id.toString()))
+                    postEvent(AdminCustomerCreateContract.Events.GoToUser(data.createCustomer.id))
                 },
                 onFailure = {
                     postEvent(AdminCustomerCreateContract.Events.OnError(it.message ?: "Error while creating new user"))
@@ -174,6 +174,7 @@ internal class AdminUserCreateInputHandler :
         copy(
             wasEdited = email.isNotEmpty() || detailFirstName.isNotEmpty() || detailLastName.isNotEmpty() ||
                 language.isNotEmpty() || detailPhone.isNotEmpty() || country.isNotEmpty() || address.isNotEmpty() ||
-                apartment.isNotEmpty() || city.isNotEmpty() || postcode.isNotEmpty() || company.isNotEmpty()
+                apartment.isNotEmpty() || city.isNotEmpty() || postcode.isNotEmpty() || company.isNotEmpty() ||
+                !collectTax || marketingEmails || marketingSms
         )
 }

@@ -8,11 +8,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import com.copperleaf.ballast.navigation.routing.RouterContract
-import com.copperleaf.ballast.navigation.routing.RouterContract.Inputs.GoBack
-import com.copperleaf.ballast.navigation.routing.build
-import com.copperleaf.ballast.navigation.routing.directions
-import com.copperleaf.ballast.navigation.routing.pathParameter
 import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
 import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.ObjectFit
@@ -56,7 +51,6 @@ import data.type.StockStatus
 import feature.admin.product.page.AdminProductPageContract
 import feature.admin.product.page.AdminProductPageViewModel
 import feature.router.RouterViewModel
-import feature.router.Screen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.FlexWrap
@@ -95,6 +89,11 @@ fun AdminProductPagePage(
     router: RouterViewModel,
     onError: suspend (String) -> Unit,
     goToAdminHome: () -> Unit,
+    goBackToProducts: () -> Unit,
+    goToCreateCategory: () -> Unit,
+    goToCreateTag: () -> Unit,
+    goToCustomer: (String) -> Unit,
+    goToProduct: (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -102,35 +101,11 @@ fun AdminProductPagePage(
             productId = productId,
             scope = scope,
             onError = onError,
-            goBack = { router.trySend(GoBack()) },
-            goToCreateCategory = {
-                router.trySend(
-                    RouterContract.Inputs.GoToDestination(Screen.AdminCategoryPageNew.matcher.routeFormat)
-                )
-            },
-            goToCreateTag = {
-                router.trySend(
-                    RouterContract.Inputs.GoToDestination(Screen.AdminTagCreate.matcher.routeFormat)
-                )
-            },
-            goToUserDetails = { id ->
-                router.trySend(
-                    RouterContract.Inputs.GoToDestination(
-                        Screen.AdminCustomerProfile.directions()
-                            .pathParameter("id", id)
-                            .build()
-                    )
-                )
-            },
-            goToProductDetail = { id ->
-                router.trySend(
-                    RouterContract.Inputs.GoToDestination(
-                        Screen.AdminProductPage.directions()
-                            .pathParameter("id", id)
-                            .build()
-                    )
-                )
-            },
+            goBackToProducts = goBackToProducts,
+            goToCreateCategory = goToCreateCategory,
+            goToCreateTag = goToCreateTag,
+            goToCustomerDetails = goToCustomer,
+            goToProductDetail = goToProduct,
         )
     }
     val state by vm.observeStates().collectAsState()
@@ -146,7 +121,7 @@ fun AdminProductPagePage(
     var deleteProductImageDialogImageId: String? by remember { mutableStateOf(null) }
 
     AdminLayout(
-        title = state.strings.createProduct,
+        title = state.strings.products,
         router = router,
         isLoading = state.isLoading,
         showEditedButtons = state.wasEdited || state.screenState is AdminProductPageContract.ScreenState.New,
@@ -154,8 +129,8 @@ fun AdminProductPagePage(
         unsavedChangesText = state.strings.unsavedChanges,
         saveText = state.strings.save,
         discardText = state.strings.discard,
-        onCancel = { if (state.wasEdited) vm.trySend(AdminProductPageContract.Inputs.OnClick.Discard) },
-        onSave = { vm.trySend(AdminProductPageContract.Inputs.OnClick.Save) },
+        onCancel = { if (state.wasEdited) vm.trySend(AdminProductPageContract.Inputs.OnDiscardClick) },
+        onSave = { vm.trySend(AdminProductPageContract.Inputs.OnSaveClick) },
         goToAdminHome = goToAdminHome,
         overlay = {
             HasChangesWidget(
@@ -163,8 +138,8 @@ fun AdminProductPagePage(
                 messageText = state.strings.unsavedChanges,
                 saveText = state.strings.saveChanges,
                 resetText = state.strings.dismiss,
-                onSave = { vm.trySend(AdminProductPageContract.Inputs.OnClick.Save) },
-                onCancel = { vm.trySend(AdminProductPageContract.Inputs.OnClick.Discard) },
+                onSave = { vm.trySend(AdminProductPageContract.Inputs.OnSaveClick) },
+                onCancel = { vm.trySend(AdminProductPageContract.Inputs.OnDiscardClick) },
             )
             if (previewDialogOpen) {
                 previewDialogImage?.let { image ->
@@ -185,7 +160,7 @@ fun AdminProductPagePage(
                 contentText = state.strings.deleteExplain,
                 onOpen = { deleteProductDialogOpen = it },
                 onClosing = { deleteProductDialogClosing = it },
-                onYes = { vm.trySend(AdminProductPageContract.Inputs.OnClick.Delete) },
+                onYes = { vm.trySend(AdminProductPageContract.Inputs.OnDeleteClick) },
                 onNo = { deleteProductDialogClosing = true },
             )
             TakeActionDialog(
@@ -199,7 +174,7 @@ fun AdminProductPagePage(
                 onClosing = { deleteProductImageDialogClosing = it },
                 onYes = {
                     deleteProductImageDialogImageId?.let {
-                        vm.trySend(AdminProductPageContract.Inputs.OnClick.DeleteImage(it))
+                        vm.trySend(AdminProductPageContract.Inputs.OnDeleteImageClick(it))
                     }
                 },
                 onNo = { deleteProductImageDialogClosing = true },
@@ -212,7 +187,7 @@ fun AdminProductPagePage(
             } else {
                 state.original.title
             },
-            onGoBack = { router.trySend(GoBack()) },
+            onGoBack = goBackToProducts,
             hasBackButton = true,
             actions = {
                 if (state.screenState is AdminProductPageContract.ScreenState.Existing) {
@@ -318,13 +293,13 @@ private fun ShippingPreset(vm: AdminProductPageViewModel, state: AdminProductPag
     SpanText(text = state.strings.shippingPreset)
     FilterChipSection(
         chips = state.allCategories.map { it.name },
-        selectedChips = state.current.categoryId?.let {
-            listOf(state.allCategories.first { it.id == it }.name)
+        selectedChips = state.current.categoryId?.let { categoryId ->
+            listOf(state.allCategories.first { it.id == categoryId }.name)
         } ?: emptyList(),
-        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.PresetSelected(it)) },
+        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.OnPresetSelected(it)) },
         noChipsText = state.strings.noCategories,
         createText = state.strings.createCategory,
-        onCreateClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.GoToCreateCategory) },
+        onCreateClick = { vm.trySend(AdminProductPageContract.Inputs.OnCreateCategoryClick) },
         afterTitle = { AppTooltip(state.strings.shippingPresetDesc) },
     )
     Box(Modifier.size(0.5.em))
@@ -798,13 +773,13 @@ private fun CategoryId(vm: AdminProductPageViewModel, state: AdminProductPageCon
     SpanText(text = state.strings.categories)
     FilterChipSection(
         chips = state.allCategories.map { it.name },
-        selectedChips = state.current.categoryId?.let {
-            listOf(state.allCategories.first { it.id == it }.name)
+        selectedChips = state.current.categoryId?.let { categoryId ->
+            listOf(state.allCategories.first { it.id == categoryId }.name)
         } ?: emptyList(),
-        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.CategorySelected(it)) },
+        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.OnCategorySelected(it)) },
         noChipsText = state.strings.noCategories,
         createText = state.strings.createCategory,
-        onCreateClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.GoToCreateCategory) },
+        onCreateClick = { vm.trySend(AdminProductPageContract.Inputs.OnCreateCategoryClick) },
         afterTitle = { AppTooltip(state.strings.categoriesDesc) },
     )
 }
@@ -817,11 +792,11 @@ private fun Tags(vm: AdminProductPageViewModel, state: AdminProductPageContract.
         selectedChips = state.current.tags
             .map { it.toString() }
             .mapNotNull { id -> state.allTags.firstOrNull { id == it.id.toString() }?.name },
-        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.TagSelected(it)) },
+        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.OnTagSelected(it)) },
         canBeEmpty = true,
         noChipsText = state.strings.noTags,
         createText = state.strings.createTag,
-        onCreateClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.GoToCreateTag) },
+        onCreateClick = { vm.trySend(AdminProductPageContract.Inputs.OnCreateTagClick) },
         afterTitle = { AppTooltip(state.strings.tagsDesc) },
         modifier = Modifier.fillMaxWidth()
     )
@@ -832,7 +807,7 @@ private fun Creator(vm: AdminProductPageViewModel, state: AdminProductPageContra
     CreatorSection(
         title = state.strings.createdBy,
         creatorName = "${state.current.creator.firstName} ${state.current.creator.lastName}",
-        onClick = { vm.trySend(AdminProductPageContract.Inputs.OnClick.GoToUserCreator) },
+        onClick = { vm.trySend(AdminProductPageContract.Inputs.OnUserCreatorClick) },
         afterTitle = { AppTooltip(state.strings.createdByDesc) },
     )
 }

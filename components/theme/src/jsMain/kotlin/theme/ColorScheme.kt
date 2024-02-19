@@ -74,5 +74,9 @@ private fun ColorScheme.colorScheme(
     sysColorScrim = this.scrim.rgb()
 )
 
-private fun Color.rgb(): com.varabyte.kobweb.compose.ui.graphics.Color =
+fun l() {
+    OldColors.darkGray.rgb()
+}
+
+fun Color.rgb(): com.varabyte.kobweb.compose.ui.graphics.Color =
     com.varabyte.kobweb.compose.ui.graphics.Color.rgb(red, green, blue)

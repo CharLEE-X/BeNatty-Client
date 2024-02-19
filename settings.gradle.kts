@@ -27,7 +27,7 @@ dependencyResolutionManagement {
 includeBuild("convention-plugins")
 include(
     ":web",
-    ":composeApp",
+//    ":composeApp",
 
     ":data",
 
@@ -39,18 +39,26 @@ include(
     ":components:theme",
     ":components:material3",
 
+    // Shared features
     ":feature:debug",
     ":feature:root",
     ":feature:router",
+
     ":feature:auth:login",
     ":feature:auth:register",
     ":feature:auth:forgot-password",
     ":feature:auth:update-password",
-    ":feature:account:profile",
-    ":feature:account:orders",
-    ":feature:account:returns",
-    ":feature:account:wishlist",
 
+    // Shop features
+    ":feature:shop:navbar",
+    ":feature:shop:footer",
+    ":feature:shop:home",
+    ":feature:shop:account:profile",
+    ":feature:shop:account:orders",
+    ":feature:shop:account:returns",
+    ":feature:shop:account:wishlist",
+
+    // Admin features
     ":feature:admin:dashboard",
     ":feature:admin:list",
     ":feature:admin:user:create",

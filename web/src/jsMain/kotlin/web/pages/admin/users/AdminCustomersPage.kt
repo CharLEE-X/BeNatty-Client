@@ -5,16 +5,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import com.copperleaf.ballast.navigation.routing.RouterContract
-import com.copperleaf.ballast.navigation.routing.build
-import com.copperleaf.ballast.navigation.routing.directions
-import com.copperleaf.ballast.navigation.routing.pathParameter
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiCreate
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.admin.list.AdminListContract
 import feature.admin.list.AdminListViewModel
 import feature.router.RouterViewModel
-import feature.router.Screen
 import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import web.components.layouts.AdminLayout
@@ -26,7 +21,10 @@ import web.components.widgets.AppFilledButton
 fun AdminCustomersPage(
     router: RouterViewModel,
     onError: suspend (String) -> Unit,
+    goBack: () -> Unit,
     goToAdminHome: () -> Unit,
+    goToCustomer: (String) -> Unit,
+    goToCreateCustomer: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -34,39 +32,29 @@ fun AdminCustomersPage(
             dataType = AdminListContract.DataType.USER,
             scope = scope,
             onError = onError,
-            goToDetail = { id ->
-                router.trySend(
-                    RouterContract.Inputs.GoToDestination(
-                        Screen.AdminCustomerProfile.directions()
-                            .pathParameter("id", id)
-                            .build()
-                    )
-                )
-            },
-            goToCreate = {
-                router.trySend(
-                    RouterContract.Inputs.GoToDestination(
-                        Screen.AdminCustomerProfile.matcher.routeFormat
-                    )
-                )
-            },
+            goToDetail = goToCustomer,
+            goToCreate = goToCreateCustomer,
         )
     }
     val state by vm.observeStates().collectAsState()
 
     AdminLayout(
-        title = state.strings.title,
         router = router,
+        title = state.strings.title,
         isLoading = state.isLoading,
+        showEditedButtons = false,
+        unsavedChangesText = "",
+        saveText = "",
+        discardText = "",
         goToAdminHome = goToAdminHome,
     ) {
         OneLayout(
             title = state.strings.title,
-            onGoBack = { router.trySend(RouterContract.Inputs.GoBack()) },
+            onGoBack = goBack,
             hasBackButton = false,
             actions = {
                 AppFilledButton(
-                    onClick = { router.trySend(RouterContract.Inputs.GoToDestination(Screen.AdminCustomerCreate.matcher.routeFormat)) },
+                    onClick = { vm.trySend(AdminListContract.Inputs.Click.Create) },
                     leadingIcon = { MdiCreate() },
                     containerColor = MaterialTheme.colors.mdSysColorTertiary.value(),
                 ) {

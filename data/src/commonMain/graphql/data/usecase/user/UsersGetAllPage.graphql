@@ -1,5 +1,5 @@
-query UsersGetAllPage($pageInput: PageInput!) {
-  getAllUsersPage(pageInput: $pageInput) {
+query CustomerGetAllPage($pageInput: PageInput!) {
+  getAllCustomersPage(pageInput: $pageInput) {
     info {
       count
       next

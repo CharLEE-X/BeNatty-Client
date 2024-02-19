@@ -1,4 +1,4 @@
-query ProductGetById($getProductByIdId: ObjectId!) {
+query ProductGetById($getProductByIdId: String!) {
   getProductById(id: $getProductByIdId) {
     id
     title

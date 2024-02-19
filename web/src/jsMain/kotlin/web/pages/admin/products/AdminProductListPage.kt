@@ -23,19 +23,17 @@ fun AdminProductListPage(
     onError: suspend (String) -> Unit,
     goBack: () -> Unit,
     goToAdminHome: () -> Unit,
-    goToProductCreate: () -> Unit,
-    goToProductDetail: (String) -> Unit,
+    goToCreateProduct: () -> Unit,
+    goToProduct: (String) -> Unit,
 ) {
-    println("DEBUG AdminProductListPage")
-
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
         AdminListViewModel(
             dataType = AdminListContract.DataType.PRODUCT,
             scope = scope,
             onError = onError,
-            goToCreate = goToProductCreate,
-            goToDetail = goToProductDetail,
+            goToCreate = goToCreateProduct,
+            goToDetail = goToProduct,
         )
     }
     val state by vm.observeStates().collectAsState()
@@ -56,15 +54,16 @@ fun AdminProductListPage(
             hasBackButton = false,
             actions = {
                 AppFilledButton(
-                    onClick = goToProductCreate,
+                    onClick = { vm.trySend(AdminListContract.Inputs.Click.Create) },
                     leadingIcon = { MdiCreate() },
                     containerColor = MaterialTheme.colors.mdSysColorTertiary.value(),
                 ) {
                     SpanText(text = state.strings.create)
                 }
             },
-        ) {
-            ListPageLayout(state, vm)
-        }
+            content = {
+                ListPageLayout(state, vm)
+            }
+        )
     }
 }

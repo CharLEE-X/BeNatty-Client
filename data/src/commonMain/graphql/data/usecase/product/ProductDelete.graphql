@@ -1,5 +1,3 @@
-mutation DeleteProduct($input: ProductDeleteInput!) {
-  deleteProduct(input: $input) {
-    deleted
-  }
+mutation DeleteProduct($id: String!) {
+  deleteProduct(id: $id)
 }

@@ -256,29 +256,7 @@ fun Item(
             AdminListContract.DataType.PRODUCT -> {
                 SpanText(item.slot1)
                 val url = item.slot2
-                if (url.isNullOrEmpty()) {
-                    MdiBrokenImage(Modifier.size(30.px))
-                } else {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .gap(0.25.em)
-                            .overflow(Overflow.Hidden)
-                    ) {
-                        var hovered by remember { mutableStateOf(false) }
-                        Image(
-                            src = url,
-                            modifier = Modifier
-                                .size(40.px)
-                                .borderRadius(5.px)
-                                .objectFit(ObjectFit.Cover)
-                                .onMouseEnter { hovered = true }
-                                .onMouseLeave { hovered = false }
-                                .scale(if (hovered) 4 else 1.0)
-                                .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
-                        )
-                    }
-                }
+                if (url.isNullOrEmpty()) MdiBrokenImage(Modifier.size(30.px)) else MiniImage(url)
                 SpanText(item.slot3 ?: "N/A")
                 SpanText(item.slot4 ?: "N/A")
                 SpanText(item.slot5 ?: "N/A")
@@ -305,6 +283,29 @@ fun Item(
                 SpanText(item.slot3 ?: "N/A")
             }
         }
+    }
+}
+
+@Composable
+private fun MiniImage(url: String) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .gap(0.25.em)
+            .overflow(Overflow.Hidden)
+    ) {
+        var hovered by remember { mutableStateOf(false) }
+        Image(
+            src = url,
+            modifier = Modifier
+                .size(40.px)
+                .borderRadius(5.px)
+                .objectFit(ObjectFit.Cover)
+                .onMouseEnter { hovered = true }
+                .onMouseLeave { hovered = false }
+                .scale(if (hovered) 4 else 1.0)
+                .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
+        )
     }
 }
 

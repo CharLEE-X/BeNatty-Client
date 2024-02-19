@@ -59,6 +59,8 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiStyle
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiWarning
 import com.varabyte.kobweb.silk.components.style.common.PlaceholderColor
 import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
+import component.localization.getString
 import feature.router.RouterViewModel
 import feature.router.Screen
 import kotlinx.browser.document
@@ -83,7 +85,7 @@ fun AdminLayout(
     modifier: Modifier = Modifier,
     router: RouterViewModel,
     title: String,
-    searchPlaceholder: String = "Search",
+    searchPlaceholder: String = getString(Strings.Search),
     isLoading: Boolean,
     showEditedButtons: Boolean = false,
     isSaveEnabled: Boolean = true,
@@ -97,7 +99,7 @@ fun AdminLayout(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     LaunchedEffect(title) {
-        document.title = "NataliaShop - $title"
+        document.title = "${getString(Strings.AppName)} - $title"
     }
 
     var searchValue by remember { mutableStateOf("") }
@@ -147,9 +149,7 @@ fun AdminLayout(
 }
 
 @Composable
-private fun AdminSideBar(
-    router: RouterViewModel,
-) {
+private fun AdminSideBar(router: RouterViewModel) {
     val routerState by router.observeStates().collectAsState()
     val currentDestination = routerState.currentDestinationOrNull
 

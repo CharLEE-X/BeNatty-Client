@@ -27,13 +27,14 @@ object ProjectConfig {
     }
 }
 
-const val FEATURE = "feature."
-const val AUTH = "auth."
 const val ACCOUNT = "account."
-const val COMPONENTS = "components."
 const val ADMIN = "admin."
-const val USER = "user."
+const val AUTH = "auth."
 const val CATEGORY = "category."
-const val TAG = "tag."
+const val COMPONENTS = "components."
+const val FEATURE = "feature."
 const val PRODUCT = "product."
 const val ORDER = "order."
+const val SHOP = "shop."
+const val TAG = "tag."
+const val USER = "user."

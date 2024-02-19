@@ -1,9 +1,9 @@
 mutation Login($loginInput: LoginInput!) {
-  login(loginInput: $loginInput) {
+  login(input: $loginInput) {
     token
-    userMinimal {
+    customerMinimal {
       id
-      email
+      role
     }
   }
 }

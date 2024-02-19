@@ -10,6 +10,7 @@ import data.LoginMutation
 import data.RegisterMutation
 import data.type.LoginInput
 import data.type.RegisterInput
+import data.type.Role
 import data.utils.handle
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
@@ -20,12 +21,13 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
 
 interface AuthService {
-    var userId: String?
+    val userId: String?
+    val userRole: Role?
     suspend fun login(email: String, password: String): Result<LoginMutation.Data>
     suspend fun register(email: String, password: String, name: String): Result<RegisterMutation.Data>
     suspend fun forgotPassword(email: String): Result<ForgotPasswordQuery.Data>
     suspend fun signOut()
-    fun checkAuth(): Boolean
+    fun isAuth(): Boolean
     suspend fun observeToken(): Flow<String?>
 }
 
@@ -34,20 +36,25 @@ internal class AuthServiceImpl(
     private val apolloClient: ApolloClient,
     settings: Settings,
 ) : AuthService {
-    override var userId by settings.nullableString()
+    private var _userId by settings.nullableString()
+    override val userId: String? get() = _userId
+
     private var token by settings.nullableString()
+
+    private var _role by settings.nullableString()
+    override val userRole: Role? get() = _role?.let { Role.valueOf(it) }
 
     override suspend fun login(email: String, password: String): Result<LoginMutation.Data> {
         val authInput = LoginInput(email = email, password = password)
         return apolloClient.mutation(LoginMutation(authInput)).handle {
-            saveData(it.login.userMinimal.id.toString(), it.login.token)
+            saveData(it.login.customerMinimal.id, it.login.token, it.login.customerMinimal.role)
         }
     }
 
     override suspend fun register(email: String, password: String, name: String): Result<RegisterMutation.Data> {
         val authInput = RegisterInput(email = email, password = password, name = name)
         return apolloClient.mutation(RegisterMutation(authInput)).handle {
-            saveData(it.register.userMinimal.id.toString(), it.register.token)
+            saveData(it.register.customerMinimal.id, it.register.token, it.register.customerMinimal.role)
         }
     }
 
@@ -57,11 +64,10 @@ internal class AuthServiceImpl(
 
     override suspend fun signOut() {
         apolloClient.apolloStore.clearAll()
-        userId = null
-        token = null
+        saveData(null, null, null)
     }
 
-    override fun checkAuth(): Boolean {
+    override fun isAuth(): Boolean {
         val isAuth = token != null
         logger.d { "User is authenticated: $isAuth" }
         return isAuth
@@ -74,10 +80,14 @@ internal class AuthServiceImpl(
         }
     }
         .distinctUntilChanged()
-        .onEach { logger.d("UserId: $userId\nToken: $it") }
+        .onEach {
+            logger.d("userId=$userId,\nrole=$userRole,\ntoken=$token")
+        }
 
-    private fun saveData(userId: String, token: String): String? {
-        this.userId = userId
+    private fun saveData(userId: String?, token: String?, role: Role?): String? {
+        logger.d { "Saving data:\nuserId=$userId,\nrole=$role,\ntoken=$token" }
+        _userId = userId
+        _role = role?.name
         this.token = token
         return this.token
     }

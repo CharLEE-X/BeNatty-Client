@@ -14,6 +14,7 @@ kotlin {
             implementation(libs.ballast.core)
             implementation(libs.koin.core)
             implementation(libs.apollo.runtime)
+            implementation(libs.kotlin.datetime)
         }
     }
 }

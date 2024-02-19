@@ -5,19 +5,26 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import com.copperleaf.ballast.navigation.routing.RouterContract
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiCreate
+import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.admin.list.AdminListContract
 import feature.admin.list.AdminListViewModel
 import feature.router.RouterViewModel
+import org.jetbrains.compose.web.css.value
+import theme.MaterialTheme
 import web.components.layouts.AdminLayout
 import web.components.layouts.ListPageLayout
 import web.components.layouts.OneLayout
+import web.components.widgets.AppFilledButton
 
 @Composable
 fun AdminOrderListPage(
     router: RouterViewModel,
     onError: suspend (String) -> Unit,
+    goBack: () -> Unit,
     goToAdminHome: () -> Unit,
+    goToCreateOrder: () -> Unit,
+    goToOrder: (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -25,16 +32,16 @@ fun AdminOrderListPage(
             dataType = AdminListContract.DataType.ORDER,
             scope = scope,
             onError = onError,
-            goToCreate = {},
-            goToDetail = {}
+            goToCreate = goToCreateOrder,
+            goToDetail = goToOrder,
         )
     }
     val state by vm.observeStates().collectAsState()
 
     AdminLayout(
-        title = "Admin Order List",
         router = router,
-        isLoading = false,
+        title = state.strings.title,
+        isLoading = state.isLoading,
         showEditedButtons = false,
         unsavedChangesText = "",
         saveText = "",
@@ -42,12 +49,21 @@ fun AdminOrderListPage(
         goToAdminHome = goToAdminHome,
     ) {
         OneLayout(
-            title = "Orders",
-            onGoBack = { router.trySend(RouterContract.Inputs.GoBack()) },
+            title = state.strings.title,
+            onGoBack = goBack,
             hasBackButton = false,
-            actions = {},
-        ) {
-            ListPageLayout(state, vm)
-        }
+            actions = {
+                AppFilledButton(
+                    onClick = { vm.trySend(AdminListContract.Inputs.Click.Create) },
+                    leadingIcon = { MdiCreate() },
+                    containerColor = MaterialTheme.colors.mdSysColorTertiary.value(),
+                ) {
+                    SpanText(text = state.strings.create)
+                }
+            },
+            content = {
+                ListPageLayout(state, vm)
+            }
+        )
     }
 }

@@ -1,5 +1,5 @@
-mutation CreateUser($input: UserCreateInput!) {
-  createUser(input: $input) {
+mutation CreateCustomer($input: UserCreateInput!) {
+  createCustomer(input: $input) {
     id
   }
 }

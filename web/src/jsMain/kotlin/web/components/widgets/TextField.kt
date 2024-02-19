@@ -8,13 +8,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
 import com.varabyte.kobweb.compose.css.CSSTransition
+import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.RowScope
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translateX
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiError
-import feature.account.profile.SHAKE_ANIM_DURATION
+import feature.shop.account.profile.SHAKE_ANIM_DURATION
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.web.attributes.AutoComplete
 import org.jetbrains.compose.web.css.CSSColorValue
@@ -34,8 +35,7 @@ fun AppOutlinedTextField(
     trailingIcon: (@Composable RowScope.() -> Unit)? = null,
     hasLeadingIcon: Boolean = false,
     hasTrailingIcon: Boolean = false,
-    containerShape: CSSLengthOrPercentageNumericValue? = null,
-    outlineColor: CSSColorValue? = null,
+    containerShape: CSSLengthOrPercentageNumericValue = 12.px,
     inputTextColor: CSSColorValue? = null,
     type: TextFieldType = TextFieldType.TEXT,
     autoComplete: AutoComplete = AutoComplete.off,
@@ -59,6 +59,9 @@ fun AppOutlinedTextField(
     step: String? = null,
     shake: Boolean = false,
     modifier: Modifier = Modifier,
+    unFocusedOutlineColor: CSSColorValue? = null,
+    focusedOutlineColor: CSSColorValue? = null,
+    hoverOutlineColor: CSSColorValue? = null,
 ) {
     var translateX by remember { mutableStateOf(0.em) }
 
@@ -90,8 +93,10 @@ fun AppOutlinedTextField(
         },
         hasLeadingIcon = hasLeadingIcon,
         hasTrailingIcon = hasTrailingIcon,
-        containerShape = containerShape ?: 12.px,
-        outlineColor = outlineColor,
+        containerShape = containerShape,
+        outlineColor = unFocusedOutlineColor,
+        focusOutlineColor = focusedOutlineColor,
+        hoverOutlineColor = hoverOutlineColor,
         inputTextColor = inputTextColor,
         type = type,
         autoComplete = autoComplete,
@@ -115,6 +120,9 @@ fun AppOutlinedTextField(
         step = step,
         modifier = modifier
             .translateX(translateX)
-            .transition(CSSTransition("translate", SHAKE_ANIM_DURATION.inWholeSeconds.s))
+            .transition(
+                CSSTransition("translate", SHAKE_ANIM_DURATION.inWholeSeconds.s),
+                CSSTransition("border-color", 0.3.s, TransitionTimingFunction.Ease),
+            )
     )
 }

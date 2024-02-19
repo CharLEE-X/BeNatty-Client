@@ -23,12 +23,11 @@ import com.varabyte.kobweb.compose.ui.modifiers.padding
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.FlexWrap
 import org.jetbrains.compose.web.css.JustifyContent
-import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 
-val oneLayoutMaxWidth = 62.375.cssRem
+val oneLayoutMaxWidth = 1300.px
 
 @Composable
 fun OneThirdLayout(

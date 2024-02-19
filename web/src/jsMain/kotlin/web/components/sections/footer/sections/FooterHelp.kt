@@ -10,46 +10,57 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
 import theme.MaterialTheme
 import theme.roleStyle
-import web.components.sections.footer.FooterContract
-import web.components.sections.footer.FooterViewModel
 import web.components.widgets.AppTextButton
 
 @Composable
-fun FooterHelp(vm: FooterViewModel, state: FooterContract.State, modifier: Modifier = Modifier) {
+fun FooterHelp(
+    modifier: Modifier = Modifier,
+    helpText: String,
+    trackOrderText: String,
+    shippingText: String,
+    returnsText: String,
+    faQsText: String,
+    contactUsText: String,
+    onTrackOrderClick: () -> Unit,
+    onShippingClick: () -> Unit,
+    onReturnsClick: () -> Unit,
+    onFAQsClick: () -> Unit,
+    onContactUsClick: () -> Unit,
+) {
     Column(
         modifier = modifier
     ) {
         SpanText(
-            text = state.strings.help,
+            text = helpText,
             modifier = Modifier
                 .roleStyle(MaterialTheme.typography.bodyMedium)
                 .fontWeight(FontWeight.Bold)
                 .margin(bottom = 1.em, left = 1.em),
         )
         AppTextButton(
-            onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
+            onClick = { onTrackOrderClick() },
         ) {
-            SpanText(state.strings.trackOrder)
+            SpanText(trackOrderText)
         }
         AppTextButton(
-            onClick = { vm.trySend(FooterContract.Inputs.OnShippingClick) },
+            onClick = { onShippingClick() },
         ) {
-            SpanText(state.strings.shipping)
+            SpanText(shippingText)
         }
         AppTextButton(
-            onClick = { vm.trySend(FooterContract.Inputs.OnReturnsClick) },
+            onClick = { onReturnsClick() },
         ) {
-            SpanText(state.strings.returns)
+            SpanText(returnsText)
         }
         AppTextButton(
-            onClick = { vm.trySend(FooterContract.Inputs.OnFAQsClick) },
+            onClick = { onFAQsClick() },
         ) {
-            SpanText(state.strings.faQs)
+            SpanText(faQsText)
         }
         AppTextButton(
-            onClick = { vm.trySend(FooterContract.Inputs.OnContactUsClick) },
+            onClick = { onContactUsClick() },
         ) {
-            SpanText(state.strings.contactUs)
+            SpanText(contactUsText)
         }
     }
 }

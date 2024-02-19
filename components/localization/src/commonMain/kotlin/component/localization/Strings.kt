@@ -221,4 +221,13 @@ enum class Strings {
     LeavingThisPageWillDiscardAllUnsavedChanges,
     LeavePage,
     Stay,
+    Ticker,
+    UnitedKingdom,
+    Admin,
+    Store,
+    Woman,
+    Man,
+    ShippingReturns,
+    About,
+    Sale,
 }

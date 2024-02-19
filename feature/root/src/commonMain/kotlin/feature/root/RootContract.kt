@@ -9,7 +9,7 @@ object RootContract : KoinComponent {
 
     data class State(
         val isLoading: Boolean = false,
-        val isAuthenticated: Boolean = authService.checkAuth(),
+        val isAuthenticated: Boolean = authService.isAuth(),
     )
 
     sealed interface Inputs {

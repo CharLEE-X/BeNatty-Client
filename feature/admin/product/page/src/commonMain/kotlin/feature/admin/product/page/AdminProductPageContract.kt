@@ -99,25 +99,21 @@ object AdminProductPageContract {
         data class AddMedia(val mediaString: String) : Inputs
         data class DeleteMedia(val index: Int) : Inputs
 
-        sealed interface Get : Inputs {
-            data class ProductById(val id: String) : Inputs
-            data object AllCategories : Inputs
-            data object AllTags : Inputs
-            data class PresetCategory(val categoryId: String) : Inputs
-        }
+        data class GetProductById(val id: String) : Inputs
+        data object GetAllCategories : Inputs
+        data object GetAllTags : Inputs
+        data class GetPresetCategory(val categoryId: String) : Inputs
 
-        sealed interface OnClick : Inputs {
-            data object Delete : OnClick
-            data object Save : Inputs
-            data object Discard : OnClick
-            data class CategorySelected(val categoryName: String) : Inputs
-            data class TagSelected(val tagName: String) : Inputs
-            data object GoToCreateCategory : Inputs
-            data object GoToCreateTag : Inputs
-            data object GoToUserCreator : Inputs
-            data class PresetSelected(val preset: String) : Inputs
-            data class DeleteImage(val imageId: String) : Inputs
-        }
+        data object OnDeleteClick : Inputs
+        data object OnSaveClick : Inputs
+        data object OnDiscardClick : Inputs
+        data object OnCreateCategoryClick : Inputs
+        data object OnCreateTagClick : Inputs
+        data object OnUserCreatorClick : Inputs
+        data class OnCategorySelected(val categoryName: String) : Inputs
+        data class OnTagSelected(val tagName: String) : Inputs
+        data class OnPresetSelected(val preset: String) : Inputs
+        data class OnDeleteImageClick(val imageId: String) : Inputs
 
         sealed interface Set : Inputs {
             data class AllCategories(val categories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal>) :
@@ -181,7 +177,7 @@ object AdminProductPageContract {
 
     sealed interface Events {
         data class OnError(val message: String) : Events
-        data object GoBack : Events
+        data object GoBackToProducts : Events
         data class GoToUserDetails(val userId: String) : Events
         data object GoToCreateCategory : Events
         data object GoToCreateTag : Events
