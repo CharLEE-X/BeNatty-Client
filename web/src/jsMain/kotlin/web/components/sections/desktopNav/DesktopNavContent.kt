@@ -72,6 +72,7 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson2
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiShoppingBasket
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.common.SmoothColorTransitionDurationVar
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import feature.shop.navbar.DesktopNavContract
@@ -96,6 +97,7 @@ import org.jetbrains.compose.web.css.value
 import org.jetbrains.compose.web.dom.Span
 import theme.MaterialTheme
 import theme.OldColorsJs
+import web.NavIconStyle
 import web.components.layouts.oneLayoutMaxWidth
 import web.components.sections.desktopNav.sections.TickerSection
 import web.components.sections.desktopNav.sections.tickerHeight
@@ -317,9 +319,9 @@ private fun RightSection(
                         .fillMaxHeight()
                         .gap(0.5.em)
                 ) {
-                    NavIcon(
-                        icon = { MdiPerson2(style = IconStyle.OUTLINED) },
-                        onClick = onProfileClick
+                    MdiPerson2(
+                        style = IconStyle.OUTLINED,
+                        modifier = NavIconStyle.toModifier().onClick { onProfileClick() }
                     )
                     Box(
                         modifier = Modifier
@@ -328,35 +330,13 @@ private fun RightSection(
                             .minHeight(30.px)
                             .fillMaxHeight()
                     )
-                    NavIcon(
-                        icon = { MdiShoppingBasket(style = IconStyle.OUTLINED) },
-                        onClick = onBasketClick
+                    MdiShoppingBasket(
+                        style = IconStyle.OUTLINED,
+                        modifier = NavIconStyle.toModifier().onClick { onBasketClick() }
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun NavIcon(
-    icon: @Composable () -> Unit,
-    onClick: () -> Unit,
-) {
-    var hovered by remember { mutableStateOf(false) }
-
-    Span(
-        Modifier
-            .onMouseEnter { hovered = true }
-            .onMouseLeave { hovered = false }
-            .onClick { onClick() }
-            .opacity(if (hovered) 0.6 else 1.0)
-            .fontSize(24.px)
-            .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
-            .cursor(Cursor.Pointer)
-            .toAttrs()
-    ) {
-        icon()
     }
 }
 
