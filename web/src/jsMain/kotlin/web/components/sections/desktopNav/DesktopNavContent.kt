@@ -357,6 +357,9 @@ private fun ListMenu(
                     text = aboutText,
                     hovered = isAboutButtonHovered,
                     onClick = onAboutClick,
+                    modifier = Modifier
+                        .onMouseEnter { isAboutButtonHovered = true }
+                        .onMouseLeave { isAboutButtonHovered = false }
                 )
                 ListMenuItem(
                     text = shippingReturnsText,
