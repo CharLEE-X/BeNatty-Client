@@ -9,7 +9,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
-import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.shop.home.HomeViewModel
 import org.jetbrains.compose.web.css.em
@@ -39,7 +38,7 @@ fun HomeContent(
         Column(
             modifier = Modifier
                 .gap(1.em)
-                .padding(top = 200.px)
+                .margin(top = 200.px)
         ) {
             repeat(10) {
                 AppFilledCard {

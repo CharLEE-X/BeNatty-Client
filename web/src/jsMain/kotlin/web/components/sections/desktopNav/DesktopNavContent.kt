@@ -54,6 +54,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.rotate
 import com.varabyte.kobweb.compose.ui.modifiers.size
+import com.varabyte.kobweb.compose.ui.modifiers.top
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translate
 import com.varabyte.kobweb.compose.ui.modifiers.translateX
@@ -121,7 +122,7 @@ fun DesktopNav(
 
     var showTicker by remember { mutableStateOf(true) }
     var showNavBar by remember { mutableStateOf(true) }
-    var showNavBarShadow by remember { mutableStateOf(true) }
+    var showNavBarShadow by remember { mutableStateOf(false) }
 
     window.addEventListener("scroll", {
         val currentScroll = window.scrollY
@@ -131,8 +132,6 @@ fun DesktopNav(
         showTicker = lastScrollPosition < 50.0
         showNavBar = scrollDirection == ScrollDirection.UP || lastScrollPosition < 60.0
         showNavBarShadow = scrollDirection == ScrollDirection.UP && !showTicker
-
-        println("scrollPosition: $lastScrollPosition, scrollDirection: $scrollDirection, showNavbar: $showNavBar, showTicker: $showTicker, showNavBarShadow: $showNavBarShadow")
     })
 
     Column(
@@ -140,24 +139,31 @@ fun DesktopNav(
         modifier = Modifier
             .position(Position.Fixed)
             .display(DisplayStyle.Block)
-            .backgroundColor(Colors.White)
             .fillMaxWidth()
             .boxSizing(BoxSizing.BorderBox)
             .zIndex(10)
+            .top(
+                when {
+                    showNavBar && showTicker -> 0.px
+                    showNavBar && !showTicker -> (-tickerHeight.value - 4).px
+                    else -> (-170).px
+                }
+            )
+            .boxShadow(
+                offsetY = 0.px,
+                blurRadius = if (showNavBarShadow) 20.px else 0.px,
+                color = OldColorsJs.neutral200,
+            )
+            .transition(
+                CSSTransition("top", SmoothColorTransitionDurationVar.value()),
+                CSSTransition("translate", SmoothColorTransitionDurationVar.value()),
+                CSSTransition("box-shadow", SmoothColorTransitionDurationVar.value()),
+                CSSTransition("position", SmoothColorTransitionDurationVar.value()),
+            )
     ) {
         TickerSection(
             tickerText = state.strings.ticker,
             onClick = { vm.trySend(DesktopNavContract.Inputs.OnTickerClick) },
-            modifier = Modifier
-                .zIndex(100)
-                .position(if (showTicker) Position.Relative else Position.Static)
-//                .display(DisplayStyle.Block)
-//                .top(0.px)
-                .translateY(if (showTicker) 0.px else (-tickerHeight.value - 4).px)
-                .transition(
-                    CSSTransition("translate", SmoothColorTransitionDurationVar.value()),
-                    CSSTransition("position", SmoothColorTransitionDurationVar.value()),
-                )
         )
         NavBar(
             storeText = state.strings.store,
@@ -175,22 +181,6 @@ fun DesktopNav(
             onEnterPress = { vm.trySend(DesktopNavContract.Inputs.OnSearchEnterPress) },
             onProfileClick = { vm.trySend(DesktopNavContract.Inputs.OnProfileClick) },
             onBasketClick = { vm.trySend(DesktopNavContract.Inputs.OnBasketClick) },
-            modifier = Modifier
-                .zIndex(5)
-//                .position(if (showNavBar) Position.Fixed else Position.Relative)
-//                .display(DisplayStyle.Block)
-//                .top(if (showTicker) tickerHeight else 0.px)
-//                .translateY(if (showNavBar) 0.px else (-100).px)
-                .boxShadow(
-                    offsetY = 0.px,
-                    blurRadius = if (showNavBarShadow) 20.px else 0.px,
-                    color = OldColorsJs.neutral200,
-                )
-                .transition(
-                    CSSTransition("translate", SmoothColorTransitionDurationVar.value()),
-                    CSSTransition("box-shadow", SmoothColorTransitionDurationVar.value()),
-                    CSSTransition("position", SmoothColorTransitionDurationVar.value()),
-                )
         )
     }
 }
@@ -216,44 +206,49 @@ fun NavBar(
 ) {
     var searchValue by remember { mutableStateOf("") }
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    Box(
+        contentAlignment = Alignment.Center,
         modifier = modifier
-            .position(Position.Fixed)
             .fillMaxWidth()
-            .maxWidth(oneLayoutMaxWidth)
             .backgroundColor(Colors.White)
-            .padding(leftRight = 20.px, topBottom = 20.px)
-            .gap(20.px)
-            .display(DisplayStyle.Grid)
-            .styleModifier { property("grid-template-columns", "1fr auto 1fr") }
     ) {
-        ListMenu(
-            storeText = storeText,
-            aboutText = aboutText,
-            shippingReturnsText = shippingReturnsText,
-            storeMenuItems = storeMenuItems,
-            onStoreClick = onStoreClick,
-            onAboutClick = onAboutClick,
-            onShippingReturnsClick = onShippingReturnsClick,
-            onStoreMenuItemSelected = onStoreMenuItemSelected,
-        )
-        Logo(
-            onClick = onLogoClick,
-            modifier = Modifier.margin(leftRight = 1.em)
-        )
-        RightSection(
-            searchPlaceholder = searchPlaceholder,
-            searchValue = searchValue,
-            basketCount = basketCount,
-            onSearchValueChanged = {
-                searchValue = it
-                onSearchValueChanged(it)
-            },
-            onEnterPress = onEnterPress,
-            onProfileClick = onProfileClick,
-            onBasketClick = onBasketClick,
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .maxWidth(oneLayoutMaxWidth)
+                .padding(leftRight = 20.px, topBottom = 20.px)
+                .gap(20.px)
+                .display(DisplayStyle.Grid)
+                .styleModifier { property("grid-template-columns", "1fr auto 1fr") }
+        ) {
+            ListMenu(
+                storeText = storeText,
+                aboutText = aboutText,
+                shippingReturnsText = shippingReturnsText,
+                storeMenuItems = storeMenuItems,
+                onStoreClick = onStoreClick,
+                onAboutClick = onAboutClick,
+                onShippingReturnsClick = onShippingReturnsClick,
+                onStoreMenuItemSelected = onStoreMenuItemSelected,
+            )
+            Logo(
+                onClick = onLogoClick,
+                modifier = Modifier.margin(leftRight = 1.em)
+            )
+            RightSection(
+                searchPlaceholder = searchPlaceholder,
+                searchValue = searchValue,
+                basketCount = basketCount,
+                onSearchValueChanged = {
+                    searchValue = it
+                    onSearchValueChanged(it)
+                },
+                onEnterPress = onEnterPress,
+                onProfileClick = onProfileClick,
+                onBasketClick = onBasketClick,
+            )
+        }
     }
 }
 
