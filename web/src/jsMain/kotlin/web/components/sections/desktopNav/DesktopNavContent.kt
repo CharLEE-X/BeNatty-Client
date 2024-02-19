@@ -82,6 +82,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.AlignContent
+import org.jetbrains.compose.web.css.CSSSizeValue
+import org.jetbrains.compose.web.css.CSSUnit
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.FlexWrap
 import org.jetbrains.compose.web.css.Position
@@ -106,6 +108,7 @@ private enum class ScrollDirection { UP, DOWN }
 fun DesktopNav(
     onError: suspend (String) -> Unit,
     desktopNavRoutes: DesktopNavRoutes,
+    onTopSpacingChanged: (CSSSizeValue<CSSUnit.px>) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -134,6 +137,13 @@ fun DesktopNav(
         showNavBarShadow = scrollDirection == ScrollDirection.UP && !showTicker
     })
 
+    val topSpacing: CSSSizeValue<CSSUnit.px> = when {
+        showNavBar && showTicker -> 0.px
+        showNavBar && !showTicker -> (-tickerHeight.value - 4).px
+        else -> (-170).px
+    }
+    onTopSpacingChanged(topSpacing)
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -142,13 +152,7 @@ fun DesktopNav(
             .fillMaxWidth()
             .boxSizing(BoxSizing.BorderBox)
             .zIndex(10)
-            .top(
-                when {
-                    showNavBar && showTicker -> 0.px
-                    showNavBar && !showTicker -> (-tickerHeight.value - 4).px
-                    else -> (-170).px
-                }
-            )
+            .top(topSpacing)
             .boxShadow(
                 offsetY = 0.px,
                 blurRadius = if (showNavBarShadow) 20.px else 0.px,

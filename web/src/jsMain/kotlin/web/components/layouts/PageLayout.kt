@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
@@ -14,10 +15,17 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.minHeight
+import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.transition
+import com.varabyte.kobweb.silk.components.style.common.SmoothColorTransitionDurationVar
 import feature.shop.footer.FooterRoutes
 import feature.shop.navbar.DesktopNavRoutes
 import kotlinx.browser.document
+import org.jetbrains.compose.web.css.CSSSizeValue
+import org.jetbrains.compose.web.css.CSSUnit
 import org.jetbrains.compose.web.css.percent
+import org.jetbrains.compose.web.css.plus
+import org.jetbrains.compose.web.css.px
 import web.components.sections.desktopNav.DesktopNav
 import web.components.sections.footer.Footer
 
@@ -82,12 +90,16 @@ fun ShopMainLayout(
         goToReturns = mainParams.goToReturns,
     )
 
+    var topSpacing: CSSSizeValue<CSSUnit.px> by remember { mutableStateOf(0.px) }
+
     PageLayout(
         title = title,
+        topSpacing = topSpacing + 40.px,
         topBar = {
             DesktopNav(
                 desktopNavRoutes = desktopNavRoutes,
                 onError = mainParams.onError,
+                onTopSpacingChanged = { topSpacing = it }
             )
         },
         footer = {
@@ -103,6 +115,7 @@ fun ShopMainLayout(
 @Composable
 private fun PageLayout(
     title: String,
+    topSpacing: CSSSizeValue<CSSUnit.px>,
     topBar: @Composable ColumnScope.() -> Unit,
     footer: @Composable ColumnScope.() -> Unit,
     content: @Composable ColumnScope.() -> Unit,
@@ -120,6 +133,8 @@ private fun PageLayout(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
+                .padding(top = topSpacing)
+                .transition(CSSTransition("padding", SmoothColorTransitionDurationVar.value()))
         ) {
             topBar()
             content()
