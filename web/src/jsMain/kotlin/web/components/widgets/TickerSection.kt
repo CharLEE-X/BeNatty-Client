@@ -1,4 +1,4 @@
-package web.components.sections.desktopNav.sections
+package web.components.widgets
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

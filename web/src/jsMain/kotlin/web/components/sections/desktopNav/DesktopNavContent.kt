@@ -99,10 +99,10 @@ import theme.MaterialTheme
 import theme.OldColorsJs
 import web.NavIconStyle
 import web.components.layouts.oneLayoutMaxWidth
-import web.components.sections.desktopNav.sections.TickerSection
-import web.components.sections.desktopNav.sections.tickerHeight
 import web.components.widgets.Logo
 import web.components.widgets.SearchBar
+import web.components.widgets.TickerSection
+import web.components.widgets.tickerHeight
 
 private enum class ScrollDirection { UP, DOWN }
 
