@@ -12,6 +12,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import feature.shop.footer.FooterContract
 import feature.shop.footer.FooterRoutes
 import feature.shop.footer.FooterViewModel
@@ -44,8 +45,9 @@ fun Footer(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .backgroundColor(MaterialTheme.colors.mdSysColorSurfaceContainer.value())
+            .backgroundColor(MaterialTheme.colors.mdSysColorSurface.value())
             .margin(top = 2.em)
+            .zIndex(2)
     ) {
         Row(
             modifier = Modifier

@@ -4,22 +4,22 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
 
 val appLightColorScheme: SysColorScheme = lightScheme.colorScheme(
-    sysColorSurfaceBright = surfaceBrightLightMediumContrast,
-    sysColorSurfaceDim = surfaceDimLightMediumContrast,
-    sysColorSurfaceContainerLowest = surfaceContainerLowestLightMediumContrast,
-    sysColorSurfaceContainerLow = surfaceContainerLowLightMediumContrast,
-    sysColorSurfaceContainer = surfaceContainerLightMediumContrast,
-    sysColorSurfaceContainerHigh = surfaceContainerHighLightMediumContrast,
-    sysColorSurfaceContainerHighest = surfaceContainerHighestLightMediumContrast,
+    sysColorSurfaceBright = surfaceBrightLight,
+    sysColorSurfaceDim = surfaceDimLight,
+    sysColorSurfaceContainerLowest = surfaceContainerLowestLight,
+    sysColorSurfaceContainerLow = surfaceContainerLowLight,
+    sysColorSurfaceContainer = surfaceContainerLight,
+    sysColorSurfaceContainerHigh = surfaceContainerHighLight,
+    sysColorSurfaceContainerHighest = surfaceContainerHighestLight,
 )
 val appDarkColorScheme: SysColorScheme = darkScheme.colorScheme(
-    sysColorSurfaceBright = surfaceBrightDarkMediumContrast,
-    sysColorSurfaceDim = surfaceDimDarkMediumContrast,
-    sysColorSurfaceContainerLowest = surfaceContainerLowestDarkMediumContrast,
-    sysColorSurfaceContainerLow = surfaceContainerLowDarkMediumContrast,
-    sysColorSurfaceContainer = surfaceContainerDarkMediumContrast,
-    sysColorSurfaceContainerHigh = surfaceContainerHighDarkMediumContrast,
-    sysColorSurfaceContainerHighest = surfaceContainerHighestDarkMediumContrast,
+    sysColorSurfaceBright = surfaceBrightDark,
+    sysColorSurfaceDim = surfaceDimDark,
+    sysColorSurfaceContainerLowest = surfaceContainerLowestDark,
+    sysColorSurfaceContainerLow = surfaceContainerLowDark,
+    sysColorSurfaceContainer = surfaceContainerDark,
+    sysColorSurfaceContainerHigh = surfaceContainerHighDark,
+    sysColorSurfaceContainerHighest = surfaceContainerHighestDark,
 )
 
 private fun ColorScheme.colorScheme(
@@ -70,13 +70,9 @@ private fun ColorScheme.colorScheme(
 
     sysColorOutline = this.outline.rgb(),
     sysColorOutlineVariant = this.outlineVariant.rgb(),
-    sysColorShadow = Color.Black.rgb(),
+    sysColorShadow = md_theme_light_shadow.rgb(),
     sysColorScrim = this.scrim.rgb()
 )
-
-fun l() {
-    OldColors.darkGray.rgb()
-}
 
 fun Color.rgb(): com.varabyte.kobweb.compose.ui.graphics.Color =
     com.varabyte.kobweb.compose.ui.graphics.Color.rgb(red, green, blue)

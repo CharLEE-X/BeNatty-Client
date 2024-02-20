@@ -25,6 +25,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.alignItems
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
+import com.varabyte.kobweb.compose.ui.modifiers.boxShadow
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxHeight
@@ -70,6 +71,7 @@ import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
+import theme.OldColorsJs
 import theme.roleStyle
 import web.FONT_CUSTOM
 import web.components.widgets.AppFilledButton
@@ -107,7 +109,7 @@ fun AdminLayout(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .backgroundColor(MaterialTheme.colors.mdSysColorSurface.value())
+            .backgroundColor(MaterialTheme.colors.mdSysColorBackground.value())
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -160,8 +162,14 @@ private fun AdminSideBar(router: RouterViewModel) {
             .width(sideBarWidth)
             .margin(top = topBarHeight)
             .position(Position.Fixed)
-            .backgroundColor(MaterialTheme.colors.mdSysColorSurfaceContainerHigh.value())
+            .backgroundColor(MaterialTheme.colors.mdSysColorSurfaceContainerLowest.value())
             .padding(1.em)
+            .boxShadow(
+                offsetX = 0.px,
+                offsetY = 4.px,
+                blurRadius = 8.px,
+                color = OldColorsJs.lightGrayDarker
+            )
     ) {
         SideNavMainItem(
             label = "Home",
@@ -457,12 +465,3 @@ private fun Loader(isLoading: Boolean) {
     }
 }
 
-enum class AdminNavDest {
-    Home,
-    Customers,
-    Products,
-    Orders,
-    Categories,
-    Tags,
-    Settings,
-}

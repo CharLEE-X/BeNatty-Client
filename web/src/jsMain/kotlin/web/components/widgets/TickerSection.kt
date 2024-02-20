@@ -71,8 +71,8 @@ fun TickerSection(
             .display(DisplayStyle.Block)
             .minHeight(tickerHeight)
             .padding(topBottom = 0.5.em)
-            .backgroundColor(MaterialTheme.colors.mdSysColorOnBackground.value())
-            .color(MaterialTheme.colors.mdSysColorBackground.value())
+            .backgroundColor(MaterialTheme.colors.mdSysColorOnSurface.value())
+            .color(MaterialTheme.colors.mdSysColorSurface.value())
             .onClick { onClick() }
             .cursor(Cursor.Pointer)
     ) {

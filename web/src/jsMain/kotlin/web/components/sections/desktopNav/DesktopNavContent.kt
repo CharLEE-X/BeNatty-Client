@@ -151,6 +151,7 @@ fun DesktopNav(
         modifier = Modifier
             .position(Position.Fixed)
             .display(DisplayStyle.Block)
+            .backgroundColor(MaterialTheme.colors.mdSysColorSurface.value())
             .fillMaxWidth()
             .boxSizing(BoxSizing.BorderBox)
             .zIndex(10)
