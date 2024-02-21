@@ -9,8 +9,9 @@ object FooterContract : KoinComponent {
         val strings: Strings = Strings(),
         val isLoading: Boolean = false,
         val isAdmin: Boolean = false,
-        val email: String = "",
-        val emailError: String? = null,
+        val showCareer: Boolean = false,
+        val showCyberSecurity: Boolean = false,
+        val showPress: Boolean = false,
         val year: Int = currentYear(),
         val currentCountryText: String = strings.unitedKingdom,
         val currentLanguageText: String = strings.english,
@@ -21,10 +22,6 @@ object FooterContract : KoinComponent {
     sealed interface Inputs {
         data object Init : Inputs
 
-        data class OnEmailChange(val email: String) : Inputs
-
-        data class SetEmail(val email: String) : Inputs
-        data object OnEmailSend : Inputs
         data object OnPrivacyPolicyClicked : Inputs
         data object OnTermsOfServiceClicked : Inputs
         data object OnAccessibilityClicked : Inputs
@@ -60,9 +57,8 @@ object FooterContract : KoinComponent {
     }
 
     data class Strings(
-        val subscribe: String = getString(component.localization.Strings.Subscribe),
-        val email: String = getString(component.localization.Strings.Email),
         val companyName: String = getString(component.localization.Strings.CompanyName),
+        val company: String = getString(component.localization.Strings.Company),
         val privacyPolicy: String = getString(component.localization.Strings.PrivacyPolicy),
         val termsOfService: String = getString(component.localization.Strings.TermsOfService),
         val accessibility: String = getString(component.localization.Strings.Accessibility),

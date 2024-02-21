@@ -1,6 +1,5 @@
 package theme
 
-import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.CSSNumeric
 import org.jetbrains.compose.web.css.CSSSizeValue
 import org.jetbrains.compose.web.css.CSSStyleVariable
@@ -57,10 +56,6 @@ open class TypeScaleTokens(
             fontWeight(role.weight.value().toString())
         }
     }
-}
-
-object MdRefTypeFaceTokens {
-    val mdRefTypeFaceBrand = CSSStyleVariable<CSSColorValue>("md-ref-typeface-brand")
 }
 
 data class FontConfig(

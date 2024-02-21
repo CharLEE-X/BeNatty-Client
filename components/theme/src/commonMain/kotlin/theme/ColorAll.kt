@@ -2,18 +2,19 @@ package theme
 
 import androidx.compose.ui.graphics.Color
 
-val surfaceDimLight = Color(0xFFE3D9C8)
-val surfaceBrightLight = Color(0xFFFFF8F1)
+val surfaceDimLight = Color(0xFFDAE8F4)
+val surfaceBrightLight = Color(0xFFF0FAFF)
 val surfaceContainerLowestLight = Color(0xFFFFFFFF)
-val surfaceContainerLowLight = Color(0xFFFDF2E1)
-val surfaceContainerLight = Color(0xFFF7EDDB)
-val surfaceContainerHighLight = Color(0xFFF2E7D6)
-val surfaceContainerHighestLight = Color(0xFFECE1D0)
+val surfaceContainerLowLight = Color(0xFFE3F2FD)
+val surfaceContainerLight = Color(0xFFD1E8FF)
+val surfaceContainerHighLight = Color(0xFFB2DFFA)
+val surfaceContainerHighestLight = Color(0xFFA6D7F2)
 
-val surfaceDimDark = Color(0xFF171309)
-val surfaceBrightDark = Color(0xFF3E392D)
-val surfaceContainerLowestDark = Color(0xFF120E05)
-val surfaceContainerLowDark = Color(0xFF201B11)
-val surfaceContainerDark = Color(0xFF241F14)
-val surfaceContainerHighDark = Color(0xFF2F291E)
-val surfaceContainerHighestDark = Color(0xFF3A3428)
+val surfaceDimDark = Color(0xFF2C3E50)
+val surfaceBrightDark = Color(0xFF546E7A)
+val surfaceContainerLowestDark = Color(0xFF394A59)
+val surfaceContainerLowDark = Color(0xFF455A64)
+val surfaceContainerDark = Color(0xFF4E6575)
+val surfaceContainerHighDark = Color(0xFF5E6F82)
+val surfaceContainerHighestDark = Color(0xFF748A9D)
+

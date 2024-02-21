@@ -162,7 +162,7 @@ private fun AdminSideBar(router: RouterViewModel) {
             .width(sideBarWidth)
             .margin(top = topBarHeight)
             .position(Position.Fixed)
-            .backgroundColor(MaterialTheme.colors.mdSysColorSurfaceContainerLowest.value())
+            .backgroundColor(MaterialTheme.colors.mdSysColorSurfaceContainerLow.value())
             .padding(1.em)
             .boxShadow(
                 offsetX = 0.px,

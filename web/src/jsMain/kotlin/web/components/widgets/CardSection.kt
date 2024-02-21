@@ -3,14 +3,12 @@ package web.components.widgets
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.UserSelect
-import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
-import com.varabyte.kobweb.compose.ui.modifiers.boxShadow
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.gap
@@ -21,7 +19,6 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
-import theme.OldColorsJs
 import theme.roleStyle
 
 
@@ -32,17 +29,10 @@ fun CardSection(
     elevation: Int? = null,
     content: @Composable () -> Unit,
 ) {
-    Box(
+    AppElevatedCard(
+        elevation = elevation,
         modifier = Modifier
             .fillMaxWidth()
-            .backgroundColor(MaterialTheme.colors.mdSysColorSurfaceContainerLowest.value())
-            .borderRadius(12.px)
-            .boxShadow(
-                offsetX = 0.px,
-                offsetY = 4.px,
-                blurRadius = 8.px,
-                color = OldColorsJs.lightGrayDarker
-            )
     ) {
         Column(
             modifier = Modifier
