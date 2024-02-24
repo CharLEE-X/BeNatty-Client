@@ -230,4 +230,5 @@ enum class Strings {
     ShippingReturns,
     About,
     Sale,
+    ShopNow,
 }

@@ -1,6 +1,7 @@
 package web
 
 import com.varabyte.kobweb.compose.css.Cursor
+import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
@@ -10,6 +11,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontFamily
 import com.varabyte.kobweb.compose.ui.modifiers.fontSize
+import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.lineHeight
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
 import com.varabyte.kobweb.compose.ui.modifiers.padding
@@ -55,6 +57,16 @@ val HeadlineTextStyle by ComponentStyle.base {
         .fontSize(3.cssRem)
         .textAlign(TextAlign.Start)
         .lineHeight(1.2) //1.5x doesn't look as good on very large text
+        .fontFamily(HEADLINE_FONT)
+        .fontWeight(FontWeight.Light)
+}
+
+val HeadlineTextStyleLight by HeadlineTextStyle.addVariantBase {
+    Modifier.fontWeight(FontWeight.Light)
+}
+
+val HeadlineTextStyleBold by HeadlineTextStyle.addVariantBase {
+    Modifier.fontWeight(FontWeight.Bold)
 }
 
 val SubheadlineTextStyle by ComponentStyle.base {

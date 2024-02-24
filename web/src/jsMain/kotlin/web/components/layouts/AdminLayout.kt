@@ -73,7 +73,7 @@ import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import theme.OldColorsJs
 import theme.roleStyle
-import web.FONT_CUSTOM
+import web.HEADLINE_FONT
 import web.components.widgets.AppFilledButton
 import web.components.widgets.AppFilledTonalButton
 import web.components.widgets.AppFilledTonalIconButton
@@ -355,7 +355,7 @@ private fun TopBarLeftSection(
         text = "Be Natty",
         modifier = modifier
             .roleStyle(MaterialTheme.typography.headlineLarge)
-            .fontFamily(FONT_CUSTOM)
+            .fontFamily(HEADLINE_FONT)
             .color(MaterialTheme.colors.mdSysColorInverseOnSurface.value())
     )
 }

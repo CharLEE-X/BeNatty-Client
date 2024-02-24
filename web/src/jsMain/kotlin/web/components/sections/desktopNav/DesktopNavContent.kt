@@ -34,7 +34,6 @@ import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
-import theme.OldColorsJs
 import web.components.widgets.TickerSection
 import web.components.widgets.tickerHeight
 
@@ -95,7 +94,7 @@ fun DesktopNav(
             .boxShadow(
                 offsetY = 0.px,
                 blurRadius = if (showNavBarShadow) 20.px else 0.px,
-                color = OldColorsJs.neutral200,
+                color = MaterialTheme.colors.mdSysColorShadow.value(),
             )
             .transition(
                 CSSTransition("top", SmoothColorTransitionDurationVar.value()),

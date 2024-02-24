@@ -58,6 +58,8 @@ import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.icons.fa.FaMoon
+import com.varabyte.kobweb.silk.components.icons.fa.FaSun
 import com.varabyte.kobweb.silk.components.icons.mdi.IconStyle
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiChevronRight
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiMenu
@@ -67,6 +69,7 @@ import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -86,6 +89,7 @@ import web.components.layouts.oneLayoutMaxWidth
 import web.components.widgets.AppElevatedCard
 import web.components.widgets.Logo
 import web.components.widgets.SearchBar
+import web.compose.material3.component.IconButton
 
 
 @Composable
@@ -221,10 +225,20 @@ private fun RightSection(
                         .fillMaxHeight()
                         .gap(0.5.em)
                 ) {
-                    MdiPerson2(
-                        style = IconStyle.OUTLINED,
-                        modifier = NavIconStyle.toModifier().onClick { onProfileClick() }
-                    )
+                    IconButton(
+                        onClick = { onProfileClick() },
+                    ) {
+                        MdiPerson2(
+                            style = IconStyle.OUTLINED,
+                            modifier = NavIconStyle.toModifier()
+                        )
+                    }
+                    var colorMode by ColorMode.currentState
+                    IconButton(
+                        onClick = { colorMode = colorMode.opposite },
+                    ) {
+                        if (colorMode.isLight) FaSun() else FaMoon()
+                    }
                     Box(
                         modifier = Modifier
                             .backgroundColor(contentColor)
@@ -232,10 +246,14 @@ private fun RightSection(
                             .minHeight(30.px)
                             .fillMaxHeight()
                     )
-                    MdiShoppingBasket(
-                        style = IconStyle.OUTLINED,
-                        modifier = NavIconStyle.toModifier().onClick { onBasketClick() }
-                    )
+                    IconButton(
+                        onClick = { onBasketClick() },
+                    ) {
+                        MdiShoppingBasket(
+                            style = IconStyle.OUTLINED,
+                            modifier = NavIconStyle.toModifier()
+                        )
+                    }
                 }
             }
         }

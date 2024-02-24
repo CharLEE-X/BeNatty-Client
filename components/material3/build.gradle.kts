@@ -27,7 +27,7 @@ kotlin {
             implementation(libs.kobweb.silk)
             implementation(libs.silk.foundation)
             implementation(libs.silk.icons.mdi)
-            api(npm("@material/web", "v1.2.0"))
+            api(npm("@material/web", "v1.3.0"))
         }
     }
 }

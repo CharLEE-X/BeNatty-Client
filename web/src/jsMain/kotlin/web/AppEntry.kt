@@ -28,7 +28,7 @@ import theme.defaultFontScheme
 import web.compose.material3.theming.MaterialTheme
 
 private const val COLOR_MODE_KEY = "nataliashop:colorMode"
-const val FONT_CUSTOM = "Kalam"
+const val HEADLINE_FONT = "Playfair Display, serif"
 
 @Suppress("unused")
 @InitSilk
@@ -46,8 +46,12 @@ fun AppEntry(content: @Composable () -> Unit) {
             localStorage.setItem(COLOR_MODE_KEY, colorMode.name)
         }
 
-        startKoin {
-            modules(rootModule)
+        try {
+            startKoin {
+                modules(rootModule)
+            }
+        } catch (e: Exception) {
+            console.error("Failed to start Koin", e)
         }
 
         @Suppress("UNUSED_VARIABLE")

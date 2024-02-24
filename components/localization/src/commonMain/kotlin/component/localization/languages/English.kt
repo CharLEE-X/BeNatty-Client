@@ -242,4 +242,5 @@ internal fun englishLanguage(
     Strings.ShippingReturns -> "Shipping & Returns"
     Strings.About -> key.name.enumCapitalized()
     Strings.Sale -> key.name.enumCapitalized()
+    Strings.ShopNow -> key.name.enumCapitalized()
 }
