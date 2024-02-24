@@ -1,0 +1,26 @@
+mutation LandingConfigAddCollageItem($configId: String!, $input: CollageItemCreateInput!) {
+  landingConfigAddCollageItem(configId: $configId, input: $input) {
+    companyInfo {
+      contactInfo {
+        email
+        phone
+      }
+      openingTimes {
+        close
+        dayFrom
+        dayTo
+        open
+      }
+    }
+    id
+    landingConfig {
+      collageItems {
+        alt
+        description
+        id
+        imageUrl
+        title
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+query GetConfig($configId: String) {
+  getConfig(configId: $configId) {
+    companyInfo {
+      contactInfo {
+        email
+        phone
+      }
+      openingTimes {
+        close
+        dayFrom
+        dayTo
+        open
+      }
+      paymentMethods {
+        id
+        imageUrl
+        name
+      }
+    }
+    id
+    landingConfig {
+      collageItems {
+        alt
+        description
+        id
+        imageUrl
+        title
+      }
+    }
+  }
+}

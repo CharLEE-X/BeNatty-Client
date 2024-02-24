@@ -10,6 +10,7 @@ private typealias FooterEventHandlerScope =
 internal class FooterEventHandler(
     private val footerRoutes: FooterRoutes,
     private val onError: suspend (String) -> Unit,
+    private val goToCompanyWebsite: () -> Unit,
 ) : KoinComponent, EventHandler<FooterContract.Inputs, FooterContract.Events, FooterContract.State> {
     override suspend fun FooterEventHandlerScope.handleEvent(event: FooterContract.Events) = when (event) {
         is FooterContract.Events.OnError -> onError(event.message)
@@ -26,5 +27,6 @@ internal class FooterEventHandler(
         FooterContract.Events.GoToTermsOfService -> footerRoutes.goToTermsOfService()
         FooterContract.Events.GoToTrackOrder -> footerRoutes.goToTrackOrder()
         FooterContract.Events.GoToAdminHome -> footerRoutes.goToAdminHome()
+        FooterContract.Events.GoToCompanyWebsite -> goToCompanyWebsite()
     }
 }

@@ -232,4 +232,11 @@ enum class Strings {
     Sale,
     ShopNow,
     FollowUs,
+    CanWeHelpYou,
+    StartChat,
+    From,
+    To,
+    Tel,
+    SendEmail,
+    WeWillReply,
 }

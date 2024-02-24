@@ -1,0 +1,11 @@
+query GetLandingConfig($configId: String) {
+  getLandingConfig(configId: $configId) {
+    collageItems {
+      alt
+      description
+      id
+      imageUrl
+      title
+    }
+  }
+}

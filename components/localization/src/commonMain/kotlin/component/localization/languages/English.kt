@@ -244,4 +244,11 @@ internal fun englishLanguage(
     Strings.Sale -> key.name.enumCapitalized()
     Strings.ShopNow -> key.name.enumCapitalized()
     Strings.FollowUs -> key.name.enumCapitalized()
+    Strings.CanWeHelpYou -> key.name.enumCapitalized()
+    Strings.StartChat -> key.name.enumCapitalized()
+    Strings.From -> key.name.enumCapitalized()
+    Strings.To -> key.name.enumCapitalized()
+    Strings.Tel -> key.name.enumCapitalized()
+    Strings.SendEmail -> key.name.enumCapitalized()
+    Strings.WeWillReply -> "We'll reply ASAP."
 }

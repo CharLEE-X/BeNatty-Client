@@ -2,6 +2,10 @@ package feature.shop.footer
 
 import component.localization.getString
 import core.util.currentYear
+import feature.shop.footer.model.ContactInfo
+import feature.shop.footer.model.OpeningTimes
+import feature.shop.footer.model.PaymentMethod
+import feature.shop.footer.model.dummyPaymentMethods
 import org.koin.core.component.KoinComponent
 
 object FooterContract : KoinComponent {
@@ -13,10 +17,24 @@ object FooterContract : KoinComponent {
         val showCyberSecurity: Boolean = false,
         val showPress: Boolean = false,
         val year: Int = currentYear(),
+
         val currentCountryText: String = strings.unitedKingdom,
         val currentLanguageText: String = strings.english,
         val countryImageUrl: String = "https://m.media-amazon.com/images/I/61msrRHflnL._AC_SL1500_.jpg",
         val languageImageUrl: String = "https://m.media-amazon.com/images/I/61msrRHflnL._AC_SL1500_.jpg",
+
+        val paymentMethods: List<PaymentMethod> = dummyPaymentMethods,
+        val openingTimes: OpeningTimes = OpeningTimes(
+            dayFrom = "Monday",
+            dayTo = "Friday",
+            open = "9:00",
+            close = "18:00",
+        ),
+        val contactInfo: ContactInfo = ContactInfo(
+            companyWebsite = "https://charleex.com",
+            email = "contact@${strings.companyName}.com",
+            phone = "+44 123 456 7890",
+        ),
     )
 
     sealed interface Inputs {
@@ -37,6 +55,7 @@ object FooterContract : KoinComponent {
         data object OnCurrencyClick : Inputs
         data object OnLanguageClick : Inputs
         data object OnGoToAdminHome : Inputs
+        data object OnCompanyNameClick : Inputs
     }
 
     sealed interface Events {
@@ -54,6 +73,7 @@ object FooterContract : KoinComponent {
         data object GoToCyberSecurity : Events
         data object GoToPress : Events
         data object GoToAdminHome : Events
+        data object GoToCompanyWebsite : Events
     }
 
     data class Strings(
@@ -80,6 +100,13 @@ object FooterContract : KoinComponent {
         val unitedKingdom: String = getString(component.localization.Strings.UnitedKingdom),
         val admin: String = getString(component.localization.Strings.Admin),
         val followUs: String = getString(component.localization.Strings.FollowUs),
+        val canWeHelpYou: String = getString(component.localization.Strings.CanWeHelpYou),
+        val startChat: String = getString(component.localization.Strings.StartChat),
+        val from: String = getString(component.localization.Strings.From),
+        val to: String = getString(component.localization.Strings.To),
+        val tel: String = getString(component.localization.Strings.Tel),
+        val sendEmail: String = getString(component.localization.Strings.SendEmail),
+        val weWillReply: String = getString(component.localization.Strings.WeWillReply),
     ) {
     }
 }

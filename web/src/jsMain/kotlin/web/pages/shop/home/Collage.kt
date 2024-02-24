@@ -48,6 +48,7 @@ import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import feature.shop.home.HomeContract
 import feature.shop.home.HomeViewModel
 import org.jetbrains.compose.web.css.DisplayStyle
@@ -111,6 +112,7 @@ private fun CollageItem(
     borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
 ) {
     var hovered by remember { mutableStateOf(false) }
+    val overlayColor = if (ColorMode.current.isLight) shadowColor else Color.rgb(179, 176, 248)
 
     AppElevatedCard(
         elevation = 0,
@@ -138,6 +140,7 @@ private fun CollageItem(
             )
             ImageOverlay(
                 shadowColor = shadowColor,
+                overlayColor = overlayColor,
                 hovered = hovered
             )
             Column(
@@ -188,6 +191,7 @@ private fun CollageItem(
                     AppElevatedButton(
                         containerShape = 16.px,
                         onClick = onClick,
+                        containerColor = MaterialTheme.colors.primary.value(),
                         modifier = Modifier
                             .margin(top = 30.px)
                             .size(200.px, 80.px)
@@ -196,7 +200,7 @@ private fun CollageItem(
                             text = it,
                             modifier = Modifier
                                 .fontSize(1.5.em)
-                                .color(MaterialTheme.colors.onSurface.value())
+                                .color(MaterialTheme.colors.onPrimary.value())
                         )
                     }
                 }
@@ -206,7 +210,11 @@ private fun CollageItem(
 }
 
 @Composable
-private fun ImageOverlay(shadowColor: Color, hovered: Boolean) {
+private fun ImageOverlay(
+    shadowColor: Color,
+    overlayColor: Color,
+    hovered: Boolean
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -216,7 +224,7 @@ private fun ImageOverlay(shadowColor: Color, hovered: Boolean) {
                 offsetY = 0.px,
                 blurRadius = 80.px,
                 spreadRadius = 0.px,
-                color = shadowColor.toRgb().copy(alpha = 120),
+                color = overlayColor.toRgb().copy(alpha = 120),
                 inset = true
             )
             .thenIf(hovered) { Modifier.scale(1.05) }

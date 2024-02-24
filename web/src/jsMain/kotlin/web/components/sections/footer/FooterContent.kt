@@ -6,12 +6,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import com.varabyte.kobweb.compose.css.FontWeight
+import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
+import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
@@ -22,17 +25,24 @@ import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.size
+import com.varabyte.kobweb.compose.ui.modifiers.translateX
+import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
+import com.varabyte.kobweb.navigation.OpenLinkStrategy
+import com.varabyte.kobweb.navigation.open
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.shop.footer.FooterContract
 import feature.shop.footer.FooterRoutes
 import feature.shop.footer.FooterViewModel
+import kotlinx.browser.window
+import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.fr
+import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import theme.roleStyle
@@ -45,6 +55,7 @@ import web.compose.material3.component.Divider
 fun Footer(
     footerRoutes: FooterRoutes,
     onError: suspend (String) -> Unit,
+    contentColor: CSSColorValue = MaterialTheme.colors.onSurface.value(),
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -52,6 +63,7 @@ fun Footer(
             scope = scope,
             onError = onError,
             footerRoutes = footerRoutes,
+            goToCompanyWebsite = { window.open("https://www.varabyte.com", OpenLinkStrategy.IN_NEW_TAB) }
         )
     }
     val state by vm.observeStates().collectAsState()
@@ -77,118 +89,107 @@ fun Footer(
                     .gridTemplateColumns { repeat(4) { size(1.fr) } }
                     .gap(2.em)
             ) {
-                Column(
-                    modifier = Modifier
-                        .roleStyle(MaterialTheme.typography.bodyMedium)
+                FooterSection(
+                    title = state.strings.canWeHelpYou.uppercase() + "?",
+                    contentColor = contentColor,
                 ) {
+                    AppTextButton(
+                        onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
+                        modifier = Modifier.translateX((-12).px)
+                    ) {
+                        SpanText(text = state.strings.startChat.uppercase())
+                    }
                     SpanText(
-                        text = "Can we help you?".uppercase(),
+                        text = "${state.strings.from} ${state.openingTimes.dayFrom} ${state.strings.to} " +
+                            "${state.openingTimes.dayTo} ${state.strings.from.lowercase()} ${state.openingTimes.open}" +
+                            " ${state.strings.to} ${state.openingTimes.close}.",
                         modifier = Modifier
-                            .fontWeight(FontWeight.SemiBold)
+                            .roleStyle(MaterialTheme.typography.bodyMedium)
+                            .color(contentColor)
                     )
                     SpanText(
-                        text = "Start chat".uppercase(),
-                        modifier = Modifier.padding(top = 1.em)
-                    )
-                    SpanText(
-                        text = "From Mondays to Fridays from 9:00 to 18:00.",
-                    )
-                    SpanText(
-                        text = "TEL: (123) 456-7890".uppercase(),
-                        modifier = Modifier.padding(top = 1.em)
-                    )
-                    SpanText(
-                        text = "From Mondays to Fridays from 9:00 to 18:00.",
-                    )
-
-                    SpanText(
-                        text = "Send email".uppercase(),
-                        modifier = Modifier.padding(top = 1.em)
-                    )
-                    SpanText(
-                        text = "We'll reply ASAP.",
-                    )
-                }
-                Column(
-                    modifier = Modifier.position(Position.Relative)
-                ) {
-                    SpanText(
-                        text = state.strings.help,
+                        text = "${state.strings.tel}: ${state.contactInfo.phone}".uppercase(),
                         modifier = Modifier
-                            .fontWeight(FontWeight.SemiBold)
-                            .margin(bottom = 1.em, left = 1.em),
+                            .padding(top = 1.em)
+                            .roleStyle(MaterialTheme.typography.bodyMedium)
+                            .color(contentColor)
+                    )
+                    SpanText(
+                        text = "${state.strings.from} ${state.openingTimes.dayFrom} ${state.strings.to} " +
+                            "${state.openingTimes.dayTo} ${state.strings.from.lowercase()} ${state.openingTimes.open}" +
+                            " ${state.strings.to} ${state.openingTimes.close}.",
+                        modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
+                            .color(contentColor)
                     )
                     AppTextButton(
                         onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
+                        modifier = Modifier.translateX((-12).px)
                     ) {
-                        SpanText(state.strings.trackOrder)
+                        SpanText(text = state.strings.sendEmail.uppercase())
                     }
-                    AppTextButton(
-                        onClick = { vm.trySend(FooterContract.Inputs.OnShippingClick) },
-                    ) {
-                        SpanText(state.strings.shipping)
-                    }
-                    AppTextButton(
-                        onClick = { vm.trySend(FooterContract.Inputs.OnReturnsClick) },
-                    ) {
-                        SpanText(state.strings.returns)
-                    }
-                    AppTextButton(
-                        onClick = { vm.trySend(FooterContract.Inputs.OnFAQsClick) },
-                    ) {
-                        SpanText(state.strings.faQs)
-                    }
-                }
-                Column(
-                    modifier = Modifier.position(Position.Relative)
-                ) {
                     SpanText(
-                        text = state.strings.company,
-                        modifier = Modifier
-                            .fontWeight(FontWeight.SemiBold)
-                            .margin(bottom = 1.em, left = 1.em),
+                        text = state.strings.weWillReply,
+                        modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
+                            .color(contentColor)
                     )
-                    AppTextButton(
+                }
+                FooterSection(
+                    title = state.strings.help,
+                    contentColor = contentColor,
+                ) {
+                    FooterTextButton(
+                        text = state.strings.trackOrder,
+                        onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
+                    )
+                    FooterTextButton(
+                        text = state.strings.shipping,
+                        onClick = { vm.trySend(FooterContract.Inputs.OnShippingClick) },
+                    )
+                    FooterTextButton(
+                        text = state.strings.returns,
+                        onClick = { vm.trySend(FooterContract.Inputs.OnReturnsClick) },
+                    )
+                    FooterTextButton(
+                        text = state.strings.accessibility,
+                        onClick = { vm.trySend(FooterContract.Inputs.OnFAQsClick) },
+                    )
+                }
+
+                FooterSection(
+                    title = state.strings.company,
+                    contentColor = contentColor,
+                ) {
+                    FooterTextButton(
+                        text = state.strings.contactUs,
                         onClick = { vm.trySend(FooterContract.Inputs.OnPrivacyPolicyClicked) },
-                    ) {
-                        SpanText(state.strings.privacyPolicy)
-                    }
-                    AppTextButton(
+                    )
+                    FooterTextButton(
+                        text = state.strings.aboutUs,
                         onClick = { vm.trySend(FooterContract.Inputs.OnTermsOfServiceClicked) },
-                    ) {
-                        SpanText(state.strings.termsOfService)
-                    }
+                    )
                     if (state.showCareer) {
-                        AppTextButton(
+                        FooterTextButton(
+                            text = state.strings.career,
                             onClick = { vm.trySend(FooterContract.Inputs.OnCareerClick) },
-                        ) {
-                            SpanText(state.strings.career)
-                        }
+                        )
                     }
                     if (state.showPress) {
-                        AppTextButton(
+                        FooterTextButton(
+                            text = state.strings.press,
                             onClick = { vm.trySend(FooterContract.Inputs.OnPressClick) },
-                        ) {
-                            SpanText(state.strings.press)
-                        }
+                        )
                     }
                     if (state.isAdmin) {
-                        AppTextButton(
+                        FooterTextButton(
+                            text = state.strings.admin,
                             onClick = { vm.trySend(FooterContract.Inputs.OnGoToAdminHome) },
-                        ) {
-                            SpanText(state.strings.admin)
-                        }
+                        )
                     }
                 }
-                Column(
-                    modifier = Modifier.position(Position.Relative)
+                FooterSection(
+                    title = state.strings.followUs,
+                    contentColor = contentColor,
                 ) {
-                    SpanText(
-                        text = state.strings.followUs,
-                        modifier = Modifier
-                            .fontWeight(FontWeight.SemiBold)
-                            .margin(bottom = 1.em),
-                    )
                     Row(
                         modifier = Modifier
                             .gap(1.em)
@@ -226,43 +227,62 @@ fun Footer(
             }
         }
         Divider()
-        Column(
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
                 .maxWidth(oneLayoutMaxWidth)
+                .gap(1.em)
+                .padding(topBottom = 1.em, leftRight = 3.em),
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .gap(1.em)
-                    .padding(topBottom = 1.em, leftRight = 3.em),
-            ) {
-                SpanText(
-                    text = "© ${state.year} ${state.strings.companyName}",
-                    modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium),
-                )
-                Spacer()
+            FooterTextButton(
+                text = "© ${state.year} ${state.strings.companyName}",
+                onClick = { vm.trySend(FooterContract.Inputs.OnCompanyNameClick) },
+            )
+            Spacer()
+            state.paymentMethods.forEach {
                 PaymentMethodImage(
-                    src = "https://cdn-icons-png.flaticon.com/128/196/196578.png",
-                    alt = "Visa"
-                )
-                PaymentMethodImage(
-                    src = "https://cdn-icons-png.flaticon.com/128/14062/14062982.png",
-                    alt = "Mastercard"
-                )
-                PaymentMethodImage(
-                    src = "https://cdn-icons-png.flaticon.com/128/349/349228.png",
-                    alt = "American Express"
-                )
-                PaymentMethodImage(
-                    src = "https://cdn-icons-png.flaticon.com/128/196/196565.png",
-                    alt = "Paypal"
+                    src = it.imageUrl,
+                    alt = it.name
                 )
             }
         }
     }
 }
+
+@Composable
+private fun FooterSection(
+    title: String,
+    contentColor: CSSColorValue,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    Column(
+        modifier = Modifier.position(Position.Relative)
+    ) {
+        SpanText(
+            text = title,
+            modifier = Modifier
+                .fontWeight(FontWeight.SemiBold)
+                .margin(bottom = 1.em)
+                .color(contentColor)
+        )
+        content()
+    }
+}
+
+@Composable
+private fun FooterTextButton(
+    text: String,
+    onClick: () -> Unit,
+) {
+    AppTextButton(
+        onClick = { onClick() },
+        modifier = Modifier.translateX((-12).px)
+    ) {
+        SpanText(text = text)
+    }
+}
+
 
 @Composable
 private fun PaymentMethodImage(
@@ -274,5 +294,6 @@ private fun PaymentMethodImage(
         alt = alt,
         modifier = Modifier
             .size(2.em)
+            .userSelect(UserSelect.None)
     )
 }
