@@ -21,7 +21,9 @@ import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
+import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
+import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.shop.footer.FooterContract
 import feature.shop.footer.FooterRoutes
@@ -35,9 +37,8 @@ import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.layouts.oneLayoutMaxWidth
+import web.components.widgets.AppOutlinedIconButton
 import web.components.widgets.AppTextButton
-import web.components.widgets.CurrencyDropdown
-import web.components.widgets.SimpleDropdown
 import web.compose.material3.component.Divider
 
 @Composable
@@ -59,7 +60,7 @@ fun Footer(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
-            .backgroundColor(MaterialTheme.colors.mdSysColorSurfaceContainerLow.value())
+            .backgroundColor(MaterialTheme.colors.surface.value())
             .margin(top = 2.em)
             .zIndex(2)
     ) {
@@ -77,7 +78,8 @@ fun Footer(
                     .gap(2.em)
             ) {
                 Column(
-
+                    modifier = Modifier
+                        .roleStyle(MaterialTheme.typography.bodyMedium)
                 ) {
                     SpanText(
                         text = "Can we help you?".uppercase(),
@@ -86,32 +88,22 @@ fun Footer(
                     )
                     SpanText(
                         text = "Start chat".uppercase(),
-                        modifier = Modifier
-                            .roleStyle(MaterialTheme.typography.bodyMedium)
-                            .padding(top = 1.em)
+                        modifier = Modifier.padding(top = 1.em)
                     )
                     SpanText(
                         text = "From Mondays to Fridays from 9:00 to 18:00.",
-                        modifier = Modifier
-                            .roleStyle(MaterialTheme.typography.bodyMedium)
                     )
                     SpanText(
                         text = "TEL: (123) 456-7890".uppercase(),
-                        modifier = Modifier
-                            .roleStyle(MaterialTheme.typography.bodyMedium)
-                            .padding(top = 1.em)
+                        modifier = Modifier.padding(top = 1.em)
                     )
                     SpanText(
                         text = "From Mondays to Fridays from 9:00 to 18:00.",
-                        modifier = Modifier
-                            .roleStyle(MaterialTheme.typography.bodyMedium)
                     )
 
                     SpanText(
                         text = "Send email".uppercase(),
-                        modifier = Modifier
-                            .roleStyle(MaterialTheme.typography.bodyMedium)
-                            .padding(top = 1.em)
+                        modifier = Modifier.padding(top = 1.em)
                     )
                     SpanText(
                         text = "We'll reply ASAP.",
@@ -192,28 +184,44 @@ fun Footer(
                     modifier = Modifier.position(Position.Relative)
                 ) {
                     SpanText(
-                        text = state.strings.aboutUs,
+                        text = state.strings.followUs,
                         modifier = Modifier
                             .fontWeight(FontWeight.SemiBold)
                             .margin(bottom = 1.em),
                     )
-                    CurrencyDropdown(
-                        countryText = state.strings.deliverTo,
-                        countryImageUrl = state.countryImageUrl,
-                        countryImageAlt = state.currentCountryText,
-                        onClick = { vm.trySend(FooterContract.Inputs.OnCurrencyClick) },
-                    )
-                    SpanText(
-                        text = state.currentCountryText,
+                    Row(
                         modifier = Modifier
-                            .roleStyle(MaterialTheme.typography.bodyMedium)
-                            .fontWeight(FontWeight.SemiBold)
-                            .margin(top = 2.em, bottom = 1.em),
-                    )
-                    SimpleDropdown(
-                        text = state.currentLanguageText,
-                        onClick = { vm.trySend(FooterContract.Inputs.OnLanguageClick) },
-                    )
+                            .gap(1.em)
+                            .margin(top = 1.em)
+                    ) {
+                        AppOutlinedIconButton(
+                            onClick = { },
+                        ) {
+                            Image(
+                                src = "/facebook.png",
+                                alt = "Facebook",
+                                modifier = Modifier.size(1.em)
+                            )
+                        }
+                        AppOutlinedIconButton(
+                            onClick = { },
+                        ) {
+                            Image(
+                                src = "/twitter.png",
+                                alt = "Twitter",
+                                modifier = Modifier.size(1.em)
+                            )
+                        }
+                        AppOutlinedIconButton(
+                            onClick = { },
+                        ) {
+                            Image(
+                                src = "/instagram.png",
+                                alt = "Instagram",
+                                modifier = Modifier.size(1.em)
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -227,6 +235,7 @@ fun Footer(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .gap(1.em)
                     .padding(topBottom = 1.em, leftRight = 3.em),
             ) {
                 SpanText(
@@ -234,31 +243,36 @@ fun Footer(
                     modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium),
                 )
                 Spacer()
-                AppTextButton(
-                    onClick = { vm.trySend(FooterContract.Inputs.OnPrivacyPolicyClicked) },
-                ) {
-                    SpanText(
-                        text = state.strings.privacyPolicy,
-                        modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium),
-                    )
-                }
-                AppTextButton(
-                    onClick = { vm.trySend(FooterContract.Inputs.OnTermsOfServiceClicked) },
-                ) {
-                    SpanText(
-                        text = state.strings.termsOfService,
-                        modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium),
-                    )
-                }
-                AppTextButton(
-                    onClick = { vm.trySend(FooterContract.Inputs.OnAccessibilityClicked) },
-                ) {
-                    SpanText(
-                        text = state.strings.accessibility,
-                        modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium),
-                    )
-                }
+                PaymentMethodImage(
+                    src = "https://cdn-icons-png.flaticon.com/128/196/196578.png",
+                    alt = "Visa"
+                )
+                PaymentMethodImage(
+                    src = "https://cdn-icons-png.flaticon.com/128/14062/14062982.png",
+                    alt = "Mastercard"
+                )
+                PaymentMethodImage(
+                    src = "https://cdn-icons-png.flaticon.com/128/349/349228.png",
+                    alt = "American Express"
+                )
+                PaymentMethodImage(
+                    src = "https://cdn-icons-png.flaticon.com/128/196/196565.png",
+                    alt = "Paypal"
+                )
             }
         }
     }
+}
+
+@Composable
+private fun PaymentMethodImage(
+    src: String,
+    alt: String,
+) {
+    Image(
+        src = src,
+        alt = alt,
+        modifier = Modifier
+            .size(2.em)
+    )
 }

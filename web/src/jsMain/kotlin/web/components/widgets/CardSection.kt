@@ -45,7 +45,7 @@ fun CardSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(leftRight = 1.em, topBottom = 0.5.em)
-                        .backgroundColor(MaterialTheme.colors.mdSysColorPrimaryContainer.value())
+                        .backgroundColor(MaterialTheme.colors.primaryContainer.value())
                         .borderRadius(topLeft = 12.px, topRight = 12.px)
                 ) {
                     Column(

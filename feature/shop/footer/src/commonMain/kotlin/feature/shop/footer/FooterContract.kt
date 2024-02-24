@@ -79,7 +79,9 @@ object FooterContract : KoinComponent {
         val currencyEnUs: String = getString(component.localization.Strings.CurrencyEnUs),
         val unitedKingdom: String = getString(component.localization.Strings.UnitedKingdom),
         val admin: String = getString(component.localization.Strings.Admin),
-    )
+        val followUs: String = getString(component.localization.Strings.FollowUs),
+    ) {
+    }
 }
 
 data class FooterRoutes(

@@ -12,6 +12,7 @@ import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.gap
@@ -24,9 +25,12 @@ import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
+import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.s
+import org.jetbrains.compose.web.css.value
+import theme.MaterialTheme
 import web.HeadlineTextStyle
 import web.HeadlineTextStyleBold
 import web.HeadlineTextStyleLight
@@ -37,6 +41,7 @@ fun Logo(
     hasLogo: Boolean = false,
     hasText: Boolean = true,
     logoSize: CSSLengthOrPercentageNumericValue = 2.em,
+    color: CSSColorValue = MaterialTheme.colors.onSurface.value(),
     onClick: () -> Unit,
 ) {
     var hovered by remember { mutableStateOf(false) }
@@ -68,10 +73,12 @@ fun Logo(
                 SpanText(
                     text = "BE",
                     modifier = HeadlineTextStyle.toModifier(HeadlineTextStyleBold)
+                        .color(color)
                 )
                 SpanText(
                     text = "NATTY",
                     modifier = HeadlineTextStyle.toModifier(HeadlineTextStyleLight)
+                        .color(color)
                 )
             }
         }

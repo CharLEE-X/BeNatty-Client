@@ -50,7 +50,6 @@ import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.shop.home.HomeContract
 import feature.shop.home.HomeViewModel
-import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
@@ -58,6 +57,8 @@ import org.jetbrains.compose.web.css.fr
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
+import org.jetbrains.compose.web.css.value
+import theme.MaterialTheme
 import web.HeadlineTextStyle
 import web.components.widgets.AppElevatedButton
 import web.components.widgets.AppElevatedCard
@@ -105,8 +106,8 @@ private fun CollageItem(
     buttonText: String? = null,
     isCentered: Boolean,
     onClick: () -> Unit,
-    contentColor: CSSColorValue = Colors.White,
-    shadowColor: Color.Rgb = Colors.Black,
+    contentColor: Color = Colors.White,
+    shadowColor: Color = Color.rgb(30, 30, 59),
     borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
 ) {
     var hovered by remember { mutableStateOf(false) }
@@ -193,7 +194,9 @@ private fun CollageItem(
                     ) {
                         SpanText(
                             text = it,
-                            modifier = Modifier.fontSize(1.5.em)
+                            modifier = Modifier
+                                .fontSize(1.5.em)
+                                .color(MaterialTheme.colors.onSurface.value())
                         )
                     }
                 }
@@ -203,7 +206,7 @@ private fun CollageItem(
 }
 
 @Composable
-private fun ImageOverlay(shadowColor: Color.Rgb, hovered: Boolean) {
+private fun ImageOverlay(shadowColor: Color, hovered: Boolean) {
     Box(
         modifier = Modifier
             .fillMaxSize()

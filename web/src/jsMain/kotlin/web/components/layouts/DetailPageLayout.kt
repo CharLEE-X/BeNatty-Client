@@ -59,7 +59,7 @@ fun DetailPageLayout(
                     AppFilledButton(
                         onClick = { onDeleteClick() },
                         leadingIcon = { MdiDelete() },
-                        containerColor = MaterialTheme.colors.mdSysColorError.value(),
+                        containerColor = MaterialTheme.colors.error.value(),
                     ) {
                         SpanText(text = deleteText)
                     }

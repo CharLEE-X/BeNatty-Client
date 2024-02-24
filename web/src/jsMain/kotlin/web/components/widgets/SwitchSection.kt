@@ -46,7 +46,7 @@ fun SwitchSection(
                 text = title,
                 modifier = Modifier
                     .roleStyle(MaterialTheme.typography.bodySmall)
-                    .color(MaterialTheme.colors.mdSysColorError.value())
+                    .color(MaterialTheme.colors.error.value())
             )
         }
     }

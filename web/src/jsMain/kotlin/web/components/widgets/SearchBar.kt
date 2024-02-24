@@ -40,9 +40,9 @@ fun SearchBar(
     leadingIcon: @Composable (() -> Unit)? = { MdiSearch() },
     trailingIcon: @Composable (() -> Unit)? = null,
     containerShape: CSSLengthOrPercentageNumericValue = 30.px,
-    containerColor: CSSColorValue = MaterialTheme.colors.mdSysColorSurfaceContainer.value(),
+    containerColor: CSSColorValue = MaterialTheme.colors.surfaceContainer.value(),
     unFocusedOutlineColor: CSSColorValue = Colors.Transparent,
-    focusedOutlineColor: CSSColorValue = MaterialTheme.colors.mdSysColorInverseSurface.value(),
+    focusedOutlineColor: CSSColorValue = MaterialTheme.colors.inverseSurface.value(),
     hoverOutlineColor: CSSColorValue = focusedOutlineColor,
 ) {
     var focused by remember { mutableStateOf(false) }

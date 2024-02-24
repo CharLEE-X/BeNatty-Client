@@ -34,6 +34,7 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiEco
 import com.varabyte.kobweb.silk.components.text.SpanText
 import kotlinx.browser.window
 import org.jetbrains.compose.web.css.AnimationTimingFunction
+import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
@@ -55,6 +56,8 @@ fun TickerSection(
     modifier: Modifier = Modifier,
     tickerText: String,
     onClick: () -> Unit,
+    backgroundColor: CSSColorValue = MaterialTheme.colors.onPrimaryContainer.value(),
+    contentColor: CSSColorValue = MaterialTheme.colors.primaryContainer.value(),
 ) {
     var repeatCount by remember { mutableStateOf(5) }
 
@@ -71,8 +74,8 @@ fun TickerSection(
             .display(DisplayStyle.Block)
             .minHeight(tickerHeight)
             .padding(topBottom = 0.5.em)
-            .backgroundColor(MaterialTheme.colors.mdSysColorOnSurface.value())
-            .color(MaterialTheme.colors.mdSysColorSurface.value())
+            .backgroundColor(backgroundColor)
+            .color(contentColor)
             .onClick { onClick() }
             .cursor(Cursor.Pointer)
     ) {
@@ -90,10 +93,13 @@ fun TickerSection(
                 )
         ) {
             repeat(repeatCount) {
-                MdiEco()
+                MdiEco(
+                    Modifier.color(contentColor)
+                )
                 SpanText(
                     text = tickerText,
                     modifier = Modifier
+                        .color(contentColor)
                         .fontSize(16.px)
                         .whiteSpace(WhiteSpace.NoWrap)
                 )

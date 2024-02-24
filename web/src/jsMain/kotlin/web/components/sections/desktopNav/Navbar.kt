@@ -58,15 +58,14 @@ import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
-import com.varabyte.kobweb.silk.components.icons.fa.FaMoon
-import com.varabyte.kobweb.silk.components.icons.fa.FaSun
 import com.varabyte.kobweb.silk.components.icons.mdi.IconStyle
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiChevronRight
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiLightMode
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiMenu
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiModeNight
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson2
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiShoppingBasket
 import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
-import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
@@ -83,14 +82,14 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
+import org.jetbrains.compose.web.css.value
 import org.jetbrains.compose.web.dom.Span
-import web.NavIconStyle
+import theme.MaterialTheme
 import web.components.layouts.oneLayoutMaxWidth
 import web.components.widgets.AppElevatedCard
 import web.components.widgets.Logo
 import web.components.widgets.SearchBar
 import web.compose.material3.component.IconButton
-
 
 @Composable
 fun NavBar(
@@ -101,8 +100,6 @@ fun NavBar(
     shippingReturnsText: String,
     basketCount: Int,
     storeMenuItems: List<String>,
-    backgroundColor: CSSColorValue,
-    contentColor: CSSColorValue,
     onStoreMenuItemSelected: (String) -> Unit,
     onStoreClick: () -> Unit,
     onAboutClick: () -> Unit,
@@ -139,7 +136,6 @@ fun NavBar(
                 onAboutClick = onAboutClick,
                 onShippingReturnsClick = onShippingReturnsClick,
                 onStoreMenuItemSelected = onStoreMenuItemSelected,
-                contentColor = contentColor,
             )
             Logo(
                 onClick = onLogoClick,
@@ -156,8 +152,6 @@ fun NavBar(
                 onEnterPress = onEnterPress,
                 onProfileClick = onProfileClick,
                 onBasketClick = onBasketClick,
-                backgroundColor = backgroundColor,
-                contentColor = contentColor,
             )
         }
     }
@@ -174,8 +168,8 @@ private fun RightSection(
     onEnterPress: () -> Unit,
     onProfileClick: () -> Unit,
     onBasketClick: () -> Unit,
-    backgroundColor: CSSColorValue,
-    contentColor: CSSColorValue,
+    backgroundColor: CSSColorValue = MaterialTheme.colors.surfaceContainerLow.value(),
+    contentColor: CSSColorValue = MaterialTheme.colors.onSurface.value(),
 ) {
     val breakpoint = rememberBreakpoint()
 
@@ -225,19 +219,22 @@ private fun RightSection(
                         .fillMaxHeight()
                         .gap(0.5.em)
                 ) {
+                    val iconStyle = IconStyle.OUTLINED
+                    val iconModifier = Modifier.color(contentColor)
                     IconButton(
                         onClick = { onProfileClick() },
                     ) {
                         MdiPerson2(
                             style = IconStyle.OUTLINED,
-                            modifier = NavIconStyle.toModifier()
+                            modifier = iconModifier
                         )
                     }
                     var colorMode by ColorMode.currentState
                     IconButton(
                         onClick = { colorMode = colorMode.opposite },
                     ) {
-                        if (colorMode.isLight) FaSun() else FaMoon()
+                        if (colorMode.isLight) MdiLightMode(iconModifier, iconStyle)
+                        else MdiModeNight(iconModifier, iconStyle)
                     }
                     Box(
                         modifier = Modifier
@@ -249,10 +246,7 @@ private fun RightSection(
                     IconButton(
                         onClick = { onBasketClick() },
                     ) {
-                        MdiShoppingBasket(
-                            style = IconStyle.OUTLINED,
-                            modifier = NavIconStyle.toModifier()
-                        )
+                        MdiShoppingBasket(iconModifier, iconStyle)
                     }
                 }
             }
@@ -267,7 +261,6 @@ private fun ListMenu(
     aboutText: String,
     shippingReturnsText: String,
     storeMenuItems: List<String>,
-    contentColor: CSSColorValue,
     onStoreMenuItemSelected: (String) -> Unit,
     onStoreClick: () -> Unit,
     onAboutClick: () -> Unit,
@@ -330,7 +323,6 @@ private fun ListMenu(
                         hasDropdown = true,
                         onClick = onStoreClick,
                         hovered = isStoreButtonHovered || isMenuHovered,
-                        contentColor = contentColor,
                         modifier = Modifier
                             .onMouseEnter { isStoreButtonHovered = true }
                             .onMouseLeave { isStoreButtonHovered = false }
@@ -340,10 +332,9 @@ private fun ListMenu(
                         items = storeMenuItems,
                         onStoreMenuItemSelected = onStoreMenuItemSelected,
                         onMenuItemHovered = { isMenuHovered = it },
-                        contentColor = contentColor,
                         modifier = Modifier
                             .translateX((-16).px)
-                            .padding(top = 10.px)
+                            .margin(top = 10.px)
                             .onMouseEnter { isMenuHovered = true }
                             .onMouseLeave {
                                 isMenuHovered = false
@@ -355,7 +346,6 @@ private fun ListMenu(
                     text = aboutText,
                     hovered = isAboutButtonHovered,
                     onClick = onAboutClick,
-                    contentColor = contentColor,
                     modifier = Modifier
                         .onMouseEnter { isAboutButtonHovered = true }
                         .onMouseLeave { isAboutButtonHovered = false }
@@ -364,7 +354,6 @@ private fun ListMenu(
                     text = shippingReturnsText,
                     hovered = isShippingButtonHovered,
                     onClick = onShippingReturnsClick,
-                    contentColor = contentColor,
                     modifier = Modifier
                         .onMouseEnter { isShippingButtonHovered = true }
                         .onMouseLeave { isShippingButtonHovered = false }
@@ -381,7 +370,7 @@ private fun StoreSubMenu(
     items: List<String>,
     onStoreMenuItemSelected: (String) -> Unit,
     onMenuItemHovered: (Boolean) -> Unit,
-    contentColor: CSSColorValue,
+    backgroundColor: CSSColorValue = MaterialTheme.colors.onSurface.value(),
 ) {
     AppElevatedCard(
         modifier = modifier
@@ -403,7 +392,7 @@ private fun StoreSubMenu(
         Column(
             modifier = Modifier
                 .width(200.px)
-                .fontWeight(300)
+                .fontWeight(400)
                 .fontSize(14.px)
                 .lineHeight(18.px)
                 .padding(leftRight = 20.px, topBottom = 16.px)
@@ -438,9 +427,9 @@ private fun StoreSubMenu(
                             modifier = Modifier
                                 .align(Alignment.Start)
                                 .onClick { onStoreMenuItemSelected(item) }
-                                .height(1.px)
+                                .height(2.px)
                                 .fillMaxWidth(if (itemHovered) 100.percent else 0.percent)
-                                .backgroundColor(contentColor)
+                                .backgroundColor(backgroundColor)
                                 .transition(CSSTransition("width", 0.3.s, TransitionTimingFunction.Ease))
                         )
                     }
@@ -456,7 +445,7 @@ private fun ListMenuItem(
     text: String,
     hovered: Boolean,
     hasDropdown: Boolean = false,
-    contentColor: CSSColorValue,
+    contentColor: CSSColorValue = MaterialTheme.colors.onSurface.value(),
     onClick: () -> Unit,
 ) {
     Column(

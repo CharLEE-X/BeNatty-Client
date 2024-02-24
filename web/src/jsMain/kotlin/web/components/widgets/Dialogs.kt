@@ -55,7 +55,7 @@ fun ImagePreviewDialog(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .backgroundColor(MaterialTheme.colors.mdSysColorOnBackground.value())
+                .backgroundColor(MaterialTheme.colors.onBackground.value())
                 .opacity(if (open) 0.7 else 0.0)
                 .onClick { onClose() }
                 .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease)),
@@ -149,7 +149,7 @@ fun TakeActionDialog(
                         onClosing(true)
                     },
                     leadingIcon = { MdiDelete() },
-                    containerColor = MaterialTheme.colors.mdSysColorError.value()
+                    containerColor = MaterialTheme.colors.error.value()
                 ) {
                     Text(actionYesText)
                 }

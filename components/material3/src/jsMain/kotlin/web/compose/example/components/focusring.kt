@@ -31,10 +31,10 @@ import web.compose.material3.component.FocusRing
 private object FocusRingStyleSheet : StyleSheet() {
     val box by style {
         margin(8.px)
-        backgroundColor(MaterialTheme.colors.mdSysColorPrimaryContainer.value())
+        backgroundColor(MaterialTheme.colors.primaryContainer.value())
         borderWidth(0.px);
         borderRadius(50.percent);
-        color(MaterialTheme.colors.mdSysColorOnPrimaryContainer.value())
+        color(MaterialTheme.colors.onPrimaryContainer.value())
         display(DisplayStyle.Flex)
         justifyContent(JustifyContent.Center)
         alignItems(AlignItems.Center)

@@ -26,7 +26,6 @@ import feature.shop.navbar.DesktopNavContract
 import feature.shop.navbar.DesktopNavRoutes
 import feature.shop.navbar.NavbarViewModel
 import kotlinx.browser.window
-import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.CSSSizeValue
 import org.jetbrains.compose.web.css.CSSUnit
 import org.jetbrains.compose.web.css.DisplayStyle
@@ -44,8 +43,6 @@ fun DesktopNav(
     onError: suspend (String) -> Unit,
     desktopNavRoutes: DesktopNavRoutes,
     onTopSpacingChanged: (CSSSizeValue<CSSUnit.px>) -> Unit,
-    backgroundColor: CSSColorValue = MaterialTheme.colors.mdSysColorSurfaceContainerLow.value(),
-    contentColor: CSSColorValue = MaterialTheme.colors.mdSysColorOnSurface.value(),
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -86,7 +83,7 @@ fun DesktopNav(
         modifier = Modifier
             .position(Position.Fixed)
             .display(DisplayStyle.Block)
-            .backgroundColor(backgroundColor)
+            .backgroundColor(MaterialTheme.colors.surface.value())
             .fillMaxWidth()
             .boxSizing(BoxSizing.BorderBox)
             .zIndex(10)
@@ -94,7 +91,7 @@ fun DesktopNav(
             .boxShadow(
                 offsetY = 0.px,
                 blurRadius = if (showNavBarShadow) 20.px else 0.px,
-                color = MaterialTheme.colors.mdSysColorShadow.value(),
+                color = MaterialTheme.colors.shadow.value(),
             )
             .transition(
                 CSSTransition("top", SmoothColorTransitionDurationVar.value()),
@@ -123,8 +120,6 @@ fun DesktopNav(
             onEnterPress = { vm.trySend(DesktopNavContract.Inputs.OnSearchEnterPress) },
             onProfileClick = { vm.trySend(DesktopNavContract.Inputs.OnProfileClick) },
             onBasketClick = { vm.trySend(DesktopNavContract.Inputs.OnBasketClick) },
-            backgroundColor = backgroundColor,
-            contentColor = contentColor,
         )
     }
 }

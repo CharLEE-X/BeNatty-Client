@@ -57,7 +57,7 @@ fun AdminProductListPage(
                 AppFilledButton(
                     onClick = { vm.trySend(AdminListContract.Inputs.Click.Create) },
                     leadingIcon = { MdiCreate() },
-                    containerColor = MaterialTheme.colors.mdSysColorTertiary.value(),
+                    containerColor = MaterialTheme.colors.tertiary.value(),
                 ) {
                     SpanText(text = state.strings.create)
                 }

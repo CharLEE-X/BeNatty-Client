@@ -22,13 +22,9 @@ import org.jetbrains.compose.web.css.value
 import org.jetbrains.compose.web.css.vh
 import org.koin.core.context.startKoin
 import theme.MaterialTheme
-import theme.appDarkColorScheme
-import theme.appLightColorScheme
-import theme.defaultFontScheme
 import web.compose.material3.theming.MaterialTheme
 
 private const val COLOR_MODE_KEY = "nataliashop:colorMode"
-const val HEADLINE_FONT = "Playfair Display, serif"
 
 @Suppress("unused")
 @InitSilk
@@ -54,19 +50,12 @@ fun AppEntry(content: @Composable () -> Unit) {
             console.error("Failed to start Koin", e)
         }
 
-        @Suppress("UNUSED_VARIABLE")
-        val colorScheme = when (colorMode) {
-            ColorMode.LIGHT -> appLightColorScheme
-            ColorMode.DARK -> appDarkColorScheme
-        }
-
-//        MaterialTheme(appLightColorScheme, defaultFontScheme) {
-        MaterialTheme(colorScheme, defaultFontScheme) {
+        MaterialTheme(colorScheme(colorMode), appFontScheme) {
             Box(
                 modifier = Modifier
                     .minHeight(100.vh)
                     .scrollBehavior(ScrollBehavior.Smooth)
-                    .backgroundColor(MaterialTheme.colors.mdSysColorBackground.value())
+                    .backgroundColor(MaterialTheme.colors.background.value())
                     .transition(CSSTransition("background-color", SmoothColorTransitionDurationVar.value()))
             ) {
                 content()

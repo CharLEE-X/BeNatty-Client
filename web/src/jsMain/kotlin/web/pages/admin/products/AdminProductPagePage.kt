@@ -195,7 +195,7 @@ fun AdminProductPagePage(
                     AppFilledButton(
                         onClick = { deleteProductDialogOpen = !deleteProductDialogOpen },
                         leadingIcon = { MdiDelete() },
-                        containerColor = MaterialTheme.colors.mdSysColorError.value(),
+                        containerColor = MaterialTheme.colors.error.value(),
                     ) {
                         SpanText(text = state.strings.delete)
                     }
@@ -508,7 +508,7 @@ private fun MediaSlot(
                         .objectFit(ObjectFit.Cover)
                         .backgroundColor(
 //                            if (imageHovered || deleteIconHovered) {
-                            MaterialTheme.colors.mdSysColorOnSurface.value()
+                            MaterialTheme.colors.onSurface.value()
 //                            } else Colors.Transparent
                         )
                         .transition(CSSTransition("backgroundColor", 0.3.s, TransitionTimingFunction.Ease))
@@ -536,14 +536,14 @@ private fun MediaSlot(
                 .borderRadius(cornerRadius)
                 .border(
                     width = 2.px,
-                    color = MaterialTheme.colors.mdSysColorInverseSurface.value(),
+                    color = MaterialTheme.colors.inverseSurface.value(),
                     style = LineStyle.Dashed,
                 )
                 .size(size)
                 .backgroundColor(
                     if (imageHovered || addIconHovered) {
-                        MaterialTheme.colors.mdSysColorSurfaceContainer.value()
-                    } else MaterialTheme.colors.mdSysColorSurface.value()
+                        MaterialTheme.colors.surfaceContainer.value()
+                    } else MaterialTheme.colors.surface.value()
                 )
                 .transition(CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease))
         ) {
@@ -587,7 +587,7 @@ private fun MediaSlot(
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .roleStyle(MaterialTheme.typography.labelSmall)
-                            .color(MaterialTheme.colors.mdSysColorError.value())
+                            .color(MaterialTheme.colors.error.value())
                             .margin(0.5.em)
                     )
                 }

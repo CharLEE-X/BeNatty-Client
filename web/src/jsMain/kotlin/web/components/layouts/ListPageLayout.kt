@@ -235,8 +235,8 @@ fun Item(
         modifier = gridContainerModifier
             .onMouseEnter { isHovered = true }
             .onMouseLeave { isHovered = false }
-            .thenIf(isHovered) { Modifier.backgroundColor(MaterialTheme.colors.mdSysColorSurfaceContainerHigh.value()) }
-            .thenIf(isHovered) { Modifier.color(MaterialTheme.colors.mdSysColorOnSurfaceVariant.value()) }
+            .thenIf(isHovered) { Modifier.backgroundColor(MaterialTheme.colors.surfaceContainerHigh.value()) }
+            .thenIf(isHovered) { Modifier.color(MaterialTheme.colors.onSurfaceVariant.value()) }
             .borderRadius(12.px)
             .onClick { vm.trySend(AdminListContract.Inputs.Click.Item(item.id)) }
             .cursor(Cursor.Pointer)
@@ -332,7 +332,7 @@ private fun TopBarItem(
                     .cursor(Cursor.Pointer)
                     .onMouseEnter { hovered = true }
                     .onMouseLeave { hovered = false }
-                    .thenIf(hovered) { Modifier.color(MaterialTheme.colors.mdSysColorSecondary.value()) }
+                    .thenIf(hovered) { Modifier.color(MaterialTheme.colors.secondary.value()) }
                     .transition(CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease))
             }
     ) {

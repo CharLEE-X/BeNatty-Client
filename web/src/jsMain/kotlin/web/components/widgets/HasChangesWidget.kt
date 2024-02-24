@@ -112,7 +112,7 @@ fun HasChangesWidget(
                         onClick = { onSave() },
                         leadingIcon = { MdiSave() },
                         containerShape = 12.px,
-                        containerColor = MaterialTheme.colors.mdSysColorTertiary.value(),
+                        containerColor = MaterialTheme.colors.tertiary.value(),
                     ) {
                         SpanText(saveText)
                     }

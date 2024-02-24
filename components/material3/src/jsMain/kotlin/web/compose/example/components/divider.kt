@@ -22,13 +22,13 @@ import web.compose.material3.component.Divider
 
 object DividerStyleSheet : StyleSheet() {
     val list by style {
-        border(1.px, LineStyle.Solid, MaterialTheme.colors.mdSysColorOutline.value())
+        border(1.px, LineStyle.Solid, MaterialTheme.colors.outline.value())
         margin(0.px)
         padding(0.px)
         width(200.px)
     }
     val listItem by style {
-        color(MaterialTheme.colors.mdSysColorOnBackground.value())
+        color(MaterialTheme.colors.onBackground.value())
         fontFamily("system-ui")
         listStyle("none")
         margin(16.px)

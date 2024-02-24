@@ -166,7 +166,7 @@ private fun AdminSideBar(router: RouterViewModel) {
             .width(sideBarWidth)
             .margin(top = topBarHeight)
             .position(Position.Fixed)
-            .backgroundColor(MaterialTheme.colors.mdSysColorSurfaceContainerLow.value())
+            .backgroundColor(MaterialTheme.colors.surfaceContainerLow.value())
             .padding(1.em)
             .boxShadow(
                 offsetX = 0.px,
@@ -263,7 +263,7 @@ fun AdminTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(topBarHeight)
-            .backgroundColor(MaterialTheme.colors.mdSysColorInverseSurface.value())
+            .backgroundColor(MaterialTheme.colors.inverseSurface.value())
             .position(Position.Fixed)
             .zIndex(100)
             .alignItems(AlignItems.Center)
@@ -320,11 +320,11 @@ private fun BoxScope.SaveSection(
             .maxWidth(oneLayoutMaxWidth)
     ) {
         MdiWarning(
-            modifier = Modifier.color(MaterialTheme.colors.mdSysColorSurface.value())
+            modifier = Modifier.color(MaterialTheme.colors.surface.value())
         )
         SpanText(
             text = unsavedChangesText,
-            modifier = Modifier.color(MaterialTheme.colors.mdSysColorSurface.value())
+            modifier = Modifier.color(MaterialTheme.colors.surface.value())
         )
         Spacer()
         AppFilledTonalButton(
@@ -338,8 +338,8 @@ private fun BoxScope.SaveSection(
             onClick = { onSaveClick() },
             disabled = !isSaveEnabled,
             containerShape = 8.px,
-            containerColor = MaterialTheme.colors.mdSysColorTertiary.value(),
-            disabledContainerColor = MaterialTheme.colors.mdSysColorInverseOnSurface.value(),
+            containerColor = MaterialTheme.colors.tertiary.value(),
+            disabledContainerColor = MaterialTheme.colors.inverseOnSurface.value(),
             modifier = Modifier.width(8.em)
         ) {
             SpanText(saveText)
@@ -356,7 +356,7 @@ private fun TopBarLeftSection(
         modifier = modifier
             .roleStyle(MaterialTheme.typography.headlineLarge)
             .fontFamily(HEADLINE_FONT)
-            .color(MaterialTheme.colors.mdSysColorInverseOnSurface.value())
+            .color(MaterialTheme.colors.inverseOnSurface.value())
     )
 }
 
@@ -402,8 +402,8 @@ private fun SearchBar(
             modifier = Modifier
                 .align(Alignment.CenterStart)
                 .color(
-                    if (focused) MaterialTheme.colors.mdSysColorInverseOnSurface.value()
-                    else MaterialTheme.colors.mdSysColorOutline.value()
+                    if (focused) MaterialTheme.colors.inverseOnSurface.value()
+                    else MaterialTheme.colors.outline.value()
                 )
                 .userSelect(UserSelect.None)
                 .margin(left = 0.5.em)
@@ -414,8 +414,8 @@ private fun SearchBar(
             text = value,
             onTextChanged = onValueChanged,
             placeholder = placeholder,
-            focusBorderColor = MaterialTheme.colors.mdSysColorSurface.value(),
-            placeholderColor = PlaceholderColor(MaterialTheme.colors.mdSysColorOutline.value()),
+            focusBorderColor = MaterialTheme.colors.surface.value(),
+            placeholderColor = PlaceholderColor(MaterialTheme.colors.outline.value()),
             modifier = Modifier
                 .align(Alignment.Center)
                 .fillMaxSize()
@@ -434,7 +434,7 @@ private fun SearchBar(
                 .align(Alignment.CenterEnd)
                 .gap(0.25.em)
                 .fontSize(1.em)
-                .color(MaterialTheme.colors.mdSysColorOutline.value())
+                .color(MaterialTheme.colors.outline.value())
                 .userSelect(UserSelect.None)
                 .margin(right = 0.75.em)
         ) {
@@ -458,7 +458,7 @@ private fun Loader(isLoading: Boolean) {
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxSize()
-                    .backgroundColor(MaterialTheme.colors.mdSysColorOnSurface.value())
+                    .backgroundColor(MaterialTheme.colors.onSurface.value())
                     .opacity(0.3)
                     .onClick { it.preventDefault() }
             )

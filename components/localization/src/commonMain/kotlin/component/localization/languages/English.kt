@@ -243,4 +243,5 @@ internal fun englishLanguage(
     Strings.About -> key.name.enumCapitalized()
     Strings.Sale -> key.name.enumCapitalized()
     Strings.ShopNow -> key.name.enumCapitalized()
+    Strings.FollowUs -> key.name.enumCapitalized()
 }

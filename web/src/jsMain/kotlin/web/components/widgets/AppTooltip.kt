@@ -21,13 +21,13 @@ fun AppTooltip(text: String) {
         showDelayMs = 500,
         hasArrow = false,
         modifier = Modifier
-            .backgroundColor(MaterialTheme.colors.mdSysColorSurfaceVariant.value())
+            .backgroundColor(MaterialTheme.colors.surfaceVariant.value())
             .border(
                 width = 1.px,
-                color = MaterialTheme.colors.mdSysColorOnSurface.value(),
+                color = MaterialTheme.colors.onSurface.value(),
                 style = LineStyle.Solid
             )
-            .setVariable(TooltipVars.BackgroundColor, MaterialTheme.colors.mdSysColorSurfaceVariant.value())
-            .setVariable(TooltipVars.Color, MaterialTheme.colors.mdSysColorOnSurface.value())
+            .setVariable(TooltipVars.BackgroundColor, MaterialTheme.colors.surfaceVariant.value())
+            .setVariable(TooltipVars.Color, MaterialTheme.colors.onSurface.value())
     )
 }

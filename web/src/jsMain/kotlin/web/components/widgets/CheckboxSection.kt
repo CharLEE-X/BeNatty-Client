@@ -52,7 +52,7 @@ fun CheckboxSection(
             SpanText(
                 text = title,
                 modifier = Modifier
-                    .color(MaterialTheme.colors.mdSysColorOnSurface.value())
+                    .color(MaterialTheme.colors.onSurface.value())
                     .opacity(opacity)
                     .transition(CSSTransition("opacity", SmoothColorTransitionDurationVar.value()))
             )
@@ -62,7 +62,7 @@ fun CheckboxSection(
                 text = title,
                 modifier = Modifier
                     .roleStyle(MaterialTheme.typography.bodySmall)
-                    .color(MaterialTheme.colors.mdSysColorError.value())
+                    .color(MaterialTheme.colors.error.value())
             )
         }
     }

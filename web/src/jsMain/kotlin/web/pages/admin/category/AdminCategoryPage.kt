@@ -115,7 +115,7 @@ fun AdminCategoryPage(
                     AppFilledButton(
                         onClick = { deleteDialogOpen = !deleteDialogOpen },
                         leadingIcon = { MdiDelete() },
-                        containerColor = MaterialTheme.colors.mdSysColorError.value(),
+                        containerColor = MaterialTheme.colors.error.value(),
                     ) {
                         SpanText(text = state.strings.delete)
                     }

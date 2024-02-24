@@ -231,4 +231,5 @@ enum class Strings {
     About,
     Sale,
     ShopNow,
+    FollowUs,
 }

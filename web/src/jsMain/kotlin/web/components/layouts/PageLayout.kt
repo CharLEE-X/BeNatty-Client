@@ -94,7 +94,7 @@ fun ShopMainLayout(
 
     PageLayout(
         title = title,
-        topSpacing = topSpacing + 40.px,
+        topSpacing = topSpacing + 60.px,
         topBar = {
             DesktopNav(
                 desktopNavRoutes = desktopNavRoutes,

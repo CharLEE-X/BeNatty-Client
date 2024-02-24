@@ -30,7 +30,7 @@ fun MaterialTheme(
 private object defaultBackground : StyleSheet() {
     init {
         root style {
-            backgroundColor(theme.MaterialTheme.colors.mdSysColorSurfaceContainerLowest.value(Color("#FFFFFF")))
+            backgroundColor(theme.MaterialTheme.colors.surfaceContainerLowest.value(Color("#FFFFFF")))
         }
     }
 }

@@ -108,13 +108,13 @@ fun SideNavMainItem(
 ) {
     var hovered by remember { mutableStateOf(false) }
     val bgColor = when {
-        isCurrent -> MaterialTheme.colors.mdSysColorPrimary.value()
-        !isCurrent && hovered -> MaterialTheme.colors.mdSysColorSurfaceContainerLow.value()
+        isCurrent -> MaterialTheme.colors.primary.value()
+        !isCurrent && hovered -> MaterialTheme.colors.surfaceContainerLow.value()
         else -> Colors.Transparent
     }
     val contentColor = when {
-        isCurrent -> MaterialTheme.colors.mdSysColorOnPrimary.value()
-        else -> MaterialTheme.colors.mdSysColorOnSurface.value()
+        isCurrent -> MaterialTheme.colors.onPrimary.value()
+        else -> MaterialTheme.colors.onSurface.value()
     }
 
     Box(
@@ -158,13 +158,13 @@ fun SideNavSubItem(
 ) {
     var hovered by remember { mutableStateOf(false) }
     val bgColor = when {
-        isSubCurrent -> MaterialTheme.colors.mdSysColorPrimary.value()
-        !isSubCurrent && hovered -> MaterialTheme.colors.mdSysColorSurfaceContainerLow.value()
+        isSubCurrent -> MaterialTheme.colors.primary.value()
+        !isSubCurrent && hovered -> MaterialTheme.colors.surfaceContainerLow.value()
         else -> Colors.Transparent
     }
     val contentColor = when {
-        isSubCurrent -> MaterialTheme.colors.mdSysColorOnPrimary.value()
-        else -> MaterialTheme.colors.mdSysColorOnSurface.value()
+        isSubCurrent -> MaterialTheme.colors.onPrimary.value()
+        else -> MaterialTheme.colors.onSurface.value()
     }
 
     Box(
