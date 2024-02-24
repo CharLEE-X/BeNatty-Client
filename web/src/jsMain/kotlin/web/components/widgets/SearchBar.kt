@@ -1,7 +1,6 @@
 package web.components.widgets
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,17 +20,14 @@ import com.varabyte.kobweb.compose.ui.modifiers.onKeyDown
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
 import com.varabyte.kobweb.compose.ui.modifiers.transition
-import com.varabyte.kobweb.silk.components.icons.fa.FaMagnifyingGlass
-import com.varabyte.kobweb.silk.components.icons.fa.IconSize
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiSearch
-import com.varabyte.kobweb.silk.components.style.breakpoint.Breakpoint
-import com.varabyte.kobweb.silk.theme.breakpoint.rememberBreakpoint
 import org.jetbrains.compose.web.attributes.AutoComplete
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import theme.OldColorsJs
+import org.jetbrains.compose.web.css.value
+import theme.MaterialTheme
 import web.compose.material3.component.FilledTextField
 
 @Composable
@@ -41,14 +37,14 @@ fun SearchBar(
     onValueChange: (String) -> Unit,
     placeholder: String,
     onEnterPress: () -> Unit,
-    onSearchIconClick: (Boolean) -> Unit,
+    leadingIcon: @Composable (() -> Unit)? = { MdiSearch() },
+    trailingIcon: @Composable (() -> Unit)? = null,
     containerShape: CSSLengthOrPercentageNumericValue = 30.px,
-    containerColor: CSSColorValue = OldColorsJs.lightGrayDarker,
+    containerColor: CSSColorValue = MaterialTheme.colors.mdSysColorSurfaceContainer.value(),
     unFocusedOutlineColor: CSSColorValue = Colors.Transparent,
-    focusedOutlineColor: CSSColorValue = Colors.Black,
-    hoverOutlineColor: CSSColorValue = Colors.Black,
+    focusedOutlineColor: CSSColorValue = MaterialTheme.colors.mdSysColorInverseSurface.value(),
+    hoverOutlineColor: CSSColorValue = focusedOutlineColor,
 ) {
-    val breakpoint = rememberBreakpoint()
     var focused by remember { mutableStateOf(false) }
     var hovered by remember { mutableStateOf(false) }
 
@@ -59,53 +55,40 @@ fun SearchBar(
     }
     val borderWidth = if (focused || hovered) 2.px else 1.px
 
-    LaunchedEffect(breakpoint) {
-        if (breakpoint >= Breakpoint.SM) onSearchIconClick(false)
-    }
-
-    if (breakpoint >= Breakpoint.SM) {
-        Box(
-            modifier = Modifier
-                .backgroundColor(containerColor)
-                .borderRadius(containerShape)
-                .border(
-                    width = borderWidth,
-                    color = borderColor,
-                    style = LineStyle.Solid,
-                )
-                .transition(
-                    CSSTransition("border-color", 0.3.s, TransitionTimingFunction.Ease),
-                    CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease),
-                )
-        ) {
-            FilledTextField(
-                value = value,
-                onInput = onValueChange,
-                label = placeholder,
-                placeholder = placeholder,
-                autoComplete = AutoComplete.off,
-                containerColor = Colors.Transparent,
-                focusActiveIndicatorColor = Colors.Transparent,
-                hoverActiveIndicatorColor = Colors.Transparent,
-                activeIndicatorColor = Colors.Transparent,
-                hoverStateLayerColor = Colors.Transparent,
-                focusLabelTextColor = focusedOutlineColor,
-                labelTextColor = focusedOutlineColor,
-                labelTextLineHeight = 20.px,
-                leadingIcon = { MdiSearch() },
-                modifier = modifier
-                    .onKeyDown { if (it.key == "Enter") onEnterPress() }
-                    .onMouseEnter { hovered = true }
-                    .onMouseLeave { hovered = false }
-                    .onFocusIn { focused = true }
-                    .onFocusOut { focused = false }
+    Box(
+        modifier = Modifier
+            .backgroundColor(containerColor)
+            .borderRadius(containerShape)
+            .border(
+                width = borderWidth,
+                color = borderColor,
+                style = LineStyle.Solid,
             )
-        }
-    } else {
-        AppIconButton(
-            onClick = { onSearchIconClick(true) },
-        ) {
-            FaMagnifyingGlass(size = IconSize.SM)
-        }
+            .transition(
+                CSSTransition("border-color", 0.3.s, TransitionTimingFunction.Ease),
+                CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease),
+            )
+    ) {
+        FilledTextField(
+            value = value,
+            onInput = onValueChange,
+            label = placeholder,
+            placeholder = placeholder,
+            autoComplete = AutoComplete.off,
+            containerColor = Colors.Transparent,
+            focusActiveIndicatorColor = Colors.Transparent,
+            hoverActiveIndicatorColor = Colors.Transparent,
+            activeIndicatorColor = Colors.Transparent,
+            hoverStateLayerColor = Colors.Transparent,
+            labelTextLineHeight = 20.px,
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
+            modifier = modifier
+                .onKeyDown { if (it.key == "Enter") onEnterPress() }
+                .onMouseEnter { hovered = true }
+                .onMouseLeave { hovered = false }
+                .onFocusIn { focused = true }
+                .onFocusOut { focused = false }
+        )
     }
 }

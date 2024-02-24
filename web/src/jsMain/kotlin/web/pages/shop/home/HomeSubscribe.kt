@@ -1,4 +1,4 @@
-package web.components.sections.footer.sections
+package web.pages.shop.home
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.css.FontWeight
@@ -19,16 +19,14 @@ import theme.MaterialTheme
 import theme.roleStyle
 import web.components.widgets.AppIconButton
 import web.components.widgets.AppOutlinedIconButton
-import web.components.widgets.AppOutlinedTextField
-
+import web.components.widgets.SearchBar
 
 @Composable
-fun FooterSubscribe(
+fun HomeSubscribe(
     modifier: Modifier = Modifier,
     subscribeText: String,
     emailText: String,
     emailPlaceholder: String,
-    emailError: String?,
     onEmailSend: () -> Unit,
     onEmailChange: (String) -> Unit,
 ) {
@@ -41,12 +39,18 @@ fun FooterSubscribe(
                 .roleStyle(MaterialTheme.typography.labelLarge)
                 .fontWeight(FontWeight.Bold)
         )
-        AppOutlinedTextField(
+        SearchBar(
             value = emailText,
-            onValueChange = { onEmailChange(it) },
-            label = emailPlaceholder,
-            errorText = emailError,
-            error = emailError != null,
+            onValueChange = onEmailChange,
+            placeholder = emailPlaceholder,
+            onEnterPress = onEmailSend,
+            leadingIcon = {
+                Image(
+                    src = "/email.png",
+                    alt = "Email",
+                    modifier = Modifier.size(1.em)
+                )
+            },
             trailingIcon = {
                 AppIconButton(
                     onClick = { onEmailSend() },

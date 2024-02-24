@@ -26,7 +26,7 @@ import theme.roleStyle
 fun CardSection(
     title: String?,
     description: String? = null,
-    elevation: Int? = 1,
+    elevation: Int? = null,
     content: @Composable () -> Unit,
 ) {
     AppElevatedCard(
@@ -34,43 +34,49 @@ fun CardSection(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        title?.let {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(leftRight = 1.em, topBottom = 0.5.em)
-                    .backgroundColor(MaterialTheme.colors.mdSysColorSurfaceContainerHigh.value())
-                    .borderRadius(topLeft = 12.px, topRight = 12.px)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .gap(0.5.em)
-                ) {
-                    SpanText(
-                        text = title,
-                        modifier = Modifier
-                            .roleStyle(MaterialTheme.typography.headlineSmall)
-                            .fontWeight(FontWeight.Bold)
-                            .userSelect(UserSelect.None)
-                    )
-                    description?.let {
-                        SpanText(
-                            text = it,
-                            modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
-                        )
-                    }
-                }
-            }
-        }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(1.em)
-                .gap(1.em)
+                .gap(0.5.em)
         ) {
-            content()
+            title?.let {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(leftRight = 1.em, topBottom = 0.5.em)
+                        .backgroundColor(MaterialTheme.colors.mdSysColorPrimaryContainer.value())
+                        .borderRadius(topLeft = 12.px, topRight = 12.px)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .gap(0.5.em)
+                    ) {
+                        SpanText(
+                            text = title,
+                            modifier = Modifier
+                                .roleStyle(MaterialTheme.typography.headlineSmall)
+                                .fontWeight(FontWeight.Bold)
+                                .userSelect(UserSelect.None)
+                        )
+                        description?.let {
+                            SpanText(
+                                text = it,
+                                modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
+                            )
+                        }
+                    }
+                }
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(1.em)
+                    .gap(1.em)
+            ) {
+                content()
+            }
         }
     }
 }

@@ -24,6 +24,7 @@ import feature.router.RouterViewModel
 import feature.router.Screen
 import org.jetbrains.compose.web.css.em
 import web.components.layouts.AdminLayout
+import web.components.layouts.AdminRoutes
 import web.components.layouts.OneLayout
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.CardSection
@@ -36,7 +37,7 @@ import web.compose.material3.component.TextFieldType
 fun AdminCustomerCreatePage(
     router: RouterViewModel,
     onError: suspend (String) -> Unit,
-    goToAdminHome: () -> Unit,
+    adminRoutes: AdminRoutes,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -76,7 +77,7 @@ fun AdminCustomerCreatePage(
         discardText = state.strings.discard,
         onCancel = { vm.trySend(AdminCustomerCreateContract.Inputs.OnClick.Discard) },
         onSave = { vm.trySend(AdminCustomerCreateContract.Inputs.OnClick.Save) },
-        goToAdminHome = goToAdminHome,
+        adminRoutes = adminRoutes,
         overlay = {
             HasChangesWidget(
                 hasChanges = state.wasEdited,

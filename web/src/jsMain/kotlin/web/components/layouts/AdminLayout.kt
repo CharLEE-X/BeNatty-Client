@@ -25,6 +25,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.alignItems
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
+import com.varabyte.kobweb.compose.ui.modifiers.boxShadow
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxHeight
@@ -70,6 +71,7 @@ import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
+import theme.OldColorsJs
 import theme.roleStyle
 import web.FONT_CUSTOM
 import web.components.widgets.AppFilledButton
@@ -79,6 +81,11 @@ import web.compose.material3.component.CircularProgress
 
 private val topBarHeight = 4.em
 private val sideBarWidth = 18.em
+
+data class AdminRoutes(
+    val goToAdminHome: () -> Unit,
+    val goToShopHome: () -> Unit,
+)
 
 @Composable
 fun AdminLayout(
@@ -94,7 +101,7 @@ fun AdminLayout(
     saveText: String = "",
     onCancel: () -> Unit = {},
     onSave: () -> Unit = {},
-    goToAdminHome: () -> Unit,
+    adminRoutes: AdminRoutes,
     overlay: @Composable BoxScope.() -> Unit = {},
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -105,9 +112,7 @@ fun AdminLayout(
     var searchValue by remember { mutableStateOf("") }
 
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .backgroundColor(MaterialTheme.colors.mdSysColorSurface.value())
+        modifier = modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -123,7 +128,8 @@ fun AdminLayout(
                 saveText = saveText,
                 onCancelClick = onCancel,
                 onSaveClick = onSave,
-                goToAdminHome = goToAdminHome,
+                goToAdminHome = adminRoutes.goToAdminHome,
+                goToShopHome = adminRoutes.goToShopHome,
             )
             Row(
                 modifier = Modifier.fillMaxSize()
@@ -160,8 +166,14 @@ private fun AdminSideBar(router: RouterViewModel) {
             .width(sideBarWidth)
             .margin(top = topBarHeight)
             .position(Position.Fixed)
-            .backgroundColor(MaterialTheme.colors.mdSysColorSurfaceContainerHigh.value())
+            .backgroundColor(MaterialTheme.colors.mdSysColorSurfaceContainerLow.value())
             .padding(1.em)
+            .boxShadow(
+                offsetX = 0.px,
+                offsetY = 4.px,
+                blurRadius = 8.px,
+                color = OldColorsJs.lightGrayDarker
+            )
     ) {
         SideNavMainItem(
             label = "Home",
@@ -245,6 +257,7 @@ fun AdminTopBar(
     onCancelClick: () -> Unit,
     onSaveClick: () -> Unit,
     goToAdminHome: () -> Unit,
+    goToShopHome: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -280,7 +293,7 @@ fun AdminTopBar(
             )
             TopBarRightSection(
                 onNotificationButtonClick = {},
-                onBeNattyButtonClick = goToAdminHome,
+                onBeNattyButtonClick = goToShopHome,
                 modifier = Modifier.align(Alignment.CenterEnd)
             )
         }
@@ -457,12 +470,3 @@ private fun Loader(isLoading: Boolean) {
     }
 }
 
-enum class AdminNavDest {
-    Home,
-    Customers,
-    Products,
-    Orders,
-    Categories,
-    Tags,
-    Settings,
-}

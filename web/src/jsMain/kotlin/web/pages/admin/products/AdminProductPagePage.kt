@@ -64,6 +64,7 @@ import org.w3c.files.File
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.layouts.AdminLayout
+import web.components.layouts.AdminRoutes
 import web.components.layouts.OneThirdLayout
 import web.components.widgets.AppFilledButton
 import web.components.widgets.AppFilledCard
@@ -88,7 +89,7 @@ fun AdminProductPagePage(
     productId: String?,
     router: RouterViewModel,
     onError: suspend (String) -> Unit,
-    goToAdminHome: () -> Unit,
+    adminRoutes: AdminRoutes,
     goBackToProducts: () -> Unit,
     goToCreateCategory: () -> Unit,
     goToCreateTag: () -> Unit,
@@ -131,7 +132,7 @@ fun AdminProductPagePage(
         discardText = state.strings.discard,
         onCancel = { if (state.wasEdited) vm.trySend(AdminProductPageContract.Inputs.OnDiscardClick) },
         onSave = { vm.trySend(AdminProductPageContract.Inputs.OnSaveClick) },
-        goToAdminHome = goToAdminHome,
+        adminRoutes = adminRoutes,
         overlay = {
             HasChangesWidget(
                 hasChanges = state.wasEdited,

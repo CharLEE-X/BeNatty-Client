@@ -94,6 +94,14 @@ fun HomeContent(
                 vm = vm,
                 state = state
             )
+
+            HomeSubscribe(
+                subscribeText = state.strings.subscribe,
+                emailPlaceholder = state.strings.email,
+                emailText = state.email,
+                onEmailSend = { vm.trySend(HomeContract.Inputs.OnEmailSend) },
+                onEmailChange = { vm.trySend(HomeContract.Inputs.OnEmailChange(it)) },
+            )
         }
     }
 }
