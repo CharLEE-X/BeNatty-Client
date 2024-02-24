@@ -18,15 +18,16 @@ import org.jetbrains.compose.web.css.em
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.layouts.AdminLayout
+import web.components.layouts.AdminRoutes
 import web.components.layouts.OneLayout
-import web.components.widgets.AppOutlinedCard
+import web.components.widgets.AppElevatedCard
 import web.compose.material3.component.Divider
 
 @Composable
 fun AdminDashboardPage(
     router: RouterViewModel,
     onError: suspend (String) -> Unit,
-    goToAdminHome: () -> Unit,
+    adminRoutes: AdminRoutes,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -45,7 +46,7 @@ fun AdminDashboardPage(
         unsavedChangesText = "",
         saveText = "",
         discardText = "",
-        goToAdminHome = goToAdminHome,
+        adminRoutes = adminRoutes,
     ) {
         OneLayout(
             title = state.strings.home,
@@ -59,7 +60,7 @@ fun AdminDashboardPage(
                     .gap(1.em)
             ) {
                 Divider()
-                AppOutlinedCard(
+                AppElevatedCard(
                     modifier = Modifier.padding(2.em)
                 ) {
                     Column(

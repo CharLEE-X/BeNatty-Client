@@ -21,6 +21,7 @@ import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.layouts.AdminLayout
+import web.components.layouts.AdminRoutes
 import web.components.layouts.OneThirdLayout
 import web.components.widgets.AppFilledButton
 import web.components.widgets.AppOutlinedTextField
@@ -38,7 +39,7 @@ fun AdminCategoryPage(
     router: RouterViewModel,
     id: String?,
     onError: suspend (String) -> Unit,
-    goToAdminHome: () -> Unit,
+    adminRoutes: AdminRoutes,
     goToCustomers: () -> Unit,
     goToCustomer: (String) -> Unit,
     goToCreateCategory: () -> Unit,
@@ -78,7 +79,7 @@ fun AdminCategoryPage(
         discardText = state.strings.discard,
         onCancel = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.CancelEdit) },
         onSave = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.SaveEdit) },
-        goToAdminHome = goToAdminHome,
+        adminRoutes = adminRoutes,
         overlay = {
             HasChangesWidget(
                 hasChanges = state.wasEdited,

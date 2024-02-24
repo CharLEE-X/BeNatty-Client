@@ -14,13 +14,14 @@ import feature.admin.order.page.AdminOrderPageViewModel
 import feature.router.RouterViewModel
 import org.jetbrains.compose.web.css.em
 import web.components.layouts.AdminLayout
+import web.components.layouts.AdminRoutes
 import web.compose.material3.component.Divider
 
 @Composable
 fun AdminOrderPagePage(
     router: RouterViewModel,
     onError: suspend (String) -> Unit,
-    goToAdminHome: () -> Unit,
+    adminRoutes: AdminRoutes,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -41,7 +42,7 @@ fun AdminOrderPagePage(
         unsavedChangesText = "",
         saveText = "state.strings.save",
         discardText = "state.strings.cancel",
-        goToAdminHome = goToAdminHome,
+        adminRoutes = adminRoutes,
     ) {
         Column(
             modifier = Modifier

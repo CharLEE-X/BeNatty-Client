@@ -17,6 +17,7 @@ import feature.admin.tag.page.AdminTagPageViewModel
 import feature.router.RouterViewModel
 import feature.router.Screen
 import web.components.layouts.AdminLayout
+import web.components.layouts.AdminRoutes
 import web.components.layouts.DetailPageLayout
 import web.components.layouts.ImproveWithButton
 import web.components.widgets.AppOutlinedTextField
@@ -31,7 +32,7 @@ fun AdminTagPage(
     router: RouterViewModel,
     id: String?,
     onError: suspend (String) -> Unit,
-    goToAdminHome: () -> Unit,
+    adminRoutes: AdminRoutes,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -85,7 +86,7 @@ fun AdminTagPage(
         discardText = state.strings.discard,
         onCancel = { vm.trySend(AdminTagPageContract.Inputs.OnClick.CancelEdit) },
         onSave = { vm.trySend(AdminTagPageContract.Inputs.OnClick.SaveEdit) },
-        goToAdminHome = goToAdminHome,
+        adminRoutes = adminRoutes,
         overlay = {
             HasChangesWidget(
                 hasChanges = state.wasEdited,

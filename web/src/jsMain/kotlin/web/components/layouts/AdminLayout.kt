@@ -82,6 +82,11 @@ import web.compose.material3.component.CircularProgress
 private val topBarHeight = 4.em
 private val sideBarWidth = 18.em
 
+data class AdminRoutes(
+    val goToAdminHome: () -> Unit,
+    val goToShopHome: () -> Unit,
+)
+
 @Composable
 fun AdminLayout(
     modifier: Modifier = Modifier,
@@ -96,7 +101,7 @@ fun AdminLayout(
     saveText: String = "",
     onCancel: () -> Unit = {},
     onSave: () -> Unit = {},
-    goToAdminHome: () -> Unit,
+    adminRoutes: AdminRoutes,
     overlay: @Composable BoxScope.() -> Unit = {},
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -107,9 +112,7 @@ fun AdminLayout(
     var searchValue by remember { mutableStateOf("") }
 
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .backgroundColor(MaterialTheme.colors.mdSysColorBackground.value())
+        modifier = modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -125,7 +128,8 @@ fun AdminLayout(
                 saveText = saveText,
                 onCancelClick = onCancel,
                 onSaveClick = onSave,
-                goToAdminHome = goToAdminHome,
+                goToAdminHome = adminRoutes.goToAdminHome,
+                goToShopHome = adminRoutes.goToShopHome,
             )
             Row(
                 modifier = Modifier.fillMaxSize()
@@ -253,6 +257,7 @@ fun AdminTopBar(
     onCancelClick: () -> Unit,
     onSaveClick: () -> Unit,
     goToAdminHome: () -> Unit,
+    goToShopHome: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -288,7 +293,7 @@ fun AdminTopBar(
             )
             TopBarRightSection(
                 onNotificationButtonClick = {},
-                onBeNattyButtonClick = goToAdminHome,
+                onBeNattyButtonClick = goToShopHome,
                 modifier = Modifier.align(Alignment.CenterEnd)
             )
         }

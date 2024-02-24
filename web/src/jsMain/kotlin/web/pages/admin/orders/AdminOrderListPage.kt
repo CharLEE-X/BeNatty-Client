@@ -13,6 +13,7 @@ import feature.router.RouterViewModel
 import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import web.components.layouts.AdminLayout
+import web.components.layouts.AdminRoutes
 import web.components.layouts.ListPageLayout
 import web.components.layouts.OneLayout
 import web.components.widgets.AppFilledButton
@@ -22,7 +23,7 @@ fun AdminOrderListPage(
     router: RouterViewModel,
     onError: suspend (String) -> Unit,
     goBack: () -> Unit,
-    goToAdminHome: () -> Unit,
+    adminRoutes: AdminRoutes,
     goToCreateOrder: () -> Unit,
     goToOrder: (String) -> Unit,
 ) {
@@ -46,7 +47,7 @@ fun AdminOrderListPage(
         unsavedChangesText = "",
         saveText = "",
         discardText = "",
-        goToAdminHome = goToAdminHome,
+        adminRoutes = adminRoutes,
     ) {
         OneLayout(
             title = state.strings.title,

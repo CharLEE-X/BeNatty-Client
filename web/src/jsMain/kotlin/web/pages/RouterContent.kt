@@ -19,6 +19,7 @@ import feature.router.Screen
 import feature.router.idPath
 import feature.shop.navbar.DesktopNavContract
 import web.components.layouts.AccountLayout
+import web.components.layouts.AdminRoutes
 import web.components.layouts.MainParams
 import web.pages.admin.category.AdminCategoryListPage
 import web.pages.admin.category.AdminCategoryPage
@@ -88,9 +89,9 @@ fun RouterContent(
     }
 
     val goBack: () -> Unit = { router.trySend(RouterContract.Inputs.GoBack()) }
+    val goToShopHome: () -> Unit = { router.trySend(GoToDestination(Screen.Home.route)) }
     val goToAdminHome: () -> Unit = { router.trySend(GoToDestination(Screen.AdminHome.route)) }
     val goToLogin: () -> Unit = { router.trySend(GoToDestination(Screen.Login.route)) }
-    val goToShopHome: () -> Unit = { router.trySend(GoToDestination(Screen.Home.route)) }
     val mainParams = MainParams(
         goToHome = goToShopHome,
         goToLogin = { router.trySend(GoToDestination(Screen.Login.route)) },
@@ -113,6 +114,10 @@ fun RouterContent(
         goToTrackOrder = { router.trySend(GoToDestination(Screen.TrackOrder.route)) },
         goToAdminHome = { router.trySend(ReplaceTopDestination(Screen.AdminHome.route)) },
         onError = onError,
+    )
+    val adminRoutes = AdminRoutes(
+        goToAdminHome = goToAdminHome,
+        goToShopHome = goToShopHome,
     )
 
     @Composable
@@ -257,7 +262,7 @@ fun RouterContent(
                     AdminDashboardPage(
                         router = router,
                         onError = onError,
-                        goToAdminHome = goToAdminHome,
+                        adminRoutes = adminRoutes,
                     )
                 }
 
@@ -266,7 +271,7 @@ fun RouterContent(
                         router = router,
                         onError = onError,
                         goBack = goBack,
-                        goToAdminHome = goToAdminHome,
+                        adminRoutes = adminRoutes,
                         goToCreateCustomer = { router.trySend(GoToDestination(Screen.AdminCustomerCreate.route)) },
                         goToCustomer = { router.trySend(GoToDestination(Screen.AdminCustomerProfile.idPath(it))) },
                     )
@@ -276,7 +281,7 @@ fun RouterContent(
                     AdminCustomerCreatePage(
                         router = router,
                         onError = onError,
-                        goToAdminHome = goToAdminHome,
+                        adminRoutes = adminRoutes,
                     )
                 }
 
@@ -286,7 +291,7 @@ fun RouterContent(
                         router = router,
 //                        userId = id,
                         onError = onError,
-                        goToAdminHome = goToAdminHome,
+                        adminRoutes = adminRoutes,
                     )
                 }
 
@@ -295,7 +300,7 @@ fun RouterContent(
                         router = router,
                         onError = onError,
                         goBack = goBack,
-                        goToAdminHome = goToAdminHome,
+                        adminRoutes = adminRoutes,
                         goToCreateProduct = { router.trySend(GoToDestination(Screen.AdminProductCreate.route)) },
                         goToProduct = { router.trySend(GoToDestination(Screen.AdminProductPage.idPath(it))) }
                     )
@@ -306,7 +311,7 @@ fun RouterContent(
                         productId = null,
                         router = router,
                         onError = onError,
-                        goToAdminHome = goToAdminHome,
+                        adminRoutes = adminRoutes,
                         goBackToProducts = goBack,
                         goToCreateCategory = { router.trySend(ReplaceTopDestination(Screen.AdminCategoryPageNew.route)) },
                         goToCreateTag = { router.trySend(ReplaceTopDestination(Screen.AdminTagCreate.route)) },
@@ -321,7 +326,7 @@ fun RouterContent(
                         productId = id,
                         router = router,
                         onError = onError,
-                        goToAdminHome = goToAdminHome,
+                        adminRoutes = adminRoutes,
                         goBackToProducts = goBack,
                         goToCreateCategory = { router.trySend(ReplaceTopDestination(Screen.AdminCategoryPageNew.route)) },
                         goToCreateTag = { router.trySend(ReplaceTopDestination(Screen.AdminTagCreate.route)) },
@@ -335,7 +340,7 @@ fun RouterContent(
                         router = router,
                         onError = onError,
                         goBack = goBack,
-                        goToAdminHome = goToAdminHome,
+                        adminRoutes = adminRoutes,
                         goToCreateOrder = { router.trySend(GoToDestination(Screen.AdminOrderPageNew.route)) },
                         goToOrder = { router.trySend(GoToDestination(Screen.AdminOrderPageExisting.idPath(it))) },
                     )
@@ -345,7 +350,7 @@ fun RouterContent(
                     AdminOrderPagePage(
                         router = router,
                         onError = onError,
-                        goToAdminHome = goToAdminHome,
+                        adminRoutes = adminRoutes,
                     )
                 }
 
@@ -354,7 +359,7 @@ fun RouterContent(
                     AdminOrderPagePage(
                         router = router,
                         onError = onError,
-                        goToAdminHome = goToAdminHome,
+                        adminRoutes = adminRoutes,
                     )
                 }
 
@@ -363,7 +368,7 @@ fun RouterContent(
                         router = router,
                         onError = onError,
                         goBack = goBack,
-                        goToAdminHome = goToAdminHome,
+                        adminRoutes = adminRoutes,
                         goToCreateCategory = { router.trySend(GoToDestination(Screen.AdminCategoryPageNew.route)) },
                         goToCategory = { router.trySend(GoToDestination(Screen.AdminCategoryProfile.idPath(it))) },
                     )
@@ -374,7 +379,7 @@ fun RouterContent(
                         router = router,
                         id = null,
                         onError = onError,
-                        goToAdminHome = goToAdminHome,
+                        adminRoutes = adminRoutes,
                         goToCustomers = { router.trySend(GoToDestination(Screen.AdminCategoryList.route)) },
                         goToCustomer = { router.trySend(GoToDestination(Screen.AdminCustomerProfile.idPath(it))) },
                         goToCreateCategory = { router.trySend(GoToDestination(Screen.AdminCategoryPageNew.route)) },
@@ -388,7 +393,7 @@ fun RouterContent(
                         router = router,
                         id = id,
                         onError = onError,
-                        goToAdminHome = goToAdminHome,
+                        adminRoutes = adminRoutes,
                         goToCustomers = { router.trySend(GoToDestination(Screen.AdminCategoryList.route)) },
                         goToCustomer = { router.trySend(GoToDestination(Screen.AdminCustomerProfile.idPath(it))) },
                         goToCreateCategory = { router.trySend(GoToDestination(Screen.AdminCategoryPageNew.route)) },
@@ -401,7 +406,7 @@ fun RouterContent(
                         router = router,
                         onError = onError,
                         goBack = goBack,
-                        goToAdminHome = goToAdminHome,
+                        adminRoutes = adminRoutes,
                         goToTagCreate = { router.trySend(GoToDestination(Screen.AdminTagCreate.route)) },
                         goToTag = { router.trySend(GoToDestination(Screen.AdminTagPageExisting.idPath(it))) },
                     )
@@ -412,7 +417,7 @@ fun RouterContent(
                         router = router,
                         id = null,
                         onError = onError,
-                        goToAdminHome = goToAdminHome,
+                        adminRoutes = adminRoutes,
                     )
                 }
 
@@ -422,7 +427,7 @@ fun RouterContent(
                         router = router,
                         id = id,
                         onError = onError,
-                        goToAdminHome = goToAdminHome,
+                        adminRoutes = adminRoutes,
                     )
                 }
             }
