@@ -23,6 +23,7 @@ import web.components.layouts.AdminRoutes
 import web.components.layouts.MainParams
 import web.pages.admin.category.AdminCategoryListPage
 import web.pages.admin.category.AdminCategoryPage
+import web.pages.admin.config.AdminConfigPage
 import web.pages.admin.dashboard.AdminDashboardPage
 import web.pages.admin.orders.AdminOrderListPage
 import web.pages.admin.orders.AdminOrderPagePage
@@ -63,7 +64,6 @@ import web.pages.shop.settings.SettingsPage
 @Composable
 fun RouterContent(
     isAuthenticated: Boolean,
-    onLogOut: () -> Unit,
     onError: (String) -> Unit,
     homeScreen: Screen = Screen.Home,
     loginScreen: Screen = Screen.Login,
@@ -243,26 +243,27 @@ fun RouterContent(
                 )
 
                 Screen.PrivacyPolicy -> PrivacyPolicyPage()
-
                 Screen.TC -> TermsOfServicePage()
-
                 Screen.TrackOrder -> TrackOrderPage()
-
                 Screen.Shipping -> ShippingPage()
-
                 Screen.Career -> CareerPage()
-
                 Screen.CyberSecurity -> CyberSecurityPage()
-
                 Screen.Accessibility -> AccessibilityPage()
-
                 Screen.Press -> PressPage()
-
                 Screen.AdminHome -> authenticatedRoute {
                     AdminDashboardPage(
                         router = router,
                         onError = onError,
                         adminRoutes = adminRoutes,
+                    )
+                }
+
+                Screen.AdminConfig -> authenticatedRoute {
+                    AdminConfigPage(
+                        router = router,
+                        onError = onError,
+                        adminRoutes = adminRoutes,
+                        goBack = goBack,
                     )
                 }
 
@@ -464,19 +465,3 @@ private fun RouterViewModel.route(item: DesktopNavContract.AccountMenuItem) {
         }
     }
 }
-
-enum class Category {
-    Inspiration,
-    Clothing,
-    Shoes,
-    Sports,
-    Accessories,
-    Jewellery,
-    Bestsellers,
-    Promos,
-}
-
-data class CategoryFilter(
-    val id: String,
-    val name: String,
-)

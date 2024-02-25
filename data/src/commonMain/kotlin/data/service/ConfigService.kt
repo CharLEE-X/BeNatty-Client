@@ -15,6 +15,7 @@ import data.type.CompanyInfoUpdateInput
 import data.type.ConfigUpdateInput
 import data.type.ContactInfoUpdateInput
 import data.type.CreateConfigInput
+import data.type.DayOfWeek
 import data.type.LandingConfigUpdateInput
 import data.type.OpeningTimesUpdateInput
 import data.utils.handle
@@ -45,10 +46,11 @@ interface ConfigService {
 
     suspend fun updateConfig(
         configId: String,
+        companyWebsite: String?,
         email: String?,
         phone: String?,
-        dayFrom: String?,
-        dayTo: String?,
+        dayFrom: DayOfWeek?,
+        dayTo: DayOfWeek?,
         open: String?,
         close: String?,
         collageItems: List<CollageItemInput>?,
@@ -64,7 +66,7 @@ internal class ConfigServiceImpl(
     }
 
     override suspend fun getConfig(): Result<GetConfigQuery.Data> {
-        return apolloClient.query(GetConfigQuery(Optional.absent())).handle()
+        return apolloClient.query(GetConfigQuery(Optional.present(null))).handle()
     }
 
     override suspend fun getLandingConfig(): Result<GetLandingConfigQuery.Data> {
@@ -108,15 +110,17 @@ internal class ConfigServiceImpl(
 
     override suspend fun updateConfig(
         configId: String,
+        companyWebsite: String?,
         email: String?,
         phone: String?,
-        dayFrom: String?,
-        dayTo: String?,
+        dayFrom: DayOfWeek?,
+        dayTo: DayOfWeek?,
         open: String?,
         close: String?,
         collageItems: List<CollageItemInput>?,
     ): Result<UpdateConfigMutation.Data> {
         val contactInfoUpdateInput = ContactInfoUpdateInput(
+            companyWebsite = companyWebsite.skipIfNull(),
             email = email.skipIfNull(),
             phone = phone.skipIfNull(),
         )
@@ -134,7 +138,7 @@ internal class ConfigServiceImpl(
             collageItems = collageItems.skipIfNull(),
         )
         val input = ConfigUpdateInput(
-            id = "id",
+            id = configId,
             companyInfoInput = companyInfoInput.skipIfNull(),
             landingConfigInput = landingConfigInput.skipIfNull(),
         )

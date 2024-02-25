@@ -63,7 +63,7 @@ fun Footer(
             scope = scope,
             onError = onError,
             footerRoutes = footerRoutes,
-            goToCompanyWebsite = { window.open("https://www.varabyte.com", OpenLinkStrategy.IN_NEW_TAB) }
+            goToCompanyWebsite = { window.open("https://github.com/CharLEE-X", OpenLinkStrategy.IN_NEW_TAB) }
         )
     }
     val state by vm.observeStates().collectAsState()
@@ -235,10 +235,19 @@ fun Footer(
                 .gap(1.em)
                 .padding(topBottom = 1.em, leftRight = 3.em),
         ) {
-            FooterTextButton(
-                text = "© ${state.year} ${state.strings.companyName}",
-                onClick = { vm.trySend(FooterContract.Inputs.OnCompanyNameClick) },
-            )
+            if (state.contactInfo.companyWebsite.isNotEmpty()) {
+                FooterTextButton(
+                    text = "© ${state.year} ${state.strings.companyName}",
+                    onClick = { vm.trySend(FooterContract.Inputs.OnCompanyNameClick) },
+                )
+            } else {
+                SpanText(
+                    text = "© ${state.year} ${state.strings.companyName}",
+                    modifier = Modifier
+                        .fontWeight(FontWeight.SemiBold)
+                        .color(contentColor)
+                )
+            }
             Spacer()
             state.paymentMethods.forEach {
                 PaymentMethodImage(

@@ -66,3 +66,19 @@ val md_theme_dark_scrim = Color(0xFF000000)
 
 
 val seed = Color(0xFF7FCEFF)
+
+val surfaceDimLight = Color(0xFFD9EFFF)
+val surfaceBrightLight = Color(0xFFF1FDFF)
+val surfaceContainerLowestLight = Color(0xFFFFFFFF)
+val surfaceContainerLowLight = Color(0xFFE4F6FF)
+val surfaceContainerLight = Color(0xFFD2ECFF)
+val surfaceContainerHighLight = Color(0xFFB3E4FF)
+val surfaceContainerHighestLight = Color(0xFFA7DEFF)
+
+val surfaceDimDark = Color(0xFF2D4357)
+val surfaceBrightDark = Color(0xFF547A8D)
+val surfaceContainerLowestDark = Color(0xFF3A5166)
+val surfaceContainerLowDark = Color(0xFF466A7A)
+val surfaceContainerDark = Color(0xFF4F7488)
+val surfaceContainerHighDark = Color(0xFF5F8294)
+val surfaceContainerHighestDark = Color(0xFF759AAE)

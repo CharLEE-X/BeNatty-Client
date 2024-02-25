@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.CSSTransition
+import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
@@ -17,7 +18,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.minHeight
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.transition
-import com.varabyte.kobweb.silk.components.style.common.SmoothColorTransitionDurationVar
 import feature.shop.footer.FooterRoutes
 import feature.shop.navbar.DesktopNavRoutes
 import kotlinx.browser.document
@@ -26,6 +26,7 @@ import org.jetbrains.compose.web.css.CSSUnit
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.plus
 import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.s
 import web.components.sections.desktopNav.DesktopNav
 import web.components.sections.footer.Footer
 
@@ -134,7 +135,7 @@ private fun PageLayout(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = topSpacing)
-                .transition(CSSTransition("padding", SmoothColorTransitionDurationVar.value()))
+                .transition(CSSTransition("padding", 0.3.s, TransitionTimingFunction.Ease))
         ) {
             topBar()
             content()

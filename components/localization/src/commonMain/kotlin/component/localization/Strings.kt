@@ -1,7 +1,7 @@
 package component.localization
 
 enum class Strings {
-    AppName,
+    ShopName,
     AppMotto,
     CompanyName,
     AppVersion,
@@ -239,4 +239,17 @@ enum class Strings {
     Tel,
     SendEmail,
     WeWillReply,
+    ShopSettings,
+    CompanyInfo,
+    ContactInfo,
+    OpeningTimes,
+    OpenDayFrom,
+    OpenDayTo,
+    OpenTime,
+    CloseTime,
+    PaymentMethods,
+    AddPaymentMethod,
+    ImageUrl,
+    CompanyWebsite,
+    LandingPageSettings,
 }

@@ -35,6 +35,7 @@ private const val ID = "/{id}"
 private const val ACCESSIBILITY = "/accessibility"
 
 const val ADMIN = "/admin"
+private const val CONFIG = "/config"
 private const val CUSTOMERS = "/customers"
 private const val NEW = "/new"
 private const val CATEGORIES = "/categories"
@@ -45,6 +46,7 @@ enum class Screen(routeFormat: String, override val annotations: Set<RouteAnnota
 
     // Admin
     AdminHome(ADMIN),
+    AdminConfig(ADMIN + CONFIG),
 
     AdminCustomers(ADMIN + CUSTOMERS),
     AdminCustomerCreate(ADMIN + CUSTOMERS + NEW),
@@ -108,63 +110,4 @@ enum class Screen(routeFormat: String, override val annotations: Set<RouteAnnota
     override val matcher: RouteMatcher = RouteMatcher.create(routeFormat)
 
     val route: String = matcher.routeFormat
-}
-
-val bottomBarRoutes = listOf(
-    Screen.Home,
-    Screen.Product,
-)
-
-fun Screen.pageTitle(shopName: String = "Natalia's Shop"): String {
-    val title = when (this) {
-        Screen.Home -> "Be Natty"
-        Screen.Login -> "Login"
-        Screen.Product -> "Product"
-        Screen.Catalogue -> "Catalogue"
-        Screen.Cart -> "Cart"
-        Screen.Checkout -> "Checkout"
-        Screen.Payment -> "Payment"
-        Screen.Order -> "Order"
-        Screen.Profile -> "Profile"
-        Screen.Settings -> "Settings"
-        Screen.About -> "About"
-        Screen.Contact -> "Contact"
-        Screen.HelpAndFAQ -> "Help"
-        Screen.Blog -> "Blog"
-        Screen.Register -> "Register"
-        Screen.ForgotPassword -> "Forgot Password"
-        Screen.UpdatePassword -> "Update Email"
-        Screen.PrivacyPolicy -> "Privacy Policy"
-        Screen.TC -> "Terms and Conditions"
-        Screen.Wishlist -> "Wishlist"
-        Screen.Returns -> "Returns"
-        Screen.TrackOrder -> "Track Order"
-        Screen.Shipping -> "Shipping"
-        Screen.Career -> "Career"
-        Screen.CyberSecurity -> "Cyber Security"
-        Screen.Accessibility -> "Accessibility"
-        Screen.Press -> "Press"
-
-        Screen.AdminHome -> "Home"
-
-        Screen.AdminCustomers -> "Customers"
-        Screen.AdminCustomerCreate -> "New Customer"
-        Screen.AdminCustomerProfile -> "Customer Profile"
-
-        Screen.AdminProducts -> "Products"
-        Screen.AdminProductCreate -> "Product Page"
-
-        Screen.AdminOrderList -> "Orders"
-        Screen.AdminOrderPageExisting -> "Order details"
-
-        Screen.AdminProductPage -> "Product details"
-        Screen.AdminOrderPageNew -> "Order Create"
-        Screen.AdminCategoryList -> "Categories"
-        Screen.AdminCategoryPageNew -> "Category Create"
-        Screen.AdminCategoryProfile -> "Category details"
-        Screen.AdminTagList -> "Tags"
-        Screen.AdminTagCreate -> "Tag Create"
-        Screen.AdminTagPageExisting -> "Tag details"
-    }
-    return "$shopName - $title"
 }

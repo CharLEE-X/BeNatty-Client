@@ -16,6 +16,8 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.graphics.Colors
+import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
@@ -30,6 +32,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.translateY
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiCancel
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiSave
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiWarning
 import com.varabyte.kobweb.silk.components.text.SpanText
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.web.css.Position
@@ -82,37 +85,43 @@ fun HasChangesWidget(
                     .align(Alignment.BottomCenter)
                     .opacity(opacity)
                     .fillMaxWidth(80.percent)
-                    .maxWidth(40.em)
+                    .maxWidth(45.em)
                     .translateY(translationY)
+                    .padding(1.em)
+                    .pointerEvents(PointerEvents.Auto)
                     .transition(
                         CSSTransition("translate", 0.15.s, TransitionTimingFunction.Ease),
                         CSSTransition("opacity", 0.15.s, TransitionTimingFunction.Ease),
                     )
-                    .padding(1.em)
-                    .pointerEvents(PointerEvents.Auto)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.gap(1.em)
                 ) {
+                    MdiWarning(
+                        modifier = Modifier
+                            .color(Colors.Yellow)
+                            .userSelect(UserSelect.None)
+                    )
                     SpanText(
                         text = messageText,
                         modifier = Modifier
                             .fontWeight(FontWeight.SemiBold)
+                            .color(MaterialTheme.colors.onSurface.value())
                             .userSelect(UserSelect.None)
                     )
                     Spacer()
-                    AppFilledTonalButton(
+                    AppFilledButton(
                         onClick = { onCancel() },
                         leadingIcon = { MdiCancel() },
+                        containerColor = MaterialTheme.colors.tertiary.value(),
                     ) {
                         SpanText(resetText)
                     }
-                    AppFilledButton(
+                    AppFilledTonalButton(
                         onClick = { onSave() },
                         leadingIcon = { MdiSave() },
                         containerShape = 12.px,
-                        containerColor = MaterialTheme.colors.tertiary.value(),
                     ) {
                         SpanText(saveText)
                     }

@@ -17,6 +17,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.flex
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiArrowBack
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
@@ -128,6 +129,7 @@ fun NavTopSection(
         if (hasBackButton) {
             AppOutlinedIconButton(
                 onClick = { onGoBack() },
+                modifier = Modifier.size(3.em)
             ) {
                 MdiArrowBack()
             }

@@ -9,6 +9,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.BoxSizing
 import com.varabyte.kobweb.compose.css.CSSTransition
+import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -21,7 +22,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.top
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
-import com.varabyte.kobweb.silk.components.style.common.SmoothColorTransitionDurationVar
 import feature.shop.navbar.DesktopNavContract
 import feature.shop.navbar.DesktopNavRoutes
 import feature.shop.navbar.NavbarViewModel
@@ -31,6 +31,7 @@ import org.jetbrains.compose.web.css.CSSUnit
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import web.components.widgets.TickerSection
@@ -94,10 +95,10 @@ fun DesktopNav(
                 color = MaterialTheme.colors.shadow.value(),
             )
             .transition(
-                CSSTransition("top", SmoothColorTransitionDurationVar.value()),
-                CSSTransition("translate", SmoothColorTransitionDurationVar.value()),
-                CSSTransition("box-shadow", SmoothColorTransitionDurationVar.value()),
-                CSSTransition("position", SmoothColorTransitionDurationVar.value()),
+                CSSTransition("top", 0.3.s, TransitionTimingFunction.Ease),
+                CSSTransition("translate", 0.3.s, TransitionTimingFunction.Ease),
+                CSSTransition("box-shadow", 0.3.s, TransitionTimingFunction.Ease),
+                CSSTransition("position", 0.3.s, TransitionTimingFunction.Ease),
             )
     ) {
         TickerSection(

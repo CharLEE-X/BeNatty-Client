@@ -1,7 +1,11 @@
 mutation LandingConfigRemoveCollageItem($configId: String!, $collageItemId: String!) {
   landingConfigRemoveCollageItem(configId: $configId, collageItemId: $collageItemId) {
+    id
+    createdAt
+    updatedAt
     companyInfo {
       contactInfo {
+        companyWebsite
         email
         phone
       }
@@ -12,7 +16,6 @@ mutation LandingConfigRemoveCollageItem($configId: String!, $collageItemId: Stri
         open
       }
     }
-    id
     landingConfig {
       collageItems {
         alt

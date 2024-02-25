@@ -1,7 +1,11 @@
 mutation LandingConfigUpdateCollageItem($configId: String!, $input: CollageItemCreateInput!) {
   landingConfigUpdateCollageItem(configId: $configId, input: $input) {
+    id
+    createdAt
+    updatedAt
     companyInfo {
       contactInfo {
+        companyWebsite
         email
         phone
       }
@@ -12,7 +16,6 @@ mutation LandingConfigUpdateCollageItem($configId: String!, $input: CollageItemC
         open
       }
     }
-    id
     landingConfig {
       collageItems {
         alt

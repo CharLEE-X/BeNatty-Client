@@ -6,7 +6,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import com.varabyte.kobweb.core.Page
-import feature.root.RootContract
 import feature.root.RootViewModel
 
 @Suppress("unused")
@@ -27,6 +26,5 @@ fun HomePage() {
         onError = {
             println("Error: $it")
         },
-        onLogOut = { vm.trySend(RootContract.Inputs.LogOut) },
     )
 }

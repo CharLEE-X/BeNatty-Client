@@ -1,7 +1,11 @@
 mutation UpdateConfig($input: ConfigUpdateInput!) {
   updateConfig(input: $input) {
+    id
+    createdAt
+    updatedAt
     companyInfo {
       contactInfo {
+        companyWebsite
         email
         phone
       }
@@ -17,7 +21,6 @@ mutation UpdateConfig($input: ConfigUpdateInput!) {
         name
       }
     }
-    id
     landingConfig {
       collageItems {
         alt

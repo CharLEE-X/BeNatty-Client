@@ -75,4 +75,9 @@ private fun ColorScheme.colorScheme(
 )
 
 fun Color.rgb(): com.varabyte.kobweb.compose.ui.graphics.Color =
-    com.varabyte.kobweb.compose.ui.graphics.Color.rgb(red, green, blue)
+    com.varabyte.kobweb.compose.ui.graphics.Color.argb(
+        a = alpha,
+        r = red,
+        g = green,
+        b = blue
+    )

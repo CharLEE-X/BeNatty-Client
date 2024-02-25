@@ -36,23 +36,31 @@ private fun BaseCard(
     ).also { jsRequire("@material/web/labs/card/$tag.js") }
 }
 
+@Suppress("UnsafeCastFromDynamic")
 @Composable
 fun ElevatedCard(
     modifier: Modifier = Modifier,
     elevation: Int? = null,
     containerShape: CSSLengthOrPercentageNumericValue? = null,
     shadowColor: CSSColorValue? = null,
+    color: CSSColorValue? = null,
     content: ContentBuilder<MdElement>? = null
 ) {
     val tag = "elevated-card"
-    BaseCard(
-        tag = tag,
-        modifier = modifier,
-        elevation = elevation,
-        containerShape = containerShape,
-        shadowColor = shadowColor,
+    MdTagElement(
+        tagName = "md-$tag",
+        applyAttrs = modifier
+            .styleModifier {
+                elevation?.let { property("--md-$tag-container-elevation", elevation.toString()) }
+                containerShape?.let { property("--md-$tag-container-shape", it) }
+                shadowColor?.let { property("--md-$tag-container-shadow-color", it.toString()) }
+                color?.let { property("--md-$tag-container-color", it.toString()) }
+            }
+            .toAttrs {
+                classes("card")
+            },
         content = content
-    )
+    ).also { jsRequire("@material/web/labs/card/$tag.js") }
 }
 
 @Composable

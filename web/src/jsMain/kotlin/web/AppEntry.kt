@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.ScrollBehavior
+import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
@@ -12,12 +13,12 @@ import com.varabyte.kobweb.compose.ui.modifiers.scrollBehavior
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.core.App
 import com.varabyte.kobweb.silk.SilkApp
-import com.varabyte.kobweb.silk.components.style.common.SmoothColorTransitionDurationVar
 import com.varabyte.kobweb.silk.init.InitSilk
 import com.varabyte.kobweb.silk.init.InitSilkContext
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import feature.root.rootModule
 import kotlinx.browser.localStorage
+import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.css.value
 import org.jetbrains.compose.web.css.vh
 import org.koin.core.context.startKoin
@@ -56,7 +57,7 @@ fun AppEntry(content: @Composable () -> Unit) {
                     .minHeight(100.vh)
                     .scrollBehavior(ScrollBehavior.Smooth)
                     .backgroundColor(MaterialTheme.colors.background.value())
-                    .transition(CSSTransition("background-color", SmoothColorTransitionDurationVar.value()))
+                    .transition(CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease))
             ) {
                 content()
             }

@@ -56,7 +56,7 @@ object RegisterContract : KoinComponent {
     }
 
     data class Strings(
-        val appName: String = getString(component.localization.Strings.AppName),
+        val shopName: String = getString(component.localization.Strings.ShopName),
         val appMotto: String = getString(component.localization.Strings.AppMotto),
         val logo: String = getString(component.localization.Strings.Logo),
         val email: String = getString(component.localization.Strings.Email),

@@ -17,6 +17,7 @@ fun AppElevatedCard(
     elevation: Int? = null,
     containerShape: CSSLengthOrPercentageNumericValue? = null,
     shadowColor: CSSColorValue? = null,
+    color: CSSColorValue? = null,
     content: ContentBuilder<MdElement>? = null
 ) {
     ElevatedCard(
@@ -24,6 +25,7 @@ fun AppElevatedCard(
         elevation = elevation,
         containerShape = containerShape ?: 12.px,
         shadowColor = shadowColor,
+        color = color,
         content = content
     )
 }

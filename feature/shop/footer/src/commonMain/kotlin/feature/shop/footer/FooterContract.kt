@@ -73,7 +73,7 @@ object FooterContract : KoinComponent {
         data object GoToCyberSecurity : Events
         data object GoToPress : Events
         data object GoToAdminHome : Events
-        data object GoToCompanyWebsite : Events
+        data class GoToCompanyWebsite(val url: String) : Events
     }
 
     data class Strings(

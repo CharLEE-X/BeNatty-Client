@@ -90,7 +90,7 @@ fun RegisterPage(
             ) {
                 LogoSection(
                     logoText = state.strings.logo,
-                    appName = state.strings.appName,
+                    appName = state.strings.shopName,
                     appMotto = state.strings.appMotto,
                 )
                 SocialButtonsLoginSection(

@@ -56,6 +56,7 @@ kotlin {
                 implementation(feature.shop.account.wishlist)
 
                 implementation(feature.admin.dashboard)
+                implementation(feature.admin.config)
                 implementation(feature.admin.list)
                 implementation(feature.admin.user.create)
                 implementation(feature.admin.product.page)

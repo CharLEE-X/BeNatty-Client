@@ -33,9 +33,14 @@ internal class FooterInputHandler :
         FooterContract.Inputs.OnShippingClick -> postEvent(FooterContract.Events.GoToShipping)
         FooterContract.Inputs.OnTrackOrderClick -> postEvent(FooterContract.Events.GoToTrackOrder)
         FooterContract.Inputs.OnGoToAdminHome -> postEvent(FooterContract.Events.GoToAdminHome)
-        FooterContract.Inputs.OnCompanyNameClick -> postEvent(FooterContract.Events.GoToCompanyWebsite)
+        FooterContract.Inputs.OnCompanyNameClick -> handleCompanyNameClick()
         FooterContract.Inputs.OnCurrencyClick -> noOp()
         FooterContract.Inputs.OnLanguageClick -> noOp()
+    }
+
+    private suspend fun InputScope.handleCompanyNameClick() {
+        val url = getCurrentState().contactInfo.companyWebsite
+        postEvent(FooterContract.Events.GoToCompanyWebsite(url))
     }
 
     private suspend fun InputScope.handleInit() {

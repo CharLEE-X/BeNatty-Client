@@ -8,6 +8,8 @@ import data.service.AuthService
 import data.service.AuthServiceImpl
 import data.service.CategoryService
 import data.service.CategoryServiceImpl
+import data.service.ConfigService
+import data.service.ConfigServiceImpl
 import data.service.DebugService
 import data.service.DebugServiceImpl
 import data.service.OrderService
@@ -93,6 +95,12 @@ val dataModule = module {
     single<OrderService> {
         OrderServiceImpl(
             apolloClient = get(),
+        )
+    }
+    single<ConfigService> {
+        ConfigServiceImpl(
+            apolloClient = get(),
+            authService = get(),
         )
     }
 }

@@ -7,7 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.copperleaf.ballast.navigation.routing.RouterContract
+import com.copperleaf.ballast.navigation.routing.RouterContract.Inputs.ReplaceTopDestination
 import com.copperleaf.ballast.navigation.routing.currentDestinationOrNull
 import com.varabyte.kobweb.compose.css.AlignItems
 import com.varabyte.kobweb.compose.css.CSSTransition
@@ -22,6 +22,7 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.alignItems
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
@@ -50,8 +51,11 @@ import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.silk.components.forms.TextInput
+import com.varabyte.kobweb.silk.components.icons.mdi.IconStyle
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiHome
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiKeyboardCommand
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiLightMode
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiModeNight
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiNotifications
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiSearch
@@ -60,6 +64,7 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiStyle
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiWarning
 import com.varabyte.kobweb.silk.components.style.common.PlaceholderColor
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import component.localization.Strings
 import component.localization.getString
 import feature.router.RouterViewModel
@@ -71,7 +76,6 @@ import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
-import theme.OldColorsJs
 import theme.roleStyle
 import web.HEADLINE_FONT
 import web.components.widgets.AppFilledButton
@@ -106,7 +110,7 @@ fun AdminLayout(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     LaunchedEffect(title) {
-        document.title = "${getString(Strings.AppName)} - $title"
+        document.title = "${getString(Strings.ShopName)} - $title"
     }
 
     var searchValue by remember { mutableStateOf("") }
@@ -139,11 +143,13 @@ fun AdminLayout(
                 )
                 Column(
                     modifier = Modifier
+                        .backgroundColor(MaterialTheme.colors.background.value())
                         .margin(top = topBarHeight)
                         .padding(left = sideBarWidth)
                         .fillMaxWidth()
                         .alignItems(AlignItems.Center)
                         .minWidth(0.px)
+                        .transition(CSSTransition("background-color", 0.3.s, TransitionTimingFunction.EaseInOut))
                 ) {
                     content()
                 }
@@ -166,34 +172,27 @@ private fun AdminSideBar(router: RouterViewModel) {
             .width(sideBarWidth)
             .margin(top = topBarHeight)
             .position(Position.Fixed)
-            .backgroundColor(MaterialTheme.colors.surfaceContainerLow.value())
+            .backgroundColor(MaterialTheme.colors.surface.value())
             .padding(1.em)
             .boxShadow(
                 offsetX = 0.px,
-                offsetY = 4.px,
+                offsetY = 0.px,
                 blurRadius = 8.px,
-                color = OldColorsJs.lightGrayDarker
+                spreadRadius = 0.px,
+                color = MaterialTheme.colors.shadow.value()
             )
     ) {
         SideNavMainItem(
             label = "Home",
             isCurrent = currentDestination?.originalRoute == Screen.AdminHome,
             icon = { MdiHome() },
-            onMenuItemClicked = {
-                router.trySend(
-                    RouterContract.Inputs.ReplaceTopDestination(Screen.AdminHome.matcher.routeFormat)
-                )
-            }
+            onMenuItemClicked = { router.trySend(ReplaceTopDestination(Screen.AdminHome.route)) }
         )
         SideNavMainItem(
             label = "Orders",
             isCurrent = currentDestination?.originalRoute == Screen.AdminOrderList,
             icon = { MdiShoppingBasket() },
-            onMenuItemClicked = {
-                router.trySend(
-                    RouterContract.Inputs.ReplaceTopDestination(Screen.AdminOrderList.matcher.routeFormat)
-                )
-            }
+            onMenuItemClicked = { router.trySend(ReplaceTopDestination(Screen.AdminOrderList.route)) }
         )
         SideNavMainItem(
             label = "Products",
@@ -203,29 +202,17 @@ private fun AdminSideBar(router: RouterViewModel) {
                 Screen.AdminProductPage
             ).any { currentDestination?.originalRoute == it },
             icon = { MdiStyle() },
-            onMenuItemClicked = {
-                router.trySend(
-                    RouterContract.Inputs.ReplaceTopDestination(Screen.AdminProducts.matcher.routeFormat)
-                )
-            }
+            onMenuItemClicked = { router.trySend(ReplaceTopDestination(Screen.AdminProducts.route)) }
         )
         SideNavSubItem(
             label = "Categories",
             isSubCurrent = currentDestination?.originalRoute == Screen.AdminCategoryList,
-            onMenuItemClicked = {
-                router.trySend(
-                    RouterContract.Inputs.ReplaceTopDestination(Screen.AdminCategoryList.matcher.routeFormat)
-                )
-            }
+            onMenuItemClicked = { router.trySend(ReplaceTopDestination(Screen.AdminCategoryList.route)) }
         )
         SideNavSubItem(
             label = "Tags",
             isSubCurrent = currentDestination?.originalRoute == Screen.AdminTagList,
-            onMenuItemClicked = {
-                router.trySend(
-                    RouterContract.Inputs.ReplaceTopDestination(Screen.AdminTagList.matcher.routeFormat)
-                )
-            }
+            onMenuItemClicked = { router.trySend(ReplaceTopDestination(Screen.AdminTagList.route)) }
         )
         SideNavMainItem(
             label = "Customers",
@@ -235,11 +222,13 @@ private fun AdminSideBar(router: RouterViewModel) {
                 Screen.AdminCustomerProfile
             ).any { currentDestination?.originalRoute == it },
             icon = { MdiPerson() },
-            onMenuItemClicked = {
-                router.trySend(
-                    RouterContract.Inputs.ReplaceTopDestination(Screen.AdminCustomers.matcher.routeFormat)
-                )
-            }
+            onMenuItemClicked = { router.trySend(ReplaceTopDestination(Screen.AdminCustomers.route)) }
+        )
+        SideNavMainItem(
+            label = "Shop config",
+            isCurrent = listOf(Screen.AdminConfig).any { currentDestination?.originalRoute == it },
+            icon = { MdiPerson() },
+            onMenuItemClicked = { router.trySend(ReplaceTopDestination(Screen.AdminConfig.route)) }
         )
     }
 }
@@ -263,11 +252,18 @@ fun AdminTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(topBarHeight)
-            .backgroundColor(MaterialTheme.colors.inverseSurface.value())
+            .backgroundColor(MaterialTheme.colors.surface.value())
             .position(Position.Fixed)
             .zIndex(100)
             .alignItems(AlignItems.Center)
             .padding(topBottom = 0.5.em, leftRight = 1.em)
+            .boxShadow(
+                offsetX = 0.px,
+                offsetY = 0.px,
+                blurRadius = 8.px,
+                spreadRadius = 0.px,
+                color = MaterialTheme.colors.shadow.value()
+            )
     ) {
         TopBarLeftSection(
             modifier = Modifier
@@ -320,26 +316,25 @@ private fun BoxScope.SaveSection(
             .maxWidth(oneLayoutMaxWidth)
     ) {
         MdiWarning(
-            modifier = Modifier.color(MaterialTheme.colors.surface.value())
+            modifier = Modifier
+                .color(Colors.Yellow)
+                .userSelect(UserSelect.None)
         )
         SpanText(
             text = unsavedChangesText,
-            modifier = Modifier.color(MaterialTheme.colors.surface.value())
+            modifier = Modifier.color(MaterialTheme.colors.onSurface.value())
         )
         Spacer()
-        AppFilledTonalButton(
+        AppFilledButton(
             onClick = { onCancelClick() },
-            containerShape = 8.px,
+            containerColor = MaterialTheme.colors.tertiary.value(),
             modifier = Modifier.width(8.em)
         ) {
             SpanText(cancelText)
         }
-        AppFilledButton(
+        AppFilledTonalButton(
             onClick = { onSaveClick() },
             disabled = !isSaveEnabled,
-            containerShape = 8.px,
-            containerColor = MaterialTheme.colors.tertiary.value(),
-            disabledContainerColor = MaterialTheme.colors.inverseOnSurface.value(),
             modifier = Modifier.width(8.em)
         ) {
             SpanText(saveText)
@@ -371,6 +366,13 @@ private fun TopBarRightSection(
         modifier = modifier
             .gap(1.em)
     ) {
+        var colorMode by ColorMode.currentState
+        AppFilledTonalIconButton(
+            onClick = { colorMode = colorMode.opposite },
+        ) {
+            if (colorMode.isLight) MdiLightMode(style = IconStyle.OUTLINED)
+            else MdiModeNight(style = IconStyle.OUTLINED)
+        }
         AppFilledTonalIconButton(
             onClick = onNotificationButtonClick,
         ) {
@@ -378,8 +380,9 @@ private fun TopBarRightSection(
         }
         AppFilledTonalButton(
             onClick = onBeNattyButtonClick,
+            containerColor = MaterialTheme.colors.primary.value(),
         ) {
-            SpanText("Be Natty")
+            SpanText(getString(Strings.ShopName))
         }
     }
 }
@@ -402,7 +405,7 @@ private fun SearchBar(
             modifier = Modifier
                 .align(Alignment.CenterStart)
                 .color(
-                    if (focused) MaterialTheme.colors.inverseOnSurface.value()
+                    if (focused) MaterialTheme.colors.primary.value()
                     else MaterialTheme.colors.outline.value()
                 )
                 .userSelect(UserSelect.None)
@@ -414,7 +417,7 @@ private fun SearchBar(
             text = value,
             onTextChanged = onValueChanged,
             placeholder = placeholder,
-            focusBorderColor = MaterialTheme.colors.surface.value(),
+            focusBorderColor = MaterialTheme.colors.primary.value(),
             placeholderColor = PlaceholderColor(MaterialTheme.colors.outline.value()),
             modifier = Modifier
                 .align(Alignment.Center)

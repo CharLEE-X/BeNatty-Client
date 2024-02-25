@@ -11,7 +11,7 @@ class FooterViewModel(
     scope: CoroutineScope,
     footerRoutes: FooterRoutes,
     onError: suspend (String) -> Unit,
-    goToCompanyWebsite: () -> Unit,
+    goToCompanyWebsite: (String) -> Unit,
 ) : BasicViewModel<
     FooterContract.Inputs,
     FooterContract.Events,

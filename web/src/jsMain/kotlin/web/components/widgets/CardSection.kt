@@ -15,6 +15,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.silk.components.text.SpanText
+import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.value
@@ -27,10 +28,12 @@ fun CardSection(
     title: String?,
     description: String? = null,
     elevation: Int? = null,
+    color: CSSColorValue? = MaterialTheme.colors.surfaceContainerLow.value(),
     content: @Composable () -> Unit,
 ) {
     AppElevatedCard(
         elevation = elevation,
+        color = color,
         modifier = Modifier
             .fillMaxWidth()
     ) {

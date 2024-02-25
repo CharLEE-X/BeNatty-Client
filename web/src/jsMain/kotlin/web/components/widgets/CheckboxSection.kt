@@ -3,6 +3,7 @@ package web.components.widgets
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
+import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -13,9 +14,9 @@ import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
 import com.varabyte.kobweb.compose.ui.modifiers.transition
-import com.varabyte.kobweb.silk.components.style.common.SmoothColorTransitionDurationVar
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
+import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import theme.roleStyle
@@ -54,7 +55,7 @@ fun CheckboxSection(
                 modifier = Modifier
                     .color(MaterialTheme.colors.onSurface.value())
                     .opacity(opacity)
-                    .transition(CSSTransition("opacity", SmoothColorTransitionDurationVar.value()))
+                    .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
             )
         }
         errorText?.let {

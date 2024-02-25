@@ -1,5 +1,8 @@
 mutation CreateConfig($input: CreateConfigInput!) {
   createConfig(input: $input) {
+    id
+    createdAt
+    updatedAt
     companyInfo {
       contactInfo {
         email
@@ -17,7 +20,6 @@ mutation CreateConfig($input: CreateConfigInput!) {
         name
       }
     }
-    id
     landingConfig {
       collageItems {
         alt

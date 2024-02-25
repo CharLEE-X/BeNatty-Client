@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.TextOverflow
+import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
@@ -31,12 +32,12 @@ import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translateX
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEast
-import com.varabyte.kobweb.silk.components.style.common.SmoothColorTransitionDurationVar
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.shop.navbar.DesktopNavContract
 import feature.shop.navbar.label
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
+import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 
@@ -108,45 +109,46 @@ fun SideNavMainItem(
 ) {
     var hovered by remember { mutableStateOf(false) }
     val bgColor = when {
-        isCurrent -> MaterialTheme.colors.primary.value()
+        isCurrent && hovered -> MaterialTheme.colors.primaryContainer.value()
+        isCurrent && !hovered -> MaterialTheme.colors.primary.value()
         !isCurrent && hovered -> MaterialTheme.colors.surfaceContainerLow.value()
         else -> Colors.Transparent
     }
     val contentColor = when {
-        isCurrent -> MaterialTheme.colors.onPrimary.value()
+        isCurrent && hovered -> MaterialTheme.colors.onPrimaryContainer.value()
+        isCurrent && !hovered -> MaterialTheme.colors.onPrimary.value()
+        !isCurrent && hovered -> MaterialTheme.colors.onSurface.value()
         else -> MaterialTheme.colors.onSurface.value()
     }
 
-    Box(
-        contentAlignment = Alignment.Center,
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .backgroundColor(bgColor)
             .onClick { onMenuItemClicked() }
             .onMouseEnter { hovered = true }
             .onMouseLeave { hovered = false }
             .borderRadius(0.5.em)
-            .transition(CSSTransition("background-color", SmoothColorTransitionDurationVar.value()))
             .cursor(Cursor.Pointer)
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .color(contentColor)
-                .padding(
-                    leftRight = 1.em,
-                    topBottom = 0.5.em,
-                )
-                .gap(0.5.em)
-        ) {
-            icon?.invoke()
-            SpanText(
-                text = label,
-                modifier = Modifier.fillMaxWidth()
+            .fillMaxWidth()
+            .padding(
+                leftRight = 1.em,
+                topBottom = 0.5.em,
             )
-            Spacer()
-        }
+            .gap(0.5.em)
+            .backgroundColor(bgColor)
+            .color(contentColor)
+            .transition(
+                CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease),
+                CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease)
+            )
+    ) {
+        icon?.invoke()
+        SpanText(
+            text = label,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer()
     }
 }
 
@@ -158,12 +160,15 @@ fun SideNavSubItem(
 ) {
     var hovered by remember { mutableStateOf(false) }
     val bgColor = when {
-        isSubCurrent -> MaterialTheme.colors.primary.value()
+        isSubCurrent && hovered -> MaterialTheme.colors.primaryContainer.value()
+        isSubCurrent && !hovered -> MaterialTheme.colors.primary.value()
         !isSubCurrent && hovered -> MaterialTheme.colors.surfaceContainerLow.value()
         else -> Colors.Transparent
     }
     val contentColor = when {
-        isSubCurrent -> MaterialTheme.colors.onPrimary.value()
+        isSubCurrent && hovered -> MaterialTheme.colors.onPrimaryContainer.value()
+        isSubCurrent && !hovered -> MaterialTheme.colors.onPrimary.value()
+        !isSubCurrent && hovered -> MaterialTheme.colors.onSurface.value()
         else -> MaterialTheme.colors.onSurface.value()
     }
 
@@ -176,7 +181,7 @@ fun SideNavSubItem(
             .onMouseEnter { hovered = true }
             .onMouseLeave { hovered = false }
             .borderRadius(0.5.em)
-            .transition(CSSTransition("background-color", SmoothColorTransitionDurationVar.value()))
+            .transition(CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease))
             .cursor(Cursor.Pointer)
     ) {
         Row(
@@ -195,8 +200,8 @@ fun SideNavSubItem(
                     .opacity(if (isSubCurrent) 1f else 0f)
                     .translateX(if (isSubCurrent) 0.em else (-0.5).em)
                     .transition(
-                        CSSTransition("opacity", SmoothColorTransitionDurationVar.value()),
-                        CSSTransition("translate", SmoothColorTransitionDurationVar.value()),
+                        CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                        CSSTransition("translate", 0.3.s, TransitionTimingFunction.Ease),
                     )
             )
             SpanText(

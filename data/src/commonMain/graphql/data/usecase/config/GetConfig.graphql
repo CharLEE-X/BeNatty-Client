@@ -1,7 +1,11 @@
 query GetConfig($configId: String) {
   getConfig(configId: $configId) {
+    id
+    createdAt
+    updatedAt
     companyInfo {
       contactInfo {
+        companyWebsite
         email
         phone
       }
@@ -17,7 +21,6 @@ query GetConfig($configId: String) {
         name
       }
     }
-    id
     landingConfig {
       collageItems {
         alt
