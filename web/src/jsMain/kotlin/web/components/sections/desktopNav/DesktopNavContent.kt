@@ -36,6 +36,7 @@ import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import web.components.widgets.TickerSection
 import web.components.widgets.tickerHeight
+import web.shadow
 
 private enum class ScrollDirection { UP, DOWN }
 
@@ -92,7 +93,7 @@ fun DesktopNav(
             .boxShadow(
                 offsetY = 0.px,
                 blurRadius = if (showNavBarShadow) 20.px else 0.px,
-                color = MaterialTheme.colors.shadow.value(),
+                color = shadow(),
             )
             .transition(
                 CSSTransition("top", 0.3.s, TransitionTimingFunction.Ease),

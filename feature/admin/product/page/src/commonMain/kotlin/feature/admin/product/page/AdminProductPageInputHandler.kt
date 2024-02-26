@@ -53,7 +53,7 @@ internal class AdminProductPageInputHandler :
         is AdminProductPageContract.Inputs.OnTagSelected -> handleTagClick(input.tagName)
         is AdminProductPageContract.Inputs.OnDeleteImageClick -> handleDeleteImage(input.imageId)
         is AdminProductPageContract.Inputs.OnUserCreatorClick -> {
-            val userId = getCurrentState().original.creator.id.toString()
+            val userId = getCurrentState().original.creator.id
             postEvent(AdminProductPageContract.Events.GoToUserDetails(userId))
         }
 

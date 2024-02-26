@@ -82,6 +82,7 @@ import web.components.widgets.AppFilledButton
 import web.components.widgets.AppFilledTonalButton
 import web.components.widgets.AppFilledTonalIconButton
 import web.compose.material3.component.CircularProgress
+import web.shadow
 
 private val topBarHeight = 4.em
 private val sideBarWidth = 18.em
@@ -179,7 +180,7 @@ private fun AdminSideBar(router: RouterViewModel) {
                 offsetY = 0.px,
                 blurRadius = 8.px,
                 spreadRadius = 0.px,
-                color = MaterialTheme.colors.shadow.value()
+                color = shadow()
             )
     ) {
         SideNavMainItem(
@@ -262,7 +263,7 @@ fun AdminTopBar(
                 offsetY = 0.px,
                 blurRadius = 8.px,
                 spreadRadius = 0.px,
-                color = MaterialTheme.colors.shadow.value()
+                color = shadow()
             )
     ) {
         TopBarLeftSection(

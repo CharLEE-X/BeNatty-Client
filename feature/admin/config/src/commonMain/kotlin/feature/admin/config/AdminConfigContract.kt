@@ -26,7 +26,6 @@ object AdminConfigContract {
                     open = null,
                     close = null,
                 ),
-                paymentMethods = listOf()
             ),
             landingConfig = GetConfigQuery.LandingConfig(
                 collageItems = listOf(),
@@ -36,15 +35,10 @@ object AdminConfigContract {
         val current: GetConfigQuery.GetConfig = original,
 
         val emailError: String? = null,
-        val emailShake: Boolean = false,
         val phoneError: String? = null,
-        val phoneShake: Boolean = false,
         val companyWebsiteError: String? = null,
-        val companyWebsiteShake: Boolean = false,
         val openTimeError: String? = null,
-        val openTimeShake: Boolean = false,
         val closeTimeError: String? = null,
-        val closeTimeShake: Boolean = false,
     )
 
     sealed interface Inputs {
@@ -52,7 +46,7 @@ object AdminConfigContract {
         data object FetchConfig : Inputs
 
         data object OnSaveClick : Inputs
-        data object OnDiscardClick : Inputs
+        data object OnDiscardSaveClick : Inputs
         data class OnOpenDayFromSelected(val day: DayOfWeek) : Inputs
         data class OnOpenDayToSelected(val day: DayOfWeek) : Inputs
 
@@ -64,15 +58,8 @@ object AdminConfigContract {
         data class SetCompanyWebsite(val companyWebsite: String) : Inputs
         data class SetOpenTime(val openTime: String) : Inputs
         data class SetCloseTime(val closeTime: String) : Inputs
-        data class SetPaymentMethods(val paymentMethods: List<GetConfigQuery.PaymentMethod>) : Inputs
         data class SetCreatedAt(val createdAt: String) : Inputs
         data class SetUpdatedAt(val updatedAt: String) : Inputs
-
-        data class SetEmailShake(val shake: Boolean) : Inputs
-        data class SetPhoneShake(val shake: Boolean) : Inputs
-        data class SetCompanyWebsiteShake(val shake: Boolean) : Inputs
-        data class SetOpenTimeShake(val shake: Boolean) : Inputs
-        data class SetCloseTimeShake(val shake: Boolean) : Inputs
     }
 
     sealed interface Events {
@@ -100,15 +87,6 @@ object AdminConfigContract {
         val openDayTo: String = getString(component.localization.Strings.OpenDayTo),
         val openTime: String = getString(component.localization.Strings.OpenTime),
         val closeTime: String = getString(component.localization.Strings.CloseTime),
-        val paymentMethods: String = getString(component.localization.Strings.PaymentMethods),
-        val addPaymentMethod: String = getString(component.localization.Strings.AddPaymentMethod),
-        val name: String = getString(component.localization.Strings.Name),
-        val imageUrl: String = getString(component.localization.Strings.ImageUrl),
         val landingPageSettings: String = getString(component.localization.Strings.LandingPageSettings),
     )
-
-    sealed interface ScreenState {
-        data object New : ScreenState
-        data object Existing : ScreenState
-    }
 }

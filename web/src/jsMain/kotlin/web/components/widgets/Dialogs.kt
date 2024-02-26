@@ -12,6 +12,7 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
+import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
@@ -22,7 +23,9 @@ import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.scaleY
 import com.varabyte.kobweb.compose.ui.modifiers.transition
+import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.components.graphics.Image
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiAdd
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiCancel
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiClose
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
@@ -156,6 +159,73 @@ fun TakeActionDialog(
             }
         ) {
             SpanText(contentText)
+        }
+    }
+}
+
+@Composable
+fun AddContentDialog(
+    open: Boolean,
+    title: String,
+    actionAddText: String,
+    actionDismissText: String,
+    closing: Boolean,
+    isAddButtonEnabled: Boolean,
+    addIcon: @Composable (Modifier) -> Unit = { MdiAdd(it) },
+    onOpen: (Boolean) -> Unit,
+    onClosing: (Boolean) -> Unit,
+    onAdd: () -> Unit,
+    onDismiss: () -> Unit,
+    content: @Composable () -> Unit,
+) {
+    if (open || closing) {
+        Dialog(
+            open = open && !closing,
+            onClosed = {
+                onOpen(false)
+                onClosing(false)
+            },
+            onClosing = { onClosing(true) },
+            headline = {
+                Text(title)
+            },
+            actions = {
+                AppFilledButton(
+                    onClick = {
+                        onDismiss()
+                        onClosing(true)
+                    },
+                    leadingIcon = { MdiCancel(Modifier.color(MaterialTheme.colors.onTertiary.value())) },
+                    containerColor = MaterialTheme.colors.tertiary.value(),
+                    modifier = Modifier.width(150.px)
+                ) {
+                    SpanText(
+                        text = actionDismissText,
+                        modifier = Modifier.color(MaterialTheme.colors.onTertiary.value())
+                    )
+                }
+                AppFilledButton(
+                    onClick = { onAdd() },
+                    leadingIcon = { addIcon(Modifier.color(MaterialTheme.colors.onSecondary.value())) },
+                    containerColor = MaterialTheme.colors.secondary.value(),
+                    disabled = !isAddButtonEnabled,
+                    modifier = Modifier.width(150.px)
+                ) {
+                    SpanText(
+                        text = actionAddText,
+                        modifier = Modifier.color(MaterialTheme.colors.onSecondary.value())
+                    )
+                }
+            }
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(1.em)
+                    .gap(1.em)
+            ) {
+                content()
+            }
         }
     }
 }

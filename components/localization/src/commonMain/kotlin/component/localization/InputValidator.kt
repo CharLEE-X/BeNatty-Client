@@ -7,6 +7,7 @@ interface InputValidator {
     fun validateText(text: String, length: Int = 2): String?
     fun validatePhone(phone: String, length: Int = 8): String?
     fun validateNumberPositive(number: Int): String?
+    fun validateUrl(url: String): String?
 }
 
 internal class InputValidatorImpl : InputValidator {
@@ -53,6 +54,15 @@ internal class InputValidatorImpl : InputValidator {
     override fun validateNumberPositive(number: Int): String? {
         return when {
             number < 0 -> "Number must be positive"
+            else -> null
+        }
+    }
+
+    override fun validateUrl(url: String): String? {
+        return when {
+            !url.contains("http") -> "URL must contain http"
+            url.isBlank() -> "URL cannot be empty"
+            url.length < 8 -> "URL must be at least 6 characters"
             else -> null
         }
     }

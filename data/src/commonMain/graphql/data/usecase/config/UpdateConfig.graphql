@@ -15,11 +15,6 @@ mutation UpdateConfig($input: ConfigUpdateInput!) {
         dayTo
         open
       }
-      paymentMethods {
-        id
-        imageUrl
-        name
-      }
     }
     landingConfig {
       collageItems {

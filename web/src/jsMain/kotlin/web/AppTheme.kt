@@ -1,5 +1,7 @@
 package web
 
+import androidx.compose.runtime.Composable
+import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import org.jetbrains.compose.web.css.cssRem
 import theme.FontConfig
@@ -32,3 +34,7 @@ val appFontScheme = SysFontScheme(
     labelMedium = FontConfig("Roboto", 12.sp, 16.sp, (0.5 / 12).cssRem, "500"),
     labelSmall = FontConfig("Roboto", 11.sp, 16.sp, (0.5 / 11).cssRem, "500"),
 )
+
+@Composable
+fun shadow() = if (ColorMode.current.isLight) Colors.Black.copy(alpha = 25).toRgb()
+else Colors.White.copy(alpha = 25).toRgb()

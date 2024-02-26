@@ -1401,31 +1401,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "paymentMethods",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "OBJECT",
-                      "name": "PaymentMethod",
-                      "ofType": null
-                    }
-                  }
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
             }
           ],
           "inputFields": null,
@@ -1476,32 +1451,6 @@
               "defaultValue": null,
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "__typename": "__InputValue",
-              "name": "paymentMethods",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "PaymentMethodInput",
-                      "ofType": null
-                    }
-                  }
-                }
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
             }
           ],
           "interfaces": null,
@@ -1539,28 +1488,6 @@
                 "kind": "INPUT_OBJECT",
                 "name": "OpeningTimesUpdateInput",
                 "ofType": null
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "__typename": "__InputValue",
-              "name": "paymentMethods",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "PaymentMethodInput",
-                    "ofType": null
-                  }
-                }
               },
               "defaultValue": null,
               "isDeprecated": false,
@@ -4755,137 +4682,6 @@
           ],
           "inputFields": null,
           "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null,
-          "specifiedByURL": null
-        },
-        {
-          "__typename": "__Type",
-          "kind": "OBJECT",
-          "name": "PaymentMethod",
-          "description": null,
-          "fields": [
-            {
-              "name": "id",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "imageUrl",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "name",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null,
-          "specifiedByURL": null
-        },
-        {
-          "__typename": "__Type",
-          "kind": "INPUT_OBJECT",
-          "name": "PaymentMethodInput",
-          "description": null,
-          "fields": null,
-          "inputFields": [
-            {
-              "__typename": "__InputValue",
-              "name": "id",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "__typename": "__InputValue",
-              "name": "imageUrl",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "__typename": "__InputValue",
-              "name": "name",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "interfaces": null,
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null

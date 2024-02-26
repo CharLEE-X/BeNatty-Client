@@ -7,12 +7,9 @@ import data.GetConfigQuery
 import data.service.ConfigService
 import data.type.CollageItemInput
 import data.type.DayOfWeek
-import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import kotlin.time.Duration.Companion.seconds
 
-val SHAKE_ANIM_DURATION = (.25).seconds
 private typealias InputScope = InputHandlerScope<AdminConfigContract.Inputs, AdminConfigContract.Events, AdminConfigContract.State>
 
 internal class AdminProductPageInputHandler :
@@ -26,7 +23,7 @@ internal class AdminProductPageInputHandler :
         is AdminConfigContract.Inputs.Init -> handleInit()
         AdminConfigContract.Inputs.FetchConfig -> handleFetchConfig()
 
-        AdminConfigContract.Inputs.OnDiscardClick -> updateState { it.copy(current = it.original).wasEdited() }
+        AdminConfigContract.Inputs.OnDiscardSaveClick -> updateState { it.copy(current = it.original).wasEdited() }
         AdminConfigContract.Inputs.OnSaveClick -> handleSave()
         is AdminConfigContract.Inputs.OnOpenDayFromSelected -> handleOnOpenDayFromSelected(input.day)
         is AdminConfigContract.Inputs.OnOpenDayToSelected -> handleOnOpenDayToSelected(input.day)
@@ -35,35 +32,26 @@ internal class AdminProductPageInputHandler :
         is AdminConfigContract.Inputs.SetOriginalConfig -> updateState { it.copy(original = input.config).wasEdited() }
         is AdminConfigContract.Inputs.SetCurrentConfig -> updateState { it.copy(current = input.config).wasEdited() }
         is AdminConfigContract.Inputs.SetEmail -> handleSetEmail(input.email)
-        is AdminConfigContract.Inputs.SetEmailShake -> updateState { it.copy(emailShake = input.shake) }
         is AdminConfigContract.Inputs.SetPhone -> handleSetPhone(input.phone)
-        is AdminConfigContract.Inputs.SetPhoneShake -> updateState { it.copy(phoneShake = input.shake) }
         is AdminConfigContract.Inputs.SetCompanyWebsite -> handleSetCompanyWebsite(input.companyWebsite)
-        is AdminConfigContract.Inputs.SetCompanyWebsiteShake -> updateState { it.copy(companyWebsiteShake = input.shake) }
         is AdminConfigContract.Inputs.SetCloseTime -> handleSetCloseTime(input.closeTime)
-        is AdminConfigContract.Inputs.SetCloseTimeShake -> updateState { it.copy(closeTimeShake = input.shake) }
         is AdminConfigContract.Inputs.SetOpenTime -> handleSetOpenTime(input.openTime)
-        is AdminConfigContract.Inputs.SetOpenTimeShake -> updateState { it.copy(openTimeShake = input.shake) }
-        is AdminConfigContract.Inputs.SetPaymentMethods -> handleSetPaymentMethods(input.paymentMethods)
         is AdminConfigContract.Inputs.SetCreatedAt -> handleSetCreatedAt(input.createdAt)
         is AdminConfigContract.Inputs.SetUpdatedAt -> handleSetUpdatedAt(input.updatedAt)
     }
 
     private suspend fun InputScope.handleOnOpenDayFromSelected(day: DayOfWeek) {
         updateState {
-            val newDayOfWeek = if (it.current.companyInfo.openingTimes.dayTo == day) null else day
-            println("day before: ${it.current.companyInfo.openingTimes.dayTo?.name}, passed day: $day, newDayOfWeek: $newDayOfWeek")
             it.copy(
                 current = it.current.copy(
                     companyInfo = it.current.companyInfo.copy(
                         openingTimes = it.current.companyInfo.openingTimes.copy(
-                            dayFrom = newDayOfWeek
+                            dayFrom = if (it.current.companyInfo.openingTimes.dayTo == day) null else day
                         )
                     )
                 ),
             ).wasEdited()
         }
-
     }
 
     private suspend fun InputScope.handleOnOpenDayToSelected(day: DayOfWeek) {
@@ -110,7 +98,11 @@ internal class AdminProductPageInputHandler :
                     postInput(AdminConfigContract.Inputs.SetCurrentConfig(config = it.getConfig))
                 },
                 onFailure = {
-                    postEvent(AdminConfigContract.Events.OnError(it.message ?: "Error while fetching product details"))
+                    postEvent(
+                        AdminConfigContract.Events.OnError(
+                            it.message ?: "Error while fetching product details"
+                        )
+                    )
                 },
             )
         }
@@ -144,18 +136,6 @@ internal class AdminProductPageInputHandler :
         }
     }
 
-    private suspend fun InputScope.handleSetOpenDayTo(dayOpenTo: DayOfWeek?) {
-        updateState {
-            it.copy(
-                current = it.current.copy(
-                    companyInfo = it.current.companyInfo.copy(
-                        openingTimes = it.current.companyInfo.openingTimes.copy(dayTo = dayOpenTo)
-                    )
-                ),
-            ).wasEdited()
-        }
-    }
-
     private suspend fun InputScope.handleSetPhone(phone: String) {
         updateState {
             val isValidated = inputValidator.validateText(phone)
@@ -166,17 +146,6 @@ internal class AdminProductPageInputHandler :
                     )
                 ),
                 phoneError = if (!it.wasEdited) null else isValidated,
-            ).wasEdited()
-        }
-    }
-
-
-    private suspend fun InputScope.handleSetPaymentMethods(paymentMethods: List<GetConfigQuery.PaymentMethod>) {
-        updateState {
-            it.copy(
-                current = it.current.copy(
-                    companyInfo = it.current.companyInfo.copy(paymentMethods = paymentMethods)
-                )
             ).wasEdited()
         }
     }
@@ -236,13 +205,6 @@ internal class AdminProductPageInputHandler :
                                     dayTo = data.updateConfig.companyInfo.openingTimes.dayTo,
                                     open = data.updateConfig.companyInfo.openingTimes.open
                                 ),
-                                paymentMethods = data.updateConfig.companyInfo.paymentMethods.map {
-                                    GetConfigQuery.PaymentMethod(
-                                        id = it.id,
-                                        name = it.name,
-                                        imageUrl = it.imageUrl
-                                    )
-                                }
                             ),
                             landingConfig = GetConfigQuery.LandingConfig(
                                 collageItems = data.updateConfig.landingConfig.collageItems.map {
@@ -293,40 +255,10 @@ internal class AdminProductPageInputHandler :
             val isCloseTimeError = closeTimeError != null
             val isNoError = !isTitleError && !isPhoneError && !isOpenTimeError && !isCloseTimeError
 
-            if (!isNoError) {
-                shakeErrors(
-                    isTitleError,
-                    isPhoneError,
-                    isOpenTimeError,
-                    isCloseTimeError
-                )
-            } else {
-                handleUpdateConfig()
-            }
+            if (!isNoError) noOp() else handleUpdateConfig()
         }
     }
 }
 
 private fun AdminConfigContract.State.wasEdited(): AdminConfigContract.State =
     copy(wasEdited = current != original)
-
-private fun InputScope.shakeErrors(
-    isEmailError: Boolean,
-    isPhoneError: Boolean,
-    isOpenTimeError: Boolean,
-    isCloseTimeError: Boolean,
-) {
-    sideJob("handleShakeErrors") {
-        if (isEmailError) postInput(AdminConfigContract.Inputs.SetEmailShake(shake = true))
-        if (isPhoneError) postInput(AdminConfigContract.Inputs.SetPhoneShake(shake = true))
-        if (isOpenTimeError) postInput(AdminConfigContract.Inputs.SetOpenTimeShake(shake = true))
-        if (isCloseTimeError) postInput(AdminConfigContract.Inputs.SetCloseTimeShake(shake = true))
-
-        delay(SHAKE_ANIM_DURATION)
-
-        if (isEmailError) postInput(AdminConfigContract.Inputs.SetEmailShake(shake = false))
-        if (isPhoneError) postInput(AdminConfigContract.Inputs.SetPhoneShake(shake = false))
-        if (isOpenTimeError) postInput(AdminConfigContract.Inputs.SetOpenTimeShake(shake = false))
-        if (isCloseTimeError) postInput(AdminConfigContract.Inputs.SetCloseTimeShake(shake = false))
-    }
-}
