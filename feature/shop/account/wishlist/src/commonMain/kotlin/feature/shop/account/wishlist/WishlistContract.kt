@@ -12,6 +12,8 @@ object WishlistContract : KoinComponent {
     )
 
     sealed interface Inputs {
+        data object OnLogoutClicked : Inputs
+
         data class SetEmail(val email: String) : Inputs
     }
 
@@ -21,5 +23,7 @@ object WishlistContract : KoinComponent {
 
     data class Strings(
         val signUp: String,
-    )
+        val logout: String = getString(component.localization.Strings.Logout),
+    ) {
+    }
 }

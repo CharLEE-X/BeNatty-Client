@@ -18,7 +18,6 @@ import feature.router.RouterViewModel
 import feature.router.Screen
 import feature.router.idPath
 import feature.shop.navbar.DesktopNavContract
-import web.components.layouts.AccountLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.MainParams
 import web.pages.admin.category.AdminCategoryListPage
@@ -185,39 +184,31 @@ fun RouterContent(
                 )
 
                 Screen.Order -> authenticatedRoute {
-                    AccountLayout(
-                        item = DesktopNavContract.AccountMenuItem.ORDERS,
+                    OrderPage(
+                        onError = onError,
                         onMenuItemClicked = { router.route(it) },
-                    ) {
-                        OrderPage(onError = onError)
-                    }
+                    )
                 }
 
                 Screen.Profile -> authenticatedRoute {
-                    AccountLayout(
-                        item = DesktopNavContract.AccountMenuItem.PROFILE,
+                    ProfilePage(
+                        onError = onError,
                         onMenuItemClicked = { router.route(it) },
-                    ) {
-                        ProfilePage(onError = onError)
-                    }
+                    )
                 }
 
                 Screen.Wishlist -> authenticatedRoute {
-                    AccountLayout(
-                        item = DesktopNavContract.AccountMenuItem.WISHLIST,
+                    WishlistPage(
+                        onError = onError,
                         onMenuItemClicked = { router.route(it) },
-                    ) {
-                        WishlistPage(onError = onError)
-                    }
+                    )
                 }
 
                 Screen.Returns -> authenticatedRoute {
-                    AccountLayout(
-                        item = DesktopNavContract.AccountMenuItem.RETURNS,
+                    ReturnsPage(
+                        onError = onError,
                         onMenuItemClicked = { router.route(it) },
-                    ) {
-                        ReturnsPage(onError = onError)
-                    }
+                    )
                 }
 
                 Screen.Settings -> authenticatedRoute {

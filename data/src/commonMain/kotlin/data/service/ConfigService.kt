@@ -9,14 +9,17 @@ import data.LandingConfigAddCollageItemMutation
 import data.LandingConfigRemoveCollageItemMutation
 import data.LandingConfigUpdateCollageItemMutation
 import data.UpdateConfigMutation
+import data.UploadConfigCollageImageMutation
 import data.type.CollageItemCreateInput
 import data.type.CollageItemInput
 import data.type.CompanyInfoUpdateInput
+import data.type.ConfigCollageMediaUploadInput
 import data.type.ConfigUpdateInput
 import data.type.ContactInfoUpdateInput
 import data.type.CreateConfigInput
 import data.type.DayOfWeek
 import data.type.LandingConfigUpdateInput
+import data.type.MediaType
 import data.type.OpeningTimesUpdateInput
 import data.utils.handle
 import data.utils.skipIfNull
@@ -55,6 +58,13 @@ interface ConfigService {
         close: String?,
         collageItems: List<CollageItemInput>?,
     ): Result<UpdateConfigMutation.Data>
+
+    suspend fun uploadCollageImage(
+        configId: String,
+        imageId: String,
+        blob: String,
+        mediaType: MediaType,
+    ): Result<UploadConfigCollageImageMutation.Data>
 }
 
 internal class ConfigServiceImpl(
@@ -143,5 +153,20 @@ internal class ConfigServiceImpl(
             landingConfigInput = landingConfigInput.skipIfNull(),
         )
         return apolloClient.mutation(UpdateConfigMutation(input)).handle()
+    }
+
+    override suspend fun uploadCollageImage(
+        configId: String,
+        imageId: String,
+        blob: String,
+        mediaType: MediaType,
+    ): Result<UploadConfigCollageImageMutation.Data> {
+        val input = ConfigCollageMediaUploadInput(
+            configId = configId,
+            imageId = imageId,
+            blob = blob,
+            mediaType = mediaType,
+        )
+        return apolloClient.mutation(UploadConfigCollageImageMutation(input)).handle()
     }
 }

@@ -20,7 +20,6 @@ import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
-import com.varabyte.kobweb.compose.ui.modifiers.boxShadow
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.display
@@ -46,11 +45,12 @@ import com.varabyte.kobweb.compose.ui.modifiers.textShadow
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.silk.components.graphics.Image
+import com.varabyte.kobweb.silk.components.style.ComponentStyle
+import com.varabyte.kobweb.silk.components.style.base
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
-import feature.shop.home.HomeContract
-import feature.shop.home.HomeViewModel
+import feature.shop.home.model.CollageItem
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
@@ -63,37 +63,48 @@ import theme.MaterialTheme
 import web.HeadlineTextStyle
 import web.components.widgets.AppElevatedButton
 import web.components.widgets.AppElevatedCard
+import web.components.widgets.ImageOverlay
 
+val CollageStyle by ComponentStyle.base {
+    Modifier
+        .fillMaxWidth()
+        .display(DisplayStyle.Grid)
+        .gridTemplateColumns { repeat(3) { size(1.fr) } }
+        .gridAutoRows { minmax(200.px, 1.fr) }
+        .gap(1.em)
+}
+
+val CollageBigItemStyle by ComponentStyle.base {
+    Modifier
+        .gridColumn(1, 3)
+        .gridRow(1, 3)
+}
 
 @Composable
 fun Collage(
-    modifier: Modifier,
-    vm: HomeViewModel,
-    state: HomeContract.State,
+    modifier: Modifier = Modifier,
+    items: List<CollageItem>,
+    shopNowText: String,
+    onCollageItemClick: (CollageItem) -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .display(DisplayStyle.Grid)
-            .gridTemplateColumns { repeat(3) { size(1.fr) } }
-            .gridAutoRows { minmax(200.px, 1.fr) }
-            .gap(1.em)
+        modifier = CollageStyle.toModifier().then(modifier)
     ) {
-        state.collageItems.forEachIndexed { index, item ->
+        items.forEachIndexed { index, item ->
             CollageItem(
                 title = item.title,
                 description = item.description,
-                imageUrl = item.imageUrl,
-                buttonText = if (index == 0) state.strings.shopNow else null,
-                onClick = { vm.trySend(HomeContract.Inputs.OnCollageItemClick(item)) },
+                buttonText = if (index == 0) shopNowText else null,
+                onClick = { onCollageItemClick(item) },
                 isCentered = index == 0,
-                modifier = Modifier
-                    .thenIf(index == 0) {
-                        Modifier
-                            .gridColumn(1, 3)
-                            .gridRow(1, 3)
-                    }
-            )
+                modifier = Modifier.thenIf(index == 0) { CollageBigItemStyle.toModifier() }
+            ) { imageModifier ->
+                Image(
+                    src = item.imageUrl,
+                    alt = item.title,
+                    modifier = imageModifier
+                )
+            }
         }
     }
 }
@@ -103,13 +114,13 @@ private fun CollageItem(
     modifier: Modifier = Modifier,
     title: String,
     description: String,
-    imageUrl: String,
     buttonText: String? = null,
     isCentered: Boolean,
     onClick: () -> Unit,
     contentColor: Color = Colors.White,
     shadowColor: Color = Color.rgb(30, 30, 59),
     borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
+    image: @Composable (imageModifier: Modifier) -> Unit,
 ) {
     var hovered by remember { mutableStateOf(false) }
     val overlayColor = if (ColorMode.current.isLight) shadowColor else Color.rgb(179, 176, 248)
@@ -132,12 +143,13 @@ private fun CollageItem(
             contentAlignment = Alignment.Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            CollageImage(
-                imageUrl = imageUrl,
-                title = title,
-                borderRadius = borderRadius,
-                hovered = hovered
-            )
+            val imageModifier = Modifier
+                .fillMaxSize()
+                .borderRadius(borderRadius)
+                .objectFit(ObjectFit.Cover)
+                .thenIf(hovered) { Modifier.scale(1.04) }
+                .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
+            image(imageModifier)
             ImageOverlay(
                 shadowColor = shadowColor,
                 overlayColor = overlayColor,
@@ -207,46 +219,4 @@ private fun CollageItem(
             }
         }
     }
-}
-
-@Composable
-private fun ImageOverlay(
-    shadowColor: Color,
-    overlayColor: Color,
-    hovered: Boolean
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .backgroundColor(shadowColor.toRgb().copy(alpha = 40))
-            .boxShadow(
-                offsetX = 0.px,
-                offsetY = 0.px,
-                blurRadius = 80.px,
-                spreadRadius = 0.px,
-                color = overlayColor.toRgb().copy(alpha = 120),
-                inset = true
-            )
-            .thenIf(hovered) { Modifier.scale(1.05) }
-            .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
-    )
-}
-
-@Composable
-private fun CollageImage(
-    imageUrl: String,
-    title: String,
-    borderRadius: CSSLengthOrPercentageNumericValue,
-    hovered: Boolean
-) {
-    Image(
-        src = imageUrl,
-        alt = title,
-        modifier = Modifier
-            .fillMaxSize()
-            .borderRadius(borderRadius)
-            .objectFit(ObjectFit.Cover)
-            .thenIf(hovered) { Modifier.scale(1.04) }
-            .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
-    )
 }

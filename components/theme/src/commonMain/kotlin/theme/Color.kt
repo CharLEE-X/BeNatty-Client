@@ -67,18 +67,18 @@ val md_theme_dark_scrim = Color(0xFF000000)
 
 val seed = Color(0xFF7FCEFF)
 
-val surfaceDimLight = Color(0xFFD9EFFF)
-val surfaceBrightLight = Color(0xFFF1FDFF)
-val surfaceContainerLowestLight = Color(0xFFFFFFFF)
-val surfaceContainerLowLight = Color(0xFFE4F6FF)
-val surfaceContainerLight = Color(0xFFD2ECFF)
-val surfaceContainerHighLight = Color(0xFFB3E4FF)
-val surfaceContainerHighestLight = Color(0xFFA7DEFF)
+val surfaceDimLight = Color(0xFFF2FAFF) // Slightly darker than base for minimal contrast
+val surfaceBrightLight = Color(0xFFF0F8FF) // Matching the base color, for uniformity
+val surfaceContainerLowestLight = Color(0xFFF7FBFF) // Brighter than base, for highlighted elements
+val surfaceContainerLowLight = Color(0xFFF4FAFF) // Slightly brighter than dim, for low emphasis elements
+val surfaceContainerLight = Color(0xFFEFF9FF) // Close to the base, for default container backgrounds
+val surfaceContainerHighLight = Color(0xFFE6F4FF) // Noticeably lighter than base, for containers that need distinction
+val surfaceContainerHighestLight = Color(0xFFDEEFFE) // The lightest, for the most prominent UI elements
 
-val surfaceDimDark = Color(0xFF2D4357)
-val surfaceBrightDark = Color(0xFF547A8D)
-val surfaceContainerLowestDark = Color(0xFF3A5166)
-val surfaceContainerLowDark = Color(0xFF466A7A)
-val surfaceContainerDark = Color(0xFF4F7488)
-val surfaceContainerHighDark = Color(0xFF5F8294)
-val surfaceContainerHighestDark = Color(0xFF759AAE)
+val surfaceDimDark = Color(0xFF23233F) // Slightly lighter than base
+val surfaceBrightDark = Color(0xFF252541) // A bit lighter than DimDark
+val surfaceContainerLowestDark = Color(0xFF272749) // Slightly lighter than BrightDark
+val surfaceContainerLowDark = Color(0xFF292952) // A tad lighter than Lowest
+val surfaceContainerDark = Color(0xFF2B2B5B) // Slightly lighter than LowDark
+val surfaceContainerHighDark = Color(0xFF2D2D64) // Brighter, yet close to Dark
+val surfaceContainerHighestDark = Color(0xFF2F2F6D) // The brightest, yet still subdued

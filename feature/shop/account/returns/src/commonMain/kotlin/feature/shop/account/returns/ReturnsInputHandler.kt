@@ -17,6 +17,10 @@ internal class ReturnsInputHandler :
     override suspend fun InputHandlerScope<ReturnsContract.Inputs, ReturnsContract.Events, ReturnsContract.State>.handleInput(
         input: ReturnsContract.Inputs,
     ) = when (input) {
+        is ReturnsContract.Inputs.OnLogoutClicked -> {
+            authService.signOut()
+        }
+
         is ReturnsContract.Inputs.SetEmail -> {}
     }
 }

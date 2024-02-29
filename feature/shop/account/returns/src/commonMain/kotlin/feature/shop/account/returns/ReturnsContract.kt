@@ -12,6 +12,8 @@ object ReturnsContract : KoinComponent {
     )
 
     sealed interface Inputs {
+        data object OnLogoutClicked : Inputs
+
         data class SetEmail(val email: String) : Inputs
     }
 
@@ -21,5 +23,6 @@ object ReturnsContract : KoinComponent {
 
     data class Strings(
         val signUp: String,
+        val logout: String = getString(component.localization.Strings.Logout),
     )
 }

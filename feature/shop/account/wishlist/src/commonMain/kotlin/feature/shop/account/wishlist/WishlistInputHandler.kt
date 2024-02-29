@@ -17,6 +17,10 @@ internal class WishlistInputHandler :
     override suspend fun InputHandlerScope<WishlistContract.Inputs, WishlistContract.Events, WishlistContract.State>.handleInput(
         input: WishlistContract.Inputs,
     ) = when (input) {
+        is WishlistContract.Inputs.OnLogoutClicked -> {
+            authService.signOut()
+        }
+
         is WishlistContract.Inputs.SetEmail -> {}
     }
 }

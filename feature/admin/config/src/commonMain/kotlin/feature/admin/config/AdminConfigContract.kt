@@ -3,6 +3,7 @@ package feature.admin.config
 import component.localization.getString
 import data.GetConfigQuery
 import data.type.DayOfWeek
+import feature.admin.config.model.ImagePreview
 
 object AdminConfigContract {
     data class State(
@@ -39,17 +40,36 @@ object AdminConfigContract {
         val companyWebsiteError: String? = null,
         val openTimeError: String? = null,
         val closeTimeError: String? = null,
+
+        val isPreviewDialogOpen: Boolean = false,
+        val previewDialogImage: ImagePreview? = null,
+
+        val deleteImageDialogOpen: Boolean = false,
+        val deleteImageDialogImageId: String? = null,
+
+        val imageDropError: String? = null,
+        val isCollageImagesLoading: Boolean = false,
     )
 
     sealed interface Inputs {
         data object Init : Inputs
         data object FetchConfig : Inputs
+        data class UploadMedia(val imageId: String, val blob: String) : Inputs
 
         data object OnSaveClick : Inputs
         data object OnDiscardSaveClick : Inputs
         data class OnOpenDayFromSelected(val day: DayOfWeek) : Inputs
         data class OnOpenDayToSelected(val day: DayOfWeek) : Inputs
+        data class OnImageClick(val imagePreview: ImagePreview) : Inputs
+        data class OnImageDeleteClick(val imageId: String) : Inputs
+        data object OnImageDeleteYesClick : Inputs
+        data object OnImageDeleteNoClick : Inputs
+        data class OnCollageMediaDrop(val imageId: String, val blob: String) : Inputs
+        data class OnCollageItemTitleChanged(val imageId: String, val title: String) : Inputs
+        data class OnCollageItemDescriptionChanged(val imageId: String, val description: String) : Inputs
 
+        data class SetPreviewDialogOpen(val isOpen: Boolean) : Inputs
+        data class SetDeleteImageDialogOpen(val isOpen: Boolean) : Inputs
         data class SetLoading(val isLoading: Boolean) : Inputs
         data class SetOriginalConfig(val config: GetConfigQuery.GetConfig) : Inputs
         data class SetCurrentConfig(val config: GetConfigQuery.GetConfig) : Inputs
@@ -60,6 +80,9 @@ object AdminConfigContract {
         data class SetCloseTime(val closeTime: String) : Inputs
         data class SetCreatedAt(val createdAt: String) : Inputs
         data class SetUpdatedAt(val updatedAt: String) : Inputs
+        data class SetCollageImageDropError(val error: String?) : Inputs
+
+        data class SetCollageImagesLoading(val isLoading: Boolean) : Inputs
     }
 
     sealed interface Events {
@@ -88,5 +111,9 @@ object AdminConfigContract {
         val openTime: String = getString(component.localization.Strings.OpenTime),
         val closeTime: String = getString(component.localization.Strings.CloseTime),
         val landingPageSettings: String = getString(component.localization.Strings.LandingPageSettings),
+        val homePageSettings: String = getString(component.localization.Strings.HomePageSettings),
+        val collage: String = getString(component.localization.Strings.Collage),
+        val shopNow: String = getString(component.localization.Strings.ShopNow),
+        val deleteExplain: String = getString(component.localization.Strings.DeleteExplain),
     )
 }

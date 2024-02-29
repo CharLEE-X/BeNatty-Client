@@ -30,6 +30,7 @@ import feature.router.RouterViewModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.FlexWrap
 import org.jetbrains.compose.web.css.em
+import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.value
 import org.w3c.dom.url.URL
 import theme.MaterialTheme
@@ -179,7 +180,7 @@ fun AdminProductPagePage(
                     Media(
                         vm = vm,
                         state = state,
-                        onImageCLick = {
+                        onImageClick = {
                             previewDialogImage = it
                             previewDialogOpen = true
                         },
@@ -369,7 +370,7 @@ private fun Price(vm: AdminProductPageViewModel, state: AdminProductPageContract
 private fun Media(
     vm: AdminProductPageViewModel,
     state: AdminProductPageContract.State,
-    onImageCLick: (ProductGetByIdQuery.Medium) -> Unit,
+    onImageClick: (ProductGetByIdQuery.Medium) -> Unit,
     onImageDeleteClick: (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -408,8 +409,8 @@ private fun Media(
                 alt = image.altText,
                 errorText = null,
                 onFileDropped = {},
-                onImageClick = { onImageCLick(image) },
-                onDeleteClick = { onImageDeleteClick(image.id.toString()) },
+                onImageClick = { onImageClick(image) },
+                onDeleteClick = { onImageDeleteClick(image.id) }
             )
         }
         MediaSlot(
@@ -426,6 +427,7 @@ private fun Media(
             },
             onImageClick = {},
             onDeleteClick = {},
+            modifier = Modifier.size(200.px)
         )
     }
 }

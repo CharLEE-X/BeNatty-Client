@@ -1,5 +1,6 @@
 package feature.admin.config
 
+import com.apollographql.apollo3.api.Optional
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
@@ -7,6 +8,7 @@ import data.GetConfigQuery
 import data.service.ConfigService
 import data.type.CollageItemInput
 import data.type.DayOfWeek
+import data.type.MediaType
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -22,11 +24,28 @@ internal class AdminProductPageInputHandler :
     override suspend fun InputScope.handleInput(input: AdminConfigContract.Inputs) = when (input) {
         is AdminConfigContract.Inputs.Init -> handleInit()
         AdminConfigContract.Inputs.FetchConfig -> handleFetchConfig()
+        is AdminConfigContract.Inputs.UploadMedia -> handleUploadMedia(input.imageId, input.blob)
 
         AdminConfigContract.Inputs.OnDiscardSaveClick -> updateState { it.copy(current = it.original).wasEdited() }
         AdminConfigContract.Inputs.OnSaveClick -> handleSave()
         is AdminConfigContract.Inputs.OnOpenDayFromSelected -> handleOnOpenDayFromSelected(input.day)
         is AdminConfigContract.Inputs.OnOpenDayToSelected -> handleOnOpenDayToSelected(input.day)
+        is AdminConfigContract.Inputs.OnImageClick ->
+            updateState { it.copy(isPreviewDialogOpen = true, previewDialogImage = input.imagePreview) }
+
+        is AdminConfigContract.Inputs.OnImageDeleteClick ->
+            updateState { it.copy(deleteImageDialogOpen = true, deleteImageDialogImageId = input.imageId) }
+
+        AdminConfigContract.Inputs.OnImageDeleteYesClick -> handleOnImageDeleteYesClick()
+        AdminConfigContract.Inputs.OnImageDeleteNoClick ->
+            updateState { it.copy(deleteImageDialogOpen = false, deleteImageDialogImageId = null) }
+
+        is AdminConfigContract.Inputs.OnCollageMediaDrop -> handleOnCollageMediaDrop(input.imageId, input.blob)
+        is AdminConfigContract.Inputs.OnCollageItemTitleChanged ->
+            handleOnCollageItemTitleChanged(input.imageId, input.title)
+
+        is AdminConfigContract.Inputs.OnCollageItemDescriptionChanged ->
+            handleOnCollageItemDescriptionChanged(input.imageId, input.description)
 
         is AdminConfigContract.Inputs.SetLoading -> updateState { it.copy(isLoading = input.isLoading) }
         is AdminConfigContract.Inputs.SetOriginalConfig -> updateState { it.copy(original = input.config).wasEdited() }
@@ -38,6 +57,132 @@ internal class AdminProductPageInputHandler :
         is AdminConfigContract.Inputs.SetOpenTime -> handleSetOpenTime(input.openTime)
         is AdminConfigContract.Inputs.SetCreatedAt -> handleSetCreatedAt(input.createdAt)
         is AdminConfigContract.Inputs.SetUpdatedAt -> handleSetUpdatedAt(input.updatedAt)
+        is AdminConfigContract.Inputs.SetPreviewDialogOpen -> updateState { it.copy(isPreviewDialogOpen = input.isOpen) }
+        is AdminConfigContract.Inputs.SetCollageImageDropError -> updateState { it.copy(imageDropError = input.error) }
+        is AdminConfigContract.Inputs.SetDeleteImageDialogOpen ->
+            updateState { it.copy(deleteImageDialogOpen = input.isOpen) }
+
+        is AdminConfigContract.Inputs.SetCollageImagesLoading -> updateState { it.copy(isCollageImagesLoading = input.isLoading) }
+    }
+
+    private suspend fun InputScope.handleOnCollageItemDescriptionChanged(imageId: String, description: String) {
+        updateState {
+            val newCollageItems = it.current.landingConfig.collageItems
+                .toMutableList()
+            val index = newCollageItems.indexOfFirst { it.id == imageId }
+            val currentCollageItem = newCollageItems[index]
+
+            newCollageItems[index] = GetConfigQuery.CollageItem(
+                id = imageId,
+                title = currentCollageItem.title,
+                description = description,
+                imageUrl = currentCollageItem.imageUrl,
+                alt = currentCollageItem.alt,
+            )
+
+            it.copy(
+                current = it.current.copy(
+                    landingConfig = it.current.landingConfig.copy(
+                        collageItems = newCollageItems.toList()
+                    )
+                ),
+            ).wasEdited()
+        }
+    }
+
+    private suspend fun InputScope.handleOnCollageItemTitleChanged(imageId: String, title: String) {
+        updateState {
+            val newCollageItems = it.current.landingConfig.collageItems
+                .toMutableList()
+            val index = newCollageItems.indexOfFirst { it.id == imageId }
+            val currentCollageItem = newCollageItems[index]
+
+            newCollageItems[index] = GetConfigQuery.CollageItem(
+                id = imageId,
+                title = title,
+                description = currentCollageItem.description,
+                imageUrl = currentCollageItem.imageUrl,
+                alt = currentCollageItem.alt,
+            )
+
+            it.copy(
+                current = it.current.copy(
+                    landingConfig = it.current.landingConfig.copy(
+                        collageItems = newCollageItems.toList()
+                    )
+                ),
+            ).wasEdited()
+        }
+    }
+
+    private suspend fun InputScope.handleUploadMedia(imageId: String, blob: String) {
+        val state = getCurrentState()
+        sideJob("handleSaveDetailsUploadImage") {
+            postInput(AdminConfigContract.Inputs.SetCollageImageDropError(error = null))
+            postInput(AdminConfigContract.Inputs.SetCollageImagesLoading(isLoading = true))
+            val mediaType = MediaType.Image // TODO: Support more media types
+            configService.uploadCollageImage(
+                configId = state.current.id,
+                imageId = imageId,
+                blob = blob,
+                mediaType = mediaType,
+            ).fold(
+                onSuccess = { data ->
+                    val media = data.uploadConfigCollageImage.collageItems.map {
+                        GetConfigQuery.CollageItem(
+                            id = it.id,
+                            imageUrl = it.imageUrl,
+                            title = it.title,
+                            description = it.description,
+                            alt = it.alt,
+                        )
+                    }
+                    val config = state.current.copy(
+                        landingConfig = state.current.landingConfig.copy(collageItems = media)
+                    )
+                    postInput(AdminConfigContract.Inputs.SetOriginalConfig(config))
+                    postInput(AdminConfigContract.Inputs.SetCurrentConfig(config))
+                },
+                onFailure = {
+                    postEvent(AdminConfigContract.Events.OnError(it.message ?: "Error while uploading image"))
+                },
+            )
+            postInput(AdminConfigContract.Inputs.SetCollageImagesLoading(isLoading = false))
+        }
+    }
+
+    private suspend fun InputScope.handleOnCollageMediaDrop(imageId: String, blob: String) {
+        sideJob("handleAddMedia") {
+            postInput(AdminConfigContract.Inputs.UploadMedia(imageId, blob))
+        }
+    }
+
+    private suspend fun InputScope.handleOnImageDeleteYesClick() {
+        updateState { state ->
+            val imageId = state.deleteImageDialogImageId ?: return@updateState state
+
+            val newCollageItems = state.current.landingConfig.collageItems
+                .toMutableList()
+            val index = newCollageItems.indexOfFirst { it.id == imageId }
+
+            newCollageItems[index] = GetConfigQuery.CollageItem(
+                id = imageId,
+                title = null,
+                description = null,
+                imageUrl = null,
+                alt = null,
+            )
+
+            state.copy(
+                deleteImageDialogOpen = false,
+                deleteImageDialogImageId = null,
+                current = state.current.copy(
+                    landingConfig = state.current.landingConfig.copy(
+                        collageItems = newCollageItems.toList()
+                    )
+                ),
+            ).wasEdited()
+        }
     }
 
     private suspend fun InputScope.handleOnOpenDayFromSelected(day: DayOfWeek) {
@@ -181,10 +326,10 @@ internal class AdminProductPageInputHandler :
                         current.landingConfig.collageItems.map {
                             CollageItemInput(
                                 id = it.id,
-                                title = it.title,
-                                description = it.description,
-                                imageUrl = it.imageUrl,
-                                alt = it.alt,
+                                title = Optional.present(it.title),
+                                description = Optional.present(it.description),
+                                imageUrl = Optional.present(it.imageUrl),
+                                alt = Optional.present(it.alt),
                             )
                         } else null,
                 ).fold(

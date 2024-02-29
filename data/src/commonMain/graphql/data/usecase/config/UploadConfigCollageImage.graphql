@@ -1,0 +1,11 @@
+mutation UploadConfigCollageImage($input: ConfigCollageMediaUploadInput!) {
+  uploadConfigCollageImage(input: $input) {
+    collageItems {
+      alt
+      description
+      id
+      imageUrl
+      title
+    }
+  }
+}

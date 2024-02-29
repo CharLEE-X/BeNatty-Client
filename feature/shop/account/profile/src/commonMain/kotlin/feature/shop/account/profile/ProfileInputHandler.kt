@@ -72,6 +72,10 @@ internal class ProfileInputHandler :
 
         ProfileContract.Inputs.SetPersonalDetailsNotEditable ->
             updateState { it.copy(isPersonalDetailsEditing = false) }
+
+        ProfileContract.Inputs.OnLogoutClicked -> {
+            authService.signOut()
+        }
     }
 
     private suspend fun InputScope.handleSetAddressNotEditable() {

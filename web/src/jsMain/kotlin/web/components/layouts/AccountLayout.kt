@@ -44,6 +44,8 @@ import theme.MaterialTheme
 @Composable
 fun AccountLayout(
     item: DesktopNavContract.AccountMenuItem,
+    logoutText: String,
+    onLogoutClicked: () -> Unit,
     onMenuItemClicked: (DesktopNavContract.AccountMenuItem) -> Unit,
     content: @Composable () -> Unit,
 ) {
@@ -58,6 +60,8 @@ fun AccountLayout(
         ) {
             MenuItems(
                 initialItem = item,
+                logoutText = logoutText,
+                onLogoutClicked = onLogoutClicked,
                 onMenuItemClicked = onMenuItemClicked,
                 modifier = Modifier.width(15.em)
             )
@@ -77,7 +81,9 @@ fun AccountLayout(
 private fun MenuItems(
     modifier: Modifier,
     initialItem: DesktopNavContract.AccountMenuItem,
+    logoutText: String,
     onMenuItemClicked: (DesktopNavContract.AccountMenuItem) -> Unit,
+    onLogoutClicked: () -> Unit,
 ) {
     val items = DesktopNavContract.AccountMenuItem.entries
         .filter { it != DesktopNavContract.AccountMenuItem.LOGOUT }
@@ -97,28 +103,50 @@ private fun MenuItems(
                 }
             )
         }
+        SideNavMainItem(
+            label = logoutText,
+            isCurrent = false,
+            isLogout = true,
+            onMenuItemClicked = { onLogoutClicked() }
+        )
     }
 }
 
 @Composable
 fun SideNavMainItem(
     label: String,
+    isLogout: Boolean = false,
     isCurrent: Boolean,
     icon: @Composable (() -> Unit)? = null,
     onMenuItemClicked: () -> Unit,
 ) {
     var hovered by remember { mutableStateOf(false) }
-    val bgColor = when {
-        isCurrent && hovered -> MaterialTheme.colors.primaryContainer.value()
-        isCurrent && !hovered -> MaterialTheme.colors.primary.value()
-        !isCurrent && hovered -> MaterialTheme.colors.surfaceContainerLow.value()
-        else -> Colors.Transparent
+    val bgColor = if (isLogout) {
+        when {
+            hovered -> MaterialTheme.colors.errorContainer.value()
+            else -> Colors.Transparent
+        }
+    } else {
+        when {
+            isCurrent && hovered -> MaterialTheme.colors.primaryContainer.value()
+            isCurrent && !hovered -> MaterialTheme.colors.primary.value()
+            !isCurrent && hovered -> MaterialTheme.colors.surfaceContainerLow.value()
+            else -> Colors.Transparent
+        }
     }
-    val contentColor = when {
-        isCurrent && hovered -> MaterialTheme.colors.onPrimaryContainer.value()
-        isCurrent && !hovered -> MaterialTheme.colors.onPrimary.value()
-        !isCurrent && hovered -> MaterialTheme.colors.onSurface.value()
-        else -> MaterialTheme.colors.onSurface.value()
+
+    val contentColor = if (isLogout) {
+        when {
+            hovered -> MaterialTheme.colors.onErrorContainer.value()
+            else -> MaterialTheme.colors.error.value()
+        }
+    } else {
+        when {
+            isCurrent && hovered -> MaterialTheme.colors.onPrimaryContainer.value()
+            isCurrent && !hovered -> MaterialTheme.colors.onPrimary.value()
+            !isCurrent && hovered -> MaterialTheme.colors.onSurface.value()
+            else -> MaterialTheme.colors.onSurface.value()
+        }
     }
 
     Row(

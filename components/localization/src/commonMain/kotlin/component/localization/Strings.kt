@@ -252,4 +252,6 @@ enum class Strings {
     ImageUrl,
     CompanyWebsite,
     LandingPageSettings,
+    HomePageSettings,
+    Collage,
 }

@@ -22,8 +22,10 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPhone
 import feature.shop.account.profile.ProfileContract
 import feature.shop.account.profile.ProfileViewModel
+import feature.shop.navbar.DesktopNavContract
 import org.jetbrains.compose.web.attributes.AutoComplete
 import org.jetbrains.compose.web.css.em
+import web.components.layouts.AccountLayout
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.EditCancelButton
 import web.components.widgets.PageHeader
@@ -35,6 +37,7 @@ import web.compose.material3.component.TextFieldType
 @Composable
 fun ProfilePage(
     onError: suspend (String) -> Unit,
+    onMenuItemClicked: (DesktopNavContract.AccountMenuItem) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -45,12 +48,19 @@ fun ProfilePage(
     }
     val state by vm.observeStates().collectAsState()
 
-    PageHeader(state.strings.profile)
-    PersonalDetails(vm, state)
-    Divider(modifier = Modifier.margin(topBottom = 1.em))
-    Password(vm, state)
-    Divider(modifier = Modifier.margin(topBottom = 1.em))
-    Address(vm, state)
+    AccountLayout(
+        item = DesktopNavContract.AccountMenuItem.PROFILE,
+        logoutText = state.strings.logout,
+        onLogoutClicked = { vm.trySend(ProfileContract.Inputs.OnLogoutClicked) },
+        onMenuItemClicked = onMenuItemClicked,
+    ) {
+        PageHeader(state.strings.profile)
+        PersonalDetails(vm, state)
+        Divider(modifier = Modifier.margin(topBottom = 1.em))
+        Password(vm, state)
+        Divider(modifier = Modifier.margin(topBottom = 1.em))
+        Address(vm, state)
+    }
 }
 
 @Composable

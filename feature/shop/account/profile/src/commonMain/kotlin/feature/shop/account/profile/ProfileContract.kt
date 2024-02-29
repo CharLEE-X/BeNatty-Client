@@ -99,6 +99,7 @@ object ProfileContract {
     sealed interface Inputs {
         data object GetUserProfile : Inputs
         data class SetUserProfile(val user: GetCustomerQuery.GetCustomer) : Inputs
+        data object OnLogoutClicked : Inputs
 
         data class SetDetailsFullName(val fullName: String) : Inputs
         data class SetFullNameShake(val shake: Boolean) : Inputs
@@ -157,5 +158,7 @@ object ProfileContract {
         val apartment: String = getString(component.localization.Strings.Apartment),
         val country: String = getString(component.localization.Strings.Country),
         val password: String = getString(component.localization.Strings.Password),
-    )
+        val logout: String = getString(component.localization.Strings.Logout),
+    ) {
+    }
 }

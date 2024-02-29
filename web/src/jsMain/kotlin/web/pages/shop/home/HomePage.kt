@@ -45,8 +45,9 @@ fun HomeContent(
         ) {
             Collage(
                 modifier = Modifier.fillMaxWidth(),
-                vm = vm,
-                state = state
+                items = state.collageItems,
+                shopNowText = state.strings.shopNow,
+                onCollageItemClick = { vm.trySend(HomeContract.Inputs.OnCollageItemClick(it)) },
             )
 
             HomeSubscribe(
