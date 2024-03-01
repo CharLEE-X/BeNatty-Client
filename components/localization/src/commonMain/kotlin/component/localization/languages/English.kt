@@ -37,7 +37,6 @@ internal fun englishLanguage(
     Strings.PromoText -> "Free shipping on orders over £50"
     Strings.HelpAndFaq -> "Help & FAQ"
     Strings.CurrencyEnUs -> "EN, $"
-    Strings.Subscribe -> "Subscribe to be first to know about our special offers"
     Strings.AboutUsSmall -> "About us"
     Strings.AboutUs -> "About Us"
     Strings.ContactUs -> "Contact Us"
@@ -97,5 +96,7 @@ internal fun englishLanguage(
     Strings.ShippingReturns -> "Shipping & Returns"
     Strings.WeWillReply -> "We'll reply ASAP."
     Strings.HeightDesc -> "The height of the product in the store's current units."
+    Strings.BeFirstToGetLatestOffers -> "Be the first to get the latest news about trends, promotions and much more!"
+    Strings.ByAgreeing -> "By clicking the button you agree to the"
     else -> key.name.enumCapitalized()
 }

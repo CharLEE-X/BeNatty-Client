@@ -11,29 +11,8 @@ object AdminConfigContract {
         val isLoading: Boolean = false,
         val wasEdited: Boolean = false,
 
-        val original: GetConfigQuery.GetConfig = GetConfigQuery.GetConfig(
-            id = "",
-            createdAt = "",
-            updatedAt = "",
-            companyInfo = GetConfigQuery.CompanyInfo(
-                contactInfo = GetConfigQuery.ContactInfo(
-                    email = null,
-                    phone = null,
-                    companyWebsite = null,
-                ),
-                openingTimes = GetConfigQuery.OpeningTimes(
-                    dayFrom = null,
-                    dayTo = null,
-                    open = null,
-                    close = null,
-                ),
-            ),
-            landingConfig = GetConfigQuery.LandingConfig(
-                collageItems = listOf(),
-            ),
-        ),
-
-        val current: GetConfigQuery.GetConfig = original,
+        val original: GetConfigQuery.GetConfig? = null,
+        val current: GetConfigQuery.GetConfig? = null,
 
         val emailError: String? = null,
         val phoneError: String? = null,
@@ -96,7 +75,7 @@ object AdminConfigContract {
         val dismiss: String = getString(component.localization.Strings.Dismiss),
         val shopSettings: String = getString(component.localization.Strings.ShopSettings),
         val createdAt: String = getString(component.localization.Strings.CreatedAt),
-        val lastUpdatedAt: String = getString(component.localization.Strings.LastUpdatedAt),
+        val updatedAt: String = getString(component.localization.Strings.LastUpdatedAt),
         val unsavedChanges: String = getString(component.localization.Strings.UnsavedChanges),
         val saveChanges: String = getString(component.localization.Strings.SaveChanges),
         val info: String = getString(component.localization.Strings.Info),

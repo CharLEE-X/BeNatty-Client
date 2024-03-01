@@ -19,7 +19,7 @@ import feature.router.Screen
 import feature.router.idPath
 import feature.shop.navbar.DesktopNavContract
 import web.components.layouts.AdminRoutes
-import web.components.layouts.MainParams
+import web.components.layouts.MainRoutes
 import web.pages.admin.category.AdminCategoryListPage
 import web.pages.admin.category.AdminCategoryPage
 import web.pages.admin.config.AdminConfigPage
@@ -91,7 +91,7 @@ fun RouterContent(
     val goToShopHome: () -> Unit = { router.trySend(GoToDestination(Screen.Home.route)) }
     val goToAdminHome: () -> Unit = { router.trySend(GoToDestination(Screen.AdminHome.route)) }
     val goToLogin: () -> Unit = { router.trySend(GoToDestination(Screen.Login.route)) }
-    val mainParams = MainParams(
+    val mainRoutes = MainRoutes(
         goToHome = goToShopHome,
         goToLogin = { router.trySend(GoToDestination(Screen.Login.route)) },
         goToOrders = { router.trySend(GoToDestination(Screen.Order.route)) },
@@ -128,8 +128,7 @@ fun RouterContent(
         route = { screen: Screen ->
             when (screen) {
                 Screen.Home -> HomeContent(
-                    mainParams = mainParams,
-                    goToCatalogue = { router.trySend(GoToDestination(Screen.Catalogue.route)) },
+                    mainRoutes = mainRoutes,
                 )
 
                 Screen.Login -> LoginPage(
@@ -143,20 +142,20 @@ fun RouterContent(
                 )
 
                 Screen.ForgotPassword -> ForgotPasswordPage(
-                    mainParams = mainParams,
+                    mainRoutes = mainRoutes,
                     goToLogin = goToLogin,
                 )
 
                 Screen.UpdatePassword -> authenticatedRoute {
                     UpdatePasswordPage(
-                        mainParams = mainParams,
+                        mainRoutes = mainRoutes,
                         goToLogin = goToLogin,
                     )
                 }
 
                 Screen.Catalogue ->
                     CataloguePage(
-                        mainParams = mainParams,
+                        mainRoutes = mainRoutes,
                         goToProduct = { router.trySend(GoToDestination(Screen.Product.idPath(it))) },
                     )
 

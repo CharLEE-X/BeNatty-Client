@@ -27,6 +27,8 @@ internal class HomeInputHandler :
         is HomeContract.Inputs.FetchProducts -> handleFetchProducts()
 
         is HomeContract.Inputs.OnCollageItemClick -> handleCollageItemClick(input.item)
+        HomeContract.Inputs.OnPrivacyPolicyClick -> postEvent(HomeContract.Events.GoToPrivacyPolicy)
+        HomeContract.Inputs.OnTermsOfServiceClick -> postEvent(HomeContract.Events.GoToTermsOfService)
 
         is HomeContract.Inputs.SetCollageItems -> updateState { it.copy(collageItems = input.items) }
         is HomeContract.Inputs.SetIsLoading -> updateState { it.copy(isLoading = input.isLoading) }
@@ -95,6 +97,7 @@ internal class HomeInputHandler :
             postInput(HomeContract.Inputs.SetIsLoading(isLoading = false))
         }
     }
+
     private fun InputScope.handleOnEmailSend() {
         noOp()
     }

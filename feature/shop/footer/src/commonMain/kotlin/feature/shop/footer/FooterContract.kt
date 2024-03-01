@@ -2,8 +2,7 @@ package feature.shop.footer
 
 import component.localization.getString
 import core.util.currentYear
-import feature.shop.footer.model.ContactInfo
-import feature.shop.footer.model.OpeningTimes
+import data.GetConfigQuery
 import feature.shop.footer.model.PaymentMethod
 import feature.shop.footer.model.dummyPaymentMethods
 import org.koin.core.component.KoinComponent
@@ -13,9 +12,6 @@ object FooterContract : KoinComponent {
         val strings: Strings = Strings(),
         val isLoading: Boolean = false,
         val isAdmin: Boolean = false,
-        val showCareer: Boolean = false,
-        val showCyberSecurity: Boolean = false,
-        val showPress: Boolean = false,
         val year: Int = currentYear(),
 
         val currentCountryText: String = strings.unitedKingdom,
@@ -24,21 +20,15 @@ object FooterContract : KoinComponent {
         val languageImageUrl: String = "https://m.media-amazon.com/images/I/61msrRHflnL._AC_SL1500_.jpg",
 
         val paymentMethods: List<PaymentMethod> = dummyPaymentMethods,
-        val openingTimes: OpeningTimes = OpeningTimes(
-            dayFrom = "Monday",
-            dayTo = "Friday",
-            open = "9:00",
-            close = "18:00",
-        ),
-        val contactInfo: ContactInfo = ContactInfo(
-            companyWebsite = "https://charleex.com",
-            email = "contact@${strings.companyName}.com",
-            phone = "+44 123 456 7890",
-        ),
+
+        val companyInfo: GetConfigQuery.CompanyInfo? = null,
+        val footerConfig: GetConfigQuery.FooterConfig? = null,
     )
 
     sealed interface Inputs {
         data object Init : Inputs
+        data object CheckUserRole : Inputs
+        data object GetConfig : Inputs
 
         data object OnPrivacyPolicyClicked : Inputs
         data object OnTermsOfServiceClicked : Inputs
@@ -56,6 +46,10 @@ object FooterContract : KoinComponent {
         data object OnLanguageClick : Inputs
         data object OnGoToAdminHome : Inputs
         data object OnCompanyNameClick : Inputs
+        data object OnTickerClick : Inputs
+
+        data class SetCompanyInfo(val companyInfo: GetConfigQuery.CompanyInfo) : Inputs
+        data class SetFooterConfig(val footerConfig: GetConfigQuery.FooterConfig) : Inputs
     }
 
     sealed interface Events {
@@ -74,6 +68,7 @@ object FooterContract : KoinComponent {
         data object GoToPress : Events
         data object GoToAdminHome : Events
         data class GoToCompanyWebsite(val url: String) : Events
+        data object GoToCatalogue : Events
     }
 
     data class Strings(
@@ -107,6 +102,7 @@ object FooterContract : KoinComponent {
         val tel: String = getString(component.localization.Strings.Tel),
         val sendEmail: String = getString(component.localization.Strings.SendEmail),
         val weWillReply: String = getString(component.localization.Strings.WeWillReply),
+        val ticker: String = getString(component.localization.Strings.Ticker),
     ) {
     }
 }
@@ -125,4 +121,5 @@ data class FooterRoutes(
     val goToTermsOfService: () -> Unit,
     val goToTrackOrder: () -> Unit,
     val goToAdminHome: () -> Unit,
+    val goToCatalogue: () -> Unit,
 )

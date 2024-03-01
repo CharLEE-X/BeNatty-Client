@@ -5,6 +5,7 @@ mutation LandingConfigAddCollageItem($configId: String!, $input: CollageItemCrea
     updatedAt
     companyInfo {
       contactInfo {
+        companyName
         companyWebsite
         email
         phone
@@ -15,6 +16,11 @@ mutation LandingConfigAddCollageItem($configId: String!, $input: CollageItemCrea
         dayTo
         open
       }
+    }
+    footerConfig {
+      showCareer
+      showCyberSecurity
+      showPress
     }
     landingConfig {
       collageItems {

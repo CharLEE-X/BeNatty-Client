@@ -3,6 +3,7 @@ package feature.shop.footer
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import data.service.AuthService
+import data.service.ConfigService
 import data.type.Role
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -14,12 +15,16 @@ internal class FooterInputHandler :
     KoinComponent,
     InputHandler<FooterContract.Inputs, FooterContract.Events, FooterContract.State> {
 
-    private val authService by inject<AuthService>()
+    private val authService: AuthService by inject()
+    private val configService: ConfigService by inject()
 
     override suspend fun InputHandlerScope<FooterContract.Inputs, FooterContract.Events, FooterContract.State>.handleInput(
         input: FooterContract.Inputs,
     ) = when (input) {
         FooterContract.Inputs.Init -> handleInit()
+        FooterContract.Inputs.GetConfig -> handleFetchConfig()
+        FooterContract.Inputs.CheckUserRole -> handleCheckUserRole()
+
         FooterContract.Inputs.OnAccessibilityClicked -> postEvent(FooterContract.Events.GoToAccessibility)
         FooterContract.Inputs.OnPrivacyPolicyClicked -> postEvent(FooterContract.Events.GoToPrivacyPolicy)
         FooterContract.Inputs.OnTermsOfServiceClicked -> postEvent(FooterContract.Events.GoToTermsOfService)
@@ -36,19 +41,49 @@ internal class FooterInputHandler :
         FooterContract.Inputs.OnCompanyNameClick -> handleCompanyNameClick()
         FooterContract.Inputs.OnCurrencyClick -> noOp()
         FooterContract.Inputs.OnLanguageClick -> noOp()
+        FooterContract.Inputs.OnTickerClick -> postEvent(FooterContract.Events.GoToCatalogue)
+
+        is FooterContract.Inputs.SetCompanyInfo -> updateState { it.copy(companyInfo = input.companyInfo) }
+        is FooterContract.Inputs.SetFooterConfig -> updateState { it.copy(footerConfig = input.footerConfig) }
     }
 
-    private suspend fun InputScope.handleCompanyNameClick() {
-        val url = getCurrentState().contactInfo.companyWebsite
-        postEvent(FooterContract.Events.GoToCompanyWebsite(url))
-    }
-
-    private suspend fun InputScope.handleInit() {
+    private suspend fun InputScope.handleCheckUserRole() {
         val userRole = authService.userRole
         updateState {
             it.copy(
                 isAdmin = userRole == Role.Admin,
             )
+        }
+    }
+
+    private suspend fun InputScope.handleFetchConfig() {
+        sideJob("handleFetchConfig") {
+            configService.config().fold(
+                onSuccess = {
+                    postInput(FooterContract.Inputs.SetCompanyInfo(companyInfo = it.getConfig.companyInfo))
+                    postInput(FooterContract.Inputs.SetFooterConfig(footerConfig = it.getConfig.footerConfig))
+                },
+                onFailure = {
+                    postEvent(
+                        FooterContract.Events.OnError(
+                            it.message ?: "Error while fetching product details"
+                        )
+                    )
+                },
+            )
+        }
+    }
+
+    private suspend fun InputScope.handleCompanyNameClick() {
+        getCurrentState().companyInfo?.contactInfo?.companyWebsite?.let { url ->
+            postEvent(FooterContract.Events.GoToCompanyWebsite(url))
+        } ?: noOp()
+    }
+
+    private suspend fun InputScope.handleInit() {
+        sideJob("handleInit") {
+            postInput(FooterContract.Inputs.CheckUserRole)
+            postInput(FooterContract.Inputs.GetConfig)
         }
     }
 }

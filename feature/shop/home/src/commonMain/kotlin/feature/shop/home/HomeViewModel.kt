@@ -14,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 class HomeViewModel(
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
+    homeRoutes: HomeRoutes,
 ) : BasicViewModel<
     HomeContract.Inputs,
     HomeContract.Events,
@@ -38,6 +39,7 @@ class HomeViewModel(
         .build(),
     eventHandler = HomeEventHandler(
         onError = onError,
+        homeRoutes = homeRoutes,
     ),
     coroutineScope = scope,
 ) {

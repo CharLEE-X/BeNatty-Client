@@ -5,6 +5,7 @@ mutation LandingConfigRemoveCollageItem($configId: String!, $collageItemId: Stri
     updatedAt
     companyInfo {
       contactInfo {
+        companyName
         companyWebsite
         email
         phone
@@ -15,6 +16,11 @@ mutation LandingConfigRemoveCollageItem($configId: String!, $collageItemId: Stri
         dayTo
         open
       }
+    }
+    footerConfig {
+      showCareer
+      showCyberSecurity
+      showPress
     }
     landingConfig {
       collageItems {

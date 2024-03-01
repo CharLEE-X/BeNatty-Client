@@ -14,7 +14,7 @@ import org.koin.core.component.inject
 
 private typealias InputScope = InputHandlerScope<AdminConfigContract.Inputs, AdminConfigContract.Events, AdminConfigContract.State>
 
-internal class AdminProductPageInputHandler :
+internal class AdminConfigInputHandler :
     KoinComponent,
     InputHandler<AdminConfigContract.Inputs, AdminConfigContract.Events, AdminConfigContract.State> {
 
@@ -67,88 +67,92 @@ internal class AdminProductPageInputHandler :
 
     private suspend fun InputScope.handleOnCollageItemDescriptionChanged(imageId: String, description: String) {
         updateState {
-            val newCollageItems = it.current.landingConfig.collageItems
-                .toMutableList()
-            val index = newCollageItems.indexOfFirst { it.id == imageId }
-            val currentCollageItem = newCollageItems[index]
+            it.current?.landingConfig?.collageItems?.let { collageItems ->
+                val newCollageItems = collageItems.toMutableList()
+                val index = newCollageItems.indexOfFirst { it.id == imageId }
+                val currentCollageItem = newCollageItems[index]
 
-            newCollageItems[index] = GetConfigQuery.CollageItem(
-                id = imageId,
-                title = currentCollageItem.title,
-                description = description,
-                imageUrl = currentCollageItem.imageUrl,
-                alt = currentCollageItem.alt,
-            )
+                newCollageItems[index] = GetConfigQuery.CollageItem(
+                    id = imageId,
+                    title = currentCollageItem.title,
+                    description = description,
+                    imageUrl = currentCollageItem.imageUrl,
+                    alt = currentCollageItem.alt,
+                )
 
-            it.copy(
-                current = it.current.copy(
-                    landingConfig = it.current.landingConfig.copy(
-                        collageItems = newCollageItems.toList()
-                    )
-                ),
-            ).wasEdited()
+                it.copy(
+                    current = it.current.copy(
+                        landingConfig = it.current.landingConfig.copy(
+                            collageItems = newCollageItems.toList()
+                        )
+                    ),
+                ).wasEdited()
+            } ?: it
         }
     }
 
     private suspend fun InputScope.handleOnCollageItemTitleChanged(imageId: String, title: String) {
         updateState {
-            val newCollageItems = it.current.landingConfig.collageItems
-                .toMutableList()
-            val index = newCollageItems.indexOfFirst { it.id == imageId }
-            val currentCollageItem = newCollageItems[index]
+            it.current?.landingConfig?.collageItems?.let { collageItems ->
+                val newCollageItems = collageItems.toMutableList()
+                val index = newCollageItems.indexOfFirst { it.id == imageId }
+                val currentCollageItem = newCollageItems[index]
 
-            newCollageItems[index] = GetConfigQuery.CollageItem(
-                id = imageId,
-                title = title,
-                description = currentCollageItem.description,
-                imageUrl = currentCollageItem.imageUrl,
-                alt = currentCollageItem.alt,
-            )
+                newCollageItems[index] = GetConfigQuery.CollageItem(
+                    id = imageId,
+                    title = title,
+                    description = currentCollageItem.description,
+                    imageUrl = currentCollageItem.imageUrl,
+                    alt = currentCollageItem.alt,
+                )
 
-            it.copy(
-                current = it.current.copy(
-                    landingConfig = it.current.landingConfig.copy(
-                        collageItems = newCollageItems.toList()
-                    )
-                ),
-            ).wasEdited()
+                it.copy(
+                    current = it.current.copy(
+                        landingConfig = it.current.landingConfig.copy(
+                            collageItems = newCollageItems.toList()
+                        )
+                    ),
+                ).wasEdited()
+            } ?: it
         }
     }
 
     private suspend fun InputScope.handleUploadMedia(imageId: String, blob: String) {
         val state = getCurrentState()
-        sideJob("handleSaveDetailsUploadImage") {
-            postInput(AdminConfigContract.Inputs.SetCollageImageDropError(error = null))
-            postInput(AdminConfigContract.Inputs.SetCollageImagesLoading(isLoading = true))
-            val mediaType = MediaType.Image // TODO: Support more media types
-            configService.uploadCollageImage(
-                configId = state.current.id,
-                imageId = imageId,
-                blob = blob,
-                mediaType = mediaType,
-            ).fold(
-                onSuccess = { data ->
-                    val media = data.uploadConfigCollageImage.collageItems.map {
-                        GetConfigQuery.CollageItem(
-                            id = it.id,
-                            imageUrl = it.imageUrl,
-                            title = it.title,
-                            description = it.description,
-                            alt = it.alt,
+        state.current?.id?.let { id ->
+            sideJob("handleSaveDetailsUploadImage") {
+                postInput(AdminConfigContract.Inputs.SetCollageImageDropError(error = null))
+                postInput(AdminConfigContract.Inputs.SetCollageImagesLoading(isLoading = true))
+                val mediaType = MediaType.Image // TODO: Support more media types
+                configService.uploadCollageImage(
+                    configId = id,
+                    imageId = imageId,
+                    blob = blob,
+                    mediaType = mediaType,
+                ).fold(
+                    onSuccess = { data ->
+                        val media = data.uploadConfigCollageImage.collageItems.map {
+                            GetConfigQuery.CollageItem(
+                                id = it.id,
+                                imageUrl = it.imageUrl,
+                                title = it.title,
+                                description = it.description,
+                                alt = it.alt,
+                            )
+                        }
+                        val config = state.current.copy(
+                            landingConfig = state.current.landingConfig.copy(collageItems = media)
                         )
-                    }
-                    val config = state.current.copy(
-                        landingConfig = state.current.landingConfig.copy(collageItems = media)
-                    )
-                    postInput(AdminConfigContract.Inputs.SetOriginalConfig(config))
-                    postInput(AdminConfigContract.Inputs.SetCurrentConfig(config))
-                },
-                onFailure = {
-                    postEvent(AdminConfigContract.Events.OnError(it.message ?: "Error while uploading image"))
-                },
-            )
-            postInput(AdminConfigContract.Inputs.SetCollageImagesLoading(isLoading = false))
-        }
+                        postInput(AdminConfigContract.Inputs.SetOriginalConfig(config))
+                        postInput(AdminConfigContract.Inputs.SetCurrentConfig(config))
+                    },
+                    onFailure = {
+                        postEvent(AdminConfigContract.Events.OnError(it.message ?: "Error while uploading image"))
+                    },
+                )
+                postInput(AdminConfigContract.Inputs.SetCollageImagesLoading(isLoading = false))
+            }
+        } ?: noOp()
     }
 
     private suspend fun InputScope.handleOnCollageMediaDrop(imageId: String, blob: String) {
@@ -161,34 +165,28 @@ internal class AdminProductPageInputHandler :
         updateState { state ->
             val imageId = state.deleteImageDialogImageId ?: return@updateState state
 
-            val newCollageItems = state.current.landingConfig.collageItems
-                .toMutableList()
-            val index = newCollageItems.indexOfFirst { it.id == imageId }
+            state.current?.landingConfig?.collageItems?.let { collageItems ->
+                val newCollageItems = collageItems.toMutableList()
+                val index = newCollageItems.indexOfFirst { it.id == imageId }
+                newCollageItems.removeAt(index)
 
-            newCollageItems[index] = GetConfigQuery.CollageItem(
-                id = imageId,
-                title = null,
-                description = null,
-                imageUrl = null,
-                alt = null,
-            )
-
-            state.copy(
-                deleteImageDialogOpen = false,
-                deleteImageDialogImageId = null,
-                current = state.current.copy(
-                    landingConfig = state.current.landingConfig.copy(
-                        collageItems = newCollageItems.toList()
-                    )
-                ),
-            ).wasEdited()
+                state.copy(
+                    deleteImageDialogOpen = false,
+                    deleteImageDialogImageId = null,
+                    current = state.current?.copy(
+                        landingConfig = state.current.landingConfig.copy(
+                            collageItems = newCollageItems.toList()
+                        )
+                    ),
+                ).wasEdited()
+            } ?: state
         }
     }
 
     private suspend fun InputScope.handleOnOpenDayFromSelected(day: DayOfWeek) {
         updateState {
             it.copy(
-                current = it.current.copy(
+                current = it.current?.copy(
                     companyInfo = it.current.companyInfo.copy(
                         openingTimes = it.current.companyInfo.openingTimes.copy(
                             dayFrom = if (it.current.companyInfo.openingTimes.dayTo == day) null else day
@@ -202,7 +200,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleOnOpenDayToSelected(day: DayOfWeek) {
         updateState {
             it.copy(
-                current = it.current.copy(
+                current = it.current?.copy(
                     companyInfo = it.current.companyInfo.copy(
                         openingTimes = it.current.companyInfo.openingTimes.copy(
                             dayTo = if (it.current.companyInfo.openingTimes.dayFrom == day) null else day
@@ -217,7 +215,7 @@ internal class AdminProductPageInputHandler :
         updateState {
             val isValidated = inputValidator.validateText(companyWebsite)
             it.copy(
-                current = it.current.copy(
+                current = it.current?.copy(
                     companyInfo = it.current.companyInfo.copy(
                         contactInfo = it.current.companyInfo.contactInfo.copy(companyWebsite = companyWebsite)
                     )
@@ -237,7 +235,7 @@ internal class AdminProductPageInputHandler :
 
     private suspend fun InputScope.handleFetchConfig() {
         sideJob("handleFetchConfig") {
-            configService.getConfig().fold(
+            configService.config().fold(
                 onSuccess = {
                     postInput(AdminConfigContract.Inputs.SetOriginalConfig(config = it.getConfig))
                     postInput(AdminConfigContract.Inputs.SetCurrentConfig(config = it.getConfig))
@@ -257,7 +255,7 @@ internal class AdminProductPageInputHandler :
         updateState {
             val isValidated = inputValidator.validateText(closeTime)
             it.copy(
-                current = it.current.copy(
+                current = it.current?.copy(
                     companyInfo = it.current.companyInfo.copy(
                         openingTimes = it.current.companyInfo.openingTimes.copy(close = closeTime)
                     )
@@ -271,7 +269,7 @@ internal class AdminProductPageInputHandler :
         updateState {
             val isValidated = inputValidator.validateText(openTime)
             it.copy(
-                current = it.current.copy(
+                current = it.current?.copy(
                     companyInfo = it.current.companyInfo.copy(
                         openingTimes = it.current.companyInfo.openingTimes.copy(open = openTime)
                     )
@@ -285,7 +283,7 @@ internal class AdminProductPageInputHandler :
         updateState {
             val isValidated = inputValidator.validateText(phone)
             it.copy(
-                current = it.current.copy(
+                current = it.current?.copy(
                     companyInfo = it.current.companyInfo.copy(
                         contactInfo = it.current.companyInfo.contactInfo.copy(phone = phone)
                     )
@@ -296,84 +294,106 @@ internal class AdminProductPageInputHandler :
     }
 
     private suspend fun InputScope.handleSetUpdatedAt(updatedAt: String) {
-        updateState { it.copy(current = it.current.copy(updatedAt = updatedAt)).wasEdited() }
+        updateState { it.copy(current = it.current?.copy(updatedAt = updatedAt)).wasEdited() }
     }
 
     private suspend fun InputScope.handleSetCreatedAt(createdAt: String) {
-        updateState { it.copy(current = it.current.copy(createdAt = createdAt)).wasEdited() }
+        updateState { it.copy(current = it.current?.copy(createdAt = createdAt)).wasEdited() }
     }
 
     private suspend fun InputScope.handleUpdateConfig() {
         with(getCurrentState()) {
-            sideJob("handleUpdateDetails") {
-                configService.updateConfig(
-                    configId = original.id,
-                    companyWebsite = if (current.companyInfo.contactInfo.companyWebsite != original.companyInfo.contactInfo.companyWebsite)
-                        current.companyInfo.contactInfo.companyWebsite else null,
-                    email = if (current.companyInfo.contactInfo.email != original.companyInfo.contactInfo.email)
-                        current.companyInfo.contactInfo.email else null,
-                    phone = if (current.companyInfo.contactInfo.phone != original.companyInfo.contactInfo.phone)
-                        current.companyInfo.contactInfo.phone else null,
-                    dayFrom = if (current.companyInfo.openingTimes.dayFrom != original.companyInfo.openingTimes.dayFrom)
-                        current.companyInfo.openingTimes.dayFrom else null,
-                    dayTo = if (current.companyInfo.openingTimes.dayTo != original.companyInfo.openingTimes.dayTo)
-                        current.companyInfo.openingTimes.dayTo else null,
-                    open = if (current.companyInfo.openingTimes.open != original.companyInfo.openingTimes.open)
-                        current.companyInfo.openingTimes.open else null,
-                    close = if (current.companyInfo.openingTimes.close != original.companyInfo.openingTimes.close)
-                        current.companyInfo.openingTimes.close else null,
-                    collageItems = if (current.landingConfig.collageItems != original.landingConfig.collageItems)
-                        current.landingConfig.collageItems.map {
-                            CollageItemInput(
-                                id = it.id,
-                                title = Optional.present(it.title),
-                                description = Optional.present(it.description),
-                                imageUrl = Optional.present(it.imageUrl),
-                                alt = Optional.present(it.alt),
-                            )
-                        } else null,
-                ).fold(
-                    onSuccess = { data ->
-                        val config = GetConfigQuery.GetConfig(
-                            id = data.updateConfig.id,
-                            createdAt = data.updateConfig.createdAt,
-                            updatedAt = data.updateConfig.updatedAt,
-                            companyInfo = GetConfigQuery.CompanyInfo(
-                                contactInfo = GetConfigQuery.ContactInfo(
-                                    email = data.updateConfig.companyInfo.contactInfo.email,
-                                    phone = data.updateConfig.companyInfo.contactInfo.phone,
-                                    companyWebsite = data.updateConfig.companyInfo.contactInfo.companyWebsite,
+            current?.id?.let { id ->
+                sideJob("handleUpdateDetails") {
+                    configService.updateConfig(
+                        configId = id,
+                        companyName = if (current.companyInfo.contactInfo.companyName != original?.companyInfo?.contactInfo?.companyName)
+                            current.companyInfo.contactInfo.companyName else null,
+                        companyWebsite = if (current.companyInfo.contactInfo.companyWebsite != original?.companyInfo?.contactInfo?.companyWebsite)
+                            current.companyInfo.contactInfo.companyWebsite else null,
+                        email = if (current.companyInfo.contactInfo.email != original?.companyInfo?.contactInfo?.email)
+                            current.companyInfo.contactInfo.email else null,
+                        phone = if (current.companyInfo.contactInfo.phone != original?.companyInfo?.contactInfo?.phone)
+                            current.companyInfo.contactInfo.phone else null,
+                        dayFrom = if (current.companyInfo.openingTimes.dayFrom != original?.companyInfo?.openingTimes?.dayFrom)
+                            current.companyInfo.openingTimes.dayFrom else null,
+                        dayTo = if (current.companyInfo.openingTimes.dayTo != original?.companyInfo?.openingTimes?.dayTo)
+                            current.companyInfo.openingTimes.dayTo else null,
+                        open = if (current.companyInfo.openingTimes.open != original?.companyInfo?.openingTimes?.open)
+                            current.companyInfo.openingTimes.open else null,
+                        close = if (current.companyInfo.openingTimes.close != original?.companyInfo?.openingTimes?.close)
+                            current.companyInfo.openingTimes.close else null,
+                        collageItems = if (current.landingConfig.collageItems != original?.landingConfig?.collageItems)
+                            current.landingConfig.collageItems.map {
+                                CollageItemInput(
+                                    id = it.id,
+                                    title = Optional.present(it.title),
+                                    description = Optional.present(it.description),
+                                    imageUrl = Optional.present(it.imageUrl),
+                                    alt = Optional.present(it.alt),
+                                )
+                            } else null,
+                        showCareer = if (current.footerConfig.showCareer != original?.footerConfig?.showCareer)
+                            current.footerConfig.showCareer else null,
+                        showCyberSecurity = if (current.footerConfig.showCyberSecurity != original?.footerConfig?.showCyberSecurity)
+                            current.footerConfig.showCyberSecurity else null,
+                        showPress = if (current.footerConfig.showPress != original?.footerConfig?.showPress)
+                            current.footerConfig.showPress else null,
+                        showStartChat = if (current.footerConfig.showStartChat != original?.footerConfig?.showStartChat)
+                            current.footerConfig.showStartChat else null,
+                        showOpeningTimes = if (current.footerConfig.showOpeningTimes != original?.footerConfig?.showOpeningTimes)
+                            current.footerConfig.showOpeningTimes else null,
+                    ).fold(
+                        onSuccess = { data ->
+                            val config = GetConfigQuery.GetConfig(
+                                id = data.updateConfig.id,
+                                createdAt = data.updateConfig.createdAt,
+                                updatedAt = data.updateConfig.updatedAt,
+                                companyInfo = GetConfigQuery.CompanyInfo(
+                                    contactInfo = GetConfigQuery.ContactInfo(
+                                        companyName = data.updateConfig.companyInfo.contactInfo.companyName,
+                                        email = data.updateConfig.companyInfo.contactInfo.email,
+                                        phone = data.updateConfig.companyInfo.contactInfo.phone,
+                                        companyWebsite = data.updateConfig.companyInfo.contactInfo.companyWebsite,
+                                    ),
+                                    openingTimes = GetConfigQuery.OpeningTimes(
+                                        close = data.updateConfig.companyInfo.openingTimes.close,
+                                        dayFrom = data.updateConfig.companyInfo.openingTimes.dayFrom,
+                                        dayTo = data.updateConfig.companyInfo.openingTimes.dayTo,
+                                        open = data.updateConfig.companyInfo.openingTimes.open
+                                    ),
                                 ),
-                                openingTimes = GetConfigQuery.OpeningTimes(
-                                    close = data.updateConfig.companyInfo.openingTimes.close,
-                                    dayFrom = data.updateConfig.companyInfo.openingTimes.dayFrom,
-                                    dayTo = data.updateConfig.companyInfo.openingTimes.dayTo,
-                                    open = data.updateConfig.companyInfo.openingTimes.open
+                                footerConfig = GetConfigQuery.FooterConfig(
+                                    showStartChat = data.updateConfig.footerConfig.showStartChat,
+                                    showOpeningTimes = data.updateConfig.footerConfig.showOpeningTimes,
+                                    showCareer = data.updateConfig.footerConfig.showCareer,
+                                    showCyberSecurity = data.updateConfig.footerConfig.showCyberSecurity,
+                                    showPress = data.updateConfig.footerConfig.showPress,
                                 ),
-                            ),
-                            landingConfig = GetConfigQuery.LandingConfig(
-                                collageItems = data.updateConfig.landingConfig.collageItems.map {
-                                    GetConfigQuery.CollageItem(
-                                        id = it.id,
-                                        title = it.title,
-                                        description = it.description,
-                                        imageUrl = it.imageUrl,
-                                        alt = it.alt
-                                    )
-                                }
+                                landingConfig = GetConfigQuery.LandingConfig(
+                                    collageItems = data.updateConfig.landingConfig.collageItems.map {
+                                        GetConfigQuery.CollageItem(
+                                            id = it.id,
+                                            title = it.title,
+                                            description = it.description,
+                                            imageUrl = it.imageUrl,
+                                            alt = it.alt
+                                        )
+                                    }
+                                )
                             )
-                        )
-                        postInput(AdminConfigContract.Inputs.SetOriginalConfig(config = config))
-                        postInput(AdminConfigContract.Inputs.SetCurrentConfig(config = config))
-                    },
-                    onFailure = {
-                        postEvent(
-                            AdminConfigContract.Events.OnError(
-                                it.message ?: "Error while updating product details"
+                            postInput(AdminConfigContract.Inputs.SetOriginalConfig(config = config))
+                            postInput(AdminConfigContract.Inputs.SetCurrentConfig(config = config))
+                        },
+                        onFailure = {
+                            postEvent(
+                                AdminConfigContract.Events.OnError(
+                                    it.message ?: "Error while updating product details"
+                                )
                             )
-                        )
-                    },
-                )
+                        },
+                    )
+                }
             }
         }
     }
@@ -382,7 +402,7 @@ internal class AdminProductPageInputHandler :
         updateState {
             val isValidated = inputValidator.validateText(email)
             it.copy(
-                current = it.current.copy(
+                current = it.current?.copy(
                     companyInfo = it.current.companyInfo.copy(
                         contactInfo = it.current.companyInfo.contactInfo.copy(email = email)
                     )

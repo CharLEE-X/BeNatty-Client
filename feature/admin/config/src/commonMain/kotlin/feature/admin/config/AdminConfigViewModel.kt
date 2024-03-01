@@ -26,7 +26,7 @@ class AdminConfigViewModel(
         }
         .withViewModel(
             initialState = AdminConfigContract.State(),
-            inputHandler = AdminProductPageInputHandler(),
+            inputHandler = AdminConfigInputHandler(),
             name = TAG,
         )
         .dispatchers(

@@ -62,7 +62,7 @@ enum class Strings {
     Wishlist,
     Profile,
     Logout,
-    Subscribe,
+    SubscribeToOurNewsletter,
     Accessibility,
     TrackOrder,
     Shipping,
@@ -254,4 +254,6 @@ enum class Strings {
     LandingPageSettings,
     HomePageSettings,
     Collage,
+    BeFirstToGetLatestOffers,
+    ByAgreeing,
 }

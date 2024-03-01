@@ -5,6 +5,8 @@ mutation CreateConfig($input: CreateConfigInput!) {
     updatedAt
     companyInfo {
       contactInfo {
+        companyName
+        companyWebsite
         email
         phone
       }
@@ -14,6 +16,11 @@ mutation CreateConfig($input: CreateConfigInput!) {
         dayTo
         open
       }
+    }
+    footerConfig {
+      showCareer
+      showCyberSecurity
+      showPress
     }
     landingConfig {
       collageItems {

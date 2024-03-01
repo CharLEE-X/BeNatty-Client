@@ -190,7 +190,7 @@ fun CollageSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) 
     Column(
         modifier = CollageStyle.toModifier()
     ) {
-        state.current.landingConfig.collageItems.forEachIndexed { index, item ->
+        state.current?.landingConfig?.collageItems?.forEachIndexed { index, item ->
             AdminCollageItem(
                 title = item.title ?: "",
                 description = item.description ?: "",
@@ -343,7 +343,7 @@ private fun AdminCollageItem(
 @Composable
 private fun CompanyInfoEmail(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
     AppOutlinedTextField(
-        value = state.current.companyInfo.contactInfo.email ?: "",
+        value = state.current?.companyInfo?.contactInfo?.email ?: "",
         onValueChange = { vm.trySend(AdminConfigContract.Inputs.SetEmail(it)) },
         label = state.strings.email,
         errorText = state.emailError,
@@ -355,7 +355,7 @@ private fun CompanyInfoEmail(vm: AdminConfigViewModel, state: AdminConfigContrac
 @Composable
 private fun CompanyInfoPhone(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
     AppOutlinedTextField(
-        value = state.current.companyInfo.contactInfo.phone ?: "",
+        value = state.current?.companyInfo?.contactInfo?.phone ?: "",
         onValueChange = { vm.trySend(AdminConfigContract.Inputs.SetPhone(it)) },
         label = state.strings.phone,
         errorText = state.phoneError,
@@ -367,7 +367,7 @@ private fun CompanyInfoPhone(vm: AdminConfigViewModel, state: AdminConfigContrac
 @Composable
 private fun CompanyInfoCompanyWebsite(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
     AppOutlinedTextField(
-        value = state.current.companyInfo.contactInfo.companyWebsite ?: "",
+        value = state.current?.companyInfo?.contactInfo?.companyWebsite ?: "",
         onValueChange = { vm.trySend(AdminConfigContract.Inputs.SetCompanyWebsite(it)) },
         label = state.strings.companyWebsite,
         errorText = state.companyWebsiteError,
@@ -392,7 +392,7 @@ fun OpeningTimes(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
             OutlinedMenu(
                 items = DayOfWeek.knownEntries.map { it.name },
                 title = state.strings.openDayFrom,
-                selectedItem = state.current.companyInfo.openingTimes.dayFrom?.name,
+                selectedItem = state.current?.companyInfo?.openingTimes?.dayFrom?.name,
                 onItemSelected = { vm.trySend(AdminConfigContract.Inputs.OnOpenDayFromSelected(DayOfWeek.valueOf(it))) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -408,7 +408,7 @@ fun OpeningTimes(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
             OutlinedMenu(
                 items = DayOfWeek.knownEntries.map { it.name },
                 title = state.strings.openDayTo,
-                selectedItem = state.current.companyInfo.openingTimes.dayTo?.name,
+                selectedItem = state.current?.companyInfo?.openingTimes?.dayTo?.name,
                 onItemSelected = { vm.trySend(AdminConfigContract.Inputs.OnOpenDayToSelected(DayOfWeek.valueOf(it))) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -428,7 +428,7 @@ fun OpeningTimes(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
         ) {
             SpanText(text = state.strings.openTime)
             AppOutlinedTextField(
-                value = state.current.companyInfo.openingTimes.open ?: "",
+                value = state.current?.companyInfo?.openingTimes?.open ?: "",
                 onValueChange = { vm.trySend(AdminConfigContract.Inputs.OnOpenDayToSelected(DayOfWeek.valueOf(it))) },
                 label = state.strings.openTime,
                 errorText = state.openTimeError,
@@ -443,7 +443,7 @@ fun OpeningTimes(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
         ) {
             SpanText(text = state.strings.closeTime)
             AppOutlinedTextField(
-                value = state.current.companyInfo.openingTimes.close ?: "",
+                value = state.current?.companyInfo?.openingTimes?.close ?: "",
                 onValueChange = { vm.trySend(AdminConfigContract.Inputs.SetCloseTime(it)) },
                 label = state.strings.closeTime,
                 errorText = state.closeTimeError,
@@ -456,20 +456,24 @@ fun OpeningTimes(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
 
 @Composable
 fun UpdatedAt(state: AdminConfigContract.State) {
-    if (state.current.updatedAt.isNotEmpty()) {
-        SpanText(
-            text = "${state.strings.lastUpdatedAt}: ${state.current.updatedAt}",
-            modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
-        )
+    state.current?.updatedAt?.let { updatedAt ->
+        if (updatedAt.isNotEmpty()) {
+            SpanText(
+                text = "${state.strings.updatedAt}: $updatedAt",
+                modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
+            )
+        }
     }
 }
 
 @Composable
 fun CreatedAt(state: AdminConfigContract.State) {
-    if (state.current.createdAt.isNotEmpty()) {
-        SpanText(
-            text = "${state.strings.createdAt}: ${state.current.createdAt}",
-            modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
-        )
+    state.current?.createdAt?.let { createdAt ->
+        if (createdAt.isNotEmpty()) {
+            SpanText(
+                text = "${state.strings.createdAt}: $createdAt",
+                modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
+            )
+        }
     }
 }

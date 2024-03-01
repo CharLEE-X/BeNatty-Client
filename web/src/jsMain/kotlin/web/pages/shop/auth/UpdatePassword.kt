@@ -25,7 +25,7 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import theme.MaterialTheme
 import theme.roleStyle
-import web.components.layouts.MainParams
+import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
 import web.components.widgets.AppFilledButton
 import web.components.widgets.AppOutlinedTextField
@@ -34,14 +34,14 @@ import web.compose.material3.component.TextFieldType
 
 @Composable
 fun UpdatePasswordPage(
-    mainParams: MainParams,
+    mainRoutes: MainRoutes,
     goToLogin: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
         UpdatePasswordViewModel(
             scope = scope,
-            onError = mainParams.onError,
+            onError = mainRoutes.onError,
             goToLogin = goToLogin,
         )
     }
@@ -49,7 +49,7 @@ fun UpdatePasswordPage(
 
     ShopMainLayout(
         title = "Update password", //state.strings.title,
-        mainParams = mainParams,
+        mainRoutes = mainRoutes,
     ) {
         Box(
             contentAlignment = Alignment.Center,

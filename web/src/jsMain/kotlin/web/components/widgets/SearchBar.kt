@@ -49,7 +49,7 @@ fun SearchBar(
     var hovered by remember { mutableStateOf(false) }
 
     val borderColor = when {
-        focused -> focusedOutlineColor
+
         hovered -> hoverOutlineColor
         else -> unFocusedOutlineColor
     }

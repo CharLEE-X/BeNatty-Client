@@ -8,17 +8,17 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.silk.components.forms.Button
 import com.varabyte.kobweb.silk.components.text.SpanText
-import web.components.layouts.MainParams
+import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
 
 @Composable
 fun CataloguePage(
-    mainParams: MainParams,
+    mainRoutes: MainRoutes,
     goToProduct: (String) -> Unit,
 ) {
     ShopMainLayout(
         title = "Catalogue",
-        mainParams = mainParams,
+        mainRoutes = mainRoutes,
     ) {
         Box(
             contentAlignment = Alignment.Center,

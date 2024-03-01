@@ -5,6 +5,7 @@ query GetConfig($configId: String) {
     updatedAt
     companyInfo {
       contactInfo {
+        companyName
         companyWebsite
         email
         phone
@@ -15,6 +16,13 @@ query GetConfig($configId: String) {
         dayTo
         open
       }
+    }
+    footerConfig {
+      showStartChat
+      showOpeningTimes
+      showCareer
+      showCyberSecurity
+      showPress
     }
     landingConfig {
       collageItems {

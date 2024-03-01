@@ -20,6 +20,8 @@ object HomeContract {
         data object FetchProducts : Inputs
 
         data class OnCollageItemClick(val item: CollageItem) : Inputs
+        data object OnPrivacyPolicyClick : Inputs
+        data object OnTermsOfServiceClick : Inputs
 
         data class OnEmailChange(val email: String) : Inputs
         data object OnEmailSend : Inputs
@@ -32,12 +34,25 @@ object HomeContract {
 
     sealed interface Events {
         data class OnError(val message: String) : Events
+        data object GoToPrivacyPolicy : Events
+        data object GoToTermsOfService : Events
     }
 
     data class Strings(
-        val title: String = getString(component.localization.Strings.Home),
-        val subscribe: String = getString(component.localization.Strings.Subscribe),
+        val home: String = getString(component.localization.Strings.Home),
+        val subscribeToOurNewsletter: String = getString(component.localization.Strings.SubscribeToOurNewsletter),
         val email: String = getString(component.localization.Strings.Email),
         val shopNow: String = getString(component.localization.Strings.ShopNow),
+        val beFirstToGetLatestOffers: String = getString(component.localization.Strings.BeFirstToGetLatestOffers),
+        val byAgreeing: String = getString(component.localization.Strings.ByAgreeing),
+        val privacyPolicy: String = getString(component.localization.Strings.PrivacyPolicy),
+        val and: String = getString(component.localization.Strings.And),
+        val termsOfService: String = getString(component.localization.Strings.TermsOfService),
     )
 }
+
+data class HomeRoutes(
+    val home: () -> Unit,
+    val privacyPolicy: () -> Unit,
+    val termsOfService: () -> Unit,
+)

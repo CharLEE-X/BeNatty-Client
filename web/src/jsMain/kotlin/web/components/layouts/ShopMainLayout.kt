@@ -30,7 +30,7 @@ import org.jetbrains.compose.web.css.s
 import web.components.sections.desktopNav.DesktopNav
 import web.components.sections.footer.Footer
 
-data class MainParams(
+data class MainRoutes(
     val goToHome: () -> Unit,
     val goToLogin: () -> Unit,
     val goToOrders: () -> Unit,
@@ -57,38 +57,39 @@ data class MainParams(
 @Composable
 fun ShopMainLayout(
     title: String,
-    mainParams: MainParams,
+    mainRoutes: MainRoutes,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     var showCartSidebar by remember { mutableStateOf(false) }
 
     val desktopNavRoutes = DesktopNavRoutes(
-        goToHome = mainParams.goToHome,
-        goToLogin = mainParams.goToLogin,
-        goToOrders = mainParams.goToOrders,
-        goToProfile = mainParams.goToProfile,
-        goToReturns = mainParams.goToReturns,
-        goToWishlist = mainParams.goToWishlist,
-        goToHelpAndFaq = mainParams.goToHelpAndFaq,
-        goToCatalogue = mainParams.goToCatalogue,
-        goToAbout = mainParams.goToAboutUs,
-        goToShippingAndReturns = mainParams.goToShipping, // FIXME: Change to 'ShippingAndReturns'
+        goToHome = mainRoutes.goToHome,
+        goToLogin = mainRoutes.goToLogin,
+        goToOrders = mainRoutes.goToOrders,
+        goToProfile = mainRoutes.goToProfile,
+        goToReturns = mainRoutes.goToReturns,
+        goToWishlist = mainRoutes.goToWishlist,
+        goToHelpAndFaq = mainRoutes.goToHelpAndFaq,
+        goToCatalogue = mainRoutes.goToCatalogue,
+        goToAbout = mainRoutes.goToAboutUs,
+        goToShippingAndReturns = mainRoutes.goToShipping, // FIXME: Change to 'ShippingAndReturns'
         showCartSidebar = { showCartSidebar = true },
     )
     val footerRoutes = FooterRoutes(
-        goToAboutUs = mainParams.goToAboutUs,
-        goToAccessibility = mainParams.goToAccessibility,
-        goToCareer = mainParams.goToCareer,
-        goToContactUs = mainParams.goToContactUs,
-        goToCyberSecurity = mainParams.goToCyberSecurity,
-        goToFAQs = mainParams.goToFAQs,
-        goToPress = mainParams.goToPress,
-        goToPrivacyPolicy = mainParams.goToPrivacyPolicy,
-        goToShipping = mainParams.goToShipping,
-        goToTermsOfService = mainParams.goToTermsOfService,
-        goToTrackOrder = mainParams.goToTrackOrder,
-        goToAdminHome = mainParams.goToAdminHome,
-        goToReturns = mainParams.goToReturns,
+        goToAboutUs = mainRoutes.goToAboutUs,
+        goToAccessibility = mainRoutes.goToAccessibility,
+        goToCareer = mainRoutes.goToCareer,
+        goToContactUs = mainRoutes.goToContactUs,
+        goToCyberSecurity = mainRoutes.goToCyberSecurity,
+        goToFAQs = mainRoutes.goToFAQs,
+        goToPress = mainRoutes.goToPress,
+        goToPrivacyPolicy = mainRoutes.goToPrivacyPolicy,
+        goToShipping = mainRoutes.goToShipping,
+        goToTermsOfService = mainRoutes.goToTermsOfService,
+        goToTrackOrder = mainRoutes.goToTrackOrder,
+        goToAdminHome = mainRoutes.goToAdminHome,
+        goToReturns = mainRoutes.goToReturns,
+        goToCatalogue = mainRoutes.goToCatalogue,
     )
 
     var topSpacing: CSSSizeValue<CSSUnit.px> by remember { mutableStateOf(0.px) }
@@ -99,13 +100,13 @@ fun ShopMainLayout(
         topBar = {
             DesktopNav(
                 desktopNavRoutes = desktopNavRoutes,
-                onError = mainParams.onError,
+                onError = mainRoutes.onError,
                 onTopSpacingChanged = { topSpacing = it }
             )
         },
         footer = {
             Footer(
-                onError = mainParams.onError,
+                onError = mainRoutes.onError,
                 footerRoutes = footerRoutes,
             )
         },

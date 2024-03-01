@@ -29,7 +29,7 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import theme.MaterialTheme
 import theme.roleStyle
-import web.components.layouts.MainParams
+import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
 import web.components.widgets.AppFilledButton
 import web.components.widgets.AppFilledTonalButton
@@ -40,7 +40,7 @@ import web.compose.material3.component.TextFieldType
 
 @Composable
 fun ForgotPasswordPage(
-    mainParams: MainParams,
+    mainRoutes: MainRoutes,
     goToLogin: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -54,7 +54,7 @@ fun ForgotPasswordPage(
 
     ShopMainLayout(
         title = state.strings.forgotPassword,
-        mainParams = mainParams,
+        mainRoutes = mainRoutes,
     ) {
         Box(
             contentAlignment = Alignment.Center,
