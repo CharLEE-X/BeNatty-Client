@@ -219,6 +219,277 @@
         },
         {
           "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "BannerItem",
+          "description": null,
+          "fields": [
+            {
+              "name": "alt",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "description",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "imageUrl",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "title",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "INPUT_OBJECT",
+          "name": "BannerItemInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "__typename": "__InputValue",
+              "name": "alt",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "description",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "imageUrl",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "title",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "BannerSection",
+          "description": null,
+          "fields": [
+            {
+              "name": "left",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "BannerItem",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "right",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "BannerItem",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "INPUT_OBJECT",
+          "name": "BannerSectionInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "__typename": "__InputValue",
+              "name": "left",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "BannerItemInput",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "right",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "BannerItemInput",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "INPUT_OBJECT",
+          "name": "BannerSectionUpdateInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "__typename": "__InputValue",
+              "name": "leftInput",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "INPUT_OBJECT",
+                "name": "BannerItemInput",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "rightInput",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "INPUT_OBJECT",
+                "name": "BannerItemInput",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
           "kind": "SCALAR",
           "name": "Boolean",
           "description": "Built-in Boolean",
@@ -1179,73 +1450,6 @@
         {
           "__typename": "__Type",
           "kind": "INPUT_OBJECT",
-          "name": "CollageItemCreateInput",
-          "description": null,
-          "fields": null,
-          "inputFields": [
-            {
-              "__typename": "__InputValue",
-              "name": "description",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "__typename": "__InputValue",
-              "name": "imageUrl",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "__typename": "__InputValue",
-              "name": "title",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null,
-          "specifiedByURL": null
-        },
-        {
-          "__typename": "__Type",
-          "kind": "INPUT_OBJECT",
           "name": "CollageItemInput",
           "description": null,
           "fields": null,
@@ -1591,6 +1795,121 @@
               "ofType": null
             }
           ],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "INPUT_OBJECT",
+          "name": "ConfigBannerMediaUploadInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "__typename": "__InputValue",
+              "name": "blob",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "configId",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "mediaType",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "MediaType",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "side",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "Side",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "ConfigBannerMediaUploadResult",
+          "description": null,
+          "fields": [
+            {
+              "name": "bannerSection",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "BannerSection",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -3541,6 +3860,23 @@
           "description": null,
           "fields": [
             {
+              "name": "bannerSection",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "BannerSection",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "collageItems",
               "description": null,
               "args": [],
@@ -3581,6 +3917,24 @@
           "inputFields": [
             {
               "__typename": "__InputValue",
+              "name": "bannerSection",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "BannerSectionInput",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
               "name": "collageItems",
               "description": null,
               "type": {
@@ -3618,6 +3972,20 @@
           "description": null,
           "fields": null,
           "inputFields": [
+            {
+              "__typename": "__InputValue",
+              "name": "bannerSectionInput",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "INPUT_OBJECT",
+                "name": "BannerSectionUpdateInput",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "__typename": "__InputValue",
               "name": "collageItems",
@@ -4048,168 +4416,6 @@
               "deprecationReason": null
             },
             {
-              "name": "landingConfigAddCollageItem",
-              "description": null,
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "configId",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "__typename": "__InputValue",
-                  "name": "input",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "CollageItemCreateInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Config",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "landingConfigUpdateCollageItem",
-              "description": null,
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "configId",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "__typename": "__InputValue",
-                  "name": "input",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "CollageItemCreateInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Config",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "landingConfigRemoveCollageItem",
-              "description": null,
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "configId",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "__typename": "__InputValue",
-                  "name": "collageItemId",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Config",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "uploadConfigCollageImage",
               "description": null,
               "args": [
@@ -4239,6 +4445,42 @@
                 "ofType": {
                   "kind": "OBJECT",
                   "name": "ConfigCollageMediaUploadResult",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "uploadConfigBannerImage",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "ConfigBannerMediaUploadInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ConfigBannerMediaUploadResult",
                   "ofType": null
                 }
               },
@@ -8014,6 +8256,31 @@
           ],
           "interfaces": null,
           "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "ENUM",
+          "name": "Side",
+          "description": null,
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": [
+            {
+              "name": "LEFT",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "RIGHT",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
           "possibleTypes": null,
           "specifiedByURL": null
         },

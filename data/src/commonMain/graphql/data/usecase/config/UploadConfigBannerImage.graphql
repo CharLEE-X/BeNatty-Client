@@ -1,0 +1,18 @@
+mutation UploadConfigBannerImage($input: ConfigBannerMediaUploadInput!) {
+  uploadConfigBannerImage(input: $input) {
+    bannerSection {
+      left {
+        alt
+        description
+        imageUrl
+        title
+      }
+      right {
+        alt
+        description
+        imageUrl
+        title
+      }
+    }
+  }
+}

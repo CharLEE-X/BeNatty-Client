@@ -13,3 +13,15 @@ fun GetConfigQuery.CollageItem.toPreviewImage() = ImagePreview(
     url = imageUrl ?: "",
     alt = alt ?: "",
 )
+
+fun GetConfigQuery.Left.toPreviewImage() = ImagePreview(
+    id = "",
+    url = imageUrl ?: "",
+    alt = alt ?: "",
+)
+
+fun GetConfigQuery.Right.toPreviewImage() = ImagePreview(
+    id = "",
+    url = imageUrl ?: "",
+    alt = alt ?: "",
+)

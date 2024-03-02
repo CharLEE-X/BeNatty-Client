@@ -256,4 +256,9 @@ enum class Strings {
     Collage,
     BeFirstToGetLatestOffers,
     ByAgreeing,
+    TrendingNow,
+    ExploreLatestFashionTrendsHere,
+    EcoFriendlyClothing,
+    CottonNoArtificialIngredients,
+    Banner,
 }

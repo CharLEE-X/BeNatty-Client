@@ -5,14 +5,14 @@ import com.apollographql.apollo3.api.Optional
 import data.CreateConfigMutation
 import data.GetConfigQuery
 import data.GetLandingConfigQuery
-import data.LandingConfigAddCollageItemMutation
-import data.LandingConfigRemoveCollageItemMutation
-import data.LandingConfigUpdateCollageItemMutation
 import data.UpdateConfigMutation
+import data.UploadConfigBannerImageMutation
 import data.UploadConfigCollageImageMutation
-import data.type.CollageItemCreateInput
+import data.type.BannerItemInput
+import data.type.BannerSectionUpdateInput
 import data.type.CollageItemInput
 import data.type.CompanyInfoUpdateInput
+import data.type.ConfigBannerMediaUploadInput
 import data.type.ConfigCollageMediaUploadInput
 import data.type.ConfigUpdateInput
 import data.type.ContactInfoUpdateInput
@@ -22,6 +22,7 @@ import data.type.FooterConfigUpdateInput
 import data.type.LandingConfigUpdateInput
 import data.type.MediaType
 import data.type.OpeningTimesUpdateInput
+import data.type.Side
 import data.utils.handle
 import data.utils.skipIfNull
 
@@ -29,24 +30,6 @@ interface ConfigService {
     suspend fun config(): Result<GetConfigQuery.Data>
     suspend fun create(input: CreateConfigInput): Result<CreateConfigMutation.Data>
     suspend fun getLandingConfig(): Result<GetLandingConfigQuery.Data>
-    suspend fun landingConfigAddCollageItem(
-        configId: String,
-        description: String,
-        imageUrl: String,
-        title: String,
-    ): Result<LandingConfigAddCollageItemMutation.Data>
-
-    suspend fun landingConfigUpdateCollageItem(
-        configId: String,
-        description: String,
-        imageUrl: String,
-        title: String,
-    ): Result<LandingConfigUpdateCollageItemMutation.Data>
-
-    suspend fun landingConfigRemoveCollageItem(
-        configId: String,
-        collageItemId: String,
-    ): Result<LandingConfigRemoveCollageItemMutation.Data>
 
     suspend fun updateConfig(
         configId: String,
@@ -64,6 +47,8 @@ interface ConfigService {
         showCareer: Boolean?,
         showCyberSecurity: Boolean?,
         showPress: Boolean?,
+        bannerSectionLeft: BannerItemInput?,
+        bannerSectionRight: BannerItemInput?,
     ): Result<UpdateConfigMutation.Data>
 
     suspend fun uploadCollageImage(
@@ -72,6 +57,13 @@ interface ConfigService {
         blob: String,
         mediaType: MediaType,
     ): Result<UploadConfigCollageImageMutation.Data>
+
+    suspend fun uploadBannerMedia(
+        configId: String,
+        side: Side,
+        blob: String,
+        mediaType: MediaType,
+    ): Result<UploadConfigBannerImageMutation.Data>
 }
 
 internal class ConfigServiceImpl(
@@ -87,42 +79,7 @@ internal class ConfigServiceImpl(
     }
 
     override suspend fun getLandingConfig(): Result<GetLandingConfigQuery.Data> {
-        return apolloClient.query(GetLandingConfigQuery(Optional.absent())).handle()
-    }
-
-    override suspend fun landingConfigAddCollageItem(
-        configId: String,
-        description: String,
-        imageUrl: String,
-        title: String,
-    ): Result<LandingConfigAddCollageItemMutation.Data> {
-        val input = CollageItemCreateInput(
-            description = description,
-            imageUrl = imageUrl,
-            title = title,
-        )
-        return apolloClient.mutation(LandingConfigAddCollageItemMutation(configId, input)).handle()
-    }
-
-    override suspend fun landingConfigUpdateCollageItem(
-        configId: String,
-        description: String,
-        imageUrl: String,
-        title: String,
-    ): Result<LandingConfigUpdateCollageItemMutation.Data> {
-        val input = CollageItemCreateInput(
-            description = "description",
-            imageUrl = "imageUrl",
-            title = "title",
-        )
-        return apolloClient.mutation(LandingConfigUpdateCollageItemMutation(configId, input)).handle()
-    }
-
-    override suspend fun landingConfigRemoveCollageItem(
-        configId: String,
-        collageItemId: String,
-    ): Result<LandingConfigRemoveCollageItemMutation.Data> {
-        return apolloClient.mutation(LandingConfigRemoveCollageItemMutation(configId, collageItemId)).handle()
+        return apolloClient.query(GetLandingConfigQuery(Optional.present(null))).handle()
     }
 
     override suspend fun updateConfig(
@@ -141,6 +98,8 @@ internal class ConfigServiceImpl(
         showCareer: Boolean?,
         showCyberSecurity: Boolean?,
         showPress: Boolean?,
+        bannerSectionLeft: BannerItemInput?,
+        bannerSectionRight: BannerItemInput?,
     ): Result<UpdateConfigMutation.Data> {
         val contactInfoUpdateInput = if (
             companyName == null &&
@@ -192,8 +151,15 @@ internal class ConfigServiceImpl(
                 showPress = showPress.skipIfNull(),
             )
         }
+        val bannerSectionInput = if (bannerSectionLeft == null && bannerSectionRight == null) null else {
+            BannerSectionUpdateInput(
+                leftInput = bannerSectionLeft.skipIfNull(),
+                rightInput = bannerSectionRight.skipIfNull(),
+            )
+        }
         val landingConfigInput = LandingConfigUpdateInput(
             collageItems = collageItems.skipIfNull(),
+            bannerSectionInput = bannerSectionInput.skipIfNull(),
         )
         val input = ConfigUpdateInput(
             id = configId,
@@ -217,5 +183,20 @@ internal class ConfigServiceImpl(
             mediaType = mediaType,
         )
         return apolloClient.mutation(UploadConfigCollageImageMutation(input)).handle()
+    }
+
+    override suspend fun uploadBannerMedia(
+        configId: String,
+        side: Side,
+        blob: String,
+        mediaType: MediaType
+    ): Result<UploadConfigBannerImageMutation.Data> {
+        val input = ConfigBannerMediaUploadInput(
+            configId = configId,
+            side = side,
+            blob = blob,
+            mediaType = mediaType,
+        )
+        return apolloClient.mutation(UploadConfigBannerImageMutation(input)).handle()
     }
 }

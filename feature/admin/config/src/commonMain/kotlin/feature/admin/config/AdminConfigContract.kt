@@ -3,6 +3,7 @@ package feature.admin.config
 import component.localization.getString
 import data.GetConfigQuery
 import data.type.DayOfWeek
+import data.type.Side
 import feature.admin.config.model.ImagePreview
 
 object AdminConfigContract {
@@ -26,14 +27,19 @@ object AdminConfigContract {
         val deleteImageDialogOpen: Boolean = false,
         val deleteImageDialogImageId: String? = null,
 
-        val imageDropError: String? = null,
+        val collageMediaDropError: String? = null,
         val isCollageImagesLoading: Boolean = false,
+        val bannerLeftMediaDropError: String? = null,
+        val isBannerLeftImagesLoading: Boolean = false,
+        val bannerRightMediaDropError: String? = null,
+        val isBannerRightImagesLoading: Boolean = false,
     )
 
     sealed interface Inputs {
         data object Init : Inputs
         data object FetchConfig : Inputs
-        data class UploadMedia(val imageId: String, val blob: String) : Inputs
+        data class UploadCollageMedia(val imageId: String, val blob: String) : Inputs
+        data class UploadBannerMedia(val side: Side, val blob: String) : Inputs
 
         data object OnSaveClick : Inputs
         data object OnDiscardSaveClick : Inputs
@@ -43,9 +49,17 @@ object AdminConfigContract {
         data class OnImageDeleteClick(val imageId: String) : Inputs
         data object OnImageDeleteYesClick : Inputs
         data object OnImageDeleteNoClick : Inputs
+
         data class OnCollageMediaDrop(val imageId: String, val blob: String) : Inputs
         data class OnCollageItemTitleChanged(val imageId: String, val title: String) : Inputs
         data class OnCollageItemDescriptionChanged(val imageId: String, val description: String) : Inputs
+
+        data class OnBannerLeftMediaDrop(val blob: String) : Inputs
+        data class OnBannerLeftTitleChanged(val title: String) : Inputs
+        data class OnBannerLeftDescriptionChanged(val description: String) : Inputs
+        data class OnBannerRightMediaDrop(val blob: String) : Inputs
+        data class OnBannerRightTitleChanged(val title: String) : Inputs
+        data class OnBannerRightDescriptionChanged(val description: String) : Inputs
 
         data class SetPreviewDialogOpen(val isOpen: Boolean) : Inputs
         data class SetDeleteImageDialogOpen(val isOpen: Boolean) : Inputs
@@ -60,8 +74,11 @@ object AdminConfigContract {
         data class SetCreatedAt(val createdAt: String) : Inputs
         data class SetUpdatedAt(val updatedAt: String) : Inputs
         data class SetCollageImageDropError(val error: String?) : Inputs
-
         data class SetCollageImagesLoading(val isLoading: Boolean) : Inputs
+        data class SetBannerLeftImageDropError(val error: String?) : Inputs
+        data class SetBannerLeftImagesLoading(val isLoading: Boolean) : Inputs
+        data class SetBannerRightImageDropError(val error: String?) : Inputs
+        data class SetBannerRightImagesLoading(val isLoading: Boolean) : Inputs
     }
 
     sealed interface Events {
@@ -94,5 +111,7 @@ object AdminConfigContract {
         val collage: String = getString(component.localization.Strings.Collage),
         val shopNow: String = getString(component.localization.Strings.ShopNow),
         val deleteExplain: String = getString(component.localization.Strings.DeleteExplain),
-    )
+        val banner: String = getString(component.localization.Strings.Banner),
+    ) {
+    }
 }

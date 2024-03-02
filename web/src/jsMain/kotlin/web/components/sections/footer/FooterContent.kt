@@ -5,7 +5,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
@@ -17,7 +16,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
-import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.gridTemplateColumns
 import com.varabyte.kobweb.compose.ui.modifiers.margin
@@ -120,18 +118,18 @@ private fun BottomSection(
             .gap(1.em)
             .padding(topBottom = 1.em, leftRight = 3.em),
     ) {
-        if (state.companyInfo?.contactInfo?.companyWebsite?.isNotEmpty() == true) {
-            FooterTextButton(
-                text = "© ${state.year} ${state.strings.companyName}",
-                onClick = { vm.trySend(FooterContract.Inputs.OnCompanyNameClick) },
-            )
-        } else {
-            SpanText(
-                text = "© ${state.year} ${state.strings.companyName}",
-                modifier = Modifier
-                    .fontWeight(FontWeight.SemiBold)
-                    .color(contentColor)
-            )
+        state.companyInfo?.contactInfo?.companyName?.let { companyName ->
+            if (state.companyInfo?.contactInfo?.companyWebsite?.isNotEmpty() == true) {
+                FooterTextButton(
+                    text = "© ${state.year} $companyName",
+                    onClick = { vm.trySend(FooterContract.Inputs.OnCompanyNameClick) },
+                )
+            } else {
+                SpanText(
+                    text = "© ${state.year} ${state.strings.companyName}",
+                    modifier = Modifier.color(contentColor)
+                )
+            }
         }
         Spacer()
         state.paymentMethods.forEach {

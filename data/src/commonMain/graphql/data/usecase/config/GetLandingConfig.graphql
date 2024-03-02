@@ -7,5 +7,19 @@ query GetLandingConfig($configId: String) {
       imageUrl
       title
     }
+    bannerSection {
+      left {
+        imageUrl
+        description
+        title
+        alt
+      }
+      right {
+        imageUrl
+        description
+        title
+        alt
+      }
+    }
   }
 }

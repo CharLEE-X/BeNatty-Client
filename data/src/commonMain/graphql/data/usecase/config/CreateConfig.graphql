@@ -30,6 +30,20 @@ mutation CreateConfig($input: CreateConfigInput!) {
         imageUrl
         title
       }
+      bannerSection {
+        left {
+          imageUrl
+          description
+          title
+          alt
+        }
+        right {
+          imageUrl
+          description
+          title
+          alt
+        }
+      }
     }
   }
 }

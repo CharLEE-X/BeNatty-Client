@@ -98,5 +98,6 @@ internal fun englishLanguage(
     Strings.HeightDesc -> "The height of the product in the store's current units."
     Strings.BeFirstToGetLatestOffers -> "Be the first to get the latest news about trends, promotions and much more!"
     Strings.ByAgreeing -> "By clicking the button you agree to the"
+    Strings.EcoFriendlyClothing -> "Eco-Friendly clothing"
     else -> key.name.enumCapitalized()
 }

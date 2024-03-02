@@ -32,6 +32,20 @@ mutation UpdateConfig($input: ConfigUpdateInput!) {
         imageUrl
         title
       }
+      bannerSection {
+        left {
+          imageUrl
+          description
+          title
+          alt
+        }
+        right {
+          imageUrl
+          description
+          title
+          alt
+        }
+      }
     }
   }
 }

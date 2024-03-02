@@ -3,12 +3,15 @@ package feature.admin.config
 import com.apollographql.apollo3.api.Optional
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
+import com.copperleaf.ballast.postInput
 import component.localization.InputValidator
 import data.GetConfigQuery
 import data.service.ConfigService
+import data.type.BannerItemInput
 import data.type.CollageItemInput
 import data.type.DayOfWeek
 import data.type.MediaType
+import data.type.Side
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -24,7 +27,8 @@ internal class AdminConfigInputHandler :
     override suspend fun InputScope.handleInput(input: AdminConfigContract.Inputs) = when (input) {
         is AdminConfigContract.Inputs.Init -> handleInit()
         AdminConfigContract.Inputs.FetchConfig -> handleFetchConfig()
-        is AdminConfigContract.Inputs.UploadMedia -> handleUploadMedia(input.imageId, input.blob)
+        is AdminConfigContract.Inputs.UploadCollageMedia -> handleUploadCollageMedia(input.imageId, input.blob)
+        is AdminConfigContract.Inputs.UploadBannerMedia -> handleUploadBannerMedia(input.side, input.blob)
 
         AdminConfigContract.Inputs.OnDiscardSaveClick -> updateState { it.copy(current = it.original).wasEdited() }
         AdminConfigContract.Inputs.OnSaveClick -> handleSave()
@@ -47,6 +51,22 @@ internal class AdminConfigInputHandler :
         is AdminConfigContract.Inputs.OnCollageItemDescriptionChanged ->
             handleOnCollageItemDescriptionChanged(input.imageId, input.description)
 
+        is AdminConfigContract.Inputs.OnBannerLeftMediaDrop -> handleOnBannerLeftMediaDrop(input.blob)
+
+        is AdminConfigContract.Inputs.OnBannerLeftTitleChanged ->
+            handleOnBannerLeftTitleChanged(input.title)
+
+        is AdminConfigContract.Inputs.OnBannerLeftDescriptionChanged ->
+            handleOnBannerLeftDescriptionChanged(input.description)
+
+        is AdminConfigContract.Inputs.OnBannerRightMediaDrop -> handleOnBannerRightMediaDrop(input.blob)
+
+        is AdminConfigContract.Inputs.OnBannerRightTitleChanged ->
+            handleOnBannerRightTitleChanged(input.title)
+
+        is AdminConfigContract.Inputs.OnBannerRightDescriptionChanged ->
+            handleOnBannerRightDescriptionChanged(input.description)
+
         is AdminConfigContract.Inputs.SetLoading -> updateState { it.copy(isLoading = input.isLoading) }
         is AdminConfigContract.Inputs.SetOriginalConfig -> updateState { it.copy(original = input.config).wasEdited() }
         is AdminConfigContract.Inputs.SetCurrentConfig -> updateState { it.copy(current = input.config).wasEdited() }
@@ -58,11 +78,90 @@ internal class AdminConfigInputHandler :
         is AdminConfigContract.Inputs.SetCreatedAt -> handleSetCreatedAt(input.createdAt)
         is AdminConfigContract.Inputs.SetUpdatedAt -> handleSetUpdatedAt(input.updatedAt)
         is AdminConfigContract.Inputs.SetPreviewDialogOpen -> updateState { it.copy(isPreviewDialogOpen = input.isOpen) }
-        is AdminConfigContract.Inputs.SetCollageImageDropError -> updateState { it.copy(imageDropError = input.error) }
+        is AdminConfigContract.Inputs.SetCollageImageDropError -> updateState { it.copy(collageMediaDropError = input.error) }
         is AdminConfigContract.Inputs.SetDeleteImageDialogOpen ->
             updateState { it.copy(deleteImageDialogOpen = input.isOpen) }
 
-        is AdminConfigContract.Inputs.SetCollageImagesLoading -> updateState { it.copy(isCollageImagesLoading = input.isLoading) }
+        is AdminConfigContract.Inputs.SetCollageImagesLoading ->
+            updateState { it.copy(isCollageImagesLoading = input.isLoading) }
+
+        is AdminConfigContract.Inputs.SetBannerLeftImageDropError ->
+            updateState { it.copy(bannerLeftMediaDropError = input.error) }
+
+        is AdminConfigContract.Inputs.SetBannerLeftImagesLoading ->
+            updateState { it.copy(isBannerLeftImagesLoading = input.isLoading) }
+
+        is AdminConfigContract.Inputs.SetBannerRightImageDropError ->
+            updateState { it.copy(bannerRightMediaDropError = input.error) }
+
+        is AdminConfigContract.Inputs.SetBannerRightImagesLoading ->
+            updateState { it.copy(isBannerRightImagesLoading = input.isLoading) }
+    }
+
+    private suspend fun InputScope.handleOnBannerRightDescriptionChanged(description: String) {
+        updateState {
+            it.current?.landingConfig?.bannerSection?.right?.let { right ->
+                val newRight = right.copy(description = description)
+                val newBannerSection = it.current.landingConfig.bannerSection.copy(right = newRight)
+                it.copy(
+                    current = it.current.copy(
+                        landingConfig = it.current.landingConfig.copy(bannerSection = newBannerSection)
+                    ),
+                ).wasEdited()
+            } ?: it
+        }
+    }
+
+    private suspend fun InputScope.handleOnBannerRightTitleChanged(title: String) {
+        updateState {
+            it.current?.landingConfig?.bannerSection?.right?.let { right ->
+                val newRight = right.copy(title = title)
+                val newBannerSection = it.current.landingConfig.bannerSection.copy(right = newRight)
+                it.copy(
+                    current = it.current.copy(
+                        landingConfig = it.current.landingConfig.copy(bannerSection = newBannerSection)
+                    ),
+                ).wasEdited()
+            } ?: it
+        }
+    }
+
+    private suspend fun InputScope.handleOnBannerLeftDescriptionChanged(description: String) {
+        updateState {
+            it.current?.landingConfig?.bannerSection?.left?.let { left ->
+                val newLeft = left.copy(description = description)
+                val newBannerSection = it.current.landingConfig.bannerSection.copy(left = newLeft)
+                it.copy(
+                    current = it.current.copy(
+                        landingConfig = it.current.landingConfig.copy(bannerSection = newBannerSection)
+                    ),
+                ).wasEdited()
+            } ?: it
+        }
+    }
+
+    private suspend fun InputScope.handleOnBannerLeftTitleChanged(title: String) {
+        updateState {
+            it.current?.landingConfig?.bannerSection?.left?.let { left ->
+                val newLeft = left.copy(title = title)
+                val newBannerSection = it.current.landingConfig.bannerSection.copy(left = newLeft)
+                it.copy(
+                    current = it.current.copy(
+                        landingConfig = it.current.landingConfig.copy(bannerSection = newBannerSection)
+                    ),
+                ).wasEdited()
+            } ?: it
+        }
+    }
+
+    private suspend fun InputScope.handleOnBannerLeftMediaDrop(blob: String) {
+        postInput(AdminConfigContract.Inputs.SetBannerLeftImagesLoading(true))
+        postInput(AdminConfigContract.Inputs.UploadBannerMedia(Side.LEFT, blob))
+    }
+
+    private suspend fun InputScope.handleOnBannerRightMediaDrop(blob: String) {
+        postInput(AdminConfigContract.Inputs.SetBannerRightImagesLoading(true))
+        postInput(AdminConfigContract.Inputs.UploadBannerMedia(Side.RIGHT, blob))
     }
 
     private suspend fun InputScope.handleOnCollageItemDescriptionChanged(imageId: String, description: String) {
@@ -117,10 +216,10 @@ internal class AdminConfigInputHandler :
         }
     }
 
-    private suspend fun InputScope.handleUploadMedia(imageId: String, blob: String) {
+    private suspend fun InputScope.handleUploadCollageMedia(imageId: String, blob: String) {
         val state = getCurrentState()
         state.current?.id?.let { id ->
-            sideJob("handleSaveDetailsUploadImage") {
+            sideJob("handleUploadCollageMedia") {
                 postInput(AdminConfigContract.Inputs.SetCollageImageDropError(error = null))
                 postInput(AdminConfigContract.Inputs.SetCollageImagesLoading(isLoading = true))
                 val mediaType = MediaType.Image // TODO: Support more media types
@@ -155,9 +254,55 @@ internal class AdminConfigInputHandler :
         } ?: noOp()
     }
 
+    private suspend fun InputScope.handleUploadBannerMedia(side: Side, blob: String) {
+        val state = getCurrentState()
+        state.current?.id?.let { id ->
+            sideJob("handleUploadBannerMedia") {
+                postInput(AdminConfigContract.Inputs.SetBannerLeftImageDropError(error = null))
+                postInput(AdminConfigContract.Inputs.SetBannerRightImageDropError(error = null))
+                val mediaType = MediaType.Image // TODO: Support more media types
+                configService.uploadBannerMedia(
+                    configId = id,
+                    side = side,
+                    blob = blob,
+                    mediaType = mediaType,
+                ).fold(
+                    onSuccess = { data ->
+                        val bannerSection = with(data.uploadConfigBannerImage.bannerSection) {
+                            GetConfigQuery.BannerSection(
+                                left = GetConfigQuery.Left(
+                                    title = left.title,
+                                    description = left.description,
+                                    imageUrl = left.imageUrl,
+                                    alt = left.alt,
+                                ),
+                                right = GetConfigQuery.Right(
+                                    title = right.title,
+                                    description = right.description,
+                                    imageUrl = right.imageUrl,
+                                    alt = right.alt,
+                                ),
+                            )
+                        }
+                        val config = state.current.copy(
+                            landingConfig = state.current.landingConfig.copy(bannerSection = bannerSection)
+                        )
+                        postInput(AdminConfigContract.Inputs.SetOriginalConfig(config))
+                        postInput(AdminConfigContract.Inputs.SetCurrentConfig(config))
+                    },
+                    onFailure = {
+                        postEvent(AdminConfigContract.Events.OnError(it.message ?: "Error while uploading image"))
+                    },
+                )
+                postInput(AdminConfigContract.Inputs.SetBannerLeftImagesLoading(isLoading = false))
+                postInput(AdminConfigContract.Inputs.SetBannerRightImagesLoading(isLoading = false))
+            }
+        } ?: noOp()
+    }
+
     private suspend fun InputScope.handleOnCollageMediaDrop(imageId: String, blob: String) {
         sideJob("handleAddMedia") {
-            postInput(AdminConfigContract.Inputs.UploadMedia(imageId, blob))
+            postInput(AdminConfigContract.Inputs.UploadCollageMedia(imageId, blob))
         }
     }
 
@@ -173,7 +318,7 @@ internal class AdminConfigInputHandler :
                 state.copy(
                     deleteImageDialogOpen = false,
                     deleteImageDialogImageId = null,
-                    current = state.current?.copy(
+                    current = state.current.copy(
                         landingConfig = state.current.landingConfig.copy(
                             collageItems = newCollageItems.toList()
                         )
@@ -343,6 +488,20 @@ internal class AdminConfigInputHandler :
                             current.footerConfig.showStartChat else null,
                         showOpeningTimes = if (current.footerConfig.showOpeningTimes != original?.footerConfig?.showOpeningTimes)
                             current.footerConfig.showOpeningTimes else null,
+                        bannerSectionLeft = if (current.landingConfig.bannerSection.left != original?.landingConfig?.bannerSection?.left)
+                            BannerItemInput(
+                                title = Optional.present(current.landingConfig.bannerSection.left.title),
+                                description = Optional.present(current.landingConfig.bannerSection.left.description),
+                                imageUrl = Optional.present(current.landingConfig.bannerSection.left.imageUrl),
+                                alt = Optional.present(current.landingConfig.bannerSection.left.alt),
+                            ) else null,
+                        bannerSectionRight = if (current.landingConfig.bannerSection.right != original?.landingConfig?.bannerSection?.right)
+                            BannerItemInput(
+                                title = Optional.present(current.landingConfig.bannerSection.right.title),
+                                description = Optional.present(current.landingConfig.bannerSection.right.description),
+                                imageUrl = Optional.present(current.landingConfig.bannerSection.right.imageUrl),
+                                alt = Optional.present(current.landingConfig.bannerSection.right.alt),
+                            ) else null,
                     ).fold(
                         onSuccess = { data ->
                             val config = GetConfigQuery.GetConfig(
@@ -379,7 +538,21 @@ internal class AdminConfigInputHandler :
                                             imageUrl = it.imageUrl,
                                             alt = it.alt
                                         )
-                                    }
+                                    },
+                                    bannerSection = GetConfigQuery.BannerSection(
+                                        left = GetConfigQuery.Left(
+                                            title = data.updateConfig.landingConfig.bannerSection.left.title,
+                                            description = data.updateConfig.landingConfig.bannerSection.left.description,
+                                            imageUrl = data.updateConfig.landingConfig.bannerSection.left.imageUrl,
+                                            alt = data.updateConfig.landingConfig.bannerSection.left.alt,
+                                        ),
+                                        right = GetConfigQuery.Right(
+                                            title = data.updateConfig.landingConfig.bannerSection.right.title,
+                                            description = data.updateConfig.landingConfig.bannerSection.right.description,
+                                            imageUrl = data.updateConfig.landingConfig.bannerSection.right.imageUrl,
+                                            alt = data.updateConfig.landingConfig.bannerSection.right.alt,
+                                        ),
+                                    ),
                                 )
                             )
                             postInput(AdminConfigContract.Inputs.SetOriginalConfig(config = config))

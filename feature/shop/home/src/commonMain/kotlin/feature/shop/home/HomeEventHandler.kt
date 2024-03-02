@@ -13,5 +13,6 @@ internal class HomeEventHandler(
         is HomeContract.Events.OnError -> onError(event.message)
         HomeContract.Events.GoToPrivacyPolicy -> homeRoutes.privacyPolicy()
         HomeContract.Events.GoToTermsOfService -> homeRoutes.termsOfService()
+        HomeContract.Events.GoToCatalogue -> homeRoutes.catalogue()
     }
 }

@@ -54,6 +54,7 @@ fun MediaSlot(
     errorText: String?,
     cornerRadius: CSSLengthOrPercentageNumericValue = 14.px,
     isImagesLoading: Boolean = false,
+    hasDeleteButton: Boolean = true,
     onFileDropped: (File) -> Unit,
     onImageClick: (url: String?) -> Unit,
     onDeleteClick: () -> Unit,
@@ -102,21 +103,23 @@ fun MediaSlot(
                     .backgroundColor(MaterialTheme.colors.onSurface.value())
                     .transition(CSSTransition("backgroundColor", 0.3.s, TransitionTimingFunction.Ease))
             ) {}
-            AppFilledTonalIconButton(
-                onClick = { onDeleteClick() },
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .margin(1.em)
-                    .onMouseOver { deleteIconHovered = true }
-                    .onMouseOut { deleteIconHovered = false }
-                    .opacity(if (imageHovered || deleteIconHovered) 1.0 else 0.0)
-                    .scale(if (deleteIconHovered) 1.05 else 1.0)
-                    .transition(
-                        CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
-                        CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
-                    )
-            ) {
-                MdiDelete()
+            if (hasDeleteButton) {
+                AppFilledTonalIconButton(
+                    onClick = { onDeleteClick() },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .margin(1.em)
+                        .onMouseOver { deleteIconHovered = true }
+                        .onMouseOut { deleteIconHovered = false }
+                        .opacity(if (imageHovered || deleteIconHovered) 1.0 else 0.0)
+                        .scale(if (deleteIconHovered) 1.05 else 1.0)
+                        .transition(
+                            CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                            CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
+                        )
+                ) {
+                    MdiDelete()
+                }
             }
         } ?: if (isImagesLoading) {
             var opacity by remember { mutableStateOf(1.0) }

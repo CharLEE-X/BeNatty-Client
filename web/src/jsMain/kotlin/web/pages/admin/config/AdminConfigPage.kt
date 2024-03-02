@@ -78,7 +78,8 @@ import web.components.widgets.MediaSlot
 import web.components.widgets.OutlinedMenu
 import web.components.widgets.TakeActionDialog
 import web.pages.shop.home.CollageBigItemStyle
-import web.pages.shop.home.CollageStyle
+import web.pages.shop.home.TextPosition
+import web.pages.shop.home.gridModifier
 import web.util.convertImageToBase64
 
 @Composable
@@ -162,6 +163,7 @@ fun AdminConfigPage(
                 }
                 CardSection(title = state.strings.homePageSettings) {
                     CollageSettings(vm, state)
+                    BannerSettings(vm, state)
                 }
             },
             contentThird = {
@@ -178,6 +180,79 @@ fun AdminConfigPage(
 }
 
 @Composable
+fun BannerSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
+    val scope = rememberCoroutineScope()
+
+    SpanText(
+        text = state.strings.banner,
+        modifier = Modifier
+            .roleStyle(MaterialTheme.typography.headlineSmall)
+            .color(MaterialTheme.colors.onSurface.value())
+    )
+    Row(
+        modifier = gridModifier(columns = 2)
+    ) {
+        state.current?.landingConfig?.bannerSection?.let { bannerSection ->
+            AdminCollageItem(
+                title = bannerSection.left.title ?: "",
+                description = bannerSection.left.description ?: "",
+                onTitleChanged = { vm.trySend(AdminConfigContract.Inputs.OnBannerLeftTitleChanged(it)) },
+                onDescriptionChanged = { vm.trySend(AdminConfigContract.Inputs.OnBannerLeftDescriptionChanged(it)) },
+                textPosition = TextPosition.LeftBottom,
+                image = { imageModifier ->
+                    MediaSlot(
+                        url = bannerSection.left.imageUrl,
+                        alt = bannerSection.left.alt,
+                        errorText = state.bannerLeftMediaDropError,
+                        hasDeleteButton = false,
+                        onFileDropped = { file ->
+                            scope.launch {
+                                convertImageToBase64(file)?.let { imageString ->
+                                    vm.trySend(AdminConfigContract.Inputs.OnBannerLeftMediaDrop(imageString))
+                                }
+                                    ?: vm.trySend(AdminConfigContract.Inputs.SetBannerLeftImageDropError(error = "Not a PNG?"))
+                            }
+                        },
+                        onImageClick = { imageUrl ->
+                            imageUrl?.let { vm.trySend(AdminConfigContract.Inputs.OnImageClick(bannerSection.left.toPreviewImage())) }
+                        },
+                        onDeleteClick = { },
+                        modifier = imageModifier
+                    )
+                }
+            )
+            AdminCollageItem(
+                title = bannerSection.right.title ?: "",
+                description = bannerSection.right.description ?: "",
+                onTitleChanged = { vm.trySend(AdminConfigContract.Inputs.OnBannerRightTitleChanged(it)) },
+                onDescriptionChanged = { vm.trySend(AdminConfigContract.Inputs.OnBannerRightDescriptionChanged(it)) },
+                textPosition = TextPosition.RightTop,
+                image = { imageModifier ->
+                    MediaSlot(
+                        url = bannerSection.right.imageUrl,
+                        alt = bannerSection.right.alt,
+                        errorText = state.bannerRightMediaDropError,
+                        onFileDropped = { file ->
+                            scope.launch {
+                                convertImageToBase64(file)?.let { imageString ->
+                                    vm.trySend(AdminConfigContract.Inputs.OnBannerRightMediaDrop(imageString))
+                                }
+                                    ?: vm.trySend(AdminConfigContract.Inputs.SetBannerRightImageDropError(error = "Not a PNG?"))
+                            }
+                        },
+                        onImageClick = { imageUrl ->
+                            imageUrl?.let { vm.trySend(AdminConfigContract.Inputs.OnImageClick(bannerSection.right.toPreviewImage())) }
+                        },
+                        onDeleteClick = {},
+                        modifier = imageModifier
+                    )
+                }
+            )
+        }
+    }
+}
+
+@Composable
 fun CollageSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
     val scope = rememberCoroutineScope()
 
@@ -188,15 +263,22 @@ fun CollageSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) 
             .color(MaterialTheme.colors.onSurface.value())
     )
     Column(
-        modifier = CollageStyle.toModifier()
+        modifier = gridModifier(columns = 3)
     ) {
         state.current?.landingConfig?.collageItems?.forEachIndexed { index, item ->
             AdminCollageItem(
                 title = item.title ?: "",
                 description = item.description ?: "",
                 buttonText = if (index == 0) state.strings.shopNow else null,
-                isCentered = index == 0,
-                onTitleChanged = { vm.trySend(AdminConfigContract.Inputs.OnCollageItemTitleChanged(item.id, it)) },
+                textPosition = if (index == 0) TextPosition.Center else TextPosition.LeftBottom,
+                onTitleChanged = {
+                    vm.trySend(
+                        AdminConfigContract.Inputs.OnCollageItemTitleChanged(
+                            item.id,
+                            it
+                        )
+                    )
+                },
                 onDescriptionChanged = {
                     vm.trySend(
                         AdminConfigContract.Inputs.OnCollageItemDescriptionChanged(item.id, it)
@@ -213,7 +295,8 @@ fun CollageSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) 
                         scope.launch {
                             convertImageToBase64(file)?.let { imageString ->
                                 vm.trySend(AdminConfigContract.Inputs.OnCollageMediaDrop(item.id, imageString))
-                            } ?: vm.trySend(AdminConfigContract.Inputs.SetCollageImageDropError(error = "Not a PNG?"))
+                            }
+                                ?: vm.trySend(AdminConfigContract.Inputs.SetCollageImageDropError(error = "Not a PNG?"))
                         }
                     },
                     onImageClick = { imageUrl ->
@@ -234,7 +317,7 @@ private fun AdminCollageItem(
     title: String,
     description: String,
     buttonText: String? = null,
-    isCentered: Boolean,
+    textPosition: TextPosition,
     contentColor: Color = Colors.White,
     shadowColor: Color = Color.rgb(30, 30, 59),
     borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
@@ -270,8 +353,19 @@ private fun AdminCollageItem(
                 .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
             image(imageModifier)
             Column(
-                horizontalAlignment = if (isCentered) Alignment.CenterHorizontally else Alignment.Start,
+                horizontalAlignment = when (textPosition) {
+                    TextPosition.Center -> Alignment.CenterHorizontally
+                    TextPosition.LeftBottom -> Alignment.Start
+                    TextPosition.RightTop -> Alignment.End
+                },
                 modifier = Modifier
+                    .align(
+                        when (textPosition) {
+                            TextPosition.Center -> Alignment.Center
+                            TextPosition.LeftBottom -> Alignment.BottomStart
+                            TextPosition.RightTop -> Alignment.TopEnd
+                        }
+                    )
                     .padding(1.em)
                     .gap(0.5.em)
                     .thenIf(hovered) { Modifier.scale(1.05) }
@@ -393,7 +487,15 @@ fun OpeningTimes(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
                 items = DayOfWeek.knownEntries.map { it.name },
                 title = state.strings.openDayFrom,
                 selectedItem = state.current?.companyInfo?.openingTimes?.dayFrom?.name,
-                onItemSelected = { vm.trySend(AdminConfigContract.Inputs.OnOpenDayFromSelected(DayOfWeek.valueOf(it))) },
+                onItemSelected = {
+                    vm.trySend(
+                        AdminConfigContract.Inputs.OnOpenDayFromSelected(
+                            DayOfWeek.valueOf(
+                                it
+                            )
+                        )
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .position(Position.Relative)
@@ -409,7 +511,15 @@ fun OpeningTimes(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
                 items = DayOfWeek.knownEntries.map { it.name },
                 title = state.strings.openDayTo,
                 selectedItem = state.current?.companyInfo?.openingTimes?.dayTo?.name,
-                onItemSelected = { vm.trySend(AdminConfigContract.Inputs.OnOpenDayToSelected(DayOfWeek.valueOf(it))) },
+                onItemSelected = {
+                    vm.trySend(
+                        AdminConfigContract.Inputs.OnOpenDayToSelected(
+                            DayOfWeek.valueOf(
+                                it
+                            )
+                        )
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .position(Position.Relative)

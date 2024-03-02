@@ -50,7 +50,7 @@ import com.varabyte.kobweb.silk.components.style.base
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
-import feature.shop.home.model.CollageItem
+import data.GetLandingConfigQuery
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
@@ -65,14 +65,12 @@ import web.components.widgets.AppElevatedButton
 import web.components.widgets.AppElevatedCard
 import web.components.widgets.ImageOverlay
 
-val CollageStyle by ComponentStyle.base {
-    Modifier
-        .fillMaxWidth()
-        .display(DisplayStyle.Grid)
-        .gridTemplateColumns { repeat(3) { size(1.fr) } }
-        .gridAutoRows { minmax(200.px, 1.fr) }
-        .gap(1.em)
-}
+fun gridModifier(columns: Int = 3) = Modifier
+    .fillMaxWidth()
+    .display(DisplayStyle.Grid)
+    .gridTemplateColumns { repeat(columns) { size(1.fr) } }
+    .gridAutoRows { minmax(200.px, 1.fr) }
+    .gap(1.em)
 
 val CollageBigItemStyle by ComponentStyle.base {
     Modifier
@@ -83,25 +81,25 @@ val CollageBigItemStyle by ComponentStyle.base {
 @Composable
 fun Collage(
     modifier: Modifier = Modifier,
-    items: List<CollageItem>,
+    items: List<GetLandingConfigQuery.CollageItem>,
     shopNowText: String,
-    onCollageItemClick: (CollageItem) -> Unit,
+    onCollageItemClick: (GetLandingConfigQuery.CollageItem) -> Unit,
 ) {
     Column(
-        modifier = CollageStyle.toModifier().then(modifier)
+        modifier = gridModifier(columns = 3).then(modifier)
     ) {
         items.forEachIndexed { index, item ->
             CollageItem(
-                title = item.title,
-                description = item.description,
+                title = item.title ?: "",
+                description = item.description ?: "",
                 buttonText = if (index == 0) shopNowText else null,
                 onClick = { onCollageItemClick(item) },
-                isCentered = index == 0,
+                textPosition = if (index == 0) TextPosition.Center else TextPosition.LeftBottom,
                 modifier = Modifier.thenIf(index == 0) { CollageBigItemStyle.toModifier() }
             ) { imageModifier ->
                 Image(
-                    src = item.imageUrl,
-                    alt = item.title,
+                    src = item.imageUrl ?: "",
+                    alt = item.title ?: "",
                     modifier = imageModifier
                 )
             }
@@ -109,13 +107,17 @@ fun Collage(
     }
 }
 
+enum class TextPosition {
+    Center, LeftBottom, RightTop
+}
+
 @Composable
-private fun CollageItem(
+fun CollageItem(
     modifier: Modifier = Modifier,
     title: String,
     description: String,
     buttonText: String? = null,
-    isCentered: Boolean,
+    textPosition: TextPosition,
     onClick: () -> Unit,
     contentColor: Color = Colors.White,
     shadowColor: Color = Color.rgb(30, 30, 59),
@@ -156,9 +158,20 @@ private fun CollageItem(
                 hovered = hovered
             )
             Column(
-                horizontalAlignment = if (isCentered) Alignment.CenterHorizontally else Alignment.Start,
+                horizontalAlignment = when (textPosition) {
+                    TextPosition.Center -> Alignment.CenterHorizontally
+                    TextPosition.LeftBottom -> Alignment.Start
+                    TextPosition.RightTop -> Alignment.End
+                },
                 modifier = Modifier
-                    .padding(2.em)
+                    .align(
+                        when (textPosition) {
+                            TextPosition.Center -> Alignment.Center
+                            TextPosition.LeftBottom -> Alignment.BottomStart
+                            TextPosition.RightTop -> Alignment.TopEnd
+                        }
+                    )
+                    .padding(50.px)
                     .thenIf(hovered) { Modifier.scale(1.05) }
                     .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
             ) {
