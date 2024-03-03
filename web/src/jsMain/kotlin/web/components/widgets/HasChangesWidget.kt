@@ -40,7 +40,6 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 
 @Composable
@@ -107,14 +106,14 @@ fun HasChangesWidget(
                         text = messageText,
                         modifier = Modifier
                             .fontWeight(FontWeight.SemiBold)
-                            .color(MaterialTheme.colors.onSurface.value())
+                            .color(MaterialTheme.colors.onSurface)
                             .userSelect(UserSelect.None)
                     )
                     Spacer()
                     AppFilledButton(
                         onClick = { onCancel() },
                         leadingIcon = { MdiCancel() },
-                        containerColor = MaterialTheme.colors.tertiary.value(),
+                        containerColor = MaterialTheme.colors.tertiary,
                     ) {
                         SpanText(resetText)
                     }

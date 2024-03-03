@@ -13,7 +13,6 @@ import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.boxShadow
 import com.varabyte.kobweb.compose.ui.modifiers.boxSizing
 import com.varabyte.kobweb.compose.ui.modifiers.display
@@ -32,13 +31,13 @@ import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import web.components.widgets.TickerSection
 import web.components.widgets.tickerHeight
 import web.shadow
+import web.util.glossy
 
-private enum class ScrollDirection { UP, DOWN }
+enum class ScrollDirection { UP, DOWN }
 
 @Composable
 fun DesktopNav(
@@ -85,7 +84,7 @@ fun DesktopNav(
         modifier = Modifier
             .position(Position.Fixed)
             .display(DisplayStyle.Block)
-            .backgroundColor(MaterialTheme.colors.surface.value())
+            .glossy(MaterialTheme.colors.surface)
             .fillMaxWidth()
             .boxSizing(BoxSizing.BorderBox)
             .zIndex(10)

@@ -1,14 +1,28 @@
-mutation ProductUpdate($input: ProductUpdateInput!) {
-  updateProduct(input: $input) {
+query AdminProductGetById($getProductByIdId: String!) {
+  getAdminProductById(id: $getProductByIdId) {
     id
     title
     description
     postStatus
-    media
+    media {
+      id
+      url
+      mediaType
+      altText
+      createdAt
+      updatedAt
+    }
     categoryId
     tags
     isFeatured
     allowReviews
+    creator {
+      id
+      firstName
+      lastName
+    }
+    createdAt
+    updatedAt
     pricing {
       price
       regularPrice
@@ -30,5 +44,7 @@ mutation ProductUpdate($input: ProductUpdateInput!) {
       width
       height
     }
+    reviews
+    totalInWishlist
   }
 }

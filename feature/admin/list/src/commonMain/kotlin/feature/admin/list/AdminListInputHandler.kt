@@ -164,26 +164,28 @@ internal class AdminListInputHandler :
                         sortDirection = state.sortDirection
                     ).fold(
                         onSuccess = {
-                            val items = it.getAllProductsPage.products.map { product ->
-                                ListItem(
-                                    id = product.id,
-                                    slot1 = millisToDate(product.createdAt.toLong()),
-                                    slot2 = product.mediaUrl,
-                                    slot3 = product.title,
-                                    slot4 = product.price,
-                                    slot5 = product.sold.toString(),
-                                    slot6 = null,
-                                )
-                            }
-                            postInput(AdminListContract.Inputs.Set.Items(items))
+                            with(it.getAllAdminProductsPage) {
+                                val items = products.map { product ->
+                                    ListItem(
+                                        id = product.id,
+                                        slot1 = millisToDate(product.createdAt.toLong()),
+                                        slot2 = product.mediaUrl,
+                                        slot3 = product.title,
+                                        slot4 = product.price,
+                                        slot5 = product.sold.toString(),
+                                        slot6 = null,
+                                    )
+                                }
+                                postInput(AdminListContract.Inputs.Set.Items(items))
 
-                            val info = PageInfo(
-                                count = it.getAllProductsPage.info.count,
-                                pages = it.getAllProductsPage.info.pages,
-                                prev = it.getAllProductsPage.info.prev,
-                                next = it.getAllProductsPage.info.next,
-                            )
-                            postInput(AdminListContract.Inputs.Set.Info(info))
+                                val info = PageInfo(
+                                    count = info.count,
+                                    pages = info.pages,
+                                    prev = info.prev,
+                                    next = info.next,
+                                )
+                                postInput(AdminListContract.Inputs.Set.Info(info))
+                            }
                         },
                         onFailure = { postEvent(AdminListContract.Events.OnError(it.message ?: "")) }
                     )

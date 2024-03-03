@@ -1,4 +1,4 @@
-mutation ProductUploadImage($input: ProductMediaUploadInput!) {
+mutation AdminProductUploadImage($input: ProductMediaUploadInput!) {
   uploadMediaToProduct(input: $input) {
     media {
       id

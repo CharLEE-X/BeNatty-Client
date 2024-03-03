@@ -5,8 +5,8 @@ import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
 import core.util.millisToTime
+import data.AdminProductGetByIdQuery
 import data.GetCategoryByIdQuery
-import data.ProductGetByIdQuery
 import data.service.CategoryService
 import data.service.ProductService
 import data.service.TagService
@@ -130,7 +130,7 @@ internal class AdminProductPageInputHandler :
 
                 AdminProductPageContract.ScreenState.New -> {
                     val currentLocalMedia = state.localMedia
-                    val newMedia = ProductGetByIdQuery.Medium(
+                    val newMedia = AdminProductGetByIdQuery.Medium(
                         id = currentLocalMedia.size.toString(),
                         url = mediaString,
                         mediaType = MediaType.Image,
@@ -362,7 +362,7 @@ internal class AdminProductPageInputHandler :
         }
     }
 
-    private suspend fun InputScope.handleSetMedia(media: List<ProductGetByIdQuery.Medium>) {
+    private suspend fun InputScope.handleSetMedia(media: List<AdminProductGetByIdQuery.Medium>) {
         updateState { it.copy(current = it.current.copy(media = media)).wasEdited() }
     }
 
@@ -374,7 +374,7 @@ internal class AdminProductPageInputHandler :
         updateState { it.copy(current = it.current.copy(updatedAt = updatedAt)).wasEdited() }
     }
 
-    private suspend fun InputScope.handleSetCreator(creator: ProductGetByIdQuery.Creator) {
+    private suspend fun InputScope.handleSetCreator(creator: AdminProductGetByIdQuery.Creator) {
         updateState { it.copy(current = it.current.copy(creator = creator)).wasEdited() }
     }
 
@@ -433,32 +433,34 @@ internal class AdminProductPageInputHandler :
             productService.getById(id).collect { result ->
                 result.fold(
                     onSuccess = { data ->
-                        val createdAt = millisToTime(data.getProductById.createdAt.toLong())
-                        val updatedAt = millisToTime(data.getProductById.updatedAt.toLong())
-                        val originalProduct = data.getProductById.copy(
-                            title = data.getProductById.title,
-                            description = data.getProductById.description,
-                            postStatus = data.getProductById.postStatus,
-                            media = data.getProductById.media,
-                            categoryId = data.getProductById.categoryId,
-                            tags = data.getProductById.tags,
-                            isFeatured = data.getProductById.isFeatured,
-                            allowReviews = data.getProductById.allowReviews,
-                            creator = data.getProductById.creator.copy(
-                                id = data.getProductById.creator.id,
-                                firstName = data.getProductById.creator.firstName,
-                                lastName = data.getProductById.creator.lastName,
-                            ),
-                            createdAt = createdAt,
-                            updatedAt = updatedAt,
-                            pricing = data.getProductById.pricing.copy(
-                                price = data.getProductById.pricing.price,
-                                regularPrice = data.getProductById.pricing.regularPrice,
-                                chargeTax = data.getProductById.pricing.chargeTax,
-                            ),
-                        )
-                        postInput(AdminProductPageContract.Inputs.Set.OriginalProduct(originalProduct))
-                        postInput(AdminProductPageContract.Inputs.Set.CurrentProduct(originalProduct))
+                        with(data.getAdminProductById) {
+                            val createdAt = millisToTime(createdAt.toLong())
+                            val updatedAt = millisToTime(updatedAt.toLong())
+                            val originalProduct = copy(
+                                title = title,
+                                description = description,
+                                postStatus = postStatus,
+                                media = media,
+                                categoryId = categoryId,
+                                tags = tags,
+                                isFeatured = isFeatured,
+                                allowReviews = allowReviews,
+                                creator = creator.copy(
+                                    id = creator.id,
+                                    firstName = creator.firstName,
+                                    lastName = creator.lastName,
+                                ),
+                                createdAt = createdAt,
+                                updatedAt = updatedAt,
+                                pricing = pricing.copy(
+                                    price = pricing.price,
+                                    regularPrice = pricing.regularPrice,
+                                    chargeTax = pricing.chargeTax,
+                                ),
+                            )
+                            postInput(AdminProductPageContract.Inputs.Set.OriginalProduct(originalProduct))
+                            postInput(AdminProductPageContract.Inputs.Set.CurrentProduct(originalProduct))
+                        }
                     },
                     onFailure = {
                         postEvent(
@@ -555,7 +557,7 @@ internal class AdminProductPageInputHandler :
             productService.uploadImage(state.current.id.toString(), imageString, mediaType).fold(
                 onSuccess = { data ->
                     val media = data.uploadMediaToProduct.media.map {
-                        ProductGetByIdQuery.Medium(
+                        AdminProductGetByIdQuery.Medium(
                             id = it.id,
                             url = it.url,
                             mediaType = it.mediaType,
@@ -630,7 +632,7 @@ internal class AdminProductPageInputHandler :
                     onSuccess = { data ->
                         postInput(
                             AdminProductPageContract.Inputs.Set.OriginalProduct(
-                                product = ProductGetByIdQuery.GetProductById(
+                                product = AdminProductGetByIdQuery.GetAdminProductById(
                                     id = data.updateProduct.id,
                                     title = data.updateProduct.title,
                                     description = data.updateProduct.description,
@@ -640,12 +642,12 @@ internal class AdminProductPageInputHandler :
                                     tags = data.updateProduct.tags,
                                     isFeatured = data.updateProduct.isFeatured,
                                     allowReviews = data.updateProduct.allowReviews,
-                                    pricing = ProductGetByIdQuery.Pricing(
+                                    pricing = AdminProductGetByIdQuery.Pricing(
                                         price = data.updateProduct.pricing.price,
                                         regularPrice = data.updateProduct.pricing.regularPrice,
                                         chargeTax = data.updateProduct.pricing.chargeTax,
                                     ),
-                                    inventory = ProductGetByIdQuery.Inventory(
+                                    inventory = AdminProductGetByIdQuery.Inventory(
                                         trackQuantity = data.updateProduct.inventory.trackQuantity,
                                         useGlobalTracking = data.updateProduct.inventory.useGlobalTracking,
                                         backorderStatus = data.updateProduct.inventory.backorderStatus,
@@ -653,7 +655,7 @@ internal class AdminProductPageInputHandler :
                                         remainingStock = data.updateProduct.inventory.remainingStock,
                                         stockStatus = data.updateProduct.inventory.stockStatus,
                                     ),
-                                    shipping = ProductGetByIdQuery.Shipping(
+                                    shipping = AdminProductGetByIdQuery.Shipping(
                                         presetId = data.updateProduct.shipping.presetId,
                                         isPhysicalProduct = data.updateProduct.shipping.isPhysicalProduct,
                                         height = data.updateProduct.shipping.height,

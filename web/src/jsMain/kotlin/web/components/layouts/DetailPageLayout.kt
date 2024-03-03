@@ -23,7 +23,6 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.em
-import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.widgets.AppFilledButton
@@ -60,7 +59,7 @@ fun DetailPageLayout(
                     AppFilledButton(
                         onClick = { onDeleteClick() },
                         leadingIcon = { MdiDelete() },
-                        containerColor = MaterialTheme.colors.error.value(),
+                        containerColor = MaterialTheme.colors.error,
                     ) {
                         SpanText(text = deleteText)
                     }

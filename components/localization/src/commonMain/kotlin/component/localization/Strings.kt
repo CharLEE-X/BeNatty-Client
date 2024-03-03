@@ -261,4 +261,12 @@ enum class Strings {
     EcoFriendlyClothing,
     CottonNoArtificialIngredients,
     Banner,
+    ProductPage,
+    PopularRightNow,
+    Catalogue,
+    Sales,
+    Kids,
+    Men,
+    SearchResults,
+    Women,
 }

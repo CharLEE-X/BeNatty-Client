@@ -11,13 +11,18 @@ import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.copperleaf.ballast.navigation.routing.RouterContract.Inputs.GoToDestination
 import com.copperleaf.ballast.navigation.routing.RouterContract.Inputs.PopUntilRoute
 import com.copperleaf.ballast.navigation.routing.RouterContract.Inputs.ReplaceTopDestination
+import com.copperleaf.ballast.navigation.routing.build
 import com.copperleaf.ballast.navigation.routing.currentDestinationOrNull
+import com.copperleaf.ballast.navigation.routing.directions
+import com.copperleaf.ballast.navigation.routing.pathParameter
 import com.copperleaf.ballast.navigation.routing.renderCurrentDestination
 import com.copperleaf.ballast.navigation.routing.stringPath
+import feature.product.catalogue.Variant
 import feature.router.RouterViewModel
 import feature.router.Screen
 import feature.router.idPath
 import feature.shop.navbar.DesktopNavContract
+import kotlinx.serialization.json.Json
 import web.components.layouts.AdminRoutes
 import web.components.layouts.MainRoutes
 import web.pages.admin.category.AdminCategoryListPage
@@ -56,8 +61,8 @@ import web.pages.shop.home.HomeContent
 import web.pages.shop.payment.PaymentPage
 import web.pages.shop.payment.cart.CartPage
 import web.pages.shop.payment.checkout.CheckoutPage
-import web.pages.shop.product.ProductPage
 import web.pages.shop.product.catalogue.CataloguePage
+import web.pages.shop.product.page.ProductPage
 import web.pages.shop.settings.SettingsPage
 
 @Composable
@@ -99,7 +104,15 @@ fun RouterContent(
         goToReturns = { router.trySend(GoToDestination(Screen.Returns.route)) },
         goToWishlist = { router.trySend(GoToDestination(Screen.Wishlist.route)) },
         goToHelpAndFaq = { router.trySend(GoToDestination(Screen.HelpAndFAQ.route)) },
-        goToCatalogue = { router.trySend(GoToDestination(Screen.Catalogue.route)) },
+        goToCatalogue = {
+            router.trySend(
+                GoToDestination(
+                    Screen.Catalogue.directions()
+                        .pathParameter("variant", Json.encodeToString(Variant.serializer(), Variant.Catalogue))
+                        .build()
+                )
+            )
+        },
         goToAboutUs = { router.trySend(GoToDestination(Screen.About.route)) },
         goToAccessibility = { router.trySend(GoToDestination(Screen.Accessibility.route)) },
         goToCareer = { router.trySend(GoToDestination(Screen.Career.route)) },
@@ -112,6 +125,7 @@ fun RouterContent(
         goToTermsOfService = { router.trySend(GoToDestination(Screen.TC.route)) },
         goToTrackOrder = { router.trySend(GoToDestination(Screen.TrackOrder.route)) },
         goToAdminHome = { router.trySend(ReplaceTopDestination(Screen.AdminHome.route)) },
+        goToProduct = { productId -> router.trySend(GoToDestination(Screen.Product.idPath(productId))) },
         onError = onError,
     )
     val adminRoutes = AdminRoutes(
@@ -153,17 +167,20 @@ fun RouterContent(
                     )
                 }
 
-                Screen.Catalogue ->
+                Screen.Catalogue -> {
+                    val variant: String by stringPath()
+                    val variantClass = Json.decodeFromString<Variant>(variant)
                     CataloguePage(
                         mainRoutes = mainRoutes,
-                        goToProduct = { router.trySend(GoToDestination(Screen.Product.idPath(it))) },
+                        variant = variantClass
                     )
+                }
 
                 Screen.Product -> {
-                    val id: String by currentDestination!!.stringPath("id")
+                    val id: String by stringPath()
                     ProductPage(
-                        router = router,
-                        id = id,
+                        productId = id,
+                        mainRoutes = mainRoutes,
                         onError = onError,
                     )
                 }

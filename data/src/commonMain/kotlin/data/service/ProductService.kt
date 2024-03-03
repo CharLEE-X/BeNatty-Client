@@ -5,13 +5,13 @@ import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.watch
-import data.CreateProductMutation
-import data.DeleteProductMediaMutation
-import data.DeleteProductMutation
-import data.GetAllProductsPageQuery
-import data.ProductGetByIdQuery
-import data.ProductUpdateMutation
-import data.ProductUploadImageMutation
+import data.AdminCreateProductMutation
+import data.AdminDeleteProductMediaMutation
+import data.AdminDeleteProductMutation
+import data.AdminGetAllProductsPageQuery
+import data.AdminProductGetByIdQuery
+import data.AdminProductUpdateMutation
+import data.AdminProductUploadImageMutation
 import data.type.BackorderStatus
 import data.type.InventoryUpdateInput
 import data.type.MediaType
@@ -31,17 +31,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 interface ProductService {
-    suspend fun create(input: ProductCreateInput): Result<CreateProductMutation.Data>
+    suspend fun create(input: ProductCreateInput): Result<AdminCreateProductMutation.Data>
     suspend fun getAsPage(
         page: Int,
         size: Int,
         query: String?,
         sortBy: String?,
         sortDirection: SortDirection?,
-    ): Result<GetAllProductsPageQuery.Data>
+    ): Result<AdminGetAllProductsPageQuery.Data>
 
-    suspend fun getById(id: String): Flow<Result<ProductGetByIdQuery.Data>>
-    suspend fun delete(id: String): Result<DeleteProductMutation.Data>
+    suspend fun getById(id: String): Flow<Result<AdminProductGetByIdQuery.Data>>
+    suspend fun delete(id: String): Result<AdminDeleteProductMutation.Data>
     suspend fun update(
         id: String,
         name: String?,
@@ -65,37 +65,37 @@ interface ProductService {
         isPhysicalProduct: Boolean?,
         weight: String?,
         width: String?,
-    ): Result<ProductUpdateMutation.Data>
+    ): Result<AdminProductUpdateMutation.Data>
 
     suspend fun uploadImage(
         productId: String,
         mediaString: String,
         mediaType: MediaType,
-    ): Result<ProductUploadImageMutation.Data>
+    ): Result<AdminProductUploadImageMutation.Data>
 
-    suspend fun deleteImage(productId: String, imageId: String): Result<DeleteProductMediaMutation.Data>
+    suspend fun deleteImage(productId: String, imageId: String): Result<AdminDeleteProductMediaMutation.Data>
 }
 
 internal class ProductServiceImpl(
     private val apolloClient: ApolloClient,
     private val authService: AuthService,
 ) : ProductService {
-    override suspend fun deleteImage(productId: String, imageId: String): Result<DeleteProductMediaMutation.Data> {
+    override suspend fun deleteImage(productId: String, imageId: String): Result<AdminDeleteProductMediaMutation.Data> {
         val input = ProductMediaDeleteInput(imageId = productId, productId = imageId)
-        return apolloClient.mutation(DeleteProductMediaMutation(input)).handle()
+        return apolloClient.mutation(AdminDeleteProductMediaMutation(input)).handle()
     }
 
     override suspend fun uploadImage(
         productId: String,
         mediaString: String,
         mediaType: MediaType,
-    ): Result<ProductUploadImageMutation.Data> {
+    ): Result<AdminProductUploadImageMutation.Data> {
         val input = ProductMediaUploadInput(
             productId = productId,
             blob = mediaString,
             mediaType = mediaType,
         )
-        return apolloClient.mutation(ProductUploadImageMutation(input)).handle()
+        return apolloClient.mutation(AdminProductUploadImageMutation(input)).handle()
     }
 
     override suspend fun update(
@@ -121,7 +121,7 @@ internal class ProductServiceImpl(
         isPhysicalProduct: Boolean?,
         weight: String?,
         width: String?,
-    ): Result<ProductUpdateMutation.Data> {
+    ): Result<AdminProductUpdateMutation.Data> {
         val inventory = if (
             backorderStatus != null || lowStockThreshold != null || remainingStock != null || stockStatus != null ||
             trackQuantity != null
@@ -178,13 +178,13 @@ internal class ProductServiceImpl(
             shipping = shipping,
         )
 
-        return apolloClient.mutation(ProductUpdateMutation(input))
+        return apolloClient.mutation(AdminProductUpdateMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }
 
-    override suspend fun create(input: ProductCreateInput): Result<CreateProductMutation.Data> {
-        return apolloClient.mutation(CreateProductMutation(input))
+    override suspend fun create(input: ProductCreateInput): Result<AdminCreateProductMutation.Data> {
+        return apolloClient.mutation(AdminCreateProductMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }
@@ -195,7 +195,7 @@ internal class ProductServiceImpl(
         query: String?,
         sortBy: String?,
         sortDirection: SortDirection?,
-    ): Result<GetAllProductsPageQuery.Data> {
+    ): Result<AdminGetAllProductsPageQuery.Data> {
         val pageInput = PageInput(
             page = page,
             size = size,
@@ -203,20 +203,20 @@ internal class ProductServiceImpl(
             sortBy = sortBy.skipIfNull(),
             sortDirection = sortDirection.skipIfNull(),
         )
-        return apolloClient.query(GetAllProductsPageQuery(pageInput))
+        return apolloClient.query(AdminGetAllProductsPageQuery(pageInput))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }
 
-    override suspend fun getById(id: String): Flow<Result<ProductGetByIdQuery.Data>> {
-        return apolloClient.query(ProductGetByIdQuery(id))
+    override suspend fun getById(id: String): Flow<Result<AdminProductGetByIdQuery.Data>> {
+        return apolloClient.query(AdminProductGetByIdQuery(id))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .watch()
             .map { it.handle() }
     }
 
-    override suspend fun delete(id: String): Result<DeleteProductMutation.Data> {
-        return apolloClient.mutation(DeleteProductMutation(id))
+    override suspend fun delete(id: String): Result<AdminDeleteProductMutation.Data> {
+        return apolloClient.mutation(AdminDeleteProductMutation(id))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }

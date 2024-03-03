@@ -38,7 +38,6 @@ import feature.shop.navbar.label
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.s
-import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 
 @Composable
@@ -123,29 +122,29 @@ fun SideNavMainItem(
     var hovered by remember { mutableStateOf(false) }
     val bgColor = if (isLogout) {
         when {
-            hovered -> MaterialTheme.colors.errorContainer.value()
+            hovered -> MaterialTheme.colors.errorContainer
             else -> Colors.Transparent
         }
     } else {
         when {
-            isCurrent && hovered -> MaterialTheme.colors.primaryContainer.value()
-            isCurrent && !hovered -> MaterialTheme.colors.primary.value()
-            !isCurrent && hovered -> MaterialTheme.colors.surfaceContainerLow.value()
+            isCurrent && hovered -> MaterialTheme.colors.primaryContainer
+            isCurrent && !hovered -> MaterialTheme.colors.primary
+            !isCurrent && hovered -> MaterialTheme.colors.surfaceContainerLow
             else -> Colors.Transparent
         }
     }
 
     val contentColor = if (isLogout) {
         when {
-            hovered -> MaterialTheme.colors.onErrorContainer.value()
-            else -> MaterialTheme.colors.error.value()
+            hovered -> MaterialTheme.colors.onErrorContainer
+            else -> MaterialTheme.colors.error
         }
     } else {
         when {
-            isCurrent && hovered -> MaterialTheme.colors.onPrimaryContainer.value()
-            isCurrent && !hovered -> MaterialTheme.colors.onPrimary.value()
-            !isCurrent && hovered -> MaterialTheme.colors.onSurface.value()
-            else -> MaterialTheme.colors.onSurface.value()
+            isCurrent && hovered -> MaterialTheme.colors.onPrimaryContainer
+            isCurrent && !hovered -> MaterialTheme.colors.onPrimary
+            !isCurrent && hovered -> MaterialTheme.colors.onSurface
+            else -> MaterialTheme.colors.onSurface
         }
     }
 
@@ -188,16 +187,16 @@ fun SideNavSubItem(
 ) {
     var hovered by remember { mutableStateOf(false) }
     val bgColor = when {
-        isSubCurrent && hovered -> MaterialTheme.colors.primaryContainer.value()
-        isSubCurrent && !hovered -> MaterialTheme.colors.primary.value()
-        !isSubCurrent && hovered -> MaterialTheme.colors.surfaceContainerLow.value()
+        isSubCurrent && hovered -> MaterialTheme.colors.primaryContainer
+        isSubCurrent && !hovered -> MaterialTheme.colors.primary
+        !isSubCurrent && hovered -> MaterialTheme.colors.surfaceContainerLow
         else -> Colors.Transparent
     }
     val contentColor = when {
-        isSubCurrent && hovered -> MaterialTheme.colors.onPrimaryContainer.value()
-        isSubCurrent && !hovered -> MaterialTheme.colors.onPrimary.value()
-        !isSubCurrent && hovered -> MaterialTheme.colors.onSurface.value()
-        else -> MaterialTheme.colors.onSurface.value()
+        isSubCurrent && hovered -> MaterialTheme.colors.onPrimaryContainer
+        isSubCurrent && !hovered -> MaterialTheme.colors.onPrimary
+        !isSubCurrent && hovered -> MaterialTheme.colors.onSurface
+        else -> MaterialTheme.colors.onSurface
     }
 
     Box(

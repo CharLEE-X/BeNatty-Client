@@ -10,7 +10,6 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.admin.list.AdminListContract
 import feature.admin.list.AdminListViewModel
 import feature.router.RouterViewModel
-import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
@@ -57,7 +56,7 @@ fun AdminProductListPage(
                 AppFilledButton(
                     onClick = { vm.trySend(AdminListContract.Inputs.Click.Create) },
                     leadingIcon = { MdiCreate() },
-                    containerColor = MaterialTheme.colors.tertiary.value(),
+                    containerColor = MaterialTheme.colors.tertiary,
                 ) {
                     SpanText(text = state.strings.create)
                 }

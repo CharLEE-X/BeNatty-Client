@@ -57,6 +57,8 @@ include(
     ":feature:shop:account:orders",
     ":feature:shop:account:returns",
     ":feature:shop:account:wishlist",
+    ":feature:shop:product:catalogue",
+    ":feature:shop:product:page",
 
     // Admin features
     ":feature:admin:dashboard",

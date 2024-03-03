@@ -1,0 +1,21 @@
+query GetCataloguePage($pageInput: PageInput!) {
+  getCataloguePage(pageInput: $pageInput) {
+    info {
+      count
+      next
+      pages
+      prev
+    }
+    products {
+      id
+      media {
+        id
+        url
+        alt
+        mediaType
+      }
+      price
+      title
+    }
+  }
+}

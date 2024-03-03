@@ -34,7 +34,7 @@ import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.value
-import theme.MaterialTheme
+import theme.CSSMaterialTheme
 
 @InitSilk
 fun initSiteStyles(ctx: InitSilkContext) {
@@ -58,7 +58,7 @@ val HeadlineTextStyle by ComponentStyle.base {
     Modifier
         .fontSize(3.cssRem)
         .textAlign(TextAlign.Start)
-        .color(MaterialTheme.colors.onSurface.value())
+        .color(CSSMaterialTheme.colors.onSurface.value())
         .lineHeight(1.2) //1.5x doesn't look as good on very large text
         .fontFamily(HEADLINE_FONT)
         .fontWeight(FontWeight.Light)

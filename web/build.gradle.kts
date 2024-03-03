@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kobweb.application)
+    kotlin("plugin.serialization")
 }
 
 group = project.name
@@ -54,6 +55,8 @@ kotlin {
                 implementation(feature.shop.account.orders)
                 implementation(feature.shop.account.returns)
                 implementation(feature.shop.account.wishlist)
+                implementation(feature.shop.product.catalogue)
+                implementation(feature.shop.product.page)
 
                 implementation(feature.admin.dashboard)
                 implementation(feature.admin.config)
@@ -79,6 +82,7 @@ kotlin {
 
             implementation(libs.koin.core)
             implementation(libs.kotlin.datetime)
+            implementation(libs.kotlinx.serialization.json)
             implementation(npm("@js-joda/timezone", "2.3.0"))
         }
     }

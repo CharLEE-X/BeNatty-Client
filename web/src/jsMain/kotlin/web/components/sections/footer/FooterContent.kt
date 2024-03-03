@@ -12,7 +12,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
@@ -41,7 +40,6 @@ import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.fr
 import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.layouts.oneLayoutMaxWidth
@@ -49,13 +47,14 @@ import web.components.widgets.AppOutlinedIconButton
 import web.components.widgets.AppTextButton
 import web.components.widgets.TickerSection
 import web.compose.material3.component.Divider
-import web.util.sectionsSpacing
+import web.util.glossy
+import web.util.sectionsGap
 
 @Composable
 fun Footer(
     footerRoutes: FooterRoutes,
     onError: suspend (String) -> Unit,
-    contentColor: CSSColorValue = MaterialTheme.colors.onSurface.value(),
+    contentColor: CSSColorValue = MaterialTheme.colors.onSurface,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -72,7 +71,7 @@ fun Footer(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
-            .backgroundColor(MaterialTheme.colors.surface.value())
+            .glossy(MaterialTheme.colors.surfaceContainer)
             .zIndex(2)
     ) {
         TickerSection(
@@ -82,7 +81,7 @@ fun Footer(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .margin(topBottom = sectionsSpacing)
+                .margin(topBottom = sectionsGap)
                 .maxWidth(oneLayoutMaxWidth)
         ) {
             Row(

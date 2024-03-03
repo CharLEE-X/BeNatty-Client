@@ -45,5 +45,33 @@ mutation CreateConfig($input: CreateConfigInput!) {
         }
       }
     }
+    catalogueConfig {
+      bannerConfig {
+        catalogue {
+          title
+          imageUrl
+        }
+        sales {
+          title
+          imageUrl
+        }
+        popular {
+          title
+          imageUrl
+        }
+        mens {
+          title
+          imageUrl
+        }
+        women {
+          title
+          imageUrl
+        }
+        kids {
+          title
+          imageUrl
+        }
+      }
+    }
   }
 }

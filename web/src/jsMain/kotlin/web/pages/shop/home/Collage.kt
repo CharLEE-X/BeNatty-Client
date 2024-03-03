@@ -34,6 +34,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.gridTemplateColumns
 import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.objectFit
+import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
 import com.varabyte.kobweb.compose.ui.modifiers.overflow
@@ -58,19 +59,22 @@ import org.jetbrains.compose.web.css.fr
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import web.HeadlineTextStyle
 import web.components.widgets.AppElevatedButton
 import web.components.widgets.AppElevatedCard
 import web.components.widgets.ImageOverlay
 
-fun gridModifier(columns: Int = 3) = Modifier
+fun gridModifier(
+    columns: Int = 3,
+    gap: CSSLengthOrPercentageNumericValue = 1.em,
+    rowMinHeight: CSSLengthOrPercentageNumericValue = 200.px
+) = Modifier
     .fillMaxWidth()
     .display(DisplayStyle.Grid)
     .gridTemplateColumns { repeat(columns) { size(1.fr) } }
-    .gridAutoRows { minmax(200.px, 1.fr) }
-    .gap(1.em)
+    .gridAutoRows { minmax(rowMinHeight, 1.fr) }
+    .gap(gap)
 
 val CollageBigItemStyle by ComponentStyle.base {
     Modifier
@@ -143,7 +147,10 @@ fun CollageItem(
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .backgroundColor(MaterialTheme.colors.surfaceContainerHighest)
+                .onClick { onClick() }
         ) {
             val imageModifier = Modifier
                 .fillMaxSize()
@@ -216,7 +223,7 @@ fun CollageItem(
                     AppElevatedButton(
                         containerShape = 16.px,
                         onClick = onClick,
-                        containerColor = MaterialTheme.colors.primary.value(),
+                        containerColor = MaterialTheme.colors.primary,
                         modifier = Modifier
                             .margin(top = 30.px)
                             .size(200.px, 80.px)
@@ -225,7 +232,7 @@ fun CollageItem(
                             text = it,
                             modifier = Modifier
                                 .fontSize(1.5.em)
-                                .color(MaterialTheme.colors.onPrimary.value())
+                                .color(MaterialTheme.colors.onPrimary)
                         )
                     }
                 }

@@ -14,6 +14,7 @@ import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.modifiers.animation
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.boxSizing
@@ -34,13 +35,11 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiEco
 import com.varabyte.kobweb.silk.components.text.SpanText
 import kotlinx.browser.window
 import org.jetbrains.compose.web.css.AnimationTimingFunction
-import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 
 val TickerAnimation by Keyframes {
@@ -56,8 +55,8 @@ fun TickerSection(
     modifier: Modifier = Modifier,
     tickerText: String,
     onClick: () -> Unit,
-    backgroundColor: CSSColorValue = MaterialTheme.colors.onPrimaryContainer.value(),
-    contentColor: CSSColorValue = MaterialTheme.colors.primaryContainer.value(),
+    backgroundColor: Color = MaterialTheme.colors.onPrimaryContainer,
+    contentColor: Color = MaterialTheme.colors.primaryContainer,
 ) {
     var repeatCount by remember { mutableStateOf(5) }
 

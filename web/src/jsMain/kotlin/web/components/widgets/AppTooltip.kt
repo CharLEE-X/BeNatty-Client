@@ -10,7 +10,6 @@ import com.varabyte.kobweb.silk.components.overlay.AdvancedTooltip
 import com.varabyte.kobweb.silk.components.overlay.TooltipVars
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 
 @Composable
@@ -21,13 +20,13 @@ fun AppTooltip(text: String) {
         showDelayMs = 500,
         hasArrow = false,
         modifier = Modifier
-            .backgroundColor(MaterialTheme.colors.surfaceVariant.value())
+            .backgroundColor(MaterialTheme.colors.surfaceVariant)
             .border(
                 width = 1.px,
-                color = MaterialTheme.colors.onSurface.value(),
+                color = MaterialTheme.colors.onSurface,
                 style = LineStyle.Solid
             )
-            .setVariable(TooltipVars.BackgroundColor, MaterialTheme.colors.surfaceVariant.value())
-            .setVariable(TooltipVars.Color, MaterialTheme.colors.onSurface.value())
+            .setVariable(TooltipVars.BackgroundColor, MaterialTheme.colors.surfaceVariant)
+            .setVariable(TooltipVars.Color, MaterialTheme.colors.onSurface)
     )
 }

@@ -61,7 +61,6 @@ import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import theme.roleStyle
 import web.HeadlineTextStyle
@@ -155,7 +154,7 @@ fun AdminConfigPage(
                         text = state.strings.contactInfo,
                         modifier = Modifier
                             .roleStyle(MaterialTheme.typography.headlineSmall)
-                            .color(MaterialTheme.colors.onSurface.value())
+                            .color(MaterialTheme.colors.onSurface)
                     )
                     CompanyInfoEmail(vm, state)
                     CompanyInfoPhone(vm, state)
@@ -187,7 +186,7 @@ fun BannerSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
         text = state.strings.banner,
         modifier = Modifier
             .roleStyle(MaterialTheme.typography.headlineSmall)
-            .color(MaterialTheme.colors.onSurface.value())
+            .color(MaterialTheme.colors.onSurface)
     )
     Row(
         modifier = gridModifier(columns = 2)
@@ -260,7 +259,7 @@ fun CollageSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) 
         text = state.strings.collage,
         modifier = Modifier
             .roleStyle(MaterialTheme.typography.headlineSmall)
-            .color(MaterialTheme.colors.onSurface.value())
+            .color(MaterialTheme.colors.onSurface)
     )
     Column(
         modifier = gridModifier(columns = 3)
@@ -416,7 +415,7 @@ private fun AdminCollageItem(
                     AppElevatedButton(
                         containerShape = 16.px,
                         onClick = {},
-                        containerColor = MaterialTheme.colors.primary.value(),
+                        containerColor = MaterialTheme.colors.primary,
                         modifier = Modifier
                             .margin(top = 30.px)
                             .size(150.px, 60.px)
@@ -425,7 +424,7 @@ private fun AdminCollageItem(
                             text = it,
                             modifier = Modifier
                                 .fontSize(1.5.em)
-                                .color(MaterialTheme.colors.onPrimary.value())
+                                .color(MaterialTheme.colors.onPrimary)
                         )
                     }
                 }

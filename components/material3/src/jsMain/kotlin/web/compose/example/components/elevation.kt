@@ -18,7 +18,7 @@ import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.value
 import org.jetbrains.compose.web.css.width
 import org.jetbrains.compose.web.dom.Div
-import theme.MaterialTheme
+import theme.CSSMaterialTheme
 import web.compose.extras.text.LargeBody
 import web.compose.extras.text.LargeTitle
 import web.compose.material3.component.Elevation
@@ -26,10 +26,10 @@ import web.compose.material3.component.Elevation
 private object ElevationStyleSheet : StyleSheet() {
     val box by style {
         margin(8.px)
-        backgroundColor(MaterialTheme.colors.primaryContainer.value())
+        backgroundColor(CSSMaterialTheme.colors.primaryContainer.value())
         borderWidth(0.px);
         borderRadius(16.px);
-        color(MaterialTheme.colors.onPrimaryContainer.value())
+        color(CSSMaterialTheme.colors.onPrimaryContainer.value())
         display(DisplayStyle.Flex)
         justifyContent(JustifyContent.Center)
         position(Position.Relative) /* This is needed for Elevation to work correctly */

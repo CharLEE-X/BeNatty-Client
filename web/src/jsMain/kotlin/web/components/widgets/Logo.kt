@@ -29,7 +29,6 @@ import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.s
-import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import web.HeadlineTextStyle
 import web.HeadlineTextStyleBold
@@ -41,7 +40,7 @@ fun Logo(
     hasLogo: Boolean = false,
     hasText: Boolean = true,
     logoSize: CSSLengthOrPercentageNumericValue = 2.em,
-    color: CSSColorValue = MaterialTheme.colors.onSurface.value(),
+    color: CSSColorValue = MaterialTheme.colors.onSurface,
     onClick: () -> Unit,
 ) {
     var hovered by remember { mutableStateOf(false) }

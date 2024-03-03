@@ -43,11 +43,9 @@ import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.widgets.AppTextButton
-import web.util.sectionsSpacing
 
 @Composable
 fun HomeSubscribe(
@@ -66,9 +64,7 @@ fun HomeSubscribe(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .margin(topBottom = sectionsSpacing)
-            .gap(1.em)
+        modifier = Modifier.gap(1.em)
     ) {
         SpanText(
             text = subscribeText.uppercase(),
@@ -121,9 +117,9 @@ private fun EmailTextField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     onEnterPress: () -> Unit,
-    containerColor: CSSColorValue = MaterialTheme.colors.surfaceContainerHighest.value(),
+    containerColor: CSSColorValue = MaterialTheme.colors.surfaceContainerHighest,
     unFocusedOutlineColor: CSSColorValue = Colors.Transparent,
-    focusedOutlineColor: CSSColorValue = MaterialTheme.colors.inverseSurface.value(),
+    focusedOutlineColor: CSSColorValue = MaterialTheme.colors.inverseSurface,
     hoverOutlineColor: CSSColorValue = focusedOutlineColor,
 ) {
     var focused by remember { mutableStateOf(false) }
@@ -153,14 +149,14 @@ private fun EmailTextField(
                     leftRight = 4.em,
                 )
                 .backgroundColor(containerColor)
-                .color(MaterialTheme.colors.onSurface.value())
+                .color(MaterialTheme.colors.onSurface)
                 .borderRadius(30.px)
                 .border(
                     width = borderWidth,
                     color = borderColor,
                     style = LineStyle.Solid,
                 )
-//                .fontSize(InputVars.FontSize.value())
+//                .fontSize(InputVars.FontSize)
                 .onKeyDown { if (it.key == "Enter") onEnterPress() }
                 .onMouseEnter { hovered = true }
                 .onMouseLeave { hovered = false }
@@ -189,7 +185,7 @@ private fun EmailTextField(
                 .align(Alignment.CenterEnd)
                 .onMouseEnter { sendHovered = true }
                 .onMouseLeave { sendHovered = false }
-                .color(if (sendHovered) MaterialTheme.colors.primary.value() else MaterialTheme.colors.onSurface.value())
+                .color(if (sendHovered) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface)
                 .transition(
                     CSSTransition.group(
                         listOf("color"),

@@ -18,7 +18,6 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import theme.roleStyle
 
@@ -28,7 +27,7 @@ fun CardSection(
     title: String?,
     description: String? = null,
     elevation: Int? = null,
-    color: CSSColorValue? = MaterialTheme.colors.surfaceContainerLow.value(),
+    color: CSSColorValue? = MaterialTheme.colors.surfaceContainerLow,
     content: @Composable () -> Unit,
 ) {
     AppElevatedCard(
@@ -48,7 +47,7 @@ fun CardSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(leftRight = 1.em, topBottom = 0.5.em)
-                        .backgroundColor(MaterialTheme.colors.primaryContainer.value())
+                        .backgroundColor(MaterialTheme.colors.primaryContainer)
                         .borderRadius(topLeft = 12.px, topRight = 12.px)
                 ) {
                     Column(

@@ -1,0 +1,3 @@
+mutation AdminDeleteProductMedia($input: ProductMediaDeleteInput!) {
+  deleteProductMedia(input: $input)
+}

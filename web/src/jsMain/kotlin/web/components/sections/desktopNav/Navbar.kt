@@ -82,7 +82,6 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import org.jetbrains.compose.web.css.value
 import org.jetbrains.compose.web.dom.Span
 import theme.MaterialTheme
 import web.components.layouts.oneLayoutMaxWidth
@@ -168,8 +167,8 @@ private fun RightSection(
     onEnterPress: () -> Unit,
     onProfileClick: () -> Unit,
     onBasketClick: () -> Unit,
-    backgroundColor: CSSColorValue = MaterialTheme.colors.surfaceContainerLow.value(),
-    contentColor: CSSColorValue = MaterialTheme.colors.onSurface.value(),
+    backgroundColor: CSSColorValue = MaterialTheme.colors.surfaceContainerLow,
+    contentColor: CSSColorValue = MaterialTheme.colors.onSurface,
 ) {
     val breakpoint = rememberBreakpoint()
 
@@ -370,7 +369,7 @@ private fun StoreSubMenu(
     items: List<String>,
     onStoreMenuItemSelected: (String) -> Unit,
     onMenuItemHovered: (Boolean) -> Unit,
-    backgroundColor: CSSColorValue = MaterialTheme.colors.onSurface.value(),
+    backgroundColor: CSSColorValue = MaterialTheme.colors.onSurface,
 ) {
     AppElevatedCard(
         modifier = modifier
@@ -445,7 +444,7 @@ private fun ListMenuItem(
     text: String,
     hovered: Boolean,
     hasDropdown: Boolean = false,
-    contentColor: CSSColorValue = MaterialTheme.colors.onSurface.value(),
+    contentColor: CSSColorValue = MaterialTheme.colors.onSurface,
     onClick: () -> Unit,
 ) {
     Column(

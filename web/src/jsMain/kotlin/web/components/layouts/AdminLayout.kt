@@ -74,7 +74,6 @@ import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import theme.roleStyle
 import web.HEADLINE_FONT
@@ -144,7 +143,7 @@ fun AdminLayout(
                 )
                 Column(
                     modifier = Modifier
-                        .backgroundColor(MaterialTheme.colors.background.value())
+                        .backgroundColor(MaterialTheme.colors.background)
                         .margin(top = topBarHeight)
                         .padding(left = sideBarWidth)
                         .fillMaxWidth()
@@ -173,7 +172,7 @@ private fun AdminSideBar(router: RouterViewModel) {
             .width(sideBarWidth)
             .margin(top = topBarHeight)
             .position(Position.Fixed)
-            .backgroundColor(MaterialTheme.colors.surface.value())
+            .backgroundColor(MaterialTheme.colors.surface)
             .padding(1.em)
             .boxShadow(
                 offsetX = 0.px,
@@ -253,7 +252,7 @@ fun AdminTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(topBarHeight)
-            .backgroundColor(MaterialTheme.colors.surface.value())
+            .backgroundColor(MaterialTheme.colors.surface)
             .position(Position.Fixed)
             .zIndex(100)
             .alignItems(AlignItems.Center)
@@ -323,12 +322,12 @@ private fun BoxScope.SaveSection(
         )
         SpanText(
             text = unsavedChangesText,
-            modifier = Modifier.color(MaterialTheme.colors.onSurface.value())
+            modifier = Modifier.color(MaterialTheme.colors.onSurface)
         )
         Spacer()
         AppFilledButton(
             onClick = { onCancelClick() },
-            containerColor = MaterialTheme.colors.tertiary.value(),
+            containerColor = MaterialTheme.colors.tertiary,
             modifier = Modifier.width(8.em)
         ) {
             SpanText(cancelText)
@@ -352,7 +351,7 @@ private fun TopBarLeftSection(
         modifier = modifier
             .roleStyle(MaterialTheme.typography.headlineLarge)
             .fontFamily(HEADLINE_FONT)
-            .color(MaterialTheme.colors.inverseOnSurface.value())
+            .color(MaterialTheme.colors.inverseOnSurface)
     )
 }
 
@@ -381,7 +380,7 @@ private fun TopBarRightSection(
         }
         AppFilledTonalButton(
             onClick = onBeNattyButtonClick,
-            containerColor = MaterialTheme.colors.primary.value(),
+            containerColor = MaterialTheme.colors.primary,
         ) {
             SpanText(getString(Strings.ShopName))
         }
@@ -406,8 +405,8 @@ private fun SearchBar(
             modifier = Modifier
                 .align(Alignment.CenterStart)
                 .color(
-                    if (focused) MaterialTheme.colors.primary.value()
-                    else MaterialTheme.colors.outline.value()
+                    if (focused) MaterialTheme.colors.primary
+                    else MaterialTheme.colors.outline
                 )
                 .userSelect(UserSelect.None)
                 .margin(left = 0.5.em)
@@ -418,8 +417,8 @@ private fun SearchBar(
             text = value,
             onTextChanged = onValueChanged,
             placeholder = placeholder,
-            focusBorderColor = MaterialTheme.colors.primary.value(),
-            placeholderColor = PlaceholderColor(MaterialTheme.colors.outline.value()),
+            focusBorderColor = MaterialTheme.colors.primary,
+            placeholderColor = PlaceholderColor(MaterialTheme.colors.outline),
             modifier = Modifier
                 .align(Alignment.Center)
                 .fillMaxSize()
@@ -438,7 +437,7 @@ private fun SearchBar(
                 .align(Alignment.CenterEnd)
                 .gap(0.25.em)
                 .fontSize(1.em)
-                .color(MaterialTheme.colors.outline.value())
+                .color(MaterialTheme.colors.outline)
                 .userSelect(UserSelect.None)
                 .margin(right = 0.75.em)
         ) {
@@ -462,7 +461,7 @@ private fun Loader(isLoading: Boolean) {
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxSize()
-                    .backgroundColor(MaterialTheme.colors.onSurface.value())
+                    .backgroundColor(MaterialTheme.colors.onSurface)
                     .opacity(0.3)
                     .onClick { it.preventDefault() }
             )

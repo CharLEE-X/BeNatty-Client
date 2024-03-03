@@ -17,7 +17,6 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.admin.category.page.AdminCategoryPageContract
 import feature.admin.category.page.AdminCategoryPageViewModel
 import feature.router.RouterViewModel
-import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.layouts.AdminLayout
@@ -115,7 +114,7 @@ fun AdminCategoryPage(
                     AppFilledButton(
                         onClick = { deleteDialogOpen = !deleteDialogOpen },
                         leadingIcon = { MdiDelete() },
-                        containerColor = MaterialTheme.colors.error.value(),
+                        containerColor = MaterialTheme.colors.error,
                     ) {
                         SpanText(text = state.strings.delete)
                     }

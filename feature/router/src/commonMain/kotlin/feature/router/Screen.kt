@@ -32,6 +32,7 @@ private const val CYBER_SECURITY = "/cyber-security"
 private const val BLOG = "/blog"
 private const val CAREER = "/career"
 private const val ID = "/{id}"
+private const val VARIANT = "/{variant}"
 private const val ACCESSIBILITY = "/accessibility"
 
 const val ADMIN = "/admin"
@@ -94,7 +95,7 @@ enum class Screen(routeFormat: String, override val annotations: Set<RouteAnnota
 
     // Product
     Product(PRODUCTS + ID),
-    Catalogue(CATALOGUE),
+    Catalogue(CATALOGUE + VARIANT),
 
     // Purchase
     Cart(CART),

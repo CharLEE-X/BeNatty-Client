@@ -26,7 +26,6 @@ import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import web.compose.material3.component.FilledTextField
 
@@ -40,9 +39,9 @@ fun SearchBar(
     leadingIcon: @Composable (() -> Unit)? = { MdiSearch() },
     trailingIcon: @Composable (() -> Unit)? = null,
     containerShape: CSSLengthOrPercentageNumericValue = 30.px,
-    containerColor: CSSColorValue = MaterialTheme.colors.surfaceContainerHighest.value(),
+    containerColor: CSSColorValue = MaterialTheme.colors.surfaceContainerHighest,
     unFocusedOutlineColor: CSSColorValue = Colors.Transparent,
-    focusedOutlineColor: CSSColorValue = MaterialTheme.colors.inverseSurface.value(),
+    focusedOutlineColor: CSSColorValue = MaterialTheme.colors.inverseSurface,
     hoverOutlineColor: CSSColorValue = focusedOutlineColor,
 ) {
     var focused by remember { mutableStateOf(false) }

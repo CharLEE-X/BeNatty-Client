@@ -1,11 +1,11 @@
 package web.compose.material3.theming
 
 import androidx.compose.runtime.Composable
-import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.Style
 import org.jetbrains.compose.web.css.StyleSheet
 import org.jetbrains.compose.web.css.backgroundColor
 import org.jetbrains.compose.web.css.value
+import theme.CSSMaterialTheme
 import theme.SysColorScheme
 import theme.SysFontScheme
 
@@ -30,7 +30,7 @@ fun MaterialTheme(
 private object defaultBackground : StyleSheet() {
     init {
         root style {
-            backgroundColor(theme.MaterialTheme.colors.surfaceContainerLowest.value(Color("#FFFFFF")))
+            backgroundColor(CSSMaterialTheme.colors.surfaceContainerLowest.value())
         }
     }
 }

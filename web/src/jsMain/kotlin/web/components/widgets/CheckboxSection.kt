@@ -17,7 +17,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.s
-import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import theme.roleStyle
 import web.compose.material3.component.Checkbox
@@ -53,7 +52,7 @@ fun CheckboxSection(
             SpanText(
                 text = title,
                 modifier = Modifier
-                    .color(MaterialTheme.colors.onSurface.value())
+                    .color(MaterialTheme.colors.onSurface)
                     .opacity(opacity)
                     .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
             )
@@ -63,7 +62,7 @@ fun CheckboxSection(
                 text = title,
                 modifier = Modifier
                     .roleStyle(MaterialTheme.typography.bodySmall)
-                    .color(MaterialTheme.colors.error.value())
+                    .color(MaterialTheme.colors.error)
             )
         }
     }

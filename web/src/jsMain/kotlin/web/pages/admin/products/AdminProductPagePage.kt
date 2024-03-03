@@ -19,7 +19,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.resize
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
-import data.ProductGetByIdQuery
+import data.AdminProductGetByIdQuery
 import data.type.BackorderStatus
 import data.type.MediaType
 import data.type.PostStatus
@@ -31,7 +31,6 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.FlexWrap
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.value
 import org.w3c.dom.url.URL
 import theme.MaterialTheme
 import theme.roleStyle
@@ -81,7 +80,7 @@ fun AdminProductPagePage(
     }
     val state by vm.observeStates().collectAsState()
 
-    var previewDialogImage: ProductGetByIdQuery.Medium? by remember { mutableStateOf(null) }
+    var previewDialogImage: AdminProductGetByIdQuery.Medium? by remember { mutableStateOf(null) }
     var previewDialogOpen by remember { mutableStateOf(false) }
 
     var deleteProductDialogOpen by remember { mutableStateOf(false) }
@@ -165,7 +164,7 @@ fun AdminProductPagePage(
                     AppFilledButton(
                         onClick = { deleteProductDialogOpen = !deleteProductDialogOpen },
                         leadingIcon = { MdiDelete() },
-                        containerColor = MaterialTheme.colors.error.value(),
+                        containerColor = MaterialTheme.colors.error,
                     ) {
                         SpanText(text = state.strings.delete)
                     }
@@ -370,18 +369,18 @@ private fun Price(vm: AdminProductPageViewModel, state: AdminProductPageContract
 private fun Media(
     vm: AdminProductPageViewModel,
     state: AdminProductPageContract.State,
-    onImageClick: (ProductGetByIdQuery.Medium) -> Unit,
+    onImageClick: (AdminProductGetByIdQuery.Medium) -> Unit,
     onImageDeleteClick: (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 
-    var convertedMedia by remember { mutableStateOf(emptyList<ProductGetByIdQuery.Medium>()) }
+    var convertedMedia by remember { mutableStateOf(emptyList<AdminProductGetByIdQuery.Medium>()) }
 
     LaunchedEffect(state.localMedia) {
         convertedMedia = state.localMedia.mapIndexed { index, medium ->
             val file = convertBase64ToFile(medium.url, index.toString())
             val url = URL.createObjectURL(file)
-            ProductGetByIdQuery.Medium(
+            AdminProductGetByIdQuery.Medium(
                 id = medium.id,
                 altText = medium.altText,
                 url = url,

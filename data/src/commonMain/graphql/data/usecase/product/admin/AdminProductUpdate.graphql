@@ -1,28 +1,14 @@
-query ProductGetById($getProductByIdId: String!) {
-  getProductById(id: $getProductByIdId) {
+mutation AdminProductUpdate($input: ProductUpdateInput!) {
+  updateProduct(input: $input) {
     id
     title
     description
     postStatus
-    media {
-      id
-      url
-      mediaType
-      altText
-      createdAt
-      updatedAt
-    }
+    media
     categoryId
     tags
     isFeatured
     allowReviews
-    creator {
-      id
-      firstName
-      lastName
-    }
-    createdAt
-    updatedAt
     pricing {
       price
       regularPrice
@@ -44,7 +30,5 @@ query ProductGetById($getProductByIdId: String!) {
       width
       height
     }
-    reviews
-    totalInWishlist
   }
 }

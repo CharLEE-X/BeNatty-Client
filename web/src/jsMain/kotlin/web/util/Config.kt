@@ -2,4 +2,4 @@ package web.util
 
 import org.jetbrains.compose.web.css.px
 
-val sectionsSpacing = 80.px
+val sectionsGap = 80.px

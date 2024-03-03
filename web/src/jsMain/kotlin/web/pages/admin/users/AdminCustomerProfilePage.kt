@@ -129,7 +129,7 @@
 //                AppFilledButton(
 //                    onClick = { deleteDialogOpen = !deleteDialogOpen },
 //                    leadingIcon = { MdiDelete() },
-//                    containerColor = MaterialTheme.colors.mdSysColorError.value(),
+//                    containerColor = MaterialTheme.colors.mdSysColorError,
 //                ) {
 //                    SpanText(text = state.strings.delete)
 //                }

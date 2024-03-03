@@ -43,11 +43,11 @@ internal class NavbarInputHandler :
     }
 
     private suspend fun InputScope.handleOnSearchEnterPress() {
-        noOp()
+        postEvent(DesktopNavContract.Events.GoToCatalogue)
     }
 
     private suspend fun InputScope.handleOnStoreMenuItemSelected(item: String) {
-        noOp()
+        postEvent(DesktopNavContract.Events.GoToCatalogue)
     }
 
     private suspend fun InputScope.handleOnCartClick() {

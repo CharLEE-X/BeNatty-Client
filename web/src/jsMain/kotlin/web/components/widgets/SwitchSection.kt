@@ -12,7 +12,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
-import org.jetbrains.compose.web.css.value
 import theme.MaterialTheme
 import theme.roleStyle
 import web.compose.material3.component.Switch
@@ -46,7 +45,7 @@ fun SwitchSection(
                 text = title,
                 modifier = Modifier
                     .roleStyle(MaterialTheme.typography.bodySmall)
-                    .color(MaterialTheme.colors.error.value())
+                    .color(MaterialTheme.colors.error)
             )
         }
     }

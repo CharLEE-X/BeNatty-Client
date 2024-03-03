@@ -3,6 +3,7 @@ package data.service
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import data.CreateConfigMutation
+import data.GetCatalogueConfigQuery
 import data.GetConfigQuery
 import data.GetLandingConfigQuery
 import data.UpdateConfigMutation
@@ -30,6 +31,7 @@ interface ConfigService {
     suspend fun config(): Result<GetConfigQuery.Data>
     suspend fun create(input: CreateConfigInput): Result<CreateConfigMutation.Data>
     suspend fun getLandingConfig(): Result<GetLandingConfigQuery.Data>
+    suspend fun getCatalogueConfig(): Result<GetCatalogueConfigQuery.Data>
 
     suspend fun updateConfig(
         configId: String,
@@ -80,6 +82,10 @@ internal class ConfigServiceImpl(
 
     override suspend fun getLandingConfig(): Result<GetLandingConfigQuery.Data> {
         return apolloClient.query(GetLandingConfigQuery(Optional.present(null))).handle()
+    }
+
+    override suspend fun getCatalogueConfig(): Result<GetCatalogueConfigQuery.Data> {
+        return apolloClient.query(GetCatalogueConfigQuery(Optional.present(null))).handle()
     }
 
     override suspend fun updateConfig(

@@ -35,7 +35,6 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import org.jetbrains.compose.web.css.value
 import org.jetbrains.compose.web.dom.Text
 import theme.MaterialTheme
 import theme.roleStyle
@@ -58,7 +57,7 @@ fun ImagePreviewDialog(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .backgroundColor(MaterialTheme.colors.onBackground.value())
+                .backgroundColor(MaterialTheme.colors.onBackground)
                 .opacity(if (open) 0.7 else 0.0)
                 .onClick { onClose() }
                 .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease)),
@@ -152,7 +151,7 @@ fun TakeActionDialog(
                         onClosing(true)
                     },
                     leadingIcon = { MdiDelete() },
-                    containerColor = MaterialTheme.colors.error.value()
+                    containerColor = MaterialTheme.colors.error
                 ) {
                     Text(actionYesText)
                 }
@@ -195,25 +194,25 @@ fun AddContentDialog(
                         onDismiss()
                         onClosing(true)
                     },
-                    leadingIcon = { MdiCancel(Modifier.color(MaterialTheme.colors.onTertiary.value())) },
-                    containerColor = MaterialTheme.colors.tertiary.value(),
+                    leadingIcon = { MdiCancel(Modifier.color(MaterialTheme.colors.onTertiary)) },
+                    containerColor = MaterialTheme.colors.tertiary,
                     modifier = Modifier.width(150.px)
                 ) {
                     SpanText(
                         text = actionDismissText,
-                        modifier = Modifier.color(MaterialTheme.colors.onTertiary.value())
+                        modifier = Modifier.color(MaterialTheme.colors.onTertiary)
                     )
                 }
                 AppFilledButton(
                     onClick = { onAdd() },
-                    leadingIcon = { addIcon(Modifier.color(MaterialTheme.colors.onSecondary.value())) },
-                    containerColor = MaterialTheme.colors.secondary.value(),
+                    leadingIcon = { addIcon(Modifier.color(MaterialTheme.colors.onSecondary)) },
+                    containerColor = MaterialTheme.colors.secondary,
                     disabled = !isAddButtonEnabled,
                     modifier = Modifier.width(150.px)
                 ) {
                     SpanText(
                         text = actionAddText,
-                        modifier = Modifier.color(MaterialTheme.colors.onSecondary.value())
+                        modifier = Modifier.color(MaterialTheme.colors.onSecondary)
                     )
                 }
             }

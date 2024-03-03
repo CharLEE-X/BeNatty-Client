@@ -41,7 +41,6 @@ import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import org.jetbrains.compose.web.css.value
 import org.w3c.files.File
 import theme.MaterialTheme
 import theme.roleStyle
@@ -73,14 +72,14 @@ fun MediaSlot(
             .onMouseOut { imageHovered = false }
             .backgroundColor(
                 if (imageHovered || addIconHovered) {
-                    MaterialTheme.colors.surfaceContainer.value()
-                } else MaterialTheme.colors.surface.value()
+                    MaterialTheme.colors.surfaceContainer
+                } else MaterialTheme.colors.surface
             )
             .transition(CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease))
             .thenIf(url == null) {
                 Modifier.border(
                     width = 2.px,
-                    color = MaterialTheme.colors.inverseSurface.value(),
+                    color = MaterialTheme.colors.inverseSurface,
                     style = LineStyle.Dashed,
                 )
             }
@@ -100,7 +99,7 @@ fun MediaSlot(
                     .fillMaxSize()
                     .borderRadius(cornerRadius)
                     .objectFit(ObjectFit.Cover)
-                    .backgroundColor(MaterialTheme.colors.onSurface.value())
+                    .backgroundColor(MaterialTheme.colors.onSurface)
                     .transition(CSSTransition("backgroundColor", 0.3.s, TransitionTimingFunction.Ease))
             ) {}
             if (hasDeleteButton) {
@@ -160,7 +159,7 @@ fun MediaSlot(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .roleStyle(MaterialTheme.typography.labelSmall)
-                        .color(MaterialTheme.colors.error.value())
+                        .color(MaterialTheme.colors.error)
                         .margin(0.5.em)
                 )
             }

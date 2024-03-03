@@ -1,5 +1,5 @@
-query GetAllProductsPage($pageInput: PageInput!) {
-  getAllProductsPage(pageInput: $pageInput) {
+query AdminGetAllProductsPage($pageInput: PageInput!) {
+  getAllAdminProductsPage(pageInput: $pageInput) {
     info {
       count
       next

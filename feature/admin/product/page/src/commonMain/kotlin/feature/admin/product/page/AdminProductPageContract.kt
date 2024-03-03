@@ -1,9 +1,9 @@
 package feature.admin.product.page
 
 import component.localization.getString
+import data.AdminProductGetByIdQuery
 import data.GetCategoriesAllMinimalQuery
 import data.GetCategoryByIdQuery
-import data.ProductGetByIdQuery
 import data.TagsGetAllMinimalQuery
 import data.type.BackorderStatus
 import data.type.PostStatus
@@ -15,7 +15,7 @@ object AdminProductPageContract {
         val isImagesLoading: Boolean = false,
         val screenState: ScreenState,
 
-        val localMedia: List<ProductGetByIdQuery.Medium> = emptyList(),
+        val localMedia: List<AdminProductGetByIdQuery.Medium> = emptyList(),
 
         val wasEdited: Boolean = false,
 
@@ -46,7 +46,7 @@ object AdminProductPageContract {
         val allTags: List<TagsGetAllMinimalQuery.GetTagsAllMinimal> = emptyList(),
         val presetCategory: GetCategoryByIdQuery.GetCategoryById? = null,
 
-        val original: ProductGetByIdQuery.GetProductById = ProductGetByIdQuery.GetProductById(
+        val original: AdminProductGetByIdQuery.GetAdminProductById = AdminProductGetByIdQuery.GetAdminProductById(
             id = "",
             title = "",
             description = "",
@@ -56,19 +56,19 @@ object AdminProductPageContract {
             tags = emptyList(),
             allowReviews = true,
             isFeatured = false,
-            creator = ProductGetByIdQuery.Creator(
+            creator = AdminProductGetByIdQuery.Creator(
                 id = "",
                 firstName = "",
                 lastName = "",
             ),
             createdAt = "",
             updatedAt = "",
-            pricing = ProductGetByIdQuery.Pricing(
+            pricing = AdminProductGetByIdQuery.Pricing(
                 price = null,
                 regularPrice = null,
                 chargeTax = true,
             ),
-            inventory = ProductGetByIdQuery.Inventory(
+            inventory = AdminProductGetByIdQuery.Inventory(
                 trackQuantity = true,
                 useGlobalTracking = true,
                 backorderStatus = BackorderStatus.Allowed,
@@ -76,7 +76,7 @@ object AdminProductPageContract {
                 remainingStock = 0,
                 stockStatus = StockStatus.OutOfStock,
             ),
-            shipping = ProductGetByIdQuery.Shipping(
+            shipping = AdminProductGetByIdQuery.Shipping(
                 presetId = null,
                 isPhysicalProduct = true,
                 height = null,
@@ -88,7 +88,7 @@ object AdminProductPageContract {
             totalInWishlist = 0,
         ),
 
-        val current: ProductGetByIdQuery.GetProductById = original,
+        val current: AdminProductGetByIdQuery.GetAdminProductById = original,
 
         val strings: Strings = Strings()
     )
@@ -124,9 +124,9 @@ object AdminProductPageContract {
             data class Loading(val isLoading: Boolean) : Inputs
             data class ImagesLoading(val isImagesLoading: Boolean) : Inputs
             data class StateOfScreen(val screenState: ScreenState) : Inputs
-            data class OriginalProduct(val product: ProductGetByIdQuery.GetProductById) : Inputs
-            data class CurrentProduct(val product: ProductGetByIdQuery.GetProductById) : Inputs
-            data class LocalMedia(val media: List<ProductGetByIdQuery.Medium>) : Inputs
+            data class OriginalProduct(val product: AdminProductGetByIdQuery.GetAdminProductById) : Inputs
+            data class CurrentProduct(val product: AdminProductGetByIdQuery.GetAdminProductById) : Inputs
+            data class LocalMedia(val media: List<AdminProductGetByIdQuery.Medium>) : Inputs
 
             data class Id(val id: String) : Inputs
             data class Title(val title: String) : Inputs
@@ -134,12 +134,12 @@ object AdminProductPageContract {
             data class Description(val description: String) : Inputs
             data class DescriptionShake(val shake: Boolean) : Inputs
             data class StatusOfPost(val postStatus: PostStatus) : Inputs
-            data class Media(val media: List<ProductGetByIdQuery.Medium>) : Inputs
+            data class Media(val media: List<AdminProductGetByIdQuery.Medium>) : Inputs
             data class ImageDropError(val error: String?) : Inputs
             data class CategoryId(val categoryId: String) : Inputs
             data class IsFeatured(val isFeatured: Boolean) : Inputs
             data class AllowReviews(val allowReviews: Boolean) : Inputs
-            data class Creator(val creator: ProductGetByIdQuery.Creator) : Inputs
+            data class Creator(val creator: AdminProductGetByIdQuery.Creator) : Inputs
             data class CreatedAt(val createdAt: String) : Inputs
             data class UpdatedAt(val updatedAt: String) : Inputs
 

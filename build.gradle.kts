@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.kobweb.application) apply false
     alias(libs.plugins.kobwebx.markdown) apply false
     alias(libs.plugins.kotlin.multiplatform) apply false
+    kotlin("plugin.serialization") version libs.versions.kotlin.get() apply false
     alias(libs.plugins.kover) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.ktLint)

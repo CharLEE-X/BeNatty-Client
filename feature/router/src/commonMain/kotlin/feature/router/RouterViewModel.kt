@@ -3,6 +3,7 @@ package feature.router
 import com.copperleaf.ballast.BallastInterceptor
 import com.copperleaf.ballast.BallastViewModelConfiguration
 import com.copperleaf.ballast.build
+import com.copperleaf.ballast.core.LoggingInterceptor
 import com.copperleaf.ballast.core.PrintlnLogger
 import com.copperleaf.ballast.navigation.routing.Route
 import com.copperleaf.ballast.navigation.routing.RouterContract
@@ -13,6 +14,7 @@ import com.copperleaf.ballast.navigation.routing.fromEnum
 import com.copperleaf.ballast.navigation.routing.pathParameter
 import com.copperleaf.ballast.navigation.vm.BasicRouter
 import com.copperleaf.ballast.navigation.vm.withRouter
+import com.copperleaf.ballast.plusAssign
 import kotlinx.coroutines.CoroutineScope
 
 typealias RouterInterceptor = BallastInterceptor<RouterContract.Inputs<Screen>, RouterContract.Events<Screen>, RouterContract.State<Screen>>
@@ -24,7 +26,7 @@ class RouterViewModel(
 ) : BasicRouter<Screen>(
     config = BallastViewModelConfiguration.Builder()
         .apply {
-//            this += LoggingInterceptor()
+            this += LoggingInterceptor()
             logger = ::PrintlnLogger
         }
         .withRouter(
