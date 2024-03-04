@@ -30,6 +30,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.compose.ui.modifiers.top
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translate
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import feature.shop.footer.FooterRoutes
 import feature.shop.navbar.DesktopNavRoutes
 import kotlinx.browser.document
@@ -200,7 +201,11 @@ fun Background() {
                     tx = (-50).percent + box2Offset,
                     ty = (50).percent + box2Offset,
                 )
-                .shadowModifier(MaterialTheme.colors.tertiaryContainer.toRgb().copy(alpha = 50))
+                .shadowModifier(
+                    MaterialTheme.colors.tertiaryContainer.toRgb().copy(
+                        alpha = if (ColorMode.current.isLight) 200 else 50
+                    )
+                )
                 .transition(CSSTransition("translate", 3.s, TransitionTimingFunction.EaseInOut))
         )
         Box(
@@ -210,7 +215,10 @@ fun Background() {
                     tx = (50).percent + box2Offset,
                     ty = (50).percent + box2Offset,
                 )
-                .shadowModifier(MaterialTheme.colors.surfaceContainerHighest.toRgb().copy(alpha = 100))
+                .shadowModifier(
+                    MaterialTheme.colors.surfaceContainerHighest.toRgb()
+                        .copy(alpha = if (ColorMode.current.isLight) 200 else 100)
+                )
                 .transition(CSSTransition("translate", 2.s, TransitionTimingFunction.EaseInOut))
         )
         Box(
@@ -220,7 +228,11 @@ fun Background() {
                     tx = (50).percent + box2Offset,
                     ty = (-50).percent + box2Offset,
                 )
-                .shadowModifier(MaterialTheme.colors.primaryContainer.toRgb().copy(alpha = 50))
+                .shadowModifier(
+                    MaterialTheme.colors.primaryContainer.toRgb().copy(
+                        alpha = if (ColorMode.current.isLight) 200 else 50
+                    )
+                )
                 .transition(CSSTransition("translate", 3.5.s, TransitionTimingFunction.EaseInOut))
         )
     }

@@ -64,6 +64,7 @@ import web.HeadlineTextStyle
 import web.components.widgets.AppElevatedButton
 import web.components.widgets.AppElevatedCard
 import web.components.widgets.ImageOverlay
+import web.util.glossy
 
 fun gridModifier(
     columns: Int = 3,
@@ -91,6 +92,8 @@ fun Collage(
 ) {
     Column(
         modifier = gridModifier(columns = 3).then(modifier)
+            .padding(leftRight = 24.px, topBottom = 48.px)
+            .glossy()
     ) {
         items.forEachIndexed { index, item ->
             CollageItem(

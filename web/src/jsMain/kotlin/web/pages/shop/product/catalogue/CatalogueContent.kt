@@ -53,6 +53,7 @@ import web.components.layouts.ShopMainLayout
 import web.components.widgets.AppElevatedCard
 import web.components.widgets.ImageOverlay
 import web.pages.shop.home.gridModifier
+import web.util.glossy
 
 @Composable
 fun CataloguePage(
@@ -79,12 +80,17 @@ fun CataloguePage(
     ) {
         Banner(
             state = state,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.px)
+                .glossy()
         )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .gap(1.em)
+                .padding(leftRight = 24.px, topBottom = 48.px)
+                .glossy()
         ) {
             CatalogueFilters(
                 modifier = Modifier

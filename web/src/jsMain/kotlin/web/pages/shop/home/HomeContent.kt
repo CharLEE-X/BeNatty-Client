@@ -9,13 +9,17 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.maxHeight
+import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.silk.components.graphics.Image
 import feature.shop.home.HomeContract
 import feature.shop.home.HomeRoutes
 import feature.shop.home.HomeViewModel
+import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.px
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
+import web.util.glossy
 
 @Composable
 fun HomeContent(
@@ -40,7 +44,6 @@ fun HomeContent(
         title = state.strings.home,
         mainRoutes = mainRoutes,
     ) {
-
         state.landingConfig?.collageItems?.let {
             Collage(
                 modifier = Modifier.fillMaxWidth(),
@@ -71,7 +74,10 @@ fun HomeContent(
 fun BannerSection(vm: HomeViewModel, state: HomeContract.State) {
     Row(
         modifier = gridModifier(columns = 2)
+            .position(Position.Relative)
             .maxHeight(400.px)
+            .padding(leftRight = 24.px, topBottom = 48.px)
+            .glossy()
     ) {
         CollageItem(
             title = state.landingConfig?.bannerSection?.left?.title ?: state.strings.trendingNow,

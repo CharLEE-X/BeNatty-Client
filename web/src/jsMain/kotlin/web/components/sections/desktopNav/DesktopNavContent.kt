@@ -31,7 +31,6 @@ import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
 import web.components.widgets.TickerSection
 import web.components.widgets.tickerHeight
 import web.shadow
@@ -84,7 +83,7 @@ fun DesktopNav(
         modifier = Modifier
             .position(Position.Fixed)
             .display(DisplayStyle.Block)
-            .glossy(MaterialTheme.colors.surface)
+            .glossy()
             .fillMaxWidth()
             .boxSizing(BoxSizing.BorderBox)
             .zIndex(10)

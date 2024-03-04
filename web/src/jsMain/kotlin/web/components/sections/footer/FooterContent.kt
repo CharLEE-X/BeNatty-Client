@@ -71,7 +71,7 @@ fun Footer(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
-            .glossy(MaterialTheme.colors.surfaceContainer)
+            .glossy()
             .zIndex(2)
     ) {
         TickerSection(

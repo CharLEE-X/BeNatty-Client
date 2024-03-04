@@ -30,6 +30,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.onKeyDown
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
 import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.silk.components.forms.Input
 import com.varabyte.kobweb.silk.components.forms.InputVars
@@ -41,11 +42,13 @@ import org.jetbrains.compose.web.attributes.AutoComplete
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.LineStyle
+import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.widgets.AppTextButton
+import web.util.glossy
 
 @Composable
 fun HomeSubscribe(
@@ -64,47 +67,56 @@ fun HomeSubscribe(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.gap(1.em)
+        modifier = Modifier
+            .position(Position.Relative)
+            .fillMaxWidth()
+            .padding(leftRight = 24.px, topBottom = 48.px)
+            .glossy()
     ) {
-        SpanText(
-            text = subscribeText.uppercase(),
-            modifier = Modifier
-                .roleStyle(MaterialTheme.typography.headlineLarge)
-                .fontWeight(FontWeight.Bold)
-        )
-        SpanText(
-            text = subscribeDescText,
-            modifier = Modifier
-                .roleStyle(MaterialTheme.typography.titleMedium)
-                .margin(leftRight = 3.em)
-        )
-        EmailTextField(
-            value = emailText,
-            onValueChange = onEmailChange,
-            placeholder = emailPlaceholder,
-            onEnterPress = onEmailSend,
-            modifier = Modifier
-                .height(60.px)
-                .fillMaxWidth()
-        )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.gap(1.em)
         ) {
             SpanText(
-                text = byAgreeingText,
+                text = subscribeText.uppercase(),
                 modifier = Modifier
-                    .roleStyle(MaterialTheme.typography.labelLarge)
+                    .roleStyle(MaterialTheme.typography.headlineLarge)
+                    .fontWeight(FontWeight.Bold)
             )
-            AppTextButton(
-                onClick = { onPrivacyPolicyClick() }
+            SpanText(
+                text = subscribeDescText,
+                modifier = Modifier
+                    .roleStyle(MaterialTheme.typography.titleMedium)
+                    .margin(leftRight = 3.em)
+            )
+            EmailTextField(
+                value = emailText,
+                onValueChange = onEmailChange,
+                placeholder = emailPlaceholder,
+                onEnterPress = onEmailSend,
+                modifier = Modifier
+                    .height(60.px)
+                    .fillMaxWidth()
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                SpanText(text = privacyPolicyText)
-            }
-            SpanText(text = andText)
-            AppTextButton(
-                onClick = { onTermsOfServiceClick() }
-            ) {
-                SpanText(text = termsOfServiceText)
+                SpanText(
+                    text = byAgreeingText,
+                    modifier = Modifier
+                        .roleStyle(MaterialTheme.typography.labelLarge)
+                )
+                AppTextButton(
+                    onClick = { onPrivacyPolicyClick() }
+                ) {
+                    SpanText(text = privacyPolicyText)
+                }
+                SpanText(text = andText)
+                AppTextButton(
+                    onClick = { onTermsOfServiceClick() }
+                ) {
+                    SpanText(text = termsOfServiceText)
+                }
             }
         }
     }
