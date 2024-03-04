@@ -52,7 +52,6 @@ import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.rgba
 import org.jetbrains.compose.web.css.s
 import theme.MaterialTheme
 import web.pages.shop.home.gridModifier
@@ -141,11 +140,10 @@ private fun MainImage(
                 modifier = Modifier
                     .padding(if (visibilityHovered) 0.5.em else 0.25.em)
                     .borderRadius(50.percent)
-                    .backgroundColor(rgba(255, 255, 255, 0.28))
+                    .backgroundColor(MaterialTheme.colors.onBackground)
                     .zIndex(3)
                     .onMouseEnter { visibilityHovered = true }
                     .onMouseLeave { visibilityHovered = false }
-                    .color(MaterialTheme.colors.onBackground)
                     .thenIf(!(thisHovered || visibilityHovered)) { Modifier.translateY((50).percent) }
                     .opacity(if (thisHovered) 1.0 else 0.0)
                     .backdropFilter(blur(12.px))
@@ -157,6 +155,7 @@ private fun MainImage(
             ) {
                 MdiVisibility(
                     style = IconStyle.OUTLINED,
+                    modifier = Modifier.color(MaterialTheme.colors.background),
                 )
             }
         } ?: Box(

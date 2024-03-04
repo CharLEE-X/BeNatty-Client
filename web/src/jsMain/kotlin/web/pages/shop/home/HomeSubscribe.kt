@@ -70,7 +70,7 @@ fun HomeSubscribe(
         modifier = Modifier
             .position(Position.Relative)
             .fillMaxWidth()
-            .padding(leftRight = 24.px, topBottom = 48.px)
+            .padding(leftRight = 24.px, topBottom = 56.px)
             .glossy()
     ) {
         Column(

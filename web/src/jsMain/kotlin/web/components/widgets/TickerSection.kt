@@ -27,6 +27,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.minHeight
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.translateX
 import com.varabyte.kobweb.compose.ui.modifiers.whiteSpace
 import com.varabyte.kobweb.silk.components.animation.Keyframes
@@ -36,6 +37,7 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import kotlinx.browser.window
 import org.jetbrains.compose.web.css.AnimationTimingFunction
 import org.jetbrains.compose.web.css.DisplayStyle
+import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
@@ -68,6 +70,7 @@ fun TickerSection(
 
     Box(
         modifier = modifier
+            .position(Position.Relative)
             .fillMaxWidth()
             .boxSizing(BoxSizing.BorderBox)
             .display(DisplayStyle.Block)

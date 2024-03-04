@@ -80,9 +80,11 @@ fun Footer(
         )
         Column(
             modifier = Modifier
+                .position(Position.Relative)
                 .fillMaxWidth()
                 .margin(topBottom = sectionsGap)
                 .maxWidth(oneLayoutMaxWidth)
+                .padding(topBottom = 4.em)
         ) {
             Row(
                 modifier = Modifier
@@ -270,7 +272,7 @@ private fun CanWeHelpYouSection(
         }
         SpanText(
             text = "${state.strings.from} ${state.companyInfo?.openingTimes?.dayFrom} ${state.strings.to} " +
-                "${state.companyInfo?.openingTimes?.dayTo} ${state.strings.from.lowercase()} " +
+                "${state.companyInfo?.openingTimes?.dayTo} \n${state.strings.from.lowercase()} " +
                 "${state.companyInfo?.openingTimes?.open}" +
                 " ${state.strings.to} ${state.companyInfo?.openingTimes?.close}.",
             modifier = Modifier

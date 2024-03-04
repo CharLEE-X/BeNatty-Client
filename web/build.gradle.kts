@@ -19,7 +19,7 @@ kobweb {
             listOf(
                 "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined",
                 "https://fonts.googleapis.com/css?family=Roboto",
-                "https://fonts.googleapis.com/css?family=Playfair+Display",
+                "https://fonts.googleapis.com/css?family=Montserrat",
             ).forEach {
                 head.add { link(it, "stylesheet") }
             }
