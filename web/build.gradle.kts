@@ -55,7 +55,7 @@ kotlin {
                 implementation(feature.shop.account.orders)
                 implementation(feature.shop.account.returns)
                 implementation(feature.shop.account.wishlist)
-                implementation(feature.shop.product.catalogue)
+                implementation(feature.shop.product.catalog)
                 implementation(feature.shop.product.page)
 
                 implementation(feature.admin.dashboard)

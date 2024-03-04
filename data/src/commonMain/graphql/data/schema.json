@@ -732,7 +732,7 @@
           "description": null,
           "fields": [
             {
-              "name": "catalogue",
+              "name": "catalog",
               "description": null,
               "args": [],
               "type": {
@@ -741,7 +741,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "CatalogueBannerItem",
+                  "name": "CatalogBannerItem",
                   "ofType": null
                 }
               },
@@ -758,7 +758,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "CatalogueBannerItem",
+                  "name": "CatalogBannerItem",
                   "ofType": null
                 }
               },
@@ -775,7 +775,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "CatalogueBannerItem",
+                  "name": "CatalogBannerItem",
                   "ofType": null
                 }
               },
@@ -792,7 +792,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "CatalogueBannerItem",
+                  "name": "CatalogBannerItem",
                   "ofType": null
                 }
               },
@@ -809,7 +809,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "CatalogueBannerItem",
+                  "name": "CatalogBannerItem",
                   "ofType": null
                 }
               },
@@ -826,7 +826,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "CatalogueBannerItem",
+                  "name": "CatalogBannerItem",
                   "ofType": null
                 }
               },
@@ -849,7 +849,7 @@
           "inputFields": [
             {
               "__typename": "__InputValue",
-              "name": "catalogue",
+              "name": "catalog",
               "description": null,
               "type": {
                 "__typename": "__Type",
@@ -857,7 +857,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "CatalogueBannerItemInput",
+                  "name": "CatalogBannerItemInput",
                   "ofType": null
                 }
               },
@@ -875,7 +875,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "CatalogueBannerItemInput",
+                  "name": "CatalogBannerItemInput",
                   "ofType": null
                 }
               },
@@ -893,7 +893,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "CatalogueBannerItemInput",
+                  "name": "CatalogBannerItemInput",
                   "ofType": null
                 }
               },
@@ -911,7 +911,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "CatalogueBannerItemInput",
+                  "name": "CatalogBannerItemInput",
                   "ofType": null
                 }
               },
@@ -929,7 +929,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "CatalogueBannerItemInput",
+                  "name": "CatalogBannerItemInput",
                   "ofType": null
                 }
               },
@@ -947,7 +947,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "CatalogueBannerItemInput",
+                  "name": "CatalogBannerItemInput",
                   "ofType": null
                 }
               },
@@ -970,12 +970,12 @@
           "inputFields": [
             {
               "__typename": "__InputValue",
-              "name": "catalogueInput",
+              "name": "catalogInput",
               "description": null,
               "type": {
                 "__typename": "__Type",
                 "kind": "INPUT_OBJECT",
-                "name": "CatalogueBannerItemUpdateInput",
+                "name": "CatalogBannerItemUpdateInput",
                 "ofType": null
               },
               "defaultValue": null,
@@ -989,7 +989,7 @@
               "type": {
                 "__typename": "__Type",
                 "kind": "INPUT_OBJECT",
-                "name": "CatalogueBannerItemUpdateInput",
+                "name": "CatalogBannerItemUpdateInput",
                 "ofType": null
               },
               "defaultValue": null,
@@ -1003,7 +1003,7 @@
               "type": {
                 "__typename": "__Type",
                 "kind": "INPUT_OBJECT",
-                "name": "CatalogueBannerItemUpdateInput",
+                "name": "CatalogBannerItemUpdateInput",
                 "ofType": null
               },
               "defaultValue": null,
@@ -1017,7 +1017,7 @@
               "type": {
                 "__typename": "__Type",
                 "kind": "INPUT_OBJECT",
-                "name": "CatalogueBannerItemUpdateInput",
+                "name": "CatalogBannerItemUpdateInput",
                 "ofType": null
               },
               "defaultValue": null,
@@ -1031,7 +1031,7 @@
               "type": {
                 "__typename": "__Type",
                 "kind": "INPUT_OBJECT",
-                "name": "CatalogueBannerItemUpdateInput",
+                "name": "CatalogBannerItemUpdateInput",
                 "ofType": null
               },
               "defaultValue": null,
@@ -1045,7 +1045,7 @@
               "type": {
                 "__typename": "__Type",
                 "kind": "INPUT_OBJECT",
-                "name": "CatalogueBannerItemUpdateInput",
+                "name": "CatalogBannerItemUpdateInput",
                 "ofType": null
               },
               "defaultValue": null,
@@ -1344,7 +1344,7 @@
         {
           "__typename": "__Type",
           "kind": "OBJECT",
-          "name": "CatalogueBannerItem",
+          "name": "CatalogBannerItem",
           "description": null,
           "fields": [
             {
@@ -1387,7 +1387,7 @@
         {
           "__typename": "__Type",
           "kind": "INPUT_OBJECT",
-          "name": "CatalogueBannerItemInput",
+          "name": "CatalogBannerItemInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -1432,7 +1432,7 @@
         {
           "__typename": "__Type",
           "kind": "INPUT_OBJECT",
-          "name": "CatalogueBannerItemUpdateInput",
+          "name": "CatalogBannerItemUpdateInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -1473,7 +1473,7 @@
         {
           "__typename": "__Type",
           "kind": "OBJECT",
-          "name": "CatalogueConfig",
+          "name": "CatalogConfig",
           "description": null,
           "fields": [
             {
@@ -1503,7 +1503,7 @@
         {
           "__typename": "__Type",
           "kind": "INPUT_OBJECT",
-          "name": "CatalogueConfigInput",
+          "name": "CatalogConfigInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -2736,7 +2736,7 @@
           "description": null,
           "fields": [
             {
-              "name": "catalogueConfig",
+              "name": "catalogConfig",
               "description": null,
               "args": [],
               "type": {
@@ -2745,7 +2745,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "CatalogueConfig",
+                  "name": "CatalogConfig",
                   "ofType": null
                 }
               },
@@ -3419,7 +3419,7 @@
           "inputFields": [
             {
               "__typename": "__InputValue",
-              "name": "catalogueConfig",
+              "name": "catalogConfig",
               "description": null,
               "type": {
                 "__typename": "__Type",
@@ -3427,7 +3427,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "CatalogueConfigInput",
+                  "name": "CatalogConfigInput",
                   "ofType": null
                 }
               },
@@ -7813,7 +7813,7 @@
               "deprecationReason": null
             },
             {
-              "name": "getCatalogueConfig",
+              "name": "getCatalogConfig",
               "description": null,
               "args": [
                 {
@@ -7837,7 +7837,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "CatalogueConfig",
+                  "name": "CatalogConfig",
                   "ofType": null
                 }
               },

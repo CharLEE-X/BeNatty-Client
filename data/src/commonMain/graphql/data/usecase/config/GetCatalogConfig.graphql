@@ -1,7 +1,7 @@
-query GetCatalogueConfig($configId: String) {
-  getCatalogueConfig(configId: $configId) {
+query GetCatalogConfig($configId: String) {
+  getCatalogConfig(configId: $configId) {
     bannerConfig {
-      catalogue {
+      catalog {
         title
         imageUrl
       }

@@ -1,4 +1,4 @@
-package feature.product.catalogue
+package feature.product.catalog
 
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
@@ -9,30 +9,30 @@ import data.type.MediaType
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-private typealias InputScope = InputHandlerScope<CatalogueContract.Inputs, CatalogueContract.Events, CatalogueContract.State>
+private typealias InputScope = InputHandlerScope<CatalogContract.Inputs, CatalogContract.Events, CatalogContract.State>
 
-internal class CatalogueInputHandler :
+internal class CatalogInputHandler :
     KoinComponent,
-    InputHandler<CatalogueContract.Inputs, CatalogueContract.Events, CatalogueContract.State> {
+    InputHandler<CatalogContract.Inputs, CatalogContract.Events, CatalogContract.State> {
 
     private val productService: ProductService by inject()
     private val configService: ConfigService by inject()
 
-    override suspend fun InputScope.handleInput(input: CatalogueContract.Inputs) = when (input) {
-        is CatalogueContract.Inputs.Init -> handleInit(input.variant)
-        CatalogueContract.Inputs.FetchCatalogueConfig -> handleFetchCatalogueConfig()
-        is CatalogueContract.Inputs.FetchProducts -> handleFetchProducts(input.page)
+    override suspend fun InputScope.handleInput(input: CatalogContract.Inputs) = when (input) {
+        is CatalogContract.Inputs.Init -> handleInit(input.variant)
+        CatalogContract.Inputs.FetchCatalogueConfig -> handleFetchCatalogueConfig()
+        is CatalogContract.Inputs.FetchProducts -> handleFetchProducts(input.page)
 
-        is CatalogueContract.Inputs.OnGoToProductClicked -> handleGoToProductClicked(input.productId)
+        is CatalogContract.Inputs.OnGoToProductClicked -> handleGoToProductClicked(input.productId)
 
-        is CatalogueContract.Inputs.SetProducts -> updateState { it.copy(products = input.products) }
-        is CatalogueContract.Inputs.SetPageInfo -> updateState { it.copy(pageInfo = input.pageInfo) }
-        is CatalogueContract.Inputs.SetIsLoading -> updateState { it.copy(isLoading = input.isLoading) }
-        is CatalogueContract.Inputs.SetCatalogueConfig -> updateState { it.copy(catalogueConfig = input.catalogueConfig) }
-        is CatalogueContract.Inputs.SetVariant -> updateState { it.copy(variant = input.variant) }
-        is CatalogueContract.Inputs.SetShowBanner -> updateState { it.copy(showBanner = input.showBanner) }
-        is CatalogueContract.Inputs.SetShowSearch -> updateState { it.copy(showSearch = input.showSearch) }
-        is CatalogueContract.Inputs.SetBanner -> updateState {
+        is CatalogContract.Inputs.SetProducts -> updateState { it.copy(products = input.products) }
+        is CatalogContract.Inputs.SetPageInfo -> updateState { it.copy(pageInfo = input.pageInfo) }
+        is CatalogContract.Inputs.SetIsLoading -> updateState { it.copy(isLoading = input.isLoading) }
+        is CatalogContract.Inputs.SetCatalogueConfig -> updateState { it.copy(catalogConfig = input.catalogueConfig) }
+        is CatalogContract.Inputs.SetVariant -> updateState { it.copy(variant = input.variant) }
+        is CatalogContract.Inputs.SetShowBanner -> updateState { it.copy(showBanner = input.showBanner) }
+        is CatalogContract.Inputs.SetShowSearch -> updateState { it.copy(showSearch = input.showSearch) }
+        is CatalogContract.Inputs.SetBanner -> updateState {
             it.copy(bannerTitle = input.bannerTitle, bannerImageUrl = input.bannerImageUrl)
         }
     }
@@ -40,11 +40,11 @@ internal class CatalogueInputHandler :
     private suspend fun InputScope.handleFetchCatalogueConfig() {
         val state = getCurrentState()
         sideJob("fetchCatalogueConfig") {
-            configService.getCatalogueConfig().fold(
+            configService.getCatalogConfig().fold(
                 onSuccess = { data ->
-                    val bannerImageUrl = with(data.getCatalogueConfig.bannerConfig) {
+                    val bannerImageUrl = with(data.getCatalogConfig.bannerConfig) {
                         when (state.variant) {
-                            Variant.Catalogue -> catalogue.imageUrl
+                            Variant.Catalog -> catalog.imageUrl
                             Variant.Kids -> kids.imageUrl
                             Variant.Men -> mens.imageUrl
                             Variant.Popular -> popular.imageUrl
@@ -53,10 +53,10 @@ internal class CatalogueInputHandler :
                             is Variant.Search -> null
                         }
                     }
-                    val bannerTitle = with(data.getCatalogueConfig.bannerConfig) {
+                    val bannerTitle = with(data.getCatalogConfig.bannerConfig) {
                         when (state.variant) {
-                            Variant.Catalogue,
-                            is Variant.Search -> catalogue.title
+                            Variant.Catalog,
+                            is Variant.Search -> catalog.title
 
                             Variant.Popular -> popular.title
                             Variant.Sales -> sales.title
@@ -65,11 +65,11 @@ internal class CatalogueInputHandler :
                             Variant.Kids -> kids.title
                         }
                     }
-                    postInput(CatalogueContract.Inputs.SetBanner(bannerTitle, bannerImageUrl))
-                    postInput(CatalogueContract.Inputs.SetCatalogueConfig(data.getCatalogueConfig))
+                    postInput(CatalogContract.Inputs.SetBanner(bannerTitle, bannerImageUrl))
+                    postInput(CatalogContract.Inputs.SetCatalogueConfig(data.getCatalogConfig))
                 },
                 onFailure = { error ->
-                    postEvent(CatalogueContract.Events.OnError(error.message ?: "Error fetching catalogue config"))
+                    postEvent(CatalogContract.Events.OnError(error.message ?: "Error fetching catalogue config"))
                 }
             )
         }
@@ -153,16 +153,16 @@ internal class CatalogueInputHandler :
 
 private suspend fun InputScope.handleInit(variant: Variant) {
     sideJob("InitCatalogue") {
-        postInput(CatalogueContract.Inputs.SetIsLoading(isLoading = true))
-        postInput(CatalogueContract.Inputs.SetVariant(variant))
-        postInput(CatalogueContract.Inputs.SetShowBanner(variant !is Variant.Search))
-        postInput(CatalogueContract.Inputs.SetShowSearch(variant is Variant.Search))
-        postInput(CatalogueContract.Inputs.FetchCatalogueConfig)
-        postInput(CatalogueContract.Inputs.FetchProducts(page = 0))
-        postInput(CatalogueContract.Inputs.SetIsLoading(isLoading = false))
+        postInput(CatalogContract.Inputs.SetIsLoading(isLoading = true))
+        postInput(CatalogContract.Inputs.SetVariant(variant))
+        postInput(CatalogContract.Inputs.SetShowBanner(variant !is Variant.Search))
+        postInput(CatalogContract.Inputs.SetShowSearch(variant is Variant.Search))
+        postInput(CatalogContract.Inputs.FetchCatalogueConfig)
+        postInput(CatalogContract.Inputs.FetchProducts(page = 0))
+        postInput(CatalogContract.Inputs.SetIsLoading(isLoading = false))
     }
 }
 
 private suspend fun InputScope.handleGoToProductClicked(productId: String) {
-    postEvent(CatalogueContract.Events.GoToProduct(productId))
+    postEvent(CatalogContract.Events.GoToProduct(productId))
 }

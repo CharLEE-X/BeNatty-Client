@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.AnimationIterationCount
 import com.varabyte.kobweb.compose.css.BoxSizing
 import com.varabyte.kobweb.compose.css.Cursor
+import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.WhiteSpace
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Row
@@ -26,6 +27,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.fontSize
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.minHeight
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
+import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.translateX
@@ -80,6 +82,7 @@ fun TickerSection(
             .color(contentColor)
             .onClick { onClick() }
             .cursor(Cursor.Pointer)
+            .overflow(Overflow.Clip)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

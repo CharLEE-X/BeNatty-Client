@@ -33,6 +33,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.objectFit
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
+import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
 import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
@@ -264,7 +265,7 @@ private fun MiniatureItem(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxSize()
-            .onMouseEnter {
+            .onMouseOver {
                 hovered = true
                 onHovered(true)
             }
@@ -276,7 +277,7 @@ private fun MiniatureItem(
             .borderRadius(12.px)
             .border(
                 width = 2.px,
-                color = if (hovered) MaterialTheme.colors.onBackground else Colors.Transparent,
+                color = if (hovered) Colors.Red else Colors.Transparent,
             )
             .transition(CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease))
     ) {
@@ -289,20 +290,9 @@ private fun MiniatureItem(
                 .borderRadius(12.px)
                 .border(
                     width = 2.px,
-                    color = if (hovered) MaterialTheme.colors.background else Colors.Transparent,
+                    color = if (hovered) Colors.Red else Colors.Transparent,
                 )
                 .transition(CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease))
         )
-//        Box(
-//            contentAlignment = Alignment.Center,
-//            modifier = modifier
-//                .fillMaxSize()
-//                .borderRadius(12.px)
-//                .border(
-//                    width = 2.px,
-//                    color = if (hovered) MaterialTheme.colors.onBackground else Colors.Transparent,
-//                )
-//                .transition(CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease))
-//        )
     }
 }

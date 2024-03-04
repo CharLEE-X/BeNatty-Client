@@ -45,9 +45,9 @@ mutation CreateConfig($input: CreateConfigInput!) {
         }
       }
     }
-    catalogueConfig {
+    catalogConfig {
       bannerConfig {
-        catalogue {
+        catalog {
           title
           imageUrl
         }

@@ -554,31 +554,31 @@ internal class AdminConfigInputHandler :
                                         ),
                                     ),
                                 ),
-                                catalogueConfig = GetConfigQuery.CatalogueConfig(
+                                catalogConfig = GetConfigQuery.CatalogConfig(
                                     bannerConfig = GetConfigQuery.BannerConfig(
-                                        catalogue = GetConfigQuery.Catalogue(
-                                            title = data.updateConfig.catalogueConfig.bannerConfig.catalogue.title,
-                                            imageUrl = data.updateConfig.catalogueConfig.bannerConfig.catalogue.imageUrl,
+                                        catalog = GetConfigQuery.Catalog(
+                                            title = data.updateConfig.catalogConfig.bannerConfig.catalog.title,
+                                            imageUrl = data.updateConfig.catalogConfig.bannerConfig.catalog.imageUrl,
                                         ),
                                         popular = GetConfigQuery.Popular(
-                                            title = data.updateConfig.catalogueConfig.bannerConfig.popular.title,
-                                            imageUrl = data.updateConfig.catalogueConfig.bannerConfig.popular.imageUrl,
+                                            title = data.updateConfig.catalogConfig.bannerConfig.popular.title,
+                                            imageUrl = data.updateConfig.catalogConfig.bannerConfig.popular.imageUrl,
                                         ),
                                         sales = GetConfigQuery.Sales(
-                                            title = data.updateConfig.catalogueConfig.bannerConfig.sales.title,
-                                            imageUrl = data.updateConfig.catalogueConfig.bannerConfig.sales.imageUrl,
+                                            title = data.updateConfig.catalogConfig.bannerConfig.sales.title,
+                                            imageUrl = data.updateConfig.catalogConfig.bannerConfig.sales.imageUrl,
                                         ),
                                         mens = GetConfigQuery.Mens(
-                                            title = data.updateConfig.catalogueConfig.bannerConfig.mens.title,
-                                            imageUrl = data.updateConfig.catalogueConfig.bannerConfig.mens.imageUrl,
+                                            title = data.updateConfig.catalogConfig.bannerConfig.mens.title,
+                                            imageUrl = data.updateConfig.catalogConfig.bannerConfig.mens.imageUrl,
                                         ),
                                         women = GetConfigQuery.Women(
-                                            title = data.updateConfig.catalogueConfig.bannerConfig.women.title,
-                                            imageUrl = data.updateConfig.catalogueConfig.bannerConfig.women.imageUrl,
+                                            title = data.updateConfig.catalogConfig.bannerConfig.women.title,
+                                            imageUrl = data.updateConfig.catalogConfig.bannerConfig.women.imageUrl,
                                         ),
                                         kids = GetConfigQuery.Kids(
-                                            title = data.updateConfig.catalogueConfig.bannerConfig.kids.title,
-                                            imageUrl = data.updateConfig.catalogueConfig.bannerConfig.kids.imageUrl,
+                                            title = data.updateConfig.catalogConfig.bannerConfig.kids.title,
+                                            imageUrl = data.updateConfig.catalogConfig.bannerConfig.kids.imageUrl,
                                         ),
                                     ),
                                 )

@@ -1,6 +1,7 @@
 package web.pages.shop.product.catalogue
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,6 +15,7 @@ import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
+import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
@@ -32,36 +34,47 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.gap
+import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.maxHeight
 import com.varabyte.kobweb.compose.ui.modifiers.objectFit
+import com.varabyte.kobweb.compose.ui.modifiers.onClick
+import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
+import com.varabyte.kobweb.compose.ui.modifiers.onMouseOut
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
 import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.rotate
 import com.varabyte.kobweb.compose.ui.modifiers.transition
+import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.compose.ui.thenIf
+import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiChevronLeft
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
-import feature.product.catalogue.CatalogueContract
-import feature.product.catalogue.CatalogueRoutes
-import feature.product.catalogue.CatalogueViewModel
-import feature.product.catalogue.Variant
+import feature.product.catalog.CatalogContract
+import feature.product.catalog.CatalogViewModel
+import feature.product.catalog.CatalogueRoutes
+import feature.product.catalog.Variant
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.deg
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
+import org.jetbrains.compose.web.dom.Span
 import theme.MaterialTheme
 import theme.roleStyle
 import web.HeadlineTextStyle
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
+import web.components.sections.desktopNav.AppMenu
 import web.components.widgets.AppElevatedCard
 import web.pages.shop.home.gridModifier
 import web.util.glossy
@@ -73,7 +86,7 @@ fun CataloguePage(
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
-        CatalogueViewModel(
+        CatalogViewModel(
             scope = scope,
             variant = variant,
             catalogueRoutes = CatalogueRoutes(
@@ -119,7 +132,37 @@ fun CataloguePage(
 }
 
 @Composable
-fun CatalogueHeader(vm: CatalogueViewModel, state: CatalogueContract.State) {
+fun CatalogueHeader(vm: CatalogViewModel, state: CatalogContract.State) {
+    val scope = rememberCoroutineScope()
+    var scheduled: Job? = null
+
+    var isFiltersButtonHovered by remember { mutableStateOf(false) }
+    var isMenuHovered by remember { mutableStateOf(isFiltersButtonHovered) }
+    var open by remember { mutableStateOf(isFiltersButtonHovered) }
+
+    fun scheduleCloseMenu() {
+        scheduled = scope.launch {
+            println("scheduleCloseMenu")
+            delay(1000)
+            if (!(isFiltersButtonHovered || isMenuHovered)) {
+                println("scheduleCloseMenu: close")
+                open = false
+            } else {
+                println("scheduleCloseMenu: open")
+            }
+        }
+    }
+
+    LaunchedEffect(isFiltersButtonHovered, isMenuHovered) {
+        println("isFiltersButtonHovered: $isFiltersButtonHovered, isMenuHovered: $isMenuHovered")
+        if (isFiltersButtonHovered || isMenuHovered) {
+            scheduled?.cancel()
+            open = true
+        } else {
+            scheduleCloseMenu()
+        }
+    }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -132,37 +175,69 @@ fun CatalogueHeader(vm: CatalogueViewModel, state: CatalogueContract.State) {
                 .color(MaterialTheme.colors.onSurface)
         )
         Spacer()
-        FiltersButton(
-            sortByText = "Sort by",
-            currentFilter = "Best selling",
-            menuOpened = false,
-            onFilterClicked = { }
-        )
+        Span(
+            Modifier
+                .position(Position.Relative)
+                .toAttrs()
+        ) {
+            FiltersButton(
+                sortByText = "Sort by",
+                currentFilter = "Best selling",
+                menuOpened = open,
+                onClick = { open = !open },
+                modifier = Modifier
+                    .onMouseEnter { isFiltersButtonHovered = true }
+                    .onMouseLeave { isFiltersButtonHovered = false }
+            )
+            AppMenu(
+                open = open,
+                items = listOf(
+                    "Featured",
+                    "Best selling",
+                    "Alphabetically, A-Z",
+                    "Alphabetically, Z-A",
+                    "Price, Low to High",
+                    "Price, High to Low",
+                    "Date, New to Old",
+                    "Date, Old to New",
+                ),
+                onStoreMenuItemSelected = {
+                    open = false
+                },
+                modifier = Modifier
+//                    .translateX((16).px)
+                    .margin(top = 10.px)
+                    .onMouseOver { isMenuHovered = true }
+                    .onMouseOut {
+                        isMenuHovered = false
+                        scheduleCloseMenu()
+                    }
+            )
+        }
     }
 }
 
 @Composable
 private fun FiltersButton(
+    modifier: Modifier,
     sortByText: String,
     currentFilter: String,
     menuOpened: Boolean,
-    onFilterClicked: () -> Unit,
+    onClick: () -> Unit,
 ) {
     var hovered by remember { mutableStateOf(false) }
     val borderColor = when {
-        hovered -> MaterialTheme.colors.onSurface
-        else -> MaterialTheme.colors.surfaceContainerLowest
-    }
-    val backgroundColor = when {
-        hovered -> MaterialTheme.colors.surfaceContainerLow
-        else -> MaterialTheme.colors.surfaceContainerLowest
+        hovered || menuOpened -> MaterialTheme.colors.onSecondaryContainer
+        else -> MaterialTheme.colors.secondaryContainer
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .padding(left = 1.em, right = 0.5.em, top = 0.5.em, bottom = 0.5.em)
-            .backgroundColor(backgroundColor)
-            .borderRadius(36.px)
+            .glossy(
+                color = MaterialTheme.colors.secondaryContainer,
+                borderRadius = 36.px
+            )
             .border(
                 width = 1.px,
                 color = borderColor,
@@ -172,6 +247,8 @@ private fun FiltersButton(
             .onMouseOver { hovered = true }
             .onMouseLeave { hovered = false }
             .transition(CSSTransition.group(listOf("border", "background-color"), 0.3.s, TransitionTimingFunction.Ease))
+            .onClick { onClick() }
+            .userSelect(UserSelect.None)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -211,11 +288,11 @@ fun SearchBanner(
 
 @Composable
 private fun Banner(
-    state: CatalogueContract.State,
+    state: CatalogContract.State,
     modifier: Modifier = Modifier,
 ) {
     if (state.showBanner) {
-        CatalogueBanner(
+        CatalogBanner(
             title = state.bannerTitle ?: "",
             modifier = modifier
         ) { imageModifier ->
@@ -236,8 +313,8 @@ private fun Banner(
 @Composable
 private fun CatalogueContent(
     modifier: Modifier = Modifier,
-    vm: CatalogueViewModel,
-    state: CatalogueContract.State,
+    vm: CatalogViewModel,
+    state: CatalogContract.State,
 ) {
     Row(
         modifier = gridModifier(3).then(modifier)
@@ -247,7 +324,7 @@ private fun CatalogueContent(
                 title = product.title,
                 price = product.price,
                 media = product.media,
-                onClick = { vm.trySend(CatalogueContract.Inputs.OnGoToProductClicked(product.id)) },
+                onClick = { vm.trySend(CatalogContract.Inputs.OnGoToProductClicked(product.id)) },
                 modifier = Modifier.thenIf(index > 2) { Modifier.padding(top = 1.em) }
             )
         }
@@ -267,11 +344,11 @@ private fun CatalogueFilters(
 }
 
 @Composable
-fun CatalogueBanner(
+fun CatalogBanner(
     modifier: Modifier = Modifier,
     title: String,
     height: CSSLengthOrPercentageNumericValue = 350.px,
-    contentColor: Color = Colors.White,
+    contentColor: Color = MaterialTheme.colors.background,
     shadowColor: Color = Color.rgb(30, 30, 59),
     borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
     image: @Composable (imageModifier: Modifier) -> Unit,

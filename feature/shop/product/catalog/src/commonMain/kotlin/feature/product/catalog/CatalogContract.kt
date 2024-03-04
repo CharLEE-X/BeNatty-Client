@@ -1,7 +1,7 @@
-package feature.product.catalogue
+package feature.product.catalog
 
 import component.localization.getString
-import data.GetCatalogueConfigQuery
+import data.GetCatalogConfigQuery
 import data.GetCataloguePageQuery
 import kotlinx.serialization.Serializable
 
@@ -12,9 +12,9 @@ private val defaultPageInfo = GetCataloguePageQuery.Info(
     next = null,
 )
 
-object CatalogueContract {
+object CatalogContract {
     data class State(
-        internal val variant: Variant = Variant.Catalogue,
+        internal val variant: Variant = Variant.Catalog,
 
         val strings: Strings = Strings(),
         val isLoading: Boolean = false,
@@ -24,7 +24,7 @@ object CatalogueContract {
         val bannerTitle: String? = null,
         val bannerImageUrl: String? = null,
 
-        val catalogueConfig: GetCatalogueConfigQuery.GetCatalogueConfig? = null,
+        val catalogConfig: GetCatalogConfigQuery.GetCatalogConfig? = null,
         val products: List<GetCataloguePageQuery.Product> = emptyList(),
         val pageInfo: GetCataloguePageQuery.Info = defaultPageInfo,
     )
@@ -39,7 +39,7 @@ object CatalogueContract {
         data class SetIsLoading(val isLoading: Boolean) : Inputs
         data class SetProducts(val products: List<GetCataloguePageQuery.Product>) : Inputs
         data class SetPageInfo(val pageInfo: GetCataloguePageQuery.Info) : Inputs
-        data class SetCatalogueConfig(val catalogueConfig: GetCatalogueConfigQuery.GetCatalogueConfig) : Inputs
+        data class SetCatalogueConfig(val catalogueConfig: GetCatalogConfigQuery.GetCatalogConfig) : Inputs
         data class SetVariant(val variant: Variant) : Inputs
         data class SetShowBanner(val showBanner: Boolean) : Inputs
         data class SetShowSearch(val showSearch: Boolean) : Inputs
@@ -67,7 +67,7 @@ object CatalogueContract {
 @Serializable
 sealed class Variant {
     @Serializable
-    data object Catalogue : Variant()
+    data object Catalog : Variant()
 
     @Serializable
     data object Popular : Variant()

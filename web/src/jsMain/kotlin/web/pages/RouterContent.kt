@@ -17,7 +17,7 @@ import com.copperleaf.ballast.navigation.routing.directions
 import com.copperleaf.ballast.navigation.routing.pathParameter
 import com.copperleaf.ballast.navigation.routing.renderCurrentDestination
 import com.copperleaf.ballast.navigation.routing.stringPath
-import feature.product.catalogue.Variant
+import feature.product.catalog.Variant
 import feature.router.RouterViewModel
 import feature.router.Screen
 import feature.router.idPath
@@ -108,7 +108,7 @@ fun RouterContent(
             router.trySend(
                 GoToDestination(
                     Screen.Catalogue.directions()
-                        .pathParameter("variant", Json.encodeToString(Variant.serializer(), Variant.Catalogue))
+                        .pathParameter("variant", Json.encodeToString(Variant.serializer(), Variant.Catalog))
                         .build()
                 )
             )

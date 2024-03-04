@@ -13,6 +13,7 @@ import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.JustifyContent
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
+import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.css.Visibility
 import com.varabyte.kobweb.compose.css.WhiteSpace
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -24,6 +25,7 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.alignContent
 import com.varabyte.kobweb.compose.ui.modifiers.alignItems
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
+import com.varabyte.kobweb.compose.ui.modifiers.border
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
@@ -43,6 +45,8 @@ import com.varabyte.kobweb.compose.ui.modifiers.minHeight
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
+import com.varabyte.kobweb.compose.ui.modifiers.onMouseOut
+import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
@@ -52,6 +56,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translate
 import com.varabyte.kobweb.compose.ui.modifiers.translateX
 import com.varabyte.kobweb.compose.ui.modifiers.translateY
+import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.compose.ui.modifiers.visibility
 import com.varabyte.kobweb.compose.ui.modifiers.whiteSpace
 import com.varabyte.kobweb.compose.ui.modifiers.width
@@ -76,6 +81,7 @@ import org.jetbrains.compose.web.css.AlignContent
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.FlexWrap
+import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.deg
 import org.jetbrains.compose.web.css.em
@@ -85,10 +91,10 @@ import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.dom.Span
 import theme.MaterialTheme
 import web.components.layouts.oneLayoutMaxWidth
-import web.components.widgets.AppElevatedCard
 import web.components.widgets.Logo
 import web.components.widgets.SearchBar
 import web.compose.material3.component.IconButton
+import web.util.glossy
 
 @Composable
 fun NavBar(
@@ -121,7 +127,7 @@ fun NavBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .maxWidth(oneLayoutMaxWidth)
-                .padding(leftRight = 20.px, topBottom = 20.px)
+                .padding(leftRight = 24.px, topBottom = 20.px)
                 .gap(20.px)
                 .display(DisplayStyle.Grid)
                 .styleModifier { property("grid-template-columns", "1fr auto 1fr") }
@@ -326,16 +332,15 @@ private fun ListMenu(
                             .onMouseEnter { isStoreButtonHovered = true }
                             .onMouseLeave { isStoreButtonHovered = false }
                     )
-                    StoreSubMenu(
+                    AppMenu(
                         open = open,
                         items = storeMenuItems,
                         onStoreMenuItemSelected = onStoreMenuItemSelected,
-                        onMenuItemHovered = { isMenuHovered = it },
                         modifier = Modifier
                             .translateX((-16).px)
                             .margin(top = 10.px)
-                            .onMouseEnter { isMenuHovered = true }
-                            .onMouseLeave {
+                            .onMouseOver { isMenuHovered = true }
+                            .onMouseOut {
                                 isMenuHovered = false
                                 scheduleCloseMenu()
                             }
@@ -363,20 +368,30 @@ private fun ListMenu(
 }
 
 @Composable
-private fun StoreSubMenu(
+fun AppMenu(
     modifier: Modifier = Modifier,
     open: Boolean,
     items: List<String>,
     onStoreMenuItemSelected: (String) -> Unit,
-    onMenuItemHovered: (Boolean) -> Unit,
-    backgroundColor: CSSColorValue = MaterialTheme.colors.onSurface,
+    underlineColor: CSSColorValue = MaterialTheme.colors.onSurface,
 ) {
-    AppElevatedCard(
+    Box(
         modifier = modifier
             .position(Position.Absolute)
             .zIndex(9)
+            .width(200.px)
             .opacity(if (open) 1.0 else 0.0)
             .visibility(if (open) Visibility.Visible else Visibility.Hidden)
+            .userSelect(UserSelect.None)
+            .glossy(
+                color = MaterialTheme.colors.background,
+                alpha = 225,
+            )
+            .border(
+                width = 1.px,
+                color = MaterialTheme.colors.surfaceContainerHighest,
+                style = LineStyle.Solid
+            )
             .translate(
                 tx = (-12).px,
                 ty = if (open) (-5).px else 20.px,
@@ -390,50 +405,63 @@ private fun StoreSubMenu(
     ) {
         Column(
             modifier = Modifier
-                .width(200.px)
                 .fontWeight(400)
                 .fontSize(14.px)
                 .lineHeight(18.px)
                 .padding(leftRight = 20.px, topBottom = 16.px)
         ) {
             items.forEach { item ->
-                var itemHovered by remember { mutableStateOf(false) }
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onClick { onStoreMenuItemSelected(item) }
-                        .cursor(Cursor.Pointer)
-                        .padding(leftRight = 12.px)
-                        .onMouseEnter {
-                            onMenuItemHovered(true)
-                            itemHovered = true
-                        }
-                        .onMouseLeave { itemHovered = false }
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = modifier
-                            .gap(1.px)
-                    ) {
-                        SpanText(
-                            text = item,
-                            modifier = Modifier
-                                .fontSize(14.px)
-                                .whiteSpace(WhiteSpace.NoWrap)
-                        )
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.Start)
-                                .onClick { onStoreMenuItemSelected(item) }
-                                .height(2.px)
-                                .fillMaxWidth(if (itemHovered) 100.percent else 0.percent)
-                                .backgroundColor(backgroundColor)
-                                .transition(CSSTransition("width", 0.3.s, TransitionTimingFunction.Ease))
-                        )
-                    }
-                }
+                MenuItem(
+                    onStoreMenuItemSelected = onStoreMenuItemSelected,
+                    item = item,
+                    modifier = modifier,
+                    underlineColor = underlineColor
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun MenuItem(
+    onStoreMenuItemSelected: (String) -> Unit,
+    item: String,
+    modifier: Modifier,
+    underlineColor: CSSColorValue
+) {
+    var itemHovered by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .onClick { onStoreMenuItemSelected(item) }
+            .cursor(Cursor.Pointer)
+            .padding(leftRight = 12.px)
+            .onMouseEnter {
+                itemHovered = true
+            }
+            .onMouseLeave { itemHovered = false }
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+                .gap(1.px)
+        ) {
+            SpanText(
+                text = item,
+                modifier = Modifier
+                    .fontSize(14.px)
+                    .whiteSpace(WhiteSpace.NoWrap)
+            )
+            Box(
+                modifier = Modifier
+                    .align(Alignment.Start)
+                    .onClick { onStoreMenuItemSelected(item) }
+                    .height(2.px)
+                    .fillMaxWidth(if (itemHovered) 100.percent else 0.percent)
+                    .backgroundColor(underlineColor)
+                    .transition(CSSTransition("width", 0.3.s, TransitionTimingFunction.Ease))
+            )
         }
     }
 }

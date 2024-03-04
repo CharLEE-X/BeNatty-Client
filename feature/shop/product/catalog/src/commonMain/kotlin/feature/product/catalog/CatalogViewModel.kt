@@ -1,4 +1,4 @@
-package feature.product.catalogue
+package feature.product.catalog
 
 import com.copperleaf.ballast.BallastViewModelConfiguration
 import com.copperleaf.ballast.build
@@ -11,14 +11,14 @@ import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
-class CatalogueViewModel(
+class CatalogViewModel(
     scope: CoroutineScope,
     catalogueRoutes: CatalogueRoutes,
     variant: Variant,
 ) : BasicViewModel<
-    CatalogueContract.Inputs,
-    CatalogueContract.Events,
-    CatalogueContract.State,
+    CatalogContract.Inputs,
+    CatalogContract.Events,
+    CatalogContract.State,
     >(
     config = BallastViewModelConfiguration.Builder()
         .apply {
@@ -26,8 +26,8 @@ class CatalogueViewModel(
             logger = { PrintlnLogger() }
         }
         .withViewModel(
-            initialState = CatalogueContract.State(),
-            inputHandler = CatalogueInputHandler(),
+            initialState = CatalogContract.State(),
+            inputHandler = CatalogInputHandler(),
             name = TAG,
         )
         .dispatchers(
@@ -37,13 +37,13 @@ class CatalogueViewModel(
             interceptorDispatcher = Dispatchers.Default,
         )
         .build(),
-    eventHandler = CatalogueEventHandler(
+    eventHandler = CatalogEventHandler(
         catalogueRoutes = catalogueRoutes,
     ),
     coroutineScope = scope,
 ) {
     init {
-        trySend(CatalogueContract.Inputs.Init(variant))
+        trySend(CatalogContract.Inputs.Init(variant))
     }
 
     companion object {

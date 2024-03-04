@@ -47,9 +47,9 @@ query GetConfig($configId: String) {
         }
       }
     }
-    catalogueConfig {
+    catalogConfig {
       bannerConfig {
-        catalogue {
+        catalog {
           title
           imageUrl
         }
