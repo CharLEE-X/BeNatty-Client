@@ -1,0 +1,7 @@
+mutation AddCategoryImage($input: AddImageToCategoryInput!) {
+  addCategoryImage(input: $input) {
+    id
+    imageUrl
+    name
+  }
+}

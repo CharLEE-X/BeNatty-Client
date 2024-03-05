@@ -63,7 +63,6 @@ import theme.MaterialTheme
 import web.HeadlineTextStyle
 import web.components.widgets.AppElevatedButton
 import web.components.widgets.AppElevatedCard
-import web.components.widgets.ImageOverlay
 import web.util.glossy
 
 fun gridModifier(
@@ -162,11 +161,11 @@ fun CollageItem(
                 .thenIf(hovered) { Modifier.scale(1.04) }
                 .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
             image(imageModifier)
-            ImageOverlay(
-                shadowColor = shadowColor,
-                overlayColor = overlayColor,
-                hovered = hovered
-            )
+//            ImageOverlay(
+//                shadowColor = shadowColor,
+//                overlayColor = overlayColor,
+//                hovered = hovered
+//            )
             Column(
                 horizontalAlignment = when (textPosition) {
                     TextPosition.Center -> Alignment.CenterHorizontally

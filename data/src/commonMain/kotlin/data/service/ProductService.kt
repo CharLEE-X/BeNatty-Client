@@ -12,7 +12,10 @@ import data.AdminGetAllProductsPageQuery
 import data.AdminProductGetByIdQuery
 import data.AdminProductUpdateMutation
 import data.AdminProductUploadImageMutation
+import data.GetCatalogPageQuery
 import data.type.BackorderStatus
+import data.type.BlobInput
+import data.type.CatalogPageInput
 import data.type.InventoryUpdateInput
 import data.type.MediaType
 import data.type.PageInput
@@ -22,6 +25,7 @@ import data.type.ProductCreateInput
 import data.type.ProductMediaDeleteInput
 import data.type.ProductMediaUploadInput
 import data.type.ProductUpdateInput
+import data.type.ProductsSort
 import data.type.ShippingUpdateInput
 import data.type.SortDirection
 import data.type.StockStatus
@@ -32,13 +36,24 @@ import kotlinx.coroutines.flow.map
 
 interface ProductService {
     suspend fun create(input: ProductCreateInput): Result<AdminCreateProductMutation.Data>
-    suspend fun getAsPage(
+    suspend fun getAdminProductsAsPage(
         page: Int,
         size: Int,
         query: String?,
         sortBy: String?,
         sortDirection: SortDirection?,
     ): Result<AdminGetAllProductsPageQuery.Data>
+
+    suspend fun getCataloguePage(
+        page: Int,
+        query: String?,
+        categories: List<String>?,
+        colors: List<String>?,
+        sizes: List<String>?,
+        priceFrom: String?,
+        priceTo: String?,
+        sortBy: ProductsSort?,
+    ): Result<GetCatalogPageQuery.Data>
 
     suspend fun getById(id: String): Flow<Result<AdminProductGetByIdQuery.Data>>
     suspend fun delete(id: String): Result<AdminDeleteProductMutation.Data>
@@ -69,7 +84,7 @@ interface ProductService {
 
     suspend fun uploadImage(
         productId: String,
-        mediaString: String,
+        blobInput: BlobInput,
         mediaType: MediaType,
     ): Result<AdminProductUploadImageMutation.Data>
 
@@ -87,12 +102,12 @@ internal class ProductServiceImpl(
 
     override suspend fun uploadImage(
         productId: String,
-        mediaString: String,
+        blobInput: BlobInput,
         mediaType: MediaType,
     ): Result<AdminProductUploadImageMutation.Data> {
         val input = ProductMediaUploadInput(
             productId = productId,
-            blob = mediaString,
+            blob = blobInput,
             mediaType = mediaType,
         )
         return apolloClient.mutation(AdminProductUploadImageMutation(input)).handle()
@@ -166,8 +181,8 @@ internal class ProductServiceImpl(
         val input = ProductUpdateInput(
             id = id,
             title = name.skipIfNull(),
-            isFeatured = isFeatured.skipIfNull(),
             description = description.skipIfNull(),
+            isFeatured = isFeatured.skipIfNull(),
             allowReviews = allowReviews.skipIfNull(),
             categoryId = categoryId.skipIfNull(),
             tags = tags.skipIfNull(),
@@ -189,7 +204,7 @@ internal class ProductServiceImpl(
             .handle()
     }
 
-    override suspend fun getAsPage(
+    override suspend fun getAdminProductsAsPage(
         page: Int,
         size: Int,
         query: String?,
@@ -204,6 +219,32 @@ internal class ProductServiceImpl(
             sortDirection = sortDirection.skipIfNull(),
         )
         return apolloClient.query(AdminGetAllProductsPageQuery(pageInput))
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .handle()
+    }
+
+    override suspend fun getCataloguePage(
+        page: Int,
+        query: String?,
+        categories: List<String>?,
+        colors: List<String>?,
+        sizes: List<String>?,
+        priceFrom: String?,
+        priceTo: String?,
+        sortBy: ProductsSort?,
+    ): Result<GetCatalogPageQuery.Data> {
+        val pageInput = CatalogPageInput(
+            page = page,
+            size = Optional.absent(),
+            query = query.skipIfNull(),
+            categories = categories.skipIfNull(),
+            colors = colors.skipIfNull(),
+            sizes = sizes.skipIfNull(),
+            priceFrom = priceFrom.skipIfNull(),
+            priceTo = priceTo.skipIfNull(),
+            sortBy = sortBy.skipIfNull(),
+        )
+        return apolloClient.query(GetCatalogPageQuery(pageInput))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }

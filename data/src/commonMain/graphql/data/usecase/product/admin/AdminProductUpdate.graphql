@@ -3,6 +3,7 @@ mutation AdminProductUpdate($input: ProductUpdateInput!) {
     id
     title
     description
+    sold
     postStatus
     media
     categoryId
@@ -29,6 +30,16 @@ mutation AdminProductUpdate($input: ProductUpdateInput!) {
       length
       width
       height
+    }
+    variants {
+      id
+      attrs {
+        key
+        value
+      }
+      price
+      quantity
+      media
     }
   }
 }

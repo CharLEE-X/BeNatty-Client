@@ -48,7 +48,7 @@ import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.IconStyle
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibility
 import com.varabyte.kobweb.silk.components.text.SpanText
-import data.GetCataloguePageQuery
+import data.GetCatalogPageQuery
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
@@ -63,7 +63,7 @@ fun CatalogItem(
     onClick: () -> Unit,
     title: String,
     price: String?,
-    media: List<GetCataloguePageQuery.Medium>,
+    media: List<GetCatalogPageQuery.Medium>,
     borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
 ) {
     var hovered by remember { mutableStateOf(false) }
@@ -100,7 +100,7 @@ fun CatalogItem(
 @Composable
 private fun MainImage(
     onClick: () -> Unit,
-    media: GetCataloguePageQuery.Medium?,
+    media: GetCatalogPageQuery.Medium?,
     hovered: Boolean,
     borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
     hoveredScale: Double = 1.02,
@@ -167,8 +167,8 @@ private fun MainImage(
 
 @Composable
 private fun Miniatures(
-    media: List<GetCataloguePageQuery.Medium>,
-    onMiniatureHoveredChanged: (GetCataloguePageQuery.Medium?) -> Unit,
+    media: List<GetCatalogPageQuery.Medium>,
+    onMiniatureHoveredChanged: (GetCatalogPageQuery.Medium?) -> Unit,
     totalShow: Int = 4,
     onMoreClick: () -> Unit,
 ) {
@@ -256,15 +256,18 @@ private fun ItemText(
 @Composable
 private fun MiniatureItem(
     modifier: Modifier = Modifier,
-    media: GetCataloguePageQuery.Medium,
+    media: GetCatalogPageQuery.Medium,
     onHovered: (Boolean) -> Unit
 ) {
     var hovered by remember { mutableStateOf(false) }
+    val outerBorderColor = if (hovered) MaterialTheme.colors.onSurface else Colors.Transparent
+    val innerBorderColor = if (hovered) MaterialTheme.colors.background else Colors.Transparent
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxSize()
+            .zIndex(1)
             .onMouseOver {
                 hovered = true
                 onHovered(true)
@@ -275,10 +278,6 @@ private fun MiniatureItem(
             }
             .cursor(Cursor.Pointer)
             .borderRadius(12.px)
-            .border(
-                width = 2.px,
-                color = if (hovered) Colors.Red else Colors.Transparent,
-            )
             .transition(CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease))
     ) {
         Image(
@@ -288,11 +287,26 @@ private fun MiniatureItem(
                 .fillMaxSize()
                 .objectFit(ObjectFit.Cover)
                 .borderRadius(12.px)
+                .transition(CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease))
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .borderRadius(12.px)
                 .border(
                     width = 2.px,
-                    color = if (hovered) Colors.Red else Colors.Transparent,
+                    color = outerBorderColor,
                 )
-                .transition(CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease))
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(2.px)
+                .borderRadius(12.px)
+                .border(
+                    width = 2.px,
+                    color = innerBorderColor,
+                )
         )
     }
 }

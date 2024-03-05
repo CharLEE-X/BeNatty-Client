@@ -1,5 +1,47 @@
 mutation AdminCreateProduct($input: ProductCreateInput!) {
   createProduct(input: $input) {
-    id
+    product {
+      id
+      title
+      description
+      sold
+      postStatus
+      media
+      categoryId
+      tags
+      isFeatured
+      allowReviews
+      pricing {
+        price
+        regularPrice
+        chargeTax
+      }
+      inventory {
+        trackQuantity
+        useGlobalTracking
+        remainingStock
+        stockStatus
+        lowStockThreshold
+        backorderStatus
+      }
+      shipping {
+        presetId
+        isPhysicalProduct
+        weight
+        length
+        width
+        height
+      }
+      variants {
+        id
+        attrs {
+          key
+          value
+        }
+        price
+        quantity
+        media
+      }
+    }
   }
 }

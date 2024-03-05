@@ -1,5 +1,5 @@
-query GetCataloguePage($pageInput: PageInput!) {
-  getCataloguePage(pageInput: $pageInput) {
+query GetCatalogPage($catalogPageInput: CatalogPageInput!) {
+  getCatalogPage(catalogPageInput: $catalogPageInput) {
     info {
       count
       next
@@ -9,10 +9,10 @@ query GetCataloguePage($pageInput: PageInput!) {
     products {
       id
       media {
-        id
-        url
         alt
+        id
         mediaType
+        url
       }
       price
       title

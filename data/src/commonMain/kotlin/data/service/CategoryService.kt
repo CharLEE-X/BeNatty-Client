@@ -5,12 +5,15 @@ import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.watch
+import data.AddCategoryImageMutation
 import data.CreateCategoryMutation
 import data.DeleteCategoryMutation
 import data.GetCategoriesAllMinimalQuery
 import data.GetCategoriesAsPageQuery
 import data.GetCategoryByIdQuery
 import data.UpdateCategoryMutation
+import data.type.AddImageToCategoryInput
+import data.type.BlobInput
 import data.type.CategoryCreateInput
 import data.type.CategoryUpdateInput
 import data.type.PageInput
@@ -47,6 +50,8 @@ interface CategoryService {
         height: String?,
         requiresShipping: Boolean?,
     ): Result<UpdateCategoryMutation.Data>
+
+    suspend fun addCategoryImage(categoryId: String, blob: String): Result<AddCategoryImageMutation.Data>
 }
 
 internal class CategoryServiceImpl(private val apolloClient: ApolloClient) : CategoryService {
@@ -130,6 +135,16 @@ internal class CategoryServiceImpl(private val apolloClient: ApolloClient) : Cat
             shippingPreset = shippingPreset,
         )
         return apolloClient.mutation(UpdateCategoryMutation(input))
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .handle()
+    }
+
+    override suspend fun addCategoryImage(categoryId: String, blob: String): Result<AddCategoryImageMutation.Data> {
+        val input = AddImageToCategoryInput(
+            categoryId = categoryId,
+            blob = BlobInput(blob),
+        )
+        return apolloClient.mutation(AddCategoryImageMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }

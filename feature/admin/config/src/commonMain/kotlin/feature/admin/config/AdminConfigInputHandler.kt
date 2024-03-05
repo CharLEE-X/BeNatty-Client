@@ -8,6 +8,7 @@ import component.localization.InputValidator
 import data.GetConfigQuery
 import data.service.ConfigService
 import data.type.BannerItemInput
+import data.type.BlobInput
 import data.type.CollageItemInput
 import data.type.DayOfWeek
 import data.type.MediaType
@@ -226,7 +227,7 @@ internal class AdminConfigInputHandler :
                 configService.uploadCollageImage(
                     configId = id,
                     imageId = imageId,
-                    blob = blob,
+                    blob = BlobInput(blob),
                     mediaType = mediaType,
                 ).fold(
                     onSuccess = { data ->
@@ -264,7 +265,7 @@ internal class AdminConfigInputHandler :
                 configService.uploadBannerMedia(
                     configId = id,
                     side = side,
-                    blob = blob,
+                    blob = BlobInput(blob),
                     mediaType = mediaType,
                 ).fold(
                     onSuccess = { data ->

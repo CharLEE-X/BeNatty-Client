@@ -32,7 +32,7 @@ import web.pages.admin.dashboard.AdminDashboardPage
 import web.pages.admin.orders.AdminOrderListPage
 import web.pages.admin.orders.AdminOrderPagePage
 import web.pages.admin.products.AdminProductListPage
-import web.pages.admin.products.AdminProductPagePage
+import web.pages.admin.products.AdminProductPageContent
 import web.pages.admin.tag.AdminTagListPage
 import web.pages.admin.tag.AdminTagPage
 import web.pages.admin.users.AdminCustomerCreatePage
@@ -315,7 +315,7 @@ fun RouterContent(
                 }
 
                 Screen.AdminProductCreate -> authenticatedRoute {
-                    AdminProductPagePage(
+                    AdminProductPageContent(
                         productId = null,
                         router = router,
                         onError = onError,
@@ -330,7 +330,7 @@ fun RouterContent(
 
                 Screen.AdminProductPage -> authenticatedRoute {
                     val id: String by stringPath()
-                    AdminProductPagePage(
+                    AdminProductPageContent(
                         productId = id,
                         router = router,
                         onError = onError,

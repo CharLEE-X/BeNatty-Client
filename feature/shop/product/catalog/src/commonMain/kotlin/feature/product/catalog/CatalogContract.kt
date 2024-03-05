@@ -2,10 +2,11 @@ package feature.product.catalog
 
 import component.localization.getString
 import data.GetCatalogConfigQuery
-import data.GetCataloguePageQuery
+import data.GetCatalogPageQuery
+import data.GetCategoriesAllMinimalQuery
 import kotlinx.serialization.Serializable
 
-private val defaultPageInfo = GetCataloguePageQuery.Info(
+private val defaultPageInfo = GetCatalogPageQuery.Info(
     count = 0,
     pages = 0,
     prev = null,
@@ -24,26 +25,37 @@ object CatalogContract {
         val bannerTitle: String? = null,
         val bannerImageUrl: String? = null,
 
+        val selectedCategories: List<String> = emptyList(),
+        val selectedColors: List<String> = emptyList(),
+        val selectedSizes: List<String> = emptyList(),
+        val selectedPriceFrom: String? = null,
+        val selectedPriceTo: String? = null,
+
         val catalogConfig: GetCatalogConfigQuery.GetCatalogConfig? = null,
-        val products: List<GetCataloguePageQuery.Product> = emptyList(),
-        val pageInfo: GetCataloguePageQuery.Info = defaultPageInfo,
+        val categories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal> = emptyList(),
+        val products: List<GetCatalogPageQuery.Product> = emptyList(),
+        val pageInfo: GetCatalogPageQuery.Info = defaultPageInfo,
     )
 
     sealed interface Inputs {
         data class Init(val variant: Variant) : Inputs
         data object FetchCatalogueConfig : Inputs
+        data object FetchCategories : Inputs
         data class FetchProducts(val page: Int) : Inputs
 
         data class OnGoToProductClicked(val productId: String) : Inputs
+        data class OnCategoryClicked(val categoryId: String) : Inputs
 
         data class SetIsLoading(val isLoading: Boolean) : Inputs
-        data class SetProducts(val products: List<GetCataloguePageQuery.Product>) : Inputs
-        data class SetPageInfo(val pageInfo: GetCataloguePageQuery.Info) : Inputs
+        data class SetCategories(val categories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal>) : Inputs
+        data class SetProducts(val products: List<GetCatalogPageQuery.Product>) : Inputs
+        data class SetPageInfo(val pageInfo: GetCatalogPageQuery.Info) : Inputs
         data class SetCatalogueConfig(val catalogueConfig: GetCatalogConfigQuery.GetCatalogConfig) : Inputs
         data class SetVariant(val variant: Variant) : Inputs
         data class SetShowBanner(val showBanner: Boolean) : Inputs
         data class SetShowSearch(val showSearch: Boolean) : Inputs
         data class SetBanner(val bannerTitle: String?, val bannerImageUrl: String?) : Inputs
+        data class SetSelectedCategories(val categories: List<String>) : Inputs
     }
 
     sealed interface Events {
@@ -60,6 +72,7 @@ object CatalogContract {
         val men: String = getString(component.localization.Strings.Men),
         val searchResults: String = getString(component.localization.Strings.SearchResults),
         val women: String = getString(component.localization.Strings.Women),
+        val matchAll: String = getString(component.localization.Strings.MatchAll),
     )
 
 }

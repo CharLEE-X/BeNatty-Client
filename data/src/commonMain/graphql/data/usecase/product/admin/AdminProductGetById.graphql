@@ -4,6 +4,7 @@ query AdminProductGetById($getProductByIdId: String!) {
     title
     description
     postStatus
+    sold
     media {
       id
       url
@@ -46,5 +47,15 @@ query AdminProductGetById($getProductByIdId: String!) {
     }
     reviews
     totalInWishlist
+    variants {
+      id
+      attrs {
+        key
+        value
+      }
+      price
+      quantity
+      media
+    }
   }
 }

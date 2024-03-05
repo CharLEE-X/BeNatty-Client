@@ -156,7 +156,7 @@ internal class AdminListInputHandler :
                 AdminListContract.DataType.PRODUCT -> {
                     println("DEBUG Getting Products page")
 
-                    productService.getAsPage(
+                    productService.getAdminProductsAsPage(
                         page = page,
                         size = state.perPage,
                         query = state.searchValue.ifBlank { null },

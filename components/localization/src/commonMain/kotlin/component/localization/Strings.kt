@@ -269,4 +269,5 @@ enum class Strings {
     Men,
     SearchResults,
     Women,
+    MatchAll,
 }

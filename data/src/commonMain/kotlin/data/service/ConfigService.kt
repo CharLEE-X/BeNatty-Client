@@ -11,6 +11,7 @@ import data.UploadConfigBannerImageMutation
 import data.UploadConfigCollageImageMutation
 import data.type.BannerItemInput
 import data.type.BannerSectionUpdateInput
+import data.type.BlobInput
 import data.type.CollageItemInput
 import data.type.CompanyInfoUpdateInput
 import data.type.ConfigBannerMediaUploadInput
@@ -56,14 +57,14 @@ interface ConfigService {
     suspend fun uploadCollageImage(
         configId: String,
         imageId: String,
-        blob: String,
+        blob: BlobInput,
         mediaType: MediaType,
     ): Result<UploadConfigCollageImageMutation.Data>
 
     suspend fun uploadBannerMedia(
         configId: String,
         side: Side,
-        blob: String,
+        blob: BlobInput,
         mediaType: MediaType,
     ): Result<UploadConfigBannerImageMutation.Data>
 }
@@ -179,7 +180,7 @@ internal class ConfigServiceImpl(
     override suspend fun uploadCollageImage(
         configId: String,
         imageId: String,
-        blob: String,
+        blob: BlobInput,
         mediaType: MediaType,
     ): Result<UploadConfigCollageImageMutation.Data> {
         val input = ConfigCollageMediaUploadInput(
@@ -194,7 +195,7 @@ internal class ConfigServiceImpl(
     override suspend fun uploadBannerMedia(
         configId: String,
         side: Side,
-        blob: String,
+        blob: BlobInput,
         mediaType: MediaType
     ): Result<UploadConfigBannerImageMutation.Data> {
         val input = ConfigBannerMediaUploadInput(

@@ -11,6 +11,10 @@ import data.type.StockStatus
 
 object AdminProductPageContract {
     data class State(
+        val strings: Strings = Strings(),
+        val original: AdminProductGetByIdQuery.GetAdminProductById? = null,
+        val current: AdminProductGetByIdQuery.GetAdminProductById? = original,
+
         val isLoading: Boolean = false,
         val isImagesLoading: Boolean = false,
         val screenState: ScreenState,
@@ -20,77 +24,21 @@ object AdminProductPageContract {
         val wasEdited: Boolean = false,
 
         val titleError: String? = null,
-        val titleShake: Boolean = false,
         val descriptionError: String? = null,
-        val descriptionShake: Boolean = false,
         val lowStockThresholdError: String? = null,
-        val lowStockThresholdShake: Boolean = false,
         val remainingStockError: String? = null,
-        val remainingStockShake: Boolean = false,
         val priceError: String? = null,
-        val priceShake: Boolean = false,
         val regularPriceError: String? = null,
-        val regularPriceShake: Boolean = false,
         val weightError: String? = null,
-        val weightShake: Boolean = false,
         val heightError: String? = null,
-        val heightShake: Boolean = false,
         val lengthError: String? = null,
-        val lengthShake: Boolean = false,
         val widthError: String? = null,
-        val widthShake: Boolean = false,
         val imageDropError: String? = null,
 
         val isCreateDisabled: Boolean = true,
         val allCategories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal> = emptyList(),
         val allTags: List<TagsGetAllMinimalQuery.GetTagsAllMinimal> = emptyList(),
         val presetCategory: GetCategoryByIdQuery.GetCategoryById? = null,
-
-        val original: AdminProductGetByIdQuery.GetAdminProductById = AdminProductGetByIdQuery.GetAdminProductById(
-            id = "",
-            title = "",
-            description = "",
-            postStatus = PostStatus.Active,
-            media = emptyList(),
-            categoryId = null,
-            tags = emptyList(),
-            allowReviews = true,
-            isFeatured = false,
-            creator = AdminProductGetByIdQuery.Creator(
-                id = "",
-                firstName = "",
-                lastName = "",
-            ),
-            createdAt = "",
-            updatedAt = "",
-            pricing = AdminProductGetByIdQuery.Pricing(
-                price = null,
-                regularPrice = null,
-                chargeTax = true,
-            ),
-            inventory = AdminProductGetByIdQuery.Inventory(
-                trackQuantity = true,
-                useGlobalTracking = true,
-                backorderStatus = BackorderStatus.Allowed,
-                lowStockThreshold = 0,
-                remainingStock = 0,
-                stockStatus = StockStatus.OutOfStock,
-            ),
-            shipping = AdminProductGetByIdQuery.Shipping(
-                presetId = null,
-                isPhysicalProduct = true,
-                height = null,
-                length = null,
-                weight = null,
-                width = null,
-            ),
-            reviews = emptyList(),
-            totalInWishlist = 0,
-        ),
-
-        val current: AdminProductGetByIdQuery.GetAdminProductById = original,
-
-        val strings: Strings = Strings()
     )
 
     sealed interface Inputs {
@@ -115,64 +63,52 @@ object AdminProductPageContract {
         data class OnPresetSelected(val preset: String) : Inputs
         data class OnDeleteImageClick(val imageId: String) : Inputs
 
-        sealed interface Set : Inputs {
-            data class AllCategories(val categories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal>) :
-                Inputs
+        data class SetAllCategories(val categories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal>) :
+            Inputs
 
-            data class AllTags(val tags: List<TagsGetAllMinimalQuery.GetTagsAllMinimal>) : Inputs
+        data class SetAllTags(val tags: List<TagsGetAllMinimalQuery.GetTagsAllMinimal>) : Inputs
 
-            data class Loading(val isLoading: Boolean) : Inputs
-            data class ImagesLoading(val isImagesLoading: Boolean) : Inputs
-            data class StateOfScreen(val screenState: ScreenState) : Inputs
-            data class OriginalProduct(val product: AdminProductGetByIdQuery.GetAdminProductById) : Inputs
-            data class CurrentProduct(val product: AdminProductGetByIdQuery.GetAdminProductById) : Inputs
-            data class LocalMedia(val media: List<AdminProductGetByIdQuery.Medium>) : Inputs
+        data class SetLoading(val isLoading: Boolean) : Inputs
+        data class SetImagesLoading(val isImagesLoading: Boolean) : Inputs
+        data class SetStateOfScreen(val screenState: ScreenState) : Inputs
+        data class SetOriginalProduct(val product: AdminProductGetByIdQuery.GetAdminProductById) : Inputs
+        data class SetCurrentProduct(val product: AdminProductGetByIdQuery.GetAdminProductById) : Inputs
+        data class SetLocalMedia(val media: List<AdminProductGetByIdQuery.Medium>) : Inputs
 
-            data class Id(val id: String) : Inputs
-            data class Title(val title: String) : Inputs
-            data class TitleShake(val shake: Boolean) : Inputs
-            data class Description(val description: String) : Inputs
-            data class DescriptionShake(val shake: Boolean) : Inputs
-            data class StatusOfPost(val postStatus: PostStatus) : Inputs
-            data class Media(val media: List<AdminProductGetByIdQuery.Medium>) : Inputs
-            data class ImageDropError(val error: String?) : Inputs
-            data class CategoryId(val categoryId: String) : Inputs
-            data class IsFeatured(val isFeatured: Boolean) : Inputs
-            data class AllowReviews(val allowReviews: Boolean) : Inputs
-            data class Creator(val creator: AdminProductGetByIdQuery.Creator) : Inputs
-            data class CreatedAt(val createdAt: String) : Inputs
-            data class UpdatedAt(val updatedAt: String) : Inputs
+        data class SetId(val id: String) : Inputs
+        data class SetTitle(val title: String) : Inputs
+        data class SetDescription(val description: String) : Inputs
+        data class SetStatusOfPost(val postStatus: PostStatus) : Inputs
+        data class SetMedia(val media: List<AdminProductGetByIdQuery.Medium>) : Inputs
+        data class SetImageDropError(val error: String?) : Inputs
+        data class SetCategoryId(val categoryId: String) : Inputs
+        data class SetIsFeatured(val isFeatured: Boolean) : Inputs
+        data class SetAllowReviews(val allowReviews: Boolean) : Inputs
+        data class SetCreator(val creator: AdminProductGetByIdQuery.Creator) : Inputs
+        data class SetCreatedAt(val createdAt: String) : Inputs
+        data class SetUpdatedAt(val updatedAt: String) : Inputs
 
-            // Pricing
-            data class Price(val price: String) : Inputs
-            data class PriceShake(val shake: Boolean) : Inputs
-            data class RegularPrice(val regularPrice: String) : Inputs
-            data class RegularPriceShake(val shake: Boolean) : Inputs
-            data class ChargeTax(val chargeTax: Boolean) : Inputs
+        // Pricing
+        data class SetPrice(val price: String) : Inputs
+        data class SetRegularPrice(val regularPrice: String) : Inputs
+        data class SetChargeTax(val chargeTax: Boolean) : Inputs
 
-            // Inventory
-            data class TrackQuantity(val trackQuantity: Boolean) : Inputs
-            data class UseGlobalTracking(val useGlobalTracking: Boolean) : Inputs
-            data class RemainingStock(val remainingStock: Int) : Inputs
-            data class RemainingStockShake(val shake: Boolean) : Inputs
-            data class StatusOfStock(val stockStatus: StockStatus) : Inputs
-            data class LowStockThreshold(val lowStockThreshold: Int) : Inputs
-            data class LowStockThresholdShake(val shake: Boolean) : Inputs
-            data class StatusOfBackorder(val backorderStatus: BackorderStatus) : Inputs
+        // Inventory
+        data class SetTrackQuantity(val trackQuantity: Boolean) : Inputs
+        data class SetUseGlobalTracking(val useGlobalTracking: Boolean) : Inputs
+        data class SetRemainingStock(val remainingStock: Int) : Inputs
+        data class SetStatusOfStock(val stockStatus: StockStatus) : Inputs
+        data class SetLowStockThreshold(val lowStockThreshold: Int) : Inputs
+        data class SetStatusOfBackorder(val backorderStatus: BackorderStatus) : Inputs
 
-            // Shipping
-            data class ShippingPresetId(val presetId: String?) : Inputs
-            data class PresetCategory(val category: GetCategoryByIdQuery.GetCategoryById?) : Inputs
-            data class IsPhysicalProduct(val isPhysicalProduct: Boolean) : Inputs
-            data class Height(val height: String) : Inputs
-            data class HeightShake(val shake: Boolean) : Inputs
-            data class Length(val length: String) : Inputs
-            data class LengthShake(val shake: Boolean) : Inputs
-            data class Weight(val weight: String) : Inputs
-            data class WeightShake(val shake: Boolean) : Inputs
-            data class Width(val width: String) : Inputs
-            data class WidthShake(val shake: Boolean) : Inputs
-        }
+        // Shipping
+        data class SetShippingPresetId(val presetId: String?) : Inputs
+        data class SetPresetCategory(val category: GetCategoryByIdQuery.GetCategoryById?) : Inputs
+        data class SetIsPhysicalProduct(val isPhysicalProduct: Boolean) : Inputs
+        data class SetHeight(val height: String) : Inputs
+        data class SetLength(val length: String) : Inputs
+        data class SetWeight(val weight: String) : Inputs
+        data class SetWidth(val width: String) : Inputs
     }
 
     sealed interface Events {
