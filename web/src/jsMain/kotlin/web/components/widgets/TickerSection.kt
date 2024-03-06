@@ -17,6 +17,7 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.modifiers.animation
+import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.boxSizing
 import com.varabyte.kobweb.compose.ui.modifiers.color
@@ -32,6 +33,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.translateX
 import com.varabyte.kobweb.compose.ui.modifiers.whiteSpace
+import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.components.animation.Keyframes
 import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEco
@@ -56,6 +58,7 @@ val tickerHeight = 40.px
 
 @Composable
 fun TickerSection(
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
     tickerText: String,
     onClick: () -> Unit,
@@ -98,16 +101,21 @@ fun TickerSection(
                 )
         ) {
             repeat(repeatCount) {
-                MdiEco(
-                    Modifier.color(contentColor)
-                )
-                SpanText(
-                    text = tickerText,
-                    modifier = Modifier
-                        .color(contentColor)
-                        .fontSize(16.px)
-                        .whiteSpace(WhiteSpace.NoWrap)
-                )
+                if (!isLoading) {
+                    MdiEco(
+                        Modifier.color(contentColor)
+                    )
+                    SpanText(
+                        text = tickerText,
+                        modifier = Modifier
+                            .color(contentColor)
+                            .fontSize(16.px)
+                            .whiteSpace(WhiteSpace.NoWrap)
+                    )
+                } else {
+                    ShimmerText(Modifier.aspectRatio(1))
+                    ShimmerText(Modifier.width(500.px))
+                }
             }
         }
     }

@@ -24,6 +24,7 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.alignContent
 import com.varabyte.kobweb.compose.ui.modifiers.alignItems
+import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
@@ -93,11 +94,13 @@ import theme.MaterialTheme
 import web.components.layouts.oneLayoutMaxWidth
 import web.components.widgets.Logo
 import web.components.widgets.SearchBar
+import web.components.widgets.ShimmerHeader
 import web.compose.material3.component.IconButton
 import web.util.glossy
 
 @Composable
 fun NavBar(
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
     storeText: String,
     aboutText: String,
@@ -147,6 +150,7 @@ fun NavBar(
                 modifier = Modifier.margin(leftRight = 1.em)
             )
             RightSection(
+                isLoading = isLoading,
                 searchPlaceholder = searchPlaceholder,
                 searchValue = searchValue,
                 basketCount = basketCount,
@@ -165,6 +169,7 @@ fun NavBar(
 
 @Composable
 private fun RightSection(
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
     searchValue: String,
     basketCount: Int,
@@ -226,14 +231,20 @@ private fun RightSection(
                 ) {
                     val iconStyle = IconStyle.OUTLINED
                     val iconModifier = Modifier.color(contentColor)
-                    IconButton(
-                        onClick = { onProfileClick() },
-                    ) {
-                        MdiPerson2(
-                            style = IconStyle.OUTLINED,
-                            modifier = iconModifier
-                        )
+
+                    if (!isLoading) {
+                        IconButton(
+                            onClick = { onProfileClick() },
+                        ) {
+                            MdiPerson2(
+                                style = IconStyle.OUTLINED,
+                                modifier = iconModifier
+                            )
+                        }
+                    } else {
+                        ShimmerHeader(Modifier.aspectRatio(1))
                     }
+
                     var colorMode by ColorMode.currentState
                     IconButton(
                         onClick = { colorMode = colorMode.opposite },

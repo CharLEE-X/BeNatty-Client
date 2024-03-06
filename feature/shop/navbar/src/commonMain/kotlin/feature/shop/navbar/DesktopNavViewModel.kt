@@ -9,7 +9,7 @@ import com.copperleaf.ballast.plusAssign
 import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
 
-class NavbarViewModel(
+class DesktopNavViewModel(
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
     desktopNavRoutes: DesktopNavRoutes,
@@ -35,7 +35,10 @@ class NavbarViewModel(
     ),
     coroutineScope = scope,
 ) {
+    init {
+        trySend(DesktopNavContract.Inputs.Init)
+    }
     companion object {
-        private val TAG = NavbarViewModel::class.simpleName!!
+        private val TAG = DesktopNavViewModel::class.simpleName!!
     }
 }

@@ -12,6 +12,7 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
@@ -24,6 +25,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.compose.ui.modifiers.translateX
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
+import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.navigation.OpenLinkStrategy
 import com.varabyte.kobweb.navigation.open
@@ -45,6 +47,8 @@ import theme.roleStyle
 import web.components.layouts.oneLayoutMaxWidth
 import web.components.widgets.AppOutlinedIconButton
 import web.components.widgets.AppTextButton
+import web.components.widgets.ShimmerHeader
+import web.components.widgets.ShimmerText
 import web.components.widgets.TickerSection
 import web.compose.material3.component.Divider
 import web.util.glossy
@@ -75,6 +79,7 @@ fun Footer(
             .zIndex(2)
     ) {
         TickerSection(
+            isLoading = state.isLoading,
             tickerText = state.strings.ticker,
             onClick = { vm.trySend(FooterContract.Inputs.OnTickerClick) },
         )
@@ -119,25 +124,36 @@ private fun BottomSection(
             .gap(1.em)
             .padding(topBottom = 1.em, leftRight = 3.em),
     ) {
-        state.companyInfo?.contactInfo?.companyName?.let { companyName ->
-            if (state.companyInfo?.contactInfo?.companyWebsite?.isNotEmpty() == true) {
-                FooterTextButton(
-                    text = "© ${state.year} $companyName",
-                    onClick = { vm.trySend(FooterContract.Inputs.OnCompanyNameClick) },
-                )
-            } else {
-                SpanText(
-                    text = "© ${state.year} ${state.strings.companyName}",
-                    modifier = Modifier.color(contentColor)
-                )
+        if (!state.isLoading) {
+            state.companyInfo?.contactInfo?.companyName?.let { companyName ->
+                if (state.companyInfo?.contactInfo?.companyWebsite?.isNotEmpty() == true) {
+                    FooterTextButton(
+                        text = "© ${state.year} $companyName",
+                        onClick = { vm.trySend(FooterContract.Inputs.OnCompanyNameClick) },
+                    )
+                } else {
+                    SpanText(
+                        text = "© ${state.year} ${state.strings.companyName}",
+                        modifier = Modifier.color(contentColor)
+                    )
+                }
             }
+        } else {
+            ShimmerText(Modifier.width(100.px))
         }
         Spacer()
-        state.paymentMethods.forEach {
-            PaymentMethodImage(
-                src = it.imageUrl,
-                alt = it.name
-            )
+
+        if (!state.isLoading) {
+            state.paymentMethods.forEach {
+                PaymentMethodImage(
+                    src = it.imageUrl,
+                    alt = it.name
+                )
+            }
+        } else {
+            repeat(4) {
+                ShimmerText(Modifier.width(60.px))
+            }
         }
     }
 }
@@ -148,39 +164,55 @@ private fun FollowUsSection(
     contentColor: CSSColorValue
 ) {
     FooterSection(
+        isLoading = state.isLoading,
         title = state.strings.followUs,
         contentColor = contentColor,
     ) {
-        Row(
-            modifier = Modifier
-                .gap(1.em)
-        ) {
-            AppOutlinedIconButton(
-                onClick = { },
+        if (!state.isLoading) {
+            Row(
+                modifier = Modifier
+                    .gap(1.em)
             ) {
-                Image(
-                    src = "/facebook.png",
-                    alt = "Facebook",
-                    modifier = Modifier.size(1.em)
-                )
+                AppOutlinedIconButton(
+                    onClick = { },
+                ) {
+                    Image(
+                        src = "/facebook.png",
+                        alt = "Facebook",
+                        modifier = Modifier.size(1.em)
+                    )
+                }
+                AppOutlinedIconButton(
+                    onClick = { },
+                ) {
+                    Image(
+                        src = "/twitter.png",
+                        alt = "Twitter",
+                        modifier = Modifier.size(1.em)
+                    )
+                }
+                AppOutlinedIconButton(
+                    onClick = { },
+                ) {
+                    Image(
+                        src = "/instagram.png",
+                        alt = "Instagram",
+                        modifier = Modifier.size(1.em)
+                    )
+                }
             }
-            AppOutlinedIconButton(
-                onClick = { },
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .gap(1.em)
             ) {
-                Image(
-                    src = "/twitter.png",
-                    alt = "Twitter",
-                    modifier = Modifier.size(1.em)
-                )
-            }
-            AppOutlinedIconButton(
-                onClick = { },
-            ) {
-                Image(
-                    src = "/instagram.png",
-                    alt = "Instagram",
-                    modifier = Modifier.size(1.em)
-                )
+                ShimmerHeader(Modifier.width(120.px))
+                Row(Modifier.gap(1.em)) {
+                    repeat(3) {
+                        ShimmerHeader(Modifier.aspectRatio(1))
+                    }
+                }
             }
         }
     }
@@ -193,21 +225,26 @@ private fun HelpSection(
     vm: FooterViewModel
 ) {
     FooterSection(
+        isLoading = state.isLoading,
         title = state.strings.help,
         contentColor = contentColor,
     ) {
-        FooterTextButton(
-            text = state.strings.trackOrder,
-            onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
-        )
-        FooterTextButton(
-            text = state.strings.shipping,
-            onClick = { vm.trySend(FooterContract.Inputs.OnShippingClick) },
-        )
-        FooterTextButton(
-            text = state.strings.returns,
-            onClick = { vm.trySend(FooterContract.Inputs.OnReturnsClick) },
-        )
+        if ((!state.isLoading)) {
+            FooterTextButton(
+                text = state.strings.trackOrder,
+                onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
+            )
+            FooterTextButton(
+                text = state.strings.shipping,
+                onClick = { vm.trySend(FooterContract.Inputs.OnShippingClick) },
+            )
+            FooterTextButton(
+                text = state.strings.returns,
+                onClick = { vm.trySend(FooterContract.Inputs.OnReturnsClick) },
+            )
+        } else {
+            ShimmerFooterSection()
+        }
     }
 }
 
@@ -218,38 +255,43 @@ private fun CompanySection(
     vm: FooterViewModel
 ) {
     FooterSection(
+        isLoading = state.isLoading,
         title = state.strings.company,
         contentColor = contentColor,
     ) {
-        FooterTextButton(
-            text = state.strings.contactUs,
-            onClick = { vm.trySend(FooterContract.Inputs.OnPrivacyPolicyClicked) },
-        )
-        FooterTextButton(
-            text = state.strings.aboutUs,
-            onClick = { vm.trySend(FooterContract.Inputs.OnTermsOfServiceClicked) },
-        )
-        if (state.footerConfig?.showCareer == true) {
+        if (!state.isLoading) {
             FooterTextButton(
-                text = state.strings.career,
-                onClick = { vm.trySend(FooterContract.Inputs.OnCareerClick) },
+                text = state.strings.contactUs,
+                onClick = { vm.trySend(FooterContract.Inputs.OnPrivacyPolicyClicked) },
             )
-        }
-        if (state.footerConfig?.showPress == true) {
             FooterTextButton(
-                text = state.strings.press,
-                onClick = { vm.trySend(FooterContract.Inputs.OnPressClick) },
+                text = state.strings.aboutUs,
+                onClick = { vm.trySend(FooterContract.Inputs.OnTermsOfServiceClicked) },
             )
-        }
-        FooterTextButton(
-            text = state.strings.privacyPolicy,
-            onClick = { vm.trySend(FooterContract.Inputs.OnPrivacyPolicyClicked) },
-        )
-        if (state.isAdmin) {
+            if (state.footerConfig?.showCareer == true) {
+                FooterTextButton(
+                    text = state.strings.career,
+                    onClick = { vm.trySend(FooterContract.Inputs.OnCareerClick) },
+                )
+            }
+            if (state.footerConfig?.showPress == true) {
+                FooterTextButton(
+                    text = state.strings.press,
+                    onClick = { vm.trySend(FooterContract.Inputs.OnPressClick) },
+                )
+            }
             FooterTextButton(
-                text = state.strings.admin,
-                onClick = { vm.trySend(FooterContract.Inputs.OnGoToAdminHome) },
+                text = state.strings.privacyPolicy,
+                onClick = { vm.trySend(FooterContract.Inputs.OnPrivacyPolicyClicked) },
             )
+            if (state.isAdmin) {
+                FooterTextButton(
+                    text = state.strings.admin,
+                    onClick = { vm.trySend(FooterContract.Inputs.OnGoToAdminHome) },
+                )
+            }
+        } else {
+            ShimmerFooterSection()
         }
     }
 }
@@ -261,57 +303,63 @@ private fun CanWeHelpYouSection(
     vm: FooterViewModel
 ) {
     FooterSection(
+        isLoading = state.isLoading,
         title = state.strings.canWeHelpYou.uppercase() + "?",
         contentColor = contentColor,
     ) {
-        AppTextButton(
-            onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
-            modifier = Modifier.translateX((-12).px)
-        ) {
-            SpanText(text = state.strings.startChat.uppercase())
-        }
-        SpanText(
-            text = "${state.strings.from} ${state.companyInfo?.openingTimes?.dayFrom} ${state.strings.to} " +
-                "${state.companyInfo?.openingTimes?.dayTo} \n${state.strings.from.lowercase()} " +
-                "${state.companyInfo?.openingTimes?.open}" +
-                " ${state.strings.to} ${state.companyInfo?.openingTimes?.close}.",
-            modifier = Modifier
-                .roleStyle(MaterialTheme.typography.bodyMedium)
-                .color(contentColor)
-        )
-        state.companyInfo?.contactInfo?.phone?.let { phone ->
+        if (!state.isLoading) {
+            AppTextButton(
+                onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
+                modifier = Modifier.translateX((-12).px)
+            ) {
+                SpanText(text = state.strings.startChat.uppercase())
+            }
             SpanText(
-                text = "${state.strings.tel}: $phone".uppercase(),
+                text = "${state.strings.from} ${state.companyInfo?.openingTimes?.dayFrom} ${state.strings.to} " +
+                    "${state.companyInfo?.openingTimes?.dayTo} \n${state.strings.from.lowercase()} " +
+                    "${state.companyInfo?.openingTimes?.open}" +
+                    " ${state.strings.to} ${state.companyInfo?.openingTimes?.close}.",
                 modifier = Modifier
-                    .padding(top = 1.em)
                     .roleStyle(MaterialTheme.typography.bodyMedium)
                     .color(contentColor)
             )
+            state.companyInfo?.contactInfo?.phone?.let { phone ->
+                SpanText(
+                    text = "${state.strings.tel}: $phone".uppercase(),
+                    modifier = Modifier
+                        .padding(top = 1.em)
+                        .roleStyle(MaterialTheme.typography.bodyMedium)
+                        .color(contentColor)
+                )
+                SpanText(
+                    text = "${state.strings.from} ${state.companyInfo?.openingTimes?.dayFrom} ${state.strings.to} " +
+                        "${state.companyInfo?.openingTimes?.dayTo} ${state.strings.from.lowercase()} " +
+                        "${state.companyInfo?.openingTimes?.open}" +
+                        " ${state.strings.to} ${state.companyInfo?.openingTimes?.close}.",
+                    modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
+                        .color(contentColor)
+                )
+            }
+            AppTextButton(
+                onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
+                modifier = Modifier.translateX((-12).px)
+            ) {
+                SpanText(text = state.strings.sendEmail.uppercase())
+            }
             SpanText(
-                text = "${state.strings.from} ${state.companyInfo?.openingTimes?.dayFrom} ${state.strings.to} " +
-                    "${state.companyInfo?.openingTimes?.dayTo} ${state.strings.from.lowercase()} " +
-                    "${state.companyInfo?.openingTimes?.open}" +
-                    " ${state.strings.to} ${state.companyInfo?.openingTimes?.close}.",
+                text = state.strings.weWillReply,
                 modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
                     .color(contentColor)
             )
+        } else {
+            ShimmerFooterSection()
         }
-        AppTextButton(
-            onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
-            modifier = Modifier.translateX((-12).px)
-        ) {
-            SpanText(text = state.strings.sendEmail.uppercase())
-        }
-        SpanText(
-            text = state.strings.weWillReply,
-            modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
-                .color(contentColor)
-        )
     }
 }
 
 @Composable
 private fun FooterSection(
+    isLoading: Boolean,
     title: String,
     contentColor: CSSColorValue,
     content: @Composable ColumnScope.() -> Unit,
@@ -319,13 +367,33 @@ private fun FooterSection(
     Column(
         modifier = Modifier.position(Position.Relative)
     ) {
-        SpanText(
-            text = title.uppercase(),
-            modifier = Modifier
-                .color(contentColor)
-                .margin(bottom = 0.25.em)
-        )
+        if (!isLoading) {
+            SpanText(
+                text = title.uppercase(),
+                modifier = Modifier
+                    .color(contentColor)
+                    .margin(bottom = 0.25.em)
+            )
+        } else {
+            ShimmerHeader()
+        }
         content()
+    }
+}
+
+@Composable
+private fun ShimmerFooterSection() {
+    val width = (20..80).random().px
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .gap(1.em)
+    ) {
+        ShimmerHeader(Modifier.width(60.px))
+        repeat(4) {
+            ShimmerText(Modifier.width(width))
+        }
     }
 }
 

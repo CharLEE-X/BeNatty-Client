@@ -6,6 +6,7 @@ import component.localization.InputValidator
 import data.GetLandingConfigQuery
 import data.service.AuthService
 import data.service.ConfigService
+import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -66,6 +67,7 @@ internal class HomeInputHandler :
             postInput(HomeContract.Inputs.SetIsLoading(isLoading = true))
             postInput(HomeContract.Inputs.FetchLandingConfig)
             postInput(HomeContract.Inputs.FetchProducts)
+            delay(5000)
             postInput(HomeContract.Inputs.SetIsLoading(isLoading = false))
         }
     }

@@ -32,6 +32,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.transition
+import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.components.forms.Input
 import com.varabyte.kobweb.silk.components.forms.InputVars
 import com.varabyte.kobweb.silk.components.icons.mdi.IconStyle
@@ -48,10 +49,12 @@ import org.jetbrains.compose.web.css.px
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.widgets.AppTextButton
+import web.components.widgets.ShimmerText
 import web.util.glossy
 
 @Composable
 fun HomeSubscribe(
+    isLoading: Boolean,
     subscribeText: String,
     subscribeDescText: String,
     emailText: String,
@@ -106,16 +109,24 @@ fun HomeSubscribe(
                     modifier = Modifier
                         .roleStyle(MaterialTheme.typography.labelLarge)
                 )
-                AppTextButton(
-                    onClick = { onPrivacyPolicyClick() }
-                ) {
-                    SpanText(text = privacyPolicyText)
+                if (!isLoading) {
+                    AppTextButton(
+                        onClick = { onPrivacyPolicyClick() }
+                    ) {
+                        SpanText(text = privacyPolicyText)
+                    }
+                } else {
+                    ShimmerText(Modifier.width(90.px).margin(leftRight = 0.5.em))
                 }
                 SpanText(text = andText)
-                AppTextButton(
-                    onClick = { onTermsOfServiceClick() }
-                ) {
-                    SpanText(text = termsOfServiceText)
+                if (!isLoading) {
+                    AppTextButton(
+                        onClick = { onTermsOfServiceClick() }
+                    ) {
+                        SpanText(text = termsOfServiceText)
+                    }
+                } else {
+                    ShimmerText(Modifier.width(90.px).margin(leftRight = 0.5.em))
                 }
             }
         }

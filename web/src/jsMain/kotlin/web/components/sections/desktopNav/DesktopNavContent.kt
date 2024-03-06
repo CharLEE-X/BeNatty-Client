@@ -23,7 +23,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import feature.shop.navbar.DesktopNavContract
 import feature.shop.navbar.DesktopNavRoutes
-import feature.shop.navbar.NavbarViewModel
+import feature.shop.navbar.DesktopNavViewModel
 import kotlinx.browser.window
 import org.jetbrains.compose.web.css.CSSSizeValue
 import org.jetbrains.compose.web.css.CSSUnit
@@ -39,14 +39,14 @@ import web.util.glossy
 enum class ScrollDirection { UP, DOWN }
 
 @Composable
-fun DesktopNav(
+fun DesktopNavContent(
     onError: suspend (String) -> Unit,
     desktopNavRoutes: DesktopNavRoutes,
     onTopSpacingChanged: (CSSSizeValue<CSSUnit.px>) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
-        NavbarViewModel(
+        DesktopNavViewModel(
             scope = scope,
             onError = onError,
             desktopNavRoutes = desktopNavRoutes,
@@ -101,10 +101,12 @@ fun DesktopNav(
             )
     ) {
         TickerSection(
+            isLoading = state.isLoading,
             tickerText = state.strings.ticker,
             onClick = { vm.trySend(DesktopNavContract.Inputs.OnTickerClick) },
         )
         NavBar(
+            isLoading = state.isLoading,
             storeText = state.strings.store,
             aboutText = state.strings.about,
             shippingReturnsText = state.strings.shippingReturns,

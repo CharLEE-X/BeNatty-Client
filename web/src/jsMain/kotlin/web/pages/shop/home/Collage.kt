@@ -13,6 +13,7 @@ import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Color
@@ -63,6 +64,10 @@ import theme.MaterialTheme
 import web.HeadlineTextStyle
 import web.components.widgets.AppElevatedButton
 import web.components.widgets.AppElevatedCard
+import web.components.widgets.Shimmer
+import web.components.widgets.ShimmerButton
+import web.components.widgets.ShimmerHeader
+import web.components.widgets.ShimmerText
 import web.util.glossy
 
 fun gridModifier(
@@ -85,31 +90,87 @@ val CollageBigItemStyle by ComponentStyle.base {
 @Composable
 fun Collage(
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
     items: List<GetLandingConfigQuery.CollageItem>,
     shopNowText: String,
     onCollageItemClick: (GetLandingConfigQuery.CollageItem) -> Unit,
 ) {
     Column(
         modifier = gridModifier(columns = 3).then(modifier)
-            .padding(leftRight = 24.px, topBottom = 48.px)
+            .padding(leftRight = 24.px, top = 24.px, bottom = 48.px)
             .glossy()
     ) {
-        items.forEachIndexed { index, item ->
-            CollageItem(
-                title = item.title ?: "",
-                description = item.description ?: "",
-                buttonText = if (index == 0) shopNowText else null,
-                onClick = { onCollageItemClick(item) },
-                textPosition = if (index == 0) TextPosition.Center else TextPosition.LeftBottom,
-                modifier = Modifier.thenIf(index == 0) { CollageBigItemStyle.toModifier() }
-            ) { imageModifier ->
-                Image(
-                    src = item.imageUrl ?: "",
-                    alt = item.title ?: "",
-                    modifier = imageModifier
-                )
+        if (!isLoading) {
+            items.forEachIndexed { index, item ->
+                CollageItem(
+                    title = item.title ?: "",
+                    description = item.description ?: "",
+                    buttonText = if (index == 0) shopNowText else null,
+                    onClick = { onCollageItemClick(item) },
+                    textPosition = if (index == 0) TextPosition.Center else TextPosition.LeftBottom,
+                    modifier = Modifier
+                        .thenIf(index == 0) { CollageBigItemStyle.toModifier() }
+                ) { imageModifier ->
+                    Image(
+                        src = item.imageUrl ?: "",
+                        alt = item.title ?: "",
+                        modifier = imageModifier
+                    )
+                }
+            }
+        } else {
+            ShimmerCollageItem(
+                textPosition = TextPosition.Center,
+                modifier = CollageBigItemStyle.toModifier().fillMaxSize(),
+            ) {
+                ShimmerHeader(Modifier.fillMaxWidth(60.percent))
+                ShimmerText(Modifier.fillMaxWidth(70.percent))
+                ShimmerButton(Modifier.fillMaxWidth(30.percent).margin(top = 0.5.em))
+            }
+            ShimmerCollageItem {
+                ShimmerHeader(Modifier.fillMaxWidth())
+                ShimmerHeader(Modifier.fillMaxWidth(50.percent))
+                ShimmerText(Modifier.fillMaxWidth(80.percent))
+            }
+            ShimmerCollageItem {
+                ShimmerHeader(Modifier.fillMaxWidth(40.percent))
+                ShimmerHeader(Modifier.fillMaxWidth(90.percent))
+                ShimmerHeader(Modifier.fillMaxWidth(60.percent))
+                ShimmerText(Modifier.fillMaxWidth(80.percent))
+                ShimmerText(Modifier.fillMaxWidth(60.percent))
+            }
+            ShimmerCollageItem {
+                ShimmerHeader(Modifier.fillMaxWidth(50.percent))
+                ShimmerText(Modifier.fillMaxWidth(80.percent))
+                ShimmerText(Modifier.fillMaxWidth(40.percent))
+            }
+            ShimmerCollageItem {
+                ShimmerHeader(Modifier.fillMaxWidth(60.percent))
+                ShimmerText(Modifier.fillMaxWidth(80.percent))
+                ShimmerText(Modifier.fillMaxWidth(40.percent))
+            }
+            ShimmerCollageItem {
+                ShimmerHeader(Modifier.fillMaxWidth(40.percent))
+                ShimmerText(Modifier.fillMaxWidth(80.percent))
             }
         }
+    }
+}
+
+@Composable
+fun ShimmerCollageItem(
+    modifier: Modifier = Modifier
+        .fillMaxSize()
+        .aspectRatio(1.0),
+    textPosition: TextPosition = TextPosition.LeftBottom,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    Shimmer(
+        textPosition = textPosition,
+        modifier = modifier
+            .padding(50.px)
+    ) {
+        content()
     }
 }
 

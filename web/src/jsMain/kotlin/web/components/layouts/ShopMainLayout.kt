@@ -30,7 +30,7 @@ import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.plus
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import web.components.sections.desktopNav.DesktopNav
+import web.components.sections.desktopNav.DesktopNavContent
 import web.components.sections.footer.Footer
 import web.components.widgets.Background
 import web.util.sectionsGap
@@ -118,7 +118,7 @@ fun ShopMainLayout(
                 .padding(top = topSpacing + 60.px)
                 .transition(CSSTransition("padding", 0.3.s, TransitionTimingFunction.Ease))
         ) {
-            DesktopNav(
+            DesktopNavContent(
                 desktopNavRoutes = desktopNavRoutes,
                 onError = mainRoutes.onError,
                 onTopSpacingChanged = { topSpacing = it }

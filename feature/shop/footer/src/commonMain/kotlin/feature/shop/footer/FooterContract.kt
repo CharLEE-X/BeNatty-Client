@@ -10,7 +10,7 @@ import org.koin.core.component.KoinComponent
 object FooterContract : KoinComponent {
     data class State(
         val strings: Strings = Strings(),
-        val isLoading: Boolean = false,
+        val isLoading: Boolean = true,
         val isAdmin: Boolean = false,
         val year: Int = currentYear(),
 
@@ -48,6 +48,7 @@ object FooterContract : KoinComponent {
         data object OnCompanyNameClick : Inputs
         data object OnTickerClick : Inputs
 
+        data class SetIsLoading(val isLoading: Boolean) : Inputs
         data class SetCompanyInfo(val companyInfo: GetConfigQuery.CompanyInfo) : Inputs
         data class SetFooterConfig(val footerConfig: GetConfigQuery.FooterConfig) : Inputs
     }

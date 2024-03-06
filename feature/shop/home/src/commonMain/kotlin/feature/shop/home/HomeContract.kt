@@ -6,7 +6,7 @@ import data.GetLandingConfigQuery
 object HomeContract {
     data class State(
         val strings: Strings = Strings(),
-        val isLoading: Boolean = false,
+        val isLoading: Boolean = true,
 
         val landingConfig: GetLandingConfigQuery.GetLandingConfig? = null,
         val products: List<String> = emptyList(),

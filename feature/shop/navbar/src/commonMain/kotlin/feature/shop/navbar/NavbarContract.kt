@@ -6,7 +6,7 @@ import org.koin.core.component.KoinComponent
 object DesktopNavContract : KoinComponent {
     data class State(
         val strings: Strings = Strings(),
-        val isLoading: Boolean = false,
+        val isLoading: Boolean = true,
         val isAuthenticated: Boolean = false,
         val storeMenuItems: List<String> = listOf(strings.woman, strings.man, strings.sale).map { it.uppercase() },
         val searchValue: String = "",

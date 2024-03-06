@@ -39,6 +39,7 @@ fun HomeContent(
         state.landingConfig?.collageItems?.let {
             Collage(
                 modifier = Modifier.fillMaxWidth(),
+                isLoading = state.isLoading,
                 items = it,
                 shopNowText = state.strings.shopNow,
                 onCollageItemClick = { vm.trySend(HomeContract.Inputs.OnCollageItemClick(it)) },
@@ -46,6 +47,7 @@ fun HomeContent(
         }
         BannerSection(vm, state)
         HomeSubscribe(
+            isLoading = state.isLoading,
             subscribeText = state.strings.subscribeToOurNewsletter,
             subscribeDescText = state.strings.beFirstToGetLatestOffers,
             emailPlaceholder = state.strings.email,
