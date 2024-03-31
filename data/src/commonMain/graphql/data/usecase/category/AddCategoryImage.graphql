@@ -1,5 +1,5 @@
-mutation AddCategoryImage($input: AddImageToCategoryInput!) {
-  addCategoryImage(input: $input) {
+mutation AddCategoryImage($input: AddMediaToCategoryInput!) {
+  addMediaToCategory(input: $input) {
     id
     imageUrl
     name

@@ -5,7 +5,6 @@ import com.copperleaf.ballast.InputHandlerScope
 import data.service.AuthService
 import data.service.ConfigService
 import data.type.Role
-import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -87,7 +86,6 @@ internal class FooterInputHandler :
             postInput(FooterContract.Inputs.SetIsLoading(isLoading = true))
             postInput(FooterContract.Inputs.CheckUserRole)
             postInput(FooterContract.Inputs.GetConfig)
-            delay(5000)
             postInput(FooterContract.Inputs.SetIsLoading(isLoading = false))
         }
     }

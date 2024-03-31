@@ -3,7 +3,6 @@ package feature.shop.navbar
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import data.service.AuthService
-import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -59,7 +58,6 @@ internal class NavbarInputHandler :
         sideJob("handleInit") {
             postInput(DesktopNavContract.Inputs.SetIsLoading(isLoading = true))
             postInput(DesktopNavContract.Inputs.CheckAuth)
-            delay(5000)
             postInput(DesktopNavContract.Inputs.SetIsLoading(isLoading = false))
         }
     }

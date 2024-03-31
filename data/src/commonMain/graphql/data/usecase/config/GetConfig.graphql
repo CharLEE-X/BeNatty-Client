@@ -1,7 +1,6 @@
 query GetConfig($configId: String) {
   getConfig(configId: $configId) {
     id
-    createdAt
     updatedAt
     companyInfo {
       contactInfo {
@@ -29,21 +28,19 @@ query GetConfig($configId: String) {
         alt
         description
         id
-        imageUrl
+        mediaId
         title
       }
       bannerSection {
         left {
-          imageUrl
+          mediaId
           description
           title
-          alt
         }
         right {
-          imageUrl
+          mediaId
           description
           title
-          alt
         }
       }
     }
@@ -51,27 +48,27 @@ query GetConfig($configId: String) {
       bannerConfig {
         catalog {
           title
-          imageUrl
+          mediaId
         }
         sales {
           title
-          imageUrl
+          mediaId
         }
         popular {
           title
-          imageUrl
+          mediaId
         }
         mens {
           title
-          imageUrl
+          mediaId
         }
         women {
           title
-          imageUrl
+          mediaId
         }
         kids {
           title
-          imageUrl
+          mediaId
         }
       }
     }

@@ -35,6 +35,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.rotate
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
+import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiChevronLeft
 import com.varabyte.kobweb.silk.components.text.SpanText
@@ -53,6 +54,8 @@ import org.jetbrains.compose.web.dom.Span
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.sections.desktopNav.AppMenu
+import web.components.widgets.ShimmerButton
+import web.components.widgets.ShimmerText
 import web.util.glossy
 
 
@@ -93,27 +96,35 @@ fun CatalogueHeader(vm: CatalogViewModel, state: CatalogContract.State) {
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        SpanText(
-            text = "${state.pageInfo.count} products",
-            modifier = Modifier
-                .roleStyle(MaterialTheme.typography.bodyLarge)
-                .color(MaterialTheme.colors.onSurface)
-        )
+        if (!state.isLoading) {
+            SpanText(
+                text = "${state.pageInfo.count} products",
+                modifier = Modifier
+                    .roleStyle(MaterialTheme.typography.bodyLarge)
+                    .color(MaterialTheme.colors.onSurface)
+            )
+        } else {
+            ShimmerText(Modifier.width(100.px))
+        }
         Spacer()
         Span(
             Modifier
                 .position(Position.Relative)
                 .toAttrs()
         ) {
-            FiltersButton(
-                sortByText = "Sort by",
-                currentFilter = "Best selling",
-                menuOpened = open,
-                onClick = { open = !open },
-                modifier = Modifier
-                    .onMouseEnter { isFiltersButtonHovered = true }
-                    .onMouseLeave { isFiltersButtonHovered = false }
-            )
+            if (!state.isLoading) {
+                FiltersButton(
+                    sortByText = "Sort by",
+                    currentFilter = "Best selling",
+                    menuOpened = open,
+                    onClick = { open = !open },
+                    modifier = Modifier
+                        .onMouseEnter { isFiltersButtonHovered = true }
+                        .onMouseLeave { isFiltersButtonHovered = false }
+                )
+            } else {
+                ShimmerButton(Modifier.width(170.px))
+            }
             AppMenu(
                 open = open,
                 items = listOf(

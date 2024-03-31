@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import com.copperleaf.ballast.navigation.routing.RouterContract
+import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
@@ -15,13 +16,10 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.admin.dashboard.AdminDashboardViewModel
 import feature.router.RouterViewModel
 import org.jetbrains.compose.web.css.em
-import theme.MaterialTheme
-import theme.roleStyle
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.OneLayout
-import web.components.widgets.AppElevatedCard
-import web.compose.material3.component.Divider
+import web.util.glossy
 
 @Composable
 fun AdminDashboardPage(
@@ -59,29 +57,18 @@ fun AdminDashboardPage(
                     .fillMaxSize()
                     .gap(1.em)
             ) {
-                Divider()
-                AppElevatedCard(
-                    modifier = Modifier.padding(2.em)
+                Box(
+                    modifier = Modifier
+                        .glossy()
+                        .padding(2.em)
                 ) {
                     Column(
                         modifier = Modifier.gap(1.em)
                     ) {
-                        SpanText(
-                            text = state.strings.stats,
-                            modifier = Modifier.roleStyle(MaterialTheme.typography.headlineMedium)
-                        )
-                        SpanText(
-                            text = "${state.strings.users}: ${state.stats.totalUsers}",
-                            modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
-                        )
-                        SpanText(
-                            text = "${state.strings.products}: ${state.stats.totalProducts}",
-                            modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
-                        )
-                        SpanText(
-                            text = "${state.strings.orders}: ${state.stats.totalOrders}",
-                            modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
-                        )
+                        SpanText(state.strings.stats)
+                        SpanText("${state.strings.users}: ${state.stats.totalUsers}")
+                        SpanText("${state.strings.products}: ${state.stats.totalProducts}")
+                        SpanText("${state.strings.orders}: ${state.stats.totalOrders}")
                     }
                 }
             }

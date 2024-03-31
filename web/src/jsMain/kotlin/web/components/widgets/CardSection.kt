@@ -3,6 +3,7 @@ package web.components.widgets
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.UserSelect
+import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -15,26 +16,22 @@ import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.silk.components.text.SpanText
-import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import theme.MaterialTheme
 import theme.roleStyle
-
+import web.util.glossy
 
 @Composable
 fun CardSection(
     title: String?,
     description: String? = null,
-    elevation: Int? = null,
-    color: CSSColorValue? = MaterialTheme.colors.surfaceContainerLow,
     content: @Composable () -> Unit,
 ) {
-    AppElevatedCard(
-        elevation = elevation,
-        color = color,
+    Box(
         modifier = Modifier
             .fillMaxWidth()
+            .glossy()
     ) {
         Column(
             modifier = Modifier

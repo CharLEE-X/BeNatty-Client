@@ -270,4 +270,7 @@ enum class Strings {
     SearchResults,
     Women,
     MatchAll,
+    Variants,
+    AddOptionsLikeSizeOrColor,
+    AddAnotherOption,
 }

@@ -1,12 +1,20 @@
 mutation UpdateCategory($input: CategoryUpdateInput!) {
   updateCategory(input: $input) {
     createdAt
-    createdBy
+    creator {
+      id
+      firstName
+      lastName
+    }
     description
     display
     id
     name
-    parentId
+    parent {
+      id
+      firstName
+      lastName
+    }
     updatedAt
     shippingPreset {
       isPhysicalProduct

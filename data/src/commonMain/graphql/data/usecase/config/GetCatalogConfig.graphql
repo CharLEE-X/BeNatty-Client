@@ -3,27 +3,27 @@ query GetCatalogConfig($configId: String) {
     bannerConfig {
       catalog {
         title
-        imageUrl
+        mediaId
       }
       sales {
         title
-        imageUrl
+        mediaId
       }
       popular {
         title
-        imageUrl
+        mediaId
       }
       mens {
         title
-        imageUrl
+        mediaId
       }
       women {
         title
-        imageUrl
+        mediaId
       }
       kids {
         title
-        imageUrl
+        mediaId
       }
     }
   }

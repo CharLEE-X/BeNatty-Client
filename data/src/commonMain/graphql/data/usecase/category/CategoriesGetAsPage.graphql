@@ -1,5 +1,5 @@
 query GetCategoriesAsPage($pageInput: PageInput!) {
-  getCategoriesAsPage(pageInput: $pageInput) {
+  getAllCategoriesAsPage(input: $pageInput) {
     categories {
       id
       createdAt

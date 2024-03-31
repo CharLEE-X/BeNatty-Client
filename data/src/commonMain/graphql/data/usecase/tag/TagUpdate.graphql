@@ -2,7 +2,6 @@ mutation UpdateTag($input: TagUpdateInput!) {
   updateTag(input: $input) {
     id
     name
-    createdBy
     createdAt
     updatedAt
   }

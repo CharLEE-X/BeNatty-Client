@@ -23,11 +23,13 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.em
+import org.jetbrains.compose.web.css.px
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.widgets.AppFilledButton
 import web.components.widgets.AppOutlinedIconButton
 import web.compose.material3.component.Divider
+import web.util.glossy
 
 @Composable
 fun DetailPageLayout(
@@ -123,6 +125,8 @@ fun NavTopSection(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
+            .padding(24.px)
+            .glossy()
             .gap(1.em)
     ) {
         if (hasBackButton) {

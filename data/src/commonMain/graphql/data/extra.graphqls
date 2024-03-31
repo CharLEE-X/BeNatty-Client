@@ -1,6 +1,0 @@
-# This tells Apollo to use the 'id' field as the key to store object in the db
-extend type Customer
-@typePolicy(keyFields: "id")
-@fieldPolicy(forField: "customerMinimal", keyArgs: "id, email")
-
-extend type CustomerMinimal @typePolicy(keyFields: "id")

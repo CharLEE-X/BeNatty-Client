@@ -1,7 +1,6 @@
 mutation UpdateConfig($input: ConfigUpdateInput!) {
   updateConfig(input: $input) {
     id
-    createdAt
     updatedAt
     companyInfo {
       contactInfo {
@@ -29,21 +28,19 @@ mutation UpdateConfig($input: ConfigUpdateInput!) {
         alt
         description
         id
-        imageUrl
+        mediaUrl
         title
       }
       bannerSection {
         left {
-          imageUrl
+          mediaUrl
           description
           title
-          alt
         }
         right {
-          imageUrl
+          mediaUrl
           description
           title
-          alt
         }
       }
     }
@@ -51,27 +48,27 @@ mutation UpdateConfig($input: ConfigUpdateInput!) {
       bannerConfig {
         catalog {
           title
-          imageUrl
+          mediaUrl
         }
         sales {
           title
-          imageUrl
+          mediaUrl
         }
         popular {
           title
-          imageUrl
+          mediaUrl
         }
         mens {
           title
-          imageUrl
+          mediaUrl
         }
         women {
           title
-          imageUrl
+          mediaUrl
         }
         kids {
           title
-          imageUrl
+          mediaUrl
         }
       }
     }

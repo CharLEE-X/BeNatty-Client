@@ -17,6 +17,7 @@ import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
+import com.varabyte.kobweb.compose.ui.modifiers.border
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
@@ -30,17 +31,20 @@ import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translateY
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
+import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiCancel
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiSave
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiWarning
 import com.varabyte.kobweb.silk.components.text.SpanText
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import theme.MaterialTheme
+import web.util.glossy
 
 @Composable
 fun HasChangesWidget(
@@ -77,17 +81,24 @@ fun HasChangesWidget(
             .fillMaxSize()
             .position(Position.Fixed)
             .pointerEvents(PointerEvents.None)
+            .zIndex(50)
     ) {
         if (show) {
-            AppOutlinedCard(
+            Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
+                    .glossy()
                     .opacity(opacity)
                     .fillMaxWidth(80.percent)
                     .maxWidth(45.em)
                     .translateY(translationY)
                     .padding(1.em)
                     .pointerEvents(PointerEvents.Auto)
+                    .border(
+                        width = 1.px,
+                        color = MaterialTheme.colors.tertiary,
+                        style = LineStyle.Solid,
+                    )
                     .transition(
                         CSSTransition("translate", 0.15.s, TransitionTimingFunction.Ease),
                         CSSTransition("opacity", 0.15.s, TransitionTimingFunction.Ease),

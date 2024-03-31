@@ -1,5 +1,5 @@
 query GetTagsAsPage($pageInput: PageInput!) {
-  getTagsAsPage(pageInput: $pageInput) {
+  getAllTagsAsPage(pageInput: $pageInput) {
     tags {
       id
       name

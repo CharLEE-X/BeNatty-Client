@@ -1,5 +1,5 @@
 query GetCatalogPage($catalogPageInput: CatalogPageInput!) {
-  getCatalogPage(catalogPageInput: $catalogPageInput) {
+  getCatalogPage(input: $catalogPageInput) {
     info {
       count
       next

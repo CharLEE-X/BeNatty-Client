@@ -14,7 +14,6 @@ import data.type.BackorderStatus
 import data.type.BlobInput
 import data.type.InventoryInput
 import data.type.MediaType
-import data.type.PostStatus
 import data.type.PricingCreateInput
 import data.type.ProductCreateInput
 import data.type.ShippingInput
@@ -59,6 +58,8 @@ internal class AdminProductPageInputHandler :
         AdminProductPageContract.Inputs.OnCreateCategoryClick ->
             postEvent(AdminProductPageContract.Events.GoToCreateCategory)
 
+        AdminProductPageContract.Inputs.OnCreateVariantClick -> updateState { it.copy(showAddVariantFields = true) }
+
         is AdminProductPageContract.Inputs.SetAllCategories -> updateState { it.copy(allCategories = input.categories) }
         is AdminProductPageContract.Inputs.SetAllTags -> updateState { it.copy(allTags = input.tags) }
         is AdminProductPageContract.Inputs.SetLoading -> updateState { it.copy(isLoading = input.isLoading) }
@@ -75,11 +76,21 @@ internal class AdminProductPageInputHandler :
         is AdminProductPageContract.Inputs.SetId -> handleSetId(input.id)
         is AdminProductPageContract.Inputs.SetTitle -> handleSetTitle(input.title)
 
-        is AdminProductPageContract.Inputs.SetIsFeatured -> handleSetIsFeatured(input.isFeatured)
-        is AdminProductPageContract.Inputs.SetAllowReviews -> handleSetAllowReviews(input.allowReviews)
-        is AdminProductPageContract.Inputs.SetStatusOfPost -> handleSetStatusOfPost(input.postStatus)
-        is AdminProductPageContract.Inputs.SetDescription -> handleSetDescription(input.description)
-        is AdminProductPageContract.Inputs.SetCategoryId -> handleSetCategoryId(input.categoryId)
+        is AdminProductPageContract.Inputs.SetIsFeatured ->
+            updateState { it.copy(current = it.current.copy(isFeatured = input.isFeatured)).wasEdited() }
+
+        is AdminProductPageContract.Inputs.SetAllowReviews ->
+            updateState { it.copy(current = it.current.copy(allowReviews = input.allowReviews)).wasEdited() }
+
+        is AdminProductPageContract.Inputs.SetStatusOfPost ->
+            updateState { it.copy(current = it.current.copy(postStatus = input.postStatus)).wasEdited() }
+
+        is AdminProductPageContract.Inputs.SetDescription ->
+            updateState { it.copy(current = it.current.copy(description = input.description)).wasEdited() }
+
+        is AdminProductPageContract.Inputs.SetCategoryId ->
+            updateState { it.copy(current = it.current.copy(categoryId = input.categoryId)).wasEdited() }
+
         is AdminProductPageContract.Inputs.SetCreatedAt -> handleSetCreatedAt(input.createdAt)
         is AdminProductPageContract.Inputs.SetCreator -> handleSetCreator(input.creator)
         is AdminProductPageContract.Inputs.SetUpdatedAt -> handleSetUpdatedAt(input.updatedAt)
@@ -105,11 +116,8 @@ internal class AdminProductPageInputHandler :
     }
 
     private suspend fun InputScope.handelOnUserCreatorClick() {
-        getCurrentState().original?.creator?.id?.let { userId ->
+        getCurrentState().original.creator.id.let { userId ->
             postEvent(AdminProductPageContract.Events.GoToUserDetails(userId))
-        } ?: run {
-            logger.error(Throwable("Original product is null"))
-            return noOp()
         }
     }
 
@@ -142,7 +150,7 @@ internal class AdminProductPageInputHandler :
         sideJob("handleDeleteMedia") {
             when (state.screenState) {
                 AdminProductPageContract.ScreenState.Existing -> {
-                    state.current?.let {
+                    state.current.let {
                         val id = it.media[index].id
                         postInput(AdminProductPageContract.Inputs.OnDeleteImageClick(id))
                     }
@@ -159,14 +167,14 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetUseGlobalTracking(useGlobalTracking: Boolean) {
         updateState {
             it.copy(
-                current = it.current?.copy(inventory = it.current.inventory.copy(useGlobalTracking = useGlobalTracking))
+                current = it.current.copy(inventory = it.current.inventory.copy(useGlobalTracking = useGlobalTracking))
             ).wasEdited()
         }
     }
 
     private suspend fun InputScope.handleSetChargeTax(chargeTax: Boolean) {
         updateState {
-            it.copy(current = it.current?.copy(pricing = it.current.pricing.copy(chargeTax = chargeTax))).wasEdited()
+            it.copy(current = it.current.copy(pricing = it.current.pricing.copy(chargeTax = chargeTax))).wasEdited()
         }
     }
 
@@ -175,9 +183,9 @@ internal class AdminProductPageInputHandler :
             state.allCategories
                 .find { category -> category.name == categoryName }
                 ?.let { chosenCategory ->
-                    val currentCategoryId = state.current?.categoryId
+                    val currentCategoryId = state.current.categoryId
                     val newCategoryId = if (chosenCategory.id == currentCategoryId) null else chosenCategory.id
-                    state.copy(current = state.current?.copy(categoryId = newCategoryId)).wasEdited()
+                    state.copy(current = state.current.copy(categoryId = newCategoryId)).wasEdited()
                 } ?: state
         }
     }
@@ -188,7 +196,7 @@ internal class AdminProductPageInputHandler :
                 .find { tag -> tag.name == name }
                 ?.let { chosenTag ->
                     val id = chosenTag.id
-                    state.current?.tags?.let { userTags ->
+                    state.current.tags.let { userTags ->
                         val newTags = userTags.toMutableList()
 
                         if (id in userTags) newTags.remove(id) else newTags.add(id)
@@ -201,7 +209,7 @@ internal class AdminProductPageInputHandler :
 
     private suspend fun InputScope.handleSetShippingPresetId(presetId: String?) {
         updateState {
-            it.copy(current = it.current?.copy(shipping = it.current.shipping.copy(presetId = presetId))).wasEdited()
+            it.copy(current = it.current.copy(shipping = it.current.shipping.copy(presetId = presetId))).wasEdited()
         }
     }
 
@@ -209,7 +217,7 @@ internal class AdminProductPageInputHandler :
         updateState {
             it.copy(
                 presetCategory = category,
-                current = it.current?.copy(
+                current = it.current.copy(
                     shipping = it.current.shipping.copy(
                         presetId = category?.id,
                         weight = category?.shippingPreset?.weight ?: it.current.shipping.weight,
@@ -245,7 +253,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handlePresetClick(presetId: String) {
         val state = getCurrentState()
         sideJob("handlePresetClick") {
-            if (state.current?.shipping?.presetId == presetId) {
+            if (state.current.shipping.presetId == presetId) {
                 postInput(AdminProductPageContract.Inputs.SetPresetCategory(null))
             } else {
                 postInput(AdminProductPageContract.Inputs.GetPresetCategory(presetId))
@@ -256,7 +264,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetStatusOfBackorder(backorderStatus: BackorderStatus) {
         updateState {
             it.copy(
-                current = it.current?.copy(inventory = it.current.inventory.copy(backorderStatus = backorderStatus))
+                current = it.current.copy(inventory = it.current.inventory.copy(backorderStatus = backorderStatus))
             ).wasEdited()
         }
     }
@@ -264,7 +272,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetStatusOfStock(stockStatus: StockStatus) {
         updateState {
             it.copy(
-                current = it.current?.copy(inventory = it.current.inventory.copy(stockStatus = stockStatus))
+                current = it.current.copy(inventory = it.current.inventory.copy(stockStatus = stockStatus))
             ).wasEdited()
         }
     }
@@ -272,7 +280,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetLowStockThreshold(lowStockThreshold: Int) {
         updateState {
             it.copy(
-                current = it.current?.copy(inventory = it.current.inventory.copy(lowStockThreshold = lowStockThreshold)),
+                current = it.current.copy(inventory = it.current.inventory.copy(lowStockThreshold = lowStockThreshold)),
                 lowStockThresholdError = if (it.wasEdited) inputValidator.validateNumberPositive(lowStockThreshold) else null,
             ).wasEdited()
         }
@@ -281,7 +289,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetRemainingStock(remainingStock: Int) {
         updateState {
             it.copy(
-                current = it.current?.copy(inventory = it.current.inventory.copy(remainingStock = remainingStock)),
+                current = it.current.copy(inventory = it.current.inventory.copy(remainingStock = remainingStock)),
                 remainingStockError = if (it.wasEdited) inputValidator.validateNumberPositive(remainingStock) else null
             ).wasEdited()
         }
@@ -290,7 +298,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetTrackQuantity(trackQuantity: Boolean) {
         updateState {
             it.copy(
-                current = it.current?.copy(inventory = it.current.inventory.copy(trackQuantity = trackQuantity))
+                current = it.current.copy(inventory = it.current.inventory.copy(trackQuantity = trackQuantity))
             ).wasEdited()
         }
     }
@@ -298,7 +306,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetPrice(price: String) {
         updateState {
             it.copy(
-                current = it.current?.copy(pricing = it.current.pricing.copy(price = price)),
+                current = it.current.copy(pricing = it.current.pricing.copy(price = price)),
                 priceError = if (it.wasEdited) inputValidator.validateNumberPositive(price.toInt()) else null
             ).wasEdited()
         }
@@ -307,7 +315,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetRegularPrice(regularPrice: String) {
         updateState {
             it.copy(
-                current = it.current?.copy(pricing = it.current.pricing.copy(regularPrice = regularPrice)),
+                current = it.current.copy(pricing = it.current.pricing.copy(regularPrice = regularPrice)),
                 regularPriceError = if (it.wasEdited) inputValidator.validateNumberPositive(regularPrice.toInt()) else null
             ).wasEdited()
         }
@@ -316,7 +324,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetHeight(height: String) {
         updateState {
             it.copy(
-                current = it.current?.copy(shipping = it.current.shipping.copy(height = height)),
+                current = it.current.copy(shipping = it.current.shipping.copy(height = height)),
                 heightError = if (it.wasEdited) inputValidator.validateNumberPositive(height.toInt()) else null
             ).wasEdited()
         }
@@ -325,7 +333,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetLength(length: String) {
         updateState {
             it.copy(
-                current = it.current?.copy(shipping = it.current.shipping.copy(length = length)),
+                current = it.current.copy(shipping = it.current.shipping.copy(length = length)),
                 lengthError = if (it.wasEdited) inputValidator.validateNumberPositive(length.toInt()) else null
             ).wasEdited()
         }
@@ -334,7 +342,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetWeight(weight: String) {
         updateState {
             it.copy(
-                current = it.current?.copy(shipping = it.current.shipping.copy(weight = weight)),
+                current = it.current.copy(shipping = it.current.shipping.copy(weight = weight)),
                 weightError = if (it.wasEdited) inputValidator.validateNumberPositive(weight.toInt()) else null
             ).wasEdited()
         }
@@ -343,7 +351,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetWidth(width: String) {
         updateState {
             it.copy(
-                current = it.current?.copy(shipping = it.current.shipping.copy(width = width)),
+                current = it.current.copy(shipping = it.current.shipping.copy(width = width)),
                 widthError = if (it.wasEdited) inputValidator.validateNumberPositive(width.toInt()) else null
             ).wasEdited()
 
@@ -353,29 +361,29 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetIsPhysicalProduct(isPhysicalProduct: Boolean) {
         updateState {
             it.copy(
-                current = it.current?.copy(shipping = it.current.shipping.copy(isPhysicalProduct = isPhysicalProduct))
+                current = it.current.copy(shipping = it.current.shipping.copy(isPhysicalProduct = isPhysicalProduct))
             ).wasEdited()
         }
     }
 
     private suspend fun InputScope.handleSetMedia(media: List<AdminProductGetByIdQuery.Medium>) {
-        updateState { it.copy(current = it.current?.copy(media = media)).wasEdited() }
+        updateState { it.copy(current = it.current.copy(media = media)).wasEdited() }
     }
 
     private suspend fun InputScope.handleSetId(id: String) {
-        updateState { it.copy(current = it.current?.copy(id = id)).wasEdited() }
+        updateState { it.copy(current = it.current.copy(id = id)).wasEdited() }
     }
 
     private suspend fun InputScope.handleSetUpdatedAt(updatedAt: String) {
-        updateState { it.copy(current = it.current?.copy(updatedAt = updatedAt)).wasEdited() }
+        updateState { it.copy(current = it.current.copy(updatedAt = updatedAt)).wasEdited() }
     }
 
     private suspend fun InputScope.handleSetCreator(creator: AdminProductGetByIdQuery.Creator) {
-        updateState { it.copy(current = it.current?.copy(creator = creator)).wasEdited() }
+        updateState { it.copy(current = it.current.copy(creator = creator)).wasEdited() }
     }
 
     private suspend fun InputScope.handleSetCreatedAt(createdAt: String) {
-        updateState { it.copy(current = it.current?.copy(createdAt = createdAt)).wasEdited() }
+        updateState { it.copy(current = it.current.copy(createdAt = createdAt)).wasEdited() }
     }
 
     private suspend fun InputScope.handleInit(id: String?) {
@@ -470,7 +478,7 @@ internal class AdminProductPageInputHandler :
 
     private suspend fun InputScope.handleCreateNewProduct() {
         val state = getCurrentState()
-        state.current?.let {
+        state.current.let {
             val input = ProductCreateInput(
                 title = it.title,
                 description = it.description,
@@ -535,15 +543,12 @@ internal class AdminProductPageInputHandler :
                 )
                 postInput(AdminProductPageContract.Inputs.SetLoading(isLoading = false))
             }
-        } ?: run {
-            logger.error(Throwable("Current product is null"))
-            return noOp()
         }
     }
 
     private suspend fun InputScope.handleDeleteImage(imageId: String) {
         val state = getCurrentState()
-        state.current?.let { current ->
+        state.current.let { current ->
             sideJob("handleDeleteImage") {
                 postInput(AdminProductPageContract.Inputs.SetImagesLoading(isImagesLoading = true))
                 productService.deleteImage(current.id, imageId).fold(
@@ -559,15 +564,12 @@ internal class AdminProductPageInputHandler :
                 )
                 postInput(AdminProductPageContract.Inputs.SetImagesLoading(isImagesLoading = false))
             }
-        } ?: run {
-            logger.error(Throwable("Current product is null"))
-            return noOp()
         }
     }
 
     private suspend fun InputScope.handleUploadImage(imageString: String) {
         val state = getCurrentState()
-        state.current?.let { current ->
+        state.current.let { current ->
             sideJob("handleSaveDetailsUploadImage") {
                 postInput(AdminProductPageContract.Inputs.SetImageDropError(error = null))
                 postInput(AdminProductPageContract.Inputs.SetImagesLoading(isImagesLoading = true))
@@ -594,16 +596,13 @@ internal class AdminProductPageInputHandler :
                 )
                 postInput(AdminProductPageContract.Inputs.SetImagesLoading(isImagesLoading = false))
             }
-        } ?: run {
-            logger.error(Throwable("Current product is null"))
-            return noOp()
         }
     }
 
     private suspend fun InputScope.handleUpdateProduct() {
         val state = getCurrentState()
-        state.current?.let { current ->
-            state.original?.let { original ->
+        state.current.let { current ->
+            state.original.let { original ->
                 sideJob("handleUpdateDetails") {
                     productService.update(
                         id = current.id,
@@ -721,18 +720,12 @@ internal class AdminProductPageInputHandler :
                         },
                     )
                 }
-            } ?: run {
-                logger.error(Throwable("Original product is null"))
-                return noOp()
             }
-        } ?: run {
-            logger.error(Throwable("Current product is null"))
-            return noOp()
         }
     }
 
     private suspend fun InputScope.handleDelete() {
-        getCurrentState().current?.let {
+        getCurrentState().current.let {
             sideJob("handleDeleteUser") {
                 productService.delete(it.id).fold(
                     onSuccess = {
@@ -747,9 +740,6 @@ internal class AdminProductPageInputHandler :
                     },
                 )
             }
-        } ?: run {
-            logger.error(Throwable("Current product is null"))
-            return noOp()
         }
     }
 
@@ -757,9 +747,8 @@ internal class AdminProductPageInputHandler :
         updateState {
             val isValidated = inputValidator.validateText(title)
             it.copy(
-                current = it.current?.copy(title = title),
+                current = it.current.copy(title = title),
                 titleError = if (!it.wasEdited) null else isValidated,
-                isCreateDisabled = isValidated != null
             ).wasEdited()
         }
     }
@@ -791,25 +780,7 @@ internal class AdminProductPageInputHandler :
     }
 }
 
-private suspend fun InputScope.handleSetIsFeatured(featured: Boolean) {
-    updateState { it.copy(current = it.current?.copy(isFeatured = featured)).wasEdited() }
+private fun AdminProductPageContract.State.wasEdited(): AdminProductPageContract.State {
+    println("wasEdited: ${current != original}")
+    return copy(wasEdited = current != original)
 }
-
-private suspend fun InputScope.handleSetAllowReviews(allowReviews: Boolean) {
-    updateState { it.copy(current = it.current?.copy(allowReviews = allowReviews)).wasEdited() }
-}
-
-private suspend fun InputScope.handleSetStatusOfPost(postStatus: PostStatus) {
-    updateState { it.copy(current = it.current?.copy(postStatus = postStatus)).wasEdited() }
-}
-
-private suspend fun InputScope.handleSetDescription(description: String) {
-    updateState { it.copy(current = it.current?.copy(description = description)).wasEdited() }
-}
-
-private suspend fun InputScope.handleSetCategoryId(categoryId: String) {
-    updateState { it.copy(current = it.current?.copy(categoryId = categoryId)).wasEdited() }
-}
-
-private fun AdminProductPageContract.State.wasEdited(): AdminProductPageContract.State =
-    copy(wasEdited = current != original)

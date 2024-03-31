@@ -2,15 +2,13 @@ mutation UploadConfigBannerImage($input: ConfigBannerMediaUploadInput!) {
   uploadConfigBannerImage(input: $input) {
     bannerSection {
       left {
-        alt
         description
-        imageUrl
+        mediaUrl
         title
       }
       right {
-        alt
         description
-        imageUrl
+        mediaUrl
         title
       }
     }

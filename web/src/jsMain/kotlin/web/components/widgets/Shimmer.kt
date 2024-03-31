@@ -8,10 +8,12 @@ import com.varabyte.kobweb.compose.css.BackgroundSize
 import com.varabyte.kobweb.compose.css.CSSBackground
 import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
 import com.varabyte.kobweb.compose.css.CSSPosition
+import com.varabyte.kobweb.compose.css.CSSTimeNumericValue
 import com.varabyte.kobweb.compose.css.functions.linearGradient
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
+import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Color
@@ -24,11 +26,13 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.height
+import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.silk.components.animation.Keyframes
 import com.varabyte.kobweb.silk.components.animation.toAnimation
 import org.jetbrains.compose.web.css.AnimationTimingFunction
 import org.jetbrains.compose.web.css.deg
 import org.jetbrains.compose.web.css.em
+import org.jetbrains.compose.web.css.ms
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
@@ -52,6 +56,7 @@ fun Shimmer(
     borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
     lightColor: Color = MaterialTheme.colors.surfaceContainerLowest,
     darkColor: Color = MaterialTheme.colors.surfaceContainerHighest,
+    delay: CSSTimeNumericValue = 0.s,
     content: @Composable ColumnScope.() -> Unit = {}
 ) {
     Box(
@@ -75,6 +80,7 @@ fun Shimmer(
             .animation(
                 ShimmerAnimation.toAnimation(
                     duration = 1.5.s,
+                    delay = delay,
                     timingFunction = AnimationTimingFunction.Linear,
                     iterationCount = AnimationIterationCount.Infinite,
                 )
@@ -135,4 +141,15 @@ fun ShimmerText(
         borderRadius = borderRadius,
         modifier = modifier.height(20.sp)
     )
+}
+
+@Composable
+fun ShimmerLoader(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.gap(0.5.em)
+    ) {
+        Shimmer(Modifier.size(20.px))
+        Shimmer(delay = 100.ms, modifier = Modifier.size(20.px))
+        Shimmer(delay = 200.ms, modifier = Modifier.size(20.px))
+    }
 }

@@ -1,5 +1,5 @@
 mutation UpdateCustomer($input: UserUpdateInput!) {
-  updateCustomer(input: $input) {
+  updateUser(input: $input) {
     address {
       address
       apartment
@@ -12,7 +12,6 @@ mutation UpdateCustomer($input: UserUpdateInput!) {
       postcode
     }
     collectTax
-    createdAt
     details {
       email
       firstName

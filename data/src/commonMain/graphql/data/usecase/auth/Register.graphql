@@ -1,7 +1,7 @@
 mutation Register($registerInput: RegisterInput!) {
   register(input: $registerInput) {
     token
-    customerMinimal {
+    userMinimal {
       id
       role
     }

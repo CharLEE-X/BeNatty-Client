@@ -12,7 +12,7 @@
         {
           "__typename": "__Type",
           "kind": "INPUT_OBJECT",
-          "name": "AddImageToCategoryInput",
+          "name": "AddMediaToCategoryInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -45,6 +45,125 @@
                 "ofType": {
                   "kind": "SCALAR",
                   "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "INPUT_OBJECT",
+          "name": "AddVariantToProductInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "__typename": "__InputValue",
+              "name": "attrs",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "VariantItemInput",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "media",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "price",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Float",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "productId",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "quantity",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
                   "ofType": null
                 }
               },
@@ -671,14 +790,7 @@
             }
           ],
           "inputFields": null,
-          "interfaces": [
-            {
-              "__typename": "__Type",
-              "kind": "INTERFACE",
-              "name": "Identifiable",
-              "ofType": null
-            }
-          ],
+          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -745,23 +857,6 @@
           "description": null,
           "fields": [
             {
-              "name": "customerMinimal",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CustomerMinimal",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "token",
               "description": null,
               "args": [],
@@ -772,6 +867,23 @@
                 "ofType": {
                   "kind": "SCALAR",
                   "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "userMinimal",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "UserMinimal",
                   "ofType": null
                 }
               },
@@ -1054,6 +1166,121 @@
         },
         {
           "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "BannerConfigProfile",
+          "description": null,
+          "fields": [
+            {
+              "name": "catalog",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CatalogBannerItemProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "kids",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CatalogBannerItemProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "mens",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CatalogBannerItemProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "popular",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CatalogBannerItemProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "sales",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CatalogBannerItemProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "women",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CatalogBannerItemProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
           "kind": "INPUT_OBJECT",
           "name": "BannerConfigUpdateInput",
           "description": null,
@@ -1156,19 +1383,6 @@
           "description": null,
           "fields": [
             {
-              "name": "alt",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "description",
               "description": null,
               "args": [],
@@ -1182,13 +1396,13 @@
               "deprecationReason": null
             },
             {
-              "name": "imageUrl",
+              "name": "mediaId",
               "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
                 "kind": "SCALAR",
-                "name": "String",
+                "name": "ObjectId",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -1223,20 +1437,6 @@
           "inputFields": [
             {
               "__typename": "__InputValue",
-              "name": "alt",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "__typename": "__InputValue",
               "name": "description",
               "description": null,
               "type": {
@@ -1251,12 +1451,12 @@
             },
             {
               "__typename": "__InputValue",
-              "name": "imageUrl",
+              "name": "mediaId",
               "description": null,
               "type": {
                 "__typename": "__Type",
                 "kind": "SCALAR",
-                "name": "String",
+                "name": "ObjectId",
                 "ofType": null
               },
               "defaultValue": null,
@@ -1279,6 +1479,58 @@
             }
           ],
           "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "BannerItemProfile",
+          "description": null,
+          "fields": [
+            {
+              "name": "description",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "mediaUrl",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "title",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -1381,6 +1633,53 @@
         },
         {
           "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "BannerSectionProfile",
+          "description": null,
+          "fields": [
+            {
+              "name": "left",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "BannerItemProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "right",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "BannerItemProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
           "kind": "INPUT_OBJECT",
           "name": "BannerSectionUpdateInput",
           "description": null,
@@ -1424,13 +1723,13 @@
           "__typename": "__Type",
           "kind": "INPUT_OBJECT",
           "name": "BlobInput",
-          "description": "Base64 Media encoded to string.",
+          "description": null,
           "fields": null,
           "inputFields": [
             {
               "__typename": "__InputValue",
               "name": "encodedString",
-              "description": "Encoded string.",
+              "description": null,
               "type": {
                 "__typename": "__Type",
                 "kind": "NON_NULL",
@@ -1470,13 +1769,13 @@
           "description": null,
           "fields": [
             {
-              "name": "imageUrl",
+              "name": "mediaId",
               "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
                 "kind": "SCALAR",
-                "name": "String",
+                "name": "ObjectId",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -1515,12 +1814,12 @@
           "inputFields": [
             {
               "__typename": "__InputValue",
-              "name": "imageUrl",
+              "name": "mediaId",
               "description": null,
               "type": {
                 "__typename": "__Type",
                 "kind": "SCALAR",
-                "name": "String",
+                "name": "ObjectId",
                 "ofType": null
               },
               "defaultValue": null,
@@ -1553,6 +1852,49 @@
         },
         {
           "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "CatalogBannerItemProfile",
+          "description": null,
+          "fields": [
+            {
+              "name": "mediaUrl",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "title",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
           "kind": "INPUT_OBJECT",
           "name": "CatalogBannerItemUpdateInput",
           "description": null,
@@ -1560,7 +1902,7 @@
           "inputFields": [
             {
               "__typename": "__InputValue",
-              "name": "imageUrl",
+              "name": "mediaId",
               "description": null,
               "type": {
                 "__typename": "__Type",
@@ -1649,6 +1991,141 @@
             }
           ],
           "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "CatalogConfigProfile",
+          "description": null,
+          "fields": [
+            {
+              "name": "bannerConfig",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "BannerConfigProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "CatalogFilters",
+          "description": null,
+          "fields": [
+            {
+              "name": "categories",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "CategoryMinimalDomain",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "colors",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "highestPrice",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "sizes",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -1909,23 +2386,6 @@
           "description": null,
           "fields": [
             {
-              "name": "createdAt",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "createdBy",
               "description": null,
               "args": [],
@@ -1935,7 +2395,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -1982,7 +2442,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -1990,7 +2450,7 @@
               "deprecationReason": null
             },
             {
-              "name": "imageUrl",
+              "name": "mediaId",
               "description": null,
               "args": [],
               "type": {
@@ -2120,43 +2580,6 @@
         {
           "__typename": "__Type",
           "kind": "OBJECT",
-          "name": "CategoryCreateResult",
-          "description": null,
-          "fields": [
-            {
-              "name": "id",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [
-            {
-              "__typename": "__Type",
-              "kind": "INTERFACE",
-              "name": "Identifiable",
-              "ofType": null
-            }
-          ],
-          "enumValues": null,
-          "possibleTypes": null,
-          "specifiedByURL": null
-        },
-        {
-          "__typename": "__Type",
-          "kind": "OBJECT",
           "name": "CategoryItem",
           "description": null,
           "fields": [
@@ -2260,14 +2683,7 @@
             }
           ],
           "inputFields": null,
-          "interfaces": [
-            {
-              "__typename": "__Type",
-              "kind": "INTERFACE",
-              "name": "Identifiable",
-              "ofType": null
-            }
-          ],
+          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -2289,6 +2705,66 @@
                 "ofType": {
                   "kind": "SCALAR",
                   "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "imageUrl",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "CategoryMinimalDomain",
+          "description": null,
+          "fields": [
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -2397,26 +2873,9 @@
         {
           "__typename": "__Type",
           "kind": "OBJECT",
-          "name": "CategoryPageItem",
+          "name": "CategoryPageItemDomain",
           "description": null,
           "fields": [
-            {
-              "name": "createdAt",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
             {
               "name": "description",
               "description": null,
@@ -2457,7 +2916,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -2661,12 +3120,6 @@
             {
               "__typename": "__Type",
               "kind": "INTERFACE",
-              "name": "Identifiable",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "INTERFACE",
               "name": "TimeTrackable",
               "ofType": null
             }
@@ -2832,7 +3285,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -2840,13 +3293,13 @@
               "deprecationReason": null
             },
             {
-              "name": "imageUrl",
+              "name": "mediaId",
               "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
                 "kind": "SCALAR",
-                "name": "String",
+                "name": "ObjectId",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -2917,7 +3370,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -2927,12 +3380,12 @@
             },
             {
               "__typename": "__InputValue",
-              "name": "imageUrl",
+              "name": "mediaId",
               "description": null,
               "type": {
                 "__typename": "__Type",
                 "kind": "SCALAR",
-                "name": "String",
+                "name": "ObjectId",
                 "ofType": null
               },
               "defaultValue": null,
@@ -2955,6 +3408,88 @@
             }
           ],
           "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "CollageItemProfile",
+          "description": null,
+          "fields": [
+            {
+              "name": "alt",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "description",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "mediaUrl",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "title",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -3137,23 +3672,6 @@
               "deprecationReason": null
             },
             {
-              "name": "createdAt",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "footerConfig",
               "description": null,
               "args": [],
@@ -3180,7 +3698,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -3342,7 +3860,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "BannerSection",
+                  "name": "BannerSectionProfile",
                   "ofType": null
                 }
               },
@@ -3475,6 +3993,128 @@
           ],
           "inputFields": null,
           "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "ConfigProfile",
+          "description": null,
+          "fields": [
+            {
+              "name": "catalogConfig",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CatalogConfigProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "companyInfo",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CompanyInfo",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "footerConfig",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "FooterConfig",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "landingConfig",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "LandingConfigProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updatedAt",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "TimeTrackable",
+              "ofType": null
+            }
+          ],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -3858,375 +4498,6 @@
             }
           ],
           "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null,
-          "specifiedByURL": null
-        },
-        {
-          "__typename": "__Type",
-          "kind": "OBJECT",
-          "name": "Customer",
-          "description": null,
-          "fields": [
-            {
-              "name": "address",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Address",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "collectTax",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "createdAt",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "details",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Details",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "emailVerified",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "id",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "marketingEmails",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "marketingSms",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "role",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "ENUM",
-                  "name": "Role",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "updatedAt",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "wishlist",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  }
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [
-            {
-              "__typename": "__Type",
-              "kind": "INTERFACE",
-              "name": "Identifiable",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "INTERFACE",
-              "name": "TimeTrackable",
-              "ofType": null
-            }
-          ],
-          "enumValues": null,
-          "possibleTypes": null,
-          "specifiedByURL": null
-        },
-        {
-          "__typename": "__Type",
-          "kind": "OBJECT",
-          "name": "CustomerItem",
-          "description": null,
-          "fields": [
-            {
-              "name": "createdAt",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "email",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "id",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "name",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "totalOrders",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [
-            {
-              "__typename": "__Type",
-              "kind": "INTERFACE",
-              "name": "Identifiable",
-              "ofType": null
-            }
-          ],
-          "enumValues": null,
-          "possibleTypes": null,
-          "specifiedByURL": null
-        },
-        {
-          "__typename": "__Type",
-          "kind": "OBJECT",
-          "name": "CustomerMinimal",
-          "description": null,
-          "fields": [
-            {
-              "name": "id",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "role",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "ENUM",
-                  "name": "Role",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -4847,7 +5118,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -4862,43 +5133,19 @@
             {
               "__typename": "__Type",
               "kind": "OBJECT",
-              "name": "AdminProductProfile",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "OBJECT",
               "name": "Category",
               "ofType": null
             },
             {
               "__typename": "__Type",
               "kind": "OBJECT",
-              "name": "CategoryCreateResult",
+              "name": "CategoryMinimalDomain",
               "ofType": null
             },
             {
               "__typename": "__Type",
               "kind": "OBJECT",
-              "name": "CategoryItem",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "OBJECT",
-              "name": "CategoryMinimal",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "OBJECT",
-              "name": "CategoryPageItem",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "OBJECT",
-              "name": "CategoryProfile",
+              "name": "CategoryPageItemDomain",
               "ofType": null
             },
             {
@@ -4910,25 +5157,7 @@
             {
               "__typename": "__Type",
               "kind": "OBJECT",
-              "name": "Customer",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "OBJECT",
-              "name": "CustomerItem",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "OBJECT",
               "name": "Media",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "OBJECT",
-              "name": "MediaSimple",
               "ofType": null
             },
             {
@@ -4946,31 +5175,7 @@
             {
               "__typename": "__Type",
               "kind": "OBJECT",
-              "name": "TagCreateResult",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "OBJECT",
-              "name": "TagItem",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "OBJECT",
-              "name": "TagMinimal",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "OBJECT",
-              "name": "TagPageItem",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "OBJECT",
-              "name": "TagProfile",
+              "name": "User",
               "ofType": null
             },
             {
@@ -4982,7 +5187,7 @@
             {
               "__typename": "__Type",
               "kind": "OBJECT",
-              "name": "UserCreator",
+              "name": "UserCreatorDomain",
               "ofType": null
             },
             {
@@ -5465,6 +5670,61 @@
         },
         {
           "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "LandingConfigProfile",
+          "description": null,
+          "fields": [
+            {
+              "name": "bannerSection",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "BannerSectionProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "collageItems",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "CollageItemProfile",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
           "kind": "INPUT_OBJECT",
           "name": "LandingConfigUpdateInput",
           "description": null,
@@ -5585,23 +5845,6 @@
               "deprecationReason": null
             },
             {
-              "name": "createdAt",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "id",
               "description": null,
               "args": [],
@@ -5611,7 +5854,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -5716,24 +5959,6 @@
             },
             {
               "__typename": "__InputValue",
-              "name": "createdAt",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "__typename": "__InputValue",
               "name": "id",
               "description": null,
               "type": {
@@ -5742,7 +5967,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -5886,14 +6111,7 @@
             }
           ],
           "inputFields": null,
-          "interfaces": [
-            {
-              "__typename": "__Type",
-              "kind": "INTERFACE",
-              "name": "Identifiable",
-              "ofType": null
-            }
-          ],
+          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -5930,152 +6148,8 @@
           "description": null,
           "fields": [
             {
-              "name": "createConfig",
-              "description": null,
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "input",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "CreateConfigInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Config",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "updateConfig",
-              "description": null,
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "input",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "ConfigUpdateInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Config",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "uploadConfigCollageImage",
-              "description": null,
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "input",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "ConfigCollageMediaUploadInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "ConfigCollageMediaUploadResult",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "uploadConfigBannerImage",
-              "description": null,
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "input",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "ConfigBannerMediaUploadInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "ConfigBannerMediaUploadResult",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "createCustomer",
-              "description": "\n        Create a new user.\n\n        Throws:\n        - Forbidden if the user is not authorized.\n        - InternalServerError if the operation failed.\n        ",
+              "description": null,
               "args": [
                 {
                   "__typename": "__InputValue",
@@ -6110,44 +6184,8 @@
               "deprecationReason": null
             },
             {
-              "name": "updateCustomer",
-              "description": "\n        Update user's information.\n\n        Throws:\n        - Forbidden if the user is not authorized.\n        - Conflict if the email is already in use.\n        - BadRequest if the email or password is invalid.\n        - InternalServerError if the update fails.\n        ",
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "input",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "UserUpdateInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Customer",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "deleteCustomer",
-              "description": "\n        Delete a user by id.\n\n        Throws:\n        - Forbidden if the user is not authorized to delete the user.\n        ",
+              "name": "deleteUserById",
+              "description": null,
               "args": [
                 {
                   "__typename": "__InputValue",
@@ -6182,8 +6220,44 @@
               "deprecationReason": null
             },
             {
+              "name": "forgotPassword",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "email",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ForgotPasswordResponse",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "login",
-              "description": "Signs in user with email and password, no header needed.",
+              "description": null,
               "args": [
                 {
                   "__typename": "__InputValue",
@@ -6254,8 +6328,80 @@
               "deprecationReason": null
             },
             {
+              "name": "updateUser",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "UserUpdateInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "UserProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "addVariantToProduct",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "AddVariantToProductInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Product",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "createProduct",
-              "description": "\n        Create a new product.\n\n        Throws:\n        - Forbidden if the user is not authorized.\n        ",
+              "description": null,
               "args": [
                 {
                   "__typename": "__InputValue",
@@ -6291,7 +6437,7 @@
             },
             {
               "name": "deleteProduct",
-              "description": "\n        Delete a product by its id.\n\n        Throws:\n        - Forbidden if the user is not authorized to delete the product.\n        ",
+              "description": null,
               "args": [
                 {
                   "__typename": "__InputValue",
@@ -6327,7 +6473,7 @@
             },
             {
               "name": "deleteProductMedia",
-              "description": "\n        Delete a media from a product.\n\n        Throws:\n        - Forbidden if the user is not authorized.\n        - NotFound if the product does not exist.\n        - InternalServerError if the media could not be deleted.\n        ",
+              "description": null,
               "args": [
                 {
                   "__typename": "__InputValue",
@@ -6363,7 +6509,7 @@
             },
             {
               "name": "updateProduct",
-              "description": "\n        Update a product.\n\n        Throws:\n        - Forbidden if the user is not authorized to update the product.\n        - InternalServerError if the product creator id is not found.\n        ",
+              "description": null,
               "args": [
                 {
                   "__typename": "__InputValue",
@@ -6398,7 +6544,7 @@
               "deprecationReason": null
             },
             {
-              "name": "uploadMediaToProduct",
+              "name": "uploadProductMedia",
               "description": null,
               "args": [
                 {
@@ -6434,8 +6580,44 @@
               "deprecationReason": null
             },
             {
+              "name": "addMediaToCategory",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "AddMediaToCategoryInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CategoryMinimal",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "createCategory",
-              "description": "\n        Create a new category.\n\n        Throws:\n          - Forbidden if the user is not authorized.\n          - Conflict if a category with the same name already exists.\n          - BadRequest if the name is empty.\n          - InternalServerError if the category could not be created, or if the creator could not be found.\n        ",
+              "description": null,
               "args": [
                 {
                   "__typename": "__InputValue",
@@ -6461,8 +6643,8 @@
                 "kind": "NON_NULL",
                 "name": null,
                 "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CategoryCreateResult",
+                  "kind": "SCALAR",
+                  "name": "String",
                   "ofType": null
                 }
               },
@@ -6471,7 +6653,7 @@
             },
             {
               "name": "deleteCategory",
-              "description": "\n        Delete a category.\n        Throws:\n        - Forbidden if the user is not authorized.\n        - NotFound if the category does not exist.\n        - InternalServerError if the category could not be deleted.\n        ",
+              "description": null,
               "args": [
                 {
                   "__typename": "__InputValue",
@@ -6507,7 +6689,7 @@
             },
             {
               "name": "updateCategory",
-              "description": "\n        Update a category.\n\n        Throws:\n        - Forbidden if the user is not authorized.\n        - NotFound if the category does not exist.\n        - InternalServerError if the category could not be updated.\n        ",
+              "description": null,
               "args": [
                 {
                   "__typename": "__InputValue",
@@ -6534,43 +6716,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "Category",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "addCategoryImage",
-              "description": "\n        Adds an image to a category.\n\n        Throws:\n        - Forbidden if the user is not authorized.\n        - NotFound if the category does not exist.\n        - InternalServerError if the category could not be updated.\n        ",
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "input",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "AddImageToCategoryInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CategoryMinimal",
+                  "name": "CategoryProfile",
                   "ofType": null
                 }
               },
@@ -6615,7 +6761,7 @@
             },
             {
               "name": "deleteTag",
-              "description": "\n        Delete a tag by its id.\n        ",
+              "description": null,
               "args": [
                 {
                   "__typename": "__InputValue",
@@ -6651,7 +6797,7 @@
             },
             {
               "name": "updateTag",
-              "description": "\n        Update a tag.\n\n        Throws:\n        - Forbidden if the user is not authorized.\n        - InternalServerError if the tag could not be updated.\n        ",
+              "description": null,
               "args": [
                 {
                   "__typename": "__InputValue",
@@ -6678,7 +6824,151 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "Tag",
+                  "name": "TagProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "createConfig",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "CreateConfigInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ConfigProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updateConfig",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "ConfigUpdateInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ConfigProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "uploadConfigBannerImage",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "ConfigBannerMediaUploadInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ConfigBannerMediaUploadResult",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "uploadConfigCollageImage",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "ConfigCollageMediaUploadInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "ConfigCollageMediaUploadResult",
                   "ofType": null
                 }
               },
@@ -6688,6 +6978,18 @@
           ],
           "inputFields": null,
           "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "SCALAR",
+          "name": "ObjectId",
+          "description": "A type representing a MongoDB ObjectID",
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -7292,25 +7594,8 @@
               "type": {
                 "__typename": "__Type",
                 "kind": "SCALAR",
-                "name": "String",
+                "name": "ObjectId",
                 "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "createdAt",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -7325,7 +7610,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -7359,7 +7644,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -7416,7 +7701,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "SCALAR",
-                      "name": "String",
+                      "name": "ObjectId",
                       "ofType": null
                     }
                   }
@@ -7509,7 +7794,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "SCALAR",
-                      "name": "String",
+                      "name": "ObjectId",
                       "ofType": null
                     }
                   }
@@ -7885,7 +8170,7 @@
           "inputFields": [
             {
               "__typename": "__InputValue",
-              "name": "imageId",
+              "name": "mediaId",
               "description": null,
               "type": {
                 "__typename": "__Type",
@@ -8321,6 +8606,482 @@
           "description": null,
           "fields": [
             {
+              "name": "getAllUsersAsPage",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "pageInput",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "PageInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "UsersPage",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "getCurrentUser",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "User",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "getUserById",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "id",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "UserProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "getStats",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "DashboardStats",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "getAllProductsAsPage",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "pageInput",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "PageInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "AdminProductsPage",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "getCatalogFilters",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "CatalogPageInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CatalogFilters",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "getCatalogPage",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "CatalogPageInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CatalogPage",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "getProductById",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "id",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "AdminProductProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "getAllCategoriesAsMinimal",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "CategoryMinimal",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "getAllCategoriesAsPage",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "PageInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CategoryPage",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "getCategoryById",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "id",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CategoryProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "getAllTagsAsMinimal",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "TagMinimal",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "getAllTagsAsPage",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "pageInput",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "PageInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "TagPage",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "getTagById",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "id",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "TagProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "getCatalogConfig",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "configId",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CatalogConfig",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "getConfig",
               "description": null,
               "args": [
@@ -8379,536 +9140,6 @@
                   "kind": "OBJECT",
                   "name": "LandingConfig",
                   "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "getCatalogConfig",
-              "description": null,
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "configId",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CatalogConfig",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "getStats",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "DashboardStats",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "getUser",
-              "description": "\n        Get the current user.\n\n        Throws:\n        - Forbidden if the user is not authorized.\n        ",
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Customer",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "getCustomer",
-              "description": null,
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "id",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "UserProfile",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "getAllCustomersPage",
-              "description": "\n        Get all users.\n\n        Throws:\n        - Forbidden if the user is not authorized.\n        ",
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "pageInput",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "PageInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "UsersPage",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "checkPasswordMatch",
-              "description": "Get current user from ID token. Originally used on user edit screen but not anymore",
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "oldPassword",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "__typename": "__InputValue",
-                  "name": "newPassword",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "forgotPassword",
-              "description": null,
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "email",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "ForgotPasswordResponse",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "getAdminProductById",
-              "description": "\n        Get a product by its ID.\n\n        Throws:\n          - NotFound if the product does not exist.\n          - InternalServerError if the creator could not be found.\n        ",
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "id",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "AdminProductProfile",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "getAllAdminProductsPage",
-              "description": "\n        Get all products as a page.\n\n        Throws:\n          - Forbidden if the user is not authorized.\n        ",
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "pageInput",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "PageInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "AdminProductsPage",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "getCatalogPage",
-              "description": "\n        Get all shop products as a page.\n\n        Throws:\n          - NotFound if the media is not found.\n        ",
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "catalogPageInput",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "CatalogPageInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CatalogPage",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "getCategoriesAsPage",
-              "description": null,
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "pageInput",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "PageInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CategoryPage",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "getCategoryById",
-              "description": "\n        Get a category by its ID.\n\n        Throws:\n          - NotFound if the category does not exist.\n          - InternalServerError if the creator could not be found.\n        ",
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "id",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CategoryProfile",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "getCategoriesAllMinimal",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "OBJECT",
-                      "name": "CategoryMinimal",
-                      "ofType": null
-                    }
-                  }
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "getTagsAsPage",
-              "description": "\n        Get all tags as a page.\n\n        Throws:\n        - Forbidden if the user is not authorized.\n        ",
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "pageInput",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "PageInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "TagPage",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "getTagById",
-              "description": "\n        Get a tag by its ID.\n\n        Throws:\n        - NotFound if the tag does not exist.\n        - InternalServerError if the creator could not be found.\n        ",
-              "args": [
-                {
-                  "__typename": "__InputValue",
-                  "name": "id",
-                  "description": null,
-                  "type": {
-                    "__typename": "__Type",
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "TagProfile",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "getTagsAllMinimal",
-              "description": "\n        Get all tags with minimal information.\n        ",
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "OBJECT",
-                      "name": "TagMinimal",
-                      "ofType": null
-                    }
-                  }
                 }
               },
               "isDeprecated": false,
@@ -9777,23 +10008,6 @@
           "description": null,
           "fields": [
             {
-              "name": "createdAt",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "createdBy",
               "description": null,
               "args": [],
@@ -9803,7 +10017,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -9820,7 +10034,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -9937,14 +10151,7 @@
             }
           ],
           "inputFields": null,
-          "interfaces": [
-            {
-              "__typename": "__Type",
-              "kind": "INTERFACE",
-              "name": "Identifiable",
-              "ofType": null
-            }
-          ],
+          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -10025,14 +10232,7 @@
             }
           ],
           "inputFields": null,
-          "interfaces": [
-            {
-              "__typename": "__Type",
-              "kind": "INTERFACE",
-              "name": "Identifiable",
-              "ofType": null
-            }
-          ],
+          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -10079,14 +10279,7 @@
             }
           ],
           "inputFields": null,
-          "interfaces": [
-            {
-              "__typename": "__Type",
-              "kind": "INTERFACE",
-              "name": "Identifiable",
-              "ofType": null
-            }
-          ],
+          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -10142,77 +10335,6 @@
           ],
           "inputFields": null,
           "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null,
-          "specifiedByURL": null
-        },
-        {
-          "__typename": "__Type",
-          "kind": "OBJECT",
-          "name": "TagPageItem",
-          "description": null,
-          "fields": [
-            {
-              "name": "createdAt",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "id",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "name",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [
-            {
-              "__typename": "__Type",
-              "kind": "INTERFACE",
-              "name": "Identifiable",
-              "ofType": null
-            }
-          ],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -10314,12 +10436,6 @@
             {
               "__typename": "__Type",
               "kind": "INTERFACE",
-              "name": "Identifiable",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "INTERFACE",
               "name": "TimeTrackable",
               "ofType": null
             }
@@ -10380,23 +10496,6 @@
           "description": null,
           "fields": [
             {
-              "name": "createdAt",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "updatedAt",
               "description": null,
               "args": [],
@@ -10439,7 +10538,7 @@
             {
               "__typename": "__Type",
               "kind": "OBJECT",
-              "name": "Customer",
+              "name": "ConfigProfile",
               "ofType": null
             },
             {
@@ -10465,8 +10564,218 @@
               "kind": "OBJECT",
               "name": "TagProfile",
               "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
             }
           ],
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "User",
+          "description": null,
+          "fields": [
+            {
+              "name": "address",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Address",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "collectTax",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "details",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Details",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "emailVerified",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "marketingEmails",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "marketingSms",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "role",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "Role",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updatedAt",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "wishlist",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "Identifiable",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "TimeTrackable",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null,
           "specifiedByURL": null
         },
         {
@@ -10752,7 +11061,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -10824,6 +11133,62 @@
             }
           ],
           "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "UserCreatorDomain",
+          "description": null,
+          "fields": [
+            {
+              "name": "firstName",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "lastName",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
           "interfaces": [
             {
               "__typename": "__Type",
@@ -10839,11 +11204,152 @@
         {
           "__typename": "__Type",
           "kind": "OBJECT",
+          "name": "UserItem",
+          "description": null,
+          "fields": [
+            {
+              "name": "createdAt",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "email",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "totalOrders",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "UserMinimal",
+          "description": null,
+          "fields": [
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "role",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "Role",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
           "name": "UserProfile",
           "description": null,
           "fields": [
             {
-              "name": "customer",
+              "name": "address",
               "description": null,
               "args": [],
               "type": {
@@ -10852,8 +11358,169 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "Customer",
+                  "name": "Address",
                   "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "collectTax",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "details",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Details",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "emailVerified",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "marketingEmails",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "marketingSms",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "role",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "Role",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updatedAt",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "wishlist",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
                 }
               },
               "isDeprecated": false,
@@ -11182,7 +11849,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -11253,7 +11920,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -11313,7 +11980,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "OBJECT",
-                      "name": "CustomerItem",
+                      "name": "UserItem",
                       "ofType": null
                     }
                   }
@@ -11370,7 +12037,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "String",
+                  "name": "ObjectId",
                   "ofType": null
                 }
               },
@@ -11715,24 +12382,6 @@
             },
             {
               "__typename": "__InputValue",
-              "name": "id",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "__typename": "__InputValue",
               "name": "media",
               "description": null,
               "type": {
@@ -11744,7 +12393,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "String",
+                    "name": "ObjectId",
                     "ofType": null
                   }
                 }
@@ -11769,6 +12418,24 @@
             },
             {
               "__typename": "__InputValue",
+              "name": "productId",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
               "name": "quantity",
               "description": null,
               "type": {
@@ -11776,6 +12443,24 @@
                 "kind": "SCALAR",
                 "name": "Int",
                 "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "variantId",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
+                  "ofType": null
+                }
               },
               "defaultValue": null,
               "isDeprecated": false,
@@ -12818,70 +13503,6 @@
                 "ofType": {
                   "kind": "SCALAR",
                   "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "isRepeatable": false
-        },
-        {
-          "name": "contact",
-          "description": "Provides contact information of the owner responsible for this subgraph schema.",
-          "locations": [
-            "SCHEMA"
-          ],
-          "args": [
-            {
-              "__typename": "__InputValue",
-              "name": "description",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "__typename": "__InputValue",
-              "name": "name",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "__typename": "__InputValue",
-              "name": "url",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
                   "ofType": null
                 }
               },

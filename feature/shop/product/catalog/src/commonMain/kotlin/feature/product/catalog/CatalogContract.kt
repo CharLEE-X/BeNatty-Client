@@ -18,7 +18,7 @@ object CatalogContract {
         internal val variant: Variant = Variant.Catalog,
 
         val strings: Strings = Strings(),
-        val isLoading: Boolean = false,
+        val isLoading: Boolean = true,
         val pageSize: Int = 10,
         val showBanner: Boolean = variant !is Variant.Search,
         val showSearch: Boolean = variant is Variant.Search,

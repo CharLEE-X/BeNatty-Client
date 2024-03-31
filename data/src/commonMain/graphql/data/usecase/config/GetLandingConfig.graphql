@@ -4,21 +4,19 @@ query GetLandingConfig($configId: String) {
       alt
       description
       id
-      imageUrl
+      mediaId
       title
     }
     bannerSection {
       left {
-        imageUrl
+        mediaId
         description
         title
-        alt
       }
       right {
-        imageUrl
+        mediaId
         description
         title
-        alt
       }
     }
   }

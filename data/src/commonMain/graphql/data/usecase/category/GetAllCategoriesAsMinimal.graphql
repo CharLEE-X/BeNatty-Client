@@ -1,0 +1,7 @@
+query GetAllCategoriesAsMinimal {
+  getAllCategoriesAsMinimal {
+    id
+    name
+    imageUrl
+  }
+}

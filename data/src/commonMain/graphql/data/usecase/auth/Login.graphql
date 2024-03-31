@@ -1,7 +1,7 @@
 mutation Login($loginInput: LoginInput!) {
   login(input: $loginInput) {
     token
-    customerMinimal {
+    userMinimal {
       id
       role
     }

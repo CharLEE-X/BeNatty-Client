@@ -1,33 +1,30 @@
 query GetCustomer($getUserByIdId: String!) {
-  getCustomer(id: $getUserByIdId) {
-    customer {
-      address {
-        address
-        apartment
-        city
-        company
-        country
-        firstName
-        lastName
-        phone
-        postcode
-      }
-      collectTax
-      createdAt
-      details {
-        email
-        firstName
-        language
-        lastName
-        phone
-      }
-      emailVerified
-      id
-      marketingEmails
-      marketingSms
-      role
-      updatedAt
-      wishlist
+  getUserById(id: $getUserByIdId) {
+    address {
+      address
+      apartment
+      city
+      company
+      country
+      firstName
+      lastName
+      phone
+      postcode
     }
+    collectTax
+    details {
+      email
+      firstName
+      language
+      lastName
+      phone
+    }
+    emailVerified
+    id
+    marketingEmails
+    marketingSms
+    role
+    updatedAt
+    wishlist
   }
 }

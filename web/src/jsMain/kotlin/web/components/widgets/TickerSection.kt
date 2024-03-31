@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.AnimationIterationCount
 import com.varabyte.kobweb.compose.css.BoxSizing
+import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.WhiteSpace
@@ -16,6 +17,7 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Color
+import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.animation
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
@@ -31,12 +33,14 @@ import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
+import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translateX
 import com.varabyte.kobweb.compose.ui.modifiers.whiteSpace
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.components.animation.Keyframes
 import com.varabyte.kobweb.silk.components.animation.toAnimation
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEco
+import com.varabyte.kobweb.silk.components.style.common.SmoothColorTransitionDurationVar
 import com.varabyte.kobweb.silk.components.text.SpanText
 import kotlinx.browser.window
 import org.jetbrains.compose.web.css.AnimationTimingFunction
@@ -81,11 +85,12 @@ fun TickerSection(
             .display(DisplayStyle.Block)
             .minHeight(tickerHeight)
             .padding(topBottom = 0.5.em)
-            .backgroundColor(backgroundColor)
+            .backgroundColor(if (isLoading) Colors.Transparent else backgroundColor)
             .color(contentColor)
             .onClick { onClick() }
             .cursor(Cursor.Pointer)
             .overflow(Overflow.Clip)
+            .transition(CSSTransition("background-color", SmoothColorTransitionDurationVar.value()))
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

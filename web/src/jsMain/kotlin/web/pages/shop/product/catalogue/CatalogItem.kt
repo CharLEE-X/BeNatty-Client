@@ -65,6 +65,7 @@ fun CatalogItem(
     price: String?,
     media: List<GetCatalogPageQuery.Medium>,
     borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
+    imageHeight: CSSLengthOrPercentageNumericValue = 600.px
 ) {
     var hovered by remember { mutableStateOf(false) }
     var currentMedia by remember { mutableStateOf(media.firstOrNull()) }
@@ -80,6 +81,7 @@ fun CatalogItem(
             media = currentMedia,
             hovered = hovered,
             borderRadius = borderRadius,
+            imageHeight = imageHeight
         )
         Box(Modifier.size(0.5.em))
         Miniatures(
@@ -104,6 +106,7 @@ private fun MainImage(
     hovered: Boolean,
     borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
     hoveredScale: Double = 1.02,
+    imageHeight: CSSLengthOrPercentageNumericValue
 ) {
     var thisHovered by remember { mutableStateOf(false) }
 
@@ -122,7 +125,7 @@ private fun MainImage(
     ) {
         val imageModifier = Modifier
             .fillMaxWidth()
-            .height(600.px)
+            .height(imageHeight)
             .borderRadius(borderRadius)
             .objectFit(ObjectFit.Cover)
             .thenIf(hovered) { Modifier.scale(hoveredScale) }

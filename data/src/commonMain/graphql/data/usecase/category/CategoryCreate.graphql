@@ -1,5 +1,3 @@
 mutation CreateCategory($input: CategoryCreateInput!) {
-  createCategory(input: $input) {
-    id
-  }
+  createCategory(input: $input)
 }

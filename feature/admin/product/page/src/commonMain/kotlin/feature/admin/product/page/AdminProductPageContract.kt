@@ -12,9 +12,6 @@ import data.type.StockStatus
 object AdminProductPageContract {
     data class State(
         val strings: Strings = Strings(),
-        val original: AdminProductGetByIdQuery.GetAdminProductById? = null,
-        val current: AdminProductGetByIdQuery.GetAdminProductById? = original,
-
         val isLoading: Boolean = false,
         val isImagesLoading: Boolean = false,
         val screenState: ScreenState,
@@ -35,10 +32,57 @@ object AdminProductPageContract {
         val widthError: String? = null,
         val imageDropError: String? = null,
 
-        val isCreateDisabled: Boolean = true,
         val allCategories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal> = emptyList(),
         val allTags: List<TagsGetAllMinimalQuery.GetTagsAllMinimal> = emptyList(),
         val presetCategory: GetCategoryByIdQuery.GetCategoryById? = null,
+
+        val showAddVariantFields: Boolean = false,
+
+        val original: AdminProductGetByIdQuery.GetAdminProductById = AdminProductGetByIdQuery.GetAdminProductById(
+            id = "",
+            title = "",
+            description = "",
+            postStatus = PostStatus.Active,
+            media = emptyList(),
+            categoryId = null,
+            tags = emptyList(),
+            allowReviews = true,
+            isFeatured = false,
+            creator = AdminProductGetByIdQuery.Creator(
+                id = "",
+                firstName = "",
+                lastName = "",
+            ),
+            createdAt = "",
+            updatedAt = "",
+            pricing = AdminProductGetByIdQuery.Pricing(
+                price = null,
+                regularPrice = null,
+                chargeTax = true,
+            ),
+            inventory = AdminProductGetByIdQuery.Inventory(
+                trackQuantity = true,
+                useGlobalTracking = true,
+                backorderStatus = BackorderStatus.Allowed,
+                lowStockThreshold = 0,
+                remainingStock = 0,
+                stockStatus = StockStatus.OutOfStock,
+            ),
+            shipping = AdminProductGetByIdQuery.Shipping(
+                presetId = null,
+                isPhysicalProduct = true,
+                height = null,
+                length = null,
+                weight = null,
+                width = null,
+            ),
+            reviews = emptyList(),
+            totalInWishlist = 0,
+            sold = 0,
+            variants = emptyList(),
+        ),
+
+        val current: AdminProductGetByIdQuery.GetAdminProductById = original,
     )
 
     sealed interface Inputs {
@@ -62,6 +106,7 @@ object AdminProductPageContract {
         data class OnTagSelected(val tagName: String) : Inputs
         data class OnPresetSelected(val preset: String) : Inputs
         data class OnDeleteImageClick(val imageId: String) : Inputs
+        data object OnCreateVariantClick : Inputs
 
         data class SetAllCategories(val categories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal>) :
             Inputs
@@ -217,6 +262,9 @@ object AdminProductPageContract {
         val insights: String = getString(component.localization.Strings.Insights),
         val noInsights: String = getString(component.localization.Strings.NoInsights),
         val productOrganization: String = getString(component.localization.Strings.ProductOrganization),
+        val variants: String = getString(component.localization.Strings.Variants),
+        val addOptionsLikeSizeOrColor: String = getString(component.localization.Strings.AddOptionsLikeSizeOrColor),
+        val addAnotherOption: String = getString(component.localization.Strings.AddAnotherOption),
     ) {
     }
 

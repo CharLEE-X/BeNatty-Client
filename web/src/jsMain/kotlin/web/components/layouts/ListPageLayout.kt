@@ -65,6 +65,7 @@ import web.components.widgets.AppSegmentedButton
 import web.components.widgets.NoItemsListAction
 import web.compose.material3.component.CircularProgress
 import web.compose.material3.component.Divider
+import web.util.glossy
 
 @Composable
 fun ListPageLayout(
@@ -75,6 +76,8 @@ fun ListPageLayout(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .glossy()
+                .padding(24.px)
         ) {
             val gridContainerModifier = Modifier
                 .fillMaxWidth()

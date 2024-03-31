@@ -1,7 +1,0 @@
-query GetCategoriesAllMinimal {
-  getCategoriesAllMinimal {
-    id
-    name
-    imageUrl
-  }
-}

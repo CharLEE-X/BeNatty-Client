@@ -1,5 +1,5 @@
 query TagsGetAllMinimal {
-  getTagsAllMinimal {
+  getAllTagsAsMinimal {
     id
     name
   }

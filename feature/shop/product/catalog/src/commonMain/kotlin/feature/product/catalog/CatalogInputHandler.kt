@@ -8,6 +8,7 @@ import data.service.CategoryService
 import data.service.ConfigService
 import data.service.ProductService
 import data.type.MediaType
+import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -104,27 +105,26 @@ internal class CatalogInputHandler :
 
     private suspend fun InputScope.handleFetchProducts(page: Int) {
         val state = getCurrentState()
-        sideJob("fetchProducts") {
-            productService.getCataloguePage(
-                page = page,
-                query = null,
-                sortBy = null,
-                categories = state.selectedCategories,
-                colors = state.selectedCategories,
-                sizes = state.selectedSizes,
-                priceFrom = state.selectedPriceFrom,
-                priceTo = state.selectedPriceTo,
-            ).fold(
-                onSuccess = { data ->
-                    postInput(CatalogContract.Inputs.SetProducts(data.getCatalogPage.products))
-                    postInput(CatalogContract.Inputs.SetPageInfo(data.getCatalogPage.info))
-                },
-                onFailure = { error ->
-                    postEvent(CatalogContract.Events.OnError(error.message ?: "Unknown error"))
-                }
-            )
-        }
-
+//        sideJob("fetchProducts") {
+//            productService.getCataloguePage(
+//                page = page,
+//                query = null,
+//                sortBy = null,
+//                categories = state.selectedCategories,
+//                colors = state.selectedCategories,
+//                sizes = state.selectedSizes,
+//                priceFrom = state.selectedPriceFrom,
+//                priceTo = state.selectedPriceTo,
+//            ).fold(
+//                onSuccess = { data ->
+//                    postInput(CatalogContract.Inputs.SetProducts(data.getCatalogPage.products))
+//                    postInput(CatalogContract.Inputs.SetPageInfo(data.getCatalogPage.info))
+//                },
+//                onFailure = { error ->
+//                    postEvent(CatalogContract.Events.OnError(error.message ?: "Unknown error"))
+//                }
+//            )
+//        }
 
         val items = (1..30).map { index ->
             GetCatalogPageQuery.Product(
@@ -189,6 +189,7 @@ private suspend fun InputScope.handleInit(variant: Variant) {
         postInput(CatalogContract.Inputs.SetShowSearch(variant is Variant.Search))
         postInput(CatalogContract.Inputs.FetchCatalogueConfig)
         postInput(CatalogContract.Inputs.FetchProducts(page = 0))
+        delay(5000)
         postInput(CatalogContract.Inputs.SetIsLoading(isLoading = false))
     }
 }

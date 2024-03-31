@@ -3,14 +3,15 @@ package web.components.widgets
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.browser.dom.ElementTarget
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
 import com.varabyte.kobweb.compose.ui.modifiers.setVariable
+import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.silk.components.overlay.AdvancedTooltip
 import com.varabyte.kobweb.silk.components.overlay.TooltipVars
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.px
 import theme.MaterialTheme
+import web.util.glossy
 
 @Composable
 fun AppTooltip(text: String) {
@@ -20,7 +21,7 @@ fun AppTooltip(text: String) {
         showDelayMs = 500,
         hasArrow = false,
         modifier = Modifier
-            .backgroundColor(MaterialTheme.colors.surfaceVariant)
+            .glossy()
             .border(
                 width = 1.px,
                 color = MaterialTheme.colors.onSurface,
@@ -28,5 +29,6 @@ fun AppTooltip(text: String) {
             )
             .setVariable(TooltipVars.BackgroundColor, MaterialTheme.colors.surfaceVariant)
             .setVariable(TooltipVars.Color, MaterialTheme.colors.onSurface)
+            .zIndex(1000)
     )
 }

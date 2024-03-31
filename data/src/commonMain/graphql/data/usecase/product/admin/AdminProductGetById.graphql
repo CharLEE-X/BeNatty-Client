@@ -1,5 +1,5 @@
 query AdminProductGetById($getProductByIdId: String!) {
-  getAdminProductById(id: $getProductByIdId) {
+  getProductById(id: $getProductByIdId) {
     id
     title
     description
@@ -10,7 +10,6 @@ query AdminProductGetById($getProductByIdId: String!) {
       url
       mediaType
       altText
-      createdAt
       updatedAt
     }
     categoryId

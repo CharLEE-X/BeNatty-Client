@@ -11,7 +11,6 @@ import com.copperleaf.ballast.navigation.routing.RouterContract.Inputs.ReplaceTo
 import com.copperleaf.ballast.navigation.routing.currentDestinationOrNull
 import com.varabyte.kobweb.compose.css.AlignItems
 import com.varabyte.kobweb.compose.css.CSSTransition
-import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -19,21 +18,17 @@ import com.varabyte.kobweb.compose.foundation.layout.BoxScope
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
 import com.varabyte.kobweb.compose.foundation.layout.Row
-import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.alignItems
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
-import com.varabyte.kobweb.compose.ui.modifiers.boxShadow
 import com.varabyte.kobweb.compose.ui.modifiers.color
-import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxHeight
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.flex
-import com.varabyte.kobweb.compose.ui.modifiers.fontFamily
 import com.varabyte.kobweb.compose.ui.modifiers.fontSize
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.height
@@ -75,13 +70,13 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import theme.MaterialTheme
-import theme.roleStyle
-import web.HEADLINE_FONT
 import web.components.widgets.AppFilledButton
 import web.components.widgets.AppFilledTonalButton
 import web.components.widgets.AppFilledTonalIconButton
+import web.components.widgets.Background
+import web.components.widgets.Logo
 import web.compose.material3.component.CircularProgress
-import web.shadow
+import web.util.glossy
 
 private val topBarHeight = 4.em
 private val sideBarWidth = 18.em
@@ -118,6 +113,7 @@ fun AdminLayout(
     Box(
         modifier = modifier.fillMaxSize()
     ) {
+        Background()
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -143,12 +139,12 @@ fun AdminLayout(
                 )
                 Column(
                     modifier = Modifier
-                        .backgroundColor(MaterialTheme.colors.background)
                         .margin(top = topBarHeight)
                         .padding(left = sideBarWidth)
                         .fillMaxWidth()
                         .alignItems(AlignItems.Center)
                         .minWidth(0.px)
+                        .zIndex(1)
                         .transition(CSSTransition("background-color", 0.3.s, TransitionTimingFunction.EaseInOut))
                 ) {
                     content()
@@ -172,15 +168,9 @@ private fun AdminSideBar(router: RouterViewModel) {
             .width(sideBarWidth)
             .margin(top = topBarHeight)
             .position(Position.Fixed)
-            .backgroundColor(MaterialTheme.colors.surface)
+            .glossy(borderRadius = 0.px)
             .padding(1.em)
-            .boxShadow(
-                offsetX = 0.px,
-                offsetY = 0.px,
-                blurRadius = 8.px,
-                spreadRadius = 0.px,
-                color = shadow()
-            )
+            .zIndex(50)
     ) {
         SideNavMainItem(
             label = "Home",
@@ -252,25 +242,13 @@ fun AdminTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(topBarHeight)
-            .backgroundColor(MaterialTheme.colors.surface)
+            .glossy(borderRadius = 0.px)
             .position(Position.Fixed)
-            .zIndex(100)
+            .zIndex(3)
             .alignItems(AlignItems.Center)
             .padding(topBottom = 0.5.em, leftRight = 1.em)
-            .boxShadow(
-                offsetX = 0.px,
-                offsetY = 0.px,
-                blurRadius = 8.px,
-                spreadRadius = 0.px,
-                color = shadow()
-            )
     ) {
-        TopBarLeftSection(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .onClick { goToAdminHome() }
-                .cursor(Cursor.Pointer)
-        )
+        Logo(onClick = goToAdminHome)
         if (showEditedButtons) {
             SaveSection(
                 isSaveEnabled = isSaveEnabled,
@@ -305,54 +283,53 @@ private fun BoxScope.SaveSection(
     onCancelClick: () -> Unit,
     onSaveClick: () -> Unit,
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    Box(
         modifier = Modifier
             .align(Alignment.Center)
-            .gap(0.5.em)
             .fillMaxWidth()
             .margin(left = sideBarWidth)
             .padding(leftRight = 2.em)
             .maxWidth(oneLayoutMaxWidth)
     ) {
-        MdiWarning(
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .color(Colors.Yellow)
-                .userSelect(UserSelect.None)
-        )
-        SpanText(
-            text = unsavedChangesText,
-            modifier = Modifier.color(MaterialTheme.colors.onSurface)
-        )
-        Spacer()
-        AppFilledButton(
-            onClick = { onCancelClick() },
-            containerColor = MaterialTheme.colors.tertiary,
-            modifier = Modifier.width(8.em)
+                .align(Alignment.CenterStart)
+                .gap(0.5.em)
         ) {
-            SpanText(cancelText)
+            MdiWarning(
+                modifier = Modifier
+                    .color(Colors.Yellow)
+                    .userSelect(UserSelect.None)
+            )
+            SpanText(
+                text = unsavedChangesText,
+                modifier = Modifier.color(MaterialTheme.colors.onSurface)
+            )
         }
-        AppFilledTonalButton(
-            onClick = { onSaveClick() },
-            disabled = !isSaveEnabled,
-            modifier = Modifier.width(8.em)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .gap(0.5.em)
+                .padding(leftRight = 1.em)
         ) {
-            SpanText(saveText)
+            AppFilledButton(
+                onClick = { onCancelClick() },
+                containerColor = MaterialTheme.colors.tertiary,
+                modifier = Modifier.width(8.em)
+            ) {
+                SpanText(cancelText)
+            }
+            AppFilledTonalButton(
+                onClick = { onSaveClick() },
+                disabled = !isSaveEnabled,
+                modifier = Modifier.width(8.em)
+            ) {
+                SpanText(saveText)
+            }
         }
     }
-}
-
-@Composable
-private fun TopBarLeftSection(
-    modifier: Modifier
-) {
-    SpanText(
-        text = "Be Natty",
-        modifier = modifier
-            .roleStyle(MaterialTheme.typography.headlineLarge)
-            .fontFamily(HEADLINE_FONT)
-            .color(MaterialTheme.colors.inverseOnSurface)
-    )
 }
 
 @Composable
