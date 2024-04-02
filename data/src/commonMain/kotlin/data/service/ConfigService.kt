@@ -1,7 +1,9 @@
 package data.service
 
+import arrow.core.Either
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
+import core.RemoteError
 import data.CreateConfigMutation
 import data.GetCatalogConfigQuery
 import data.GetConfigQuery
@@ -29,10 +31,10 @@ import data.utils.handle
 import data.utils.skipIfNull
 
 interface ConfigService {
-    suspend fun config(): Result<GetConfigQuery.Data>
-    suspend fun create(input: CreateConfigInput): Result<CreateConfigMutation.Data>
-    suspend fun getLandingConfig(): Result<GetLandingConfigQuery.Data>
-    suspend fun getCatalogConfig(): Result<GetCatalogConfigQuery.Data>
+    suspend fun fetchConfig(): Either<RemoteError, GetConfigQuery.Data>
+    suspend fun createConfig(input: CreateConfigInput): Either<RemoteError, CreateConfigMutation.Data>
+    suspend fun getLandingConfig(): Either<RemoteError, GetLandingConfigQuery.Data>
+    suspend fun getCatalogConfig(): Either<RemoteError, GetCatalogConfigQuery.Data>
 
     suspend fun updateConfig(
         configId: String,
@@ -52,40 +54,37 @@ interface ConfigService {
         showPress: Boolean?,
         bannerSectionLeft: BannerItemInput?,
         bannerSectionRight: BannerItemInput?,
-    ): Result<UpdateConfigMutation.Data>
+    ): Either<RemoteError, UpdateConfigMutation.Data>
 
     suspend fun uploadCollageImage(
         configId: String,
         imageId: String,
         blob: BlobInput,
         mediaType: MediaType,
-    ): Result<UploadConfigCollageImageMutation.Data>
+    ): Either<RemoteError, UploadConfigCollageImageMutation.Data>
 
     suspend fun uploadBannerMedia(
         configId: String,
         side: Side,
         blob: BlobInput,
         mediaType: MediaType,
-    ): Result<UploadConfigBannerImageMutation.Data>
+    ): Either<RemoteError, UploadConfigBannerImageMutation.Data>
 }
 
-internal class ConfigServiceImpl(
-    private val apolloClient: ApolloClient,
-    private val authService: AuthService,
-) : ConfigService {
-    override suspend fun config(): Result<GetConfigQuery.Data> = apolloClient
+internal class ConfigServiceImpl(private val apolloClient: ApolloClient) : ConfigService {
+    override suspend fun fetchConfig(): Either<RemoteError, GetConfigQuery.Data> = apolloClient
         .query(GetConfigQuery(Optional.present(null)))
         .handle()
 
-    override suspend fun create(input: CreateConfigInput): Result<CreateConfigMutation.Data> {
+    override suspend fun createConfig(input: CreateConfigInput): Either<RemoteError, CreateConfigMutation.Data> {
         return apolloClient.mutation(CreateConfigMutation(input)).handle()
     }
 
-    override suspend fun getLandingConfig(): Result<GetLandingConfigQuery.Data> {
+    override suspend fun getLandingConfig(): Either<RemoteError, GetLandingConfigQuery.Data> {
         return apolloClient.query(GetLandingConfigQuery(Optional.present(null))).handle()
     }
 
-    override suspend fun getCatalogConfig(): Result<GetCatalogConfigQuery.Data> {
+    override suspend fun getCatalogConfig(): Either<RemoteError, GetCatalogConfigQuery.Data> {
         return apolloClient.query(GetCatalogConfigQuery(Optional.present(null))).handle()
     }
 
@@ -107,7 +106,7 @@ internal class ConfigServiceImpl(
         showPress: Boolean?,
         bannerSectionLeft: BannerItemInput?,
         bannerSectionRight: BannerItemInput?,
-    ): Result<UpdateConfigMutation.Data> {
+    ): Either<RemoteError, UpdateConfigMutation.Data> {
         val contactInfoUpdateInput = if (
             companyName == null &&
             companyWebsite == null &&
@@ -182,7 +181,7 @@ internal class ConfigServiceImpl(
         imageId: String,
         blob: BlobInput,
         mediaType: MediaType,
-    ): Result<UploadConfigCollageImageMutation.Data> {
+    ): Either<RemoteError, UploadConfigCollageImageMutation.Data> {
         val input = ConfigCollageMediaUploadInput(
             configId = configId,
             imageId = imageId,
@@ -197,7 +196,7 @@ internal class ConfigServiceImpl(
         side: Side,
         blob: BlobInput,
         mediaType: MediaType
-    ): Result<UploadConfigBannerImageMutation.Data> {
+    ): Either<RemoteError, UploadConfigBannerImageMutation.Data> {
         val input = ConfigBannerMediaUploadInput(
             configId = configId,
             side = side,

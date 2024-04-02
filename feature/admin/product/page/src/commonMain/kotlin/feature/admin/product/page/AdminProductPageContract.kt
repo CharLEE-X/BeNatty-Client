@@ -2,7 +2,7 @@ package feature.admin.product.page
 
 import component.localization.getString
 import data.AdminProductGetByIdQuery
-import data.GetCategoriesAllMinimalQuery
+import data.GetAllCategoriesAsMinimalQuery
 import data.GetCategoryByIdQuery
 import data.TagsGetAllMinimalQuery
 import data.type.BackorderStatus
@@ -32,13 +32,13 @@ object AdminProductPageContract {
         val widthError: String? = null,
         val imageDropError: String? = null,
 
-        val allCategories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal> = emptyList(),
-        val allTags: List<TagsGetAllMinimalQuery.GetTagsAllMinimal> = emptyList(),
+        val allCategories: List<GetAllCategoriesAsMinimalQuery.GetAllCategoriesAsMinimal> = emptyList(),
+        val allTags: List<TagsGetAllMinimalQuery.GetAllTagsAsMinimal> = emptyList(),
         val presetCategory: GetCategoryByIdQuery.GetCategoryById? = null,
 
         val showAddVariantFields: Boolean = false,
 
-        val original: AdminProductGetByIdQuery.GetAdminProductById = AdminProductGetByIdQuery.GetAdminProductById(
+        val original: AdminProductGetByIdQuery.GetProductById = AdminProductGetByIdQuery.GetProductById(
             id = "",
             title = "",
             description = "",
@@ -82,7 +82,7 @@ object AdminProductPageContract {
             variants = emptyList(),
         ),
 
-        val current: AdminProductGetByIdQuery.GetAdminProductById = original,
+        val current: AdminProductGetByIdQuery.GetProductById = original,
     )
 
     sealed interface Inputs {
@@ -108,16 +108,16 @@ object AdminProductPageContract {
         data class OnDeleteImageClick(val imageId: String) : Inputs
         data object OnCreateVariantClick : Inputs
 
-        data class SetAllCategories(val categories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal>) :
+        data class SetAllCategories(val categories: List<GetAllCategoriesAsMinimalQuery.GetAllCategoriesAsMinimal>) :
             Inputs
 
-        data class SetAllTags(val tags: List<TagsGetAllMinimalQuery.GetTagsAllMinimal>) : Inputs
+        data class SetAllTags(val tags: List<TagsGetAllMinimalQuery.GetAllTagsAsMinimal>) : Inputs
 
         data class SetLoading(val isLoading: Boolean) : Inputs
         data class SetImagesLoading(val isImagesLoading: Boolean) : Inputs
         data class SetStateOfScreen(val screenState: ScreenState) : Inputs
-        data class SetOriginalProduct(val product: AdminProductGetByIdQuery.GetAdminProductById) : Inputs
-        data class SetCurrentProduct(val product: AdminProductGetByIdQuery.GetAdminProductById) : Inputs
+        data class SetOriginalProduct(val product: AdminProductGetByIdQuery.GetProductById) : Inputs
+        data class SetCurrentProduct(val product: AdminProductGetByIdQuery.GetProductById) : Inputs
         data class SetLocalMedia(val media: List<AdminProductGetByIdQuery.Medium>) : Inputs
 
         data class SetId(val id: String) : Inputs

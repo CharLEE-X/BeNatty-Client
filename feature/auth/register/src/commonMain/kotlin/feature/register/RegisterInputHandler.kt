@@ -3,6 +3,7 @@ package feature.register
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
+import core.mapToUiMessage
 import data.service.AuthService
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -129,8 +130,8 @@ internal class RegisterInputHandler :
         sideJob("handleRegistration") {
             postInput(RegisterContract.Inputs.SetIsLoading(true))
             authService.register(state.email, state.password, state.name).fold(
-                onSuccess = { postEvent(RegisterContract.Events.OnAuthenticated) },
-                onFailure = { postEvent(RegisterContract.Events.OnError(it.message ?: "Registration failed")) },
+                { postEvent(RegisterContract.Events.OnError(it.mapToUiMessage())) },
+                { postEvent(RegisterContract.Events.OnAuthenticated) },
             )
             postInput(RegisterContract.Inputs.SetIsLoading(false))
         }
@@ -139,8 +140,8 @@ internal class RegisterInputHandler :
     private suspend fun RegisterInputScope.registerDefaultUser() {
         sideJob("handleLogin") {
             authService.register("test@test.com", "P@ss1234", "Adrian").fold(
-                onSuccess = { postEvent(RegisterContract.Events.OnAuthenticated) },
-                onFailure = { postEvent(RegisterContract.Events.OnError(it.message ?: "Login failed")) },
+                { postEvent(RegisterContract.Events.OnError(it.mapToUiMessage())) },
+                { postEvent(RegisterContract.Events.OnAuthenticated) },
             )
         }
     }

@@ -585,7 +585,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "OBJECT",
-                      "name": "Media",
+                      "name": "MediaProfile",
                       "ofType": null
                     }
                   }
@@ -779,7 +779,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "OBJECT",
-                      "name": "Variant",
+                      "name": "VariantProfile",
                       "ofType": null
                     }
                   }
@@ -1489,6 +1489,19 @@
           "name": "BannerItemProfile",
           "description": null,
           "fields": [
+            {
+              "name": "alt",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "name": "description",
               "description": null,
@@ -3981,7 +3994,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "OBJECT",
-                      "name": "CollageItem",
+                      "name": "CollageItemProfile",
                       "ofType": null
                     }
                   }
@@ -5181,12 +5194,6 @@
             {
               "__typename": "__Type",
               "kind": "OBJECT",
-              "name": "UserCreateResult",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "OBJECT",
               "name": "UserCreatorDomain",
               "ofType": null
             },
@@ -6038,6 +6045,111 @@
         {
           "__typename": "__Type",
           "kind": "OBJECT",
+          "name": "MediaProfile",
+          "description": null,
+          "fields": [
+            {
+              "name": "altText",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "mediaType",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "MediaType",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updatedAt",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "url",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "TimeTrackable",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
           "name": "MediaSimple",
           "description": null,
           "fields": [
@@ -6392,7 +6504,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "Product",
+                  "name": "AdminProductProfile",
                   "ofType": null
                 }
               },
@@ -6536,7 +6648,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "Product",
+                  "name": "AdminProductProfile",
                   "ofType": null
                 }
               },
@@ -8147,7 +8259,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "Product",
+                  "name": "AdminProductProfile",
                   "ofType": null
                 }
               },
@@ -8299,7 +8411,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "OBJECT",
-                      "name": "Media",
+                      "name": "MediaProfile",
                       "ofType": null
                     }
                   }
@@ -8651,7 +8763,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "User",
+                  "name": "UserProfile",
                   "ofType": null
                 }
               },
@@ -9074,7 +9186,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "CatalogConfig",
+                  "name": "CatalogConfigProfile",
                   "ofType": null
                 }
               },
@@ -9106,7 +9218,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "Config",
+                  "name": "ConfigProfile",
                   "ofType": null
                 }
               },
@@ -9138,7 +9250,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "LandingConfig",
+                  "name": "LandingConfigProfile",
                   "ofType": null
                 }
               },
@@ -10550,6 +10662,12 @@
             {
               "__typename": "__Type",
               "kind": "OBJECT",
+              "name": "MediaProfile",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
               "name": "Product",
               "ofType": null
             },
@@ -11061,7 +11179,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "ObjectId",
+                  "name": "String",
                   "ofType": null
                 }
               },
@@ -11070,14 +11188,7 @@
             }
           ],
           "inputFields": null,
-          "interfaces": [
-            {
-              "__typename": "__Type",
-              "kind": "INTERFACE",
-              "name": "Identifiable",
-              "ofType": null
-            }
-          ],
+          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -12316,6 +12427,120 @@
         },
         {
           "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "VariantProfile",
+          "description": null,
+          "fields": [
+            {
+              "name": "attrs",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "VariantItem",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "media",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "price",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Float",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "quantity",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
           "kind": "ENUM",
           "name": "VariantType",
           "description": null,
@@ -12393,7 +12618,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "SCALAR",
-                    "name": "ObjectId",
+                    "name": "String",
                     "ofType": null
                   }
                 }
@@ -12426,7 +12651,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "ObjectId",
+                  "name": "String",
                   "ofType": null
                 }
               },
@@ -12458,7 +12683,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "SCALAR",
-                  "name": "ObjectId",
+                  "name": "String",
                   "ofType": null
                 }
               },

@@ -2,6 +2,7 @@ package feature.forgotpassword
 
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
+import core.mapToUiMessage
 import data.service.AuthService
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -66,7 +67,8 @@ internal class ForgotPasswordInputHandler :
         sideJob("handleForgotPassword") {
             postInput(ForgotPasswordContract.Inputs.SetIsLoading(true))
             authService.forgotPassword(state.email).fold(
-                onSuccess = { result ->
+                { postInput(ForgotPasswordContract.Inputs.ShowError(it.mapToUiMessage())) },
+                { result ->
                     if (result.forgotPassword.isForgotPasswordEmailSent) {
                         postInput(
                             ForgotPasswordContract.Inputs.SetScreenState(ForgotPasswordContract.ScreenState.CheckEmail)
@@ -74,9 +76,6 @@ internal class ForgotPasswordInputHandler :
                     } else {
                         postInput(ForgotPasswordContract.Inputs.ShowError("Forgot password failed"))
                     }
-                },
-                onFailure = {
-                    postInput(ForgotPasswordContract.Inputs.ShowError(it.message ?: "Forgot password failed"))
                 },
             )
             postInput(ForgotPasswordContract.Inputs.SetIsLoading(false))

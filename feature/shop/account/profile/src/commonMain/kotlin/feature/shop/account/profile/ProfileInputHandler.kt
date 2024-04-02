@@ -3,6 +3,7 @@ package feature.shop.account.profile
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
+import core.mapToUiMessage
 import data.service.AuthService
 import data.service.UserService
 import kotlinx.coroutines.delay
@@ -178,23 +179,15 @@ internal class ProfileInputHandler :
                             marketingSms = null, detailPhone = null, addressPhone = null,
 
                             ).fold(
-                            onSuccess = {
+                            { postEvent(ProfileContract.Events.OnError(it.mapToUiMessage())) },
+                            {
                                 postInput(
                                     ProfileContract.Inputs.SetUserProfile(
-                                        user = this@with.original.copy(
-
-                                        )
+                                        user = this@with.original
                                     )
                                 )
                                 postInput(ProfileContract.Inputs.SetPersonalDetailsButtonDisabled(isDisabled = true))
                                 postInput(ProfileContract.Inputs.SetPersonalDetailsNotEditable)
-                            },
-                            onFailure = {
-                                postEvent(
-                                    ProfileContract.Events.OnError(
-                                        it.message ?: "Error while updating personal details"
-                                    )
-                                )
                             },
                         )
                     }
@@ -252,24 +245,24 @@ internal class ProfileInputHandler :
                     if (isNewPassError) postInput(ProfileContract.Inputs.SetNewPasswordShake(shake = false))
                 }
             } else {
-                sideJob("handleSavePassword") {
-                    userService.checkPasswordMatch(oldPassword = oldPassword, newPassword = newPassword).fold(
-                        onSuccess = {
-                            if (it.checkPasswordMatch) {
-                                postInput(ProfileContract.Inputs.SetPasswordButtonDisabled(isDisabled = true))
-                            } else {
-                                postEvent(ProfileContract.Events.OnError("Old password does not match"))
-                            }
-                        },
-                        onFailure = {
-                            postEvent(
-                                ProfileContract.Events.OnError(
-                                    it.message ?: "Error while checking password match"
-                                )
-                            )
-                        },
-                    )
-                }
+//                sideJob("handleSavePassword") {
+//                    userService.checkPasswordMatch(oldPassword = oldPassword, newPassword = newPassword).fold(
+//                        onSuccess = {
+//                            if (it.checkPasswordMatch) {
+//                                postInput(ProfileContract.Inputs.SetPasswordButtonDisabled(isDisabled = true))
+//                            } else {
+//                                postEvent(ProfileContract.Events.OnError("Old password does not match"))
+//                            }
+//                        },
+//                        onFailure = {
+//                            postEvent(
+//                                ProfileContract.Events.OnError(
+//                                    it.message ?: "Error while checking password match"
+//                                )
+//                            )
+//                        },
+//                    )
+//                }
             }
         }
     }
@@ -398,17 +391,11 @@ internal class ProfileInputHandler :
                             marketingSms = null, detailPhone = null, addressPhone = null,
 
                             ).fold(
-                            onSuccess = {
-                                postInput(
-                                    ProfileContract.Inputs.SetUserProfile(
-                                        user = this@with.original.copy()
-                                    )
-                                )
+                            { postEvent(ProfileContract.Events.OnError(it.mapToUiMessage())) },
+                            {
+                                postInput(ProfileContract.Inputs.SetUserProfile(user = this@with.original))
                                 postInput(ProfileContract.Inputs.SetAddressButtonDisabled(isDisabled = true))
                                 postInput(ProfileContract.Inputs.SetAddressNotEditable)
-                            },
-                            onFailure = {
-                                postEvent(ProfileContract.Events.OnError(it.message ?: "Error while updating address"))
                             },
                         )
                     }
@@ -422,45 +409,24 @@ internal class ProfileInputHandler :
             authService.userId?.let {
                 userService.getById("1").collect {
                     it.fold(
-                        onSuccess = {
-
-                            postInput(ProfileContract.Inputs.SetEmail(it.getCustomer.customer.details.email))
+                        { postEvent(ProfileContract.Events.OnError(it.mapToUiMessage())) },
+                        {
+                            postInput(ProfileContract.Inputs.SetEmail(it.getUserById.details.email))
                             postInput(
                                 ProfileContract.Inputs.SetDetailsFullName(
-                                    it.getCustomer.customer.details.firstName ?: ""
+                                    it.getUserById.details.firstName ?: ""
                                 )
                             )
-                            it.getCustomer.customer.details.phone?.let { postInput(ProfileContract.Inputs.SetPhone(it)) }
+                            it.getUserById.details.phone?.let { postInput(ProfileContract.Inputs.SetPhone(it)) }
                             postInput(ProfileContract.Inputs.SetPersonalDetailsButtonDisabled(isDisabled = true))
 
                             postInput(ProfileContract.Inputs.SetPasswordButtonDisabled(isDisabled = true))
 
-                            it.getCustomer.customer.address.address?.let {
-                                postInput(
-                                    ProfileContract.Inputs.SetAddress(
-                                        it
-                                    )
-                                )
-                            }
-                            it.getCustomer.customer.address.postcode?.let {
-                                postInput(
-                                    ProfileContract.Inputs.SetPostcode(
-                                        it
-                                    )
-                                )
-                            }
-                            it.getCustomer.customer.address.city?.let { postInput(ProfileContract.Inputs.SetCity(it)) }
-                            it.getCustomer.customer.address.country?.let {
-                                postInput(
-                                    ProfileContract.Inputs.SetCountry(
-                                        it
-                                    )
-                                )
-                            }
+                            it.getUserById.address.address?.let { postInput(ProfileContract.Inputs.SetAddress(it)) }
+                            it.getUserById.address.postcode?.let { postInput(ProfileContract.Inputs.SetPostcode(it)) }
+                            it.getUserById.address.city?.let { postInput(ProfileContract.Inputs.SetCity(it)) }
+                            it.getUserById.address.country?.let { postInput(ProfileContract.Inputs.SetCountry(it)) }
                             postInput(ProfileContract.Inputs.SetAddressButtonDisabled(isDisabled = true))
-                        },
-                        onFailure = {
-                            postEvent(ProfileContract.Events.OnError(it.message ?: "Error while getting user profile"))
                         },
                     )
                 }

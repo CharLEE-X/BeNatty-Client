@@ -3,6 +3,7 @@ package feature.product.catalog
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import com.copperleaf.ballast.postInput
+import core.mapToUiMessage
 import data.GetCatalogPageQuery
 import data.service.CategoryService
 import data.service.ConfigService
@@ -59,8 +60,8 @@ internal class CatalogInputHandler :
     private suspend fun InputScope.handleFetchCategories() {
         sideJob("fetchCategories") {
             categoryService.getCategoriesAllMinimal().fold(
-                onSuccess = { postInput(CatalogContract.Inputs.SetCategories(it.getCategoriesAllMinimal)) },
-                onFailure = { postEvent(CatalogContract.Events.OnError(it.message ?: "Error fetching categories")) }
+                { postEvent(CatalogContract.Events.OnError(it.mapToUiMessage())) },
+                { postInput(CatalogContract.Inputs.SetCategories(it.getAllCategoriesAsMinimal)) },
             )
         }
     }
@@ -69,19 +70,20 @@ internal class CatalogInputHandler :
         val state = getCurrentState()
         sideJob("fetchCatalogueConfig") {
             configService.getCatalogConfig().fold(
-                onSuccess = { data ->
-                    val bannerImageUrl = with(data.getCatalogConfig.bannerConfig) {
+                { postEvent(CatalogContract.Events.OnError(it.mapToUiMessage())) },
+                {
+                    val bannerImageUrl = with(it.getCatalogConfig.bannerConfig) {
                         when (state.variant) {
-                            Variant.Catalog -> catalog.imageUrl
-                            Variant.Kids -> kids.imageUrl
-                            Variant.Men -> mens.imageUrl
-                            Variant.Popular -> popular.imageUrl
-                            Variant.Sales -> sales.imageUrl
-                            Variant.Women -> women.imageUrl
+                            Variant.Catalog -> catalog.mediaUrl
+                            Variant.Kids -> kids.mediaUrl
+                            Variant.Men -> mens.mediaUrl
+                            Variant.Popular -> popular.mediaUrl
+                            Variant.Sales -> sales.mediaUrl
+                            Variant.Women -> women.mediaUrl
                             is Variant.Search -> null
                         }
                     }
-                    val bannerTitle = with(data.getCatalogConfig.bannerConfig) {
+                    val bannerTitle = with(it.getCatalogConfig.bannerConfig) {
                         when (state.variant) {
                             Variant.Catalog,
                             is Variant.Search -> catalog.title
@@ -94,11 +96,8 @@ internal class CatalogInputHandler :
                         }
                     }
                     postInput(CatalogContract.Inputs.SetBanner(bannerTitle, bannerImageUrl))
-                    postInput(CatalogContract.Inputs.SetCatalogueConfig(data.getCatalogConfig))
+                    postInput(CatalogContract.Inputs.SetCatalogueConfig(it.getCatalogConfig))
                 },
-                onFailure = { error ->
-                    postEvent(CatalogContract.Events.OnError(error.message ?: "Error fetching catalogue config"))
-                }
             )
         }
     }

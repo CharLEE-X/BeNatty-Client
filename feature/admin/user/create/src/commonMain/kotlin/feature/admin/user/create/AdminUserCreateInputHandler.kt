@@ -3,6 +3,7 @@ package feature.admin.user.create
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
+import core.mapToUiMessage
 import data.service.UserService
 import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
@@ -19,7 +20,10 @@ internal class AdminUserCreateInputHandler :
     private val userService: UserService by inject()
     private val inputValidator: InputValidator by inject()
 
-    override suspend fun InputHandlerScope<AdminCustomerCreateContract.Inputs, AdminCustomerCreateContract.Events, AdminCustomerCreateContract.State>.handleInput(
+    override suspend fun InputHandlerScope<
+        AdminCustomerCreateContract.Inputs,
+        AdminCustomerCreateContract.Events,
+        AdminCustomerCreateContract.State>.handleInput(
         input: AdminCustomerCreateContract.Inputs,
     ) = when (input) {
         AdminCustomerCreateContract.Inputs.OnClick.Save -> handleCreateNewUser()
@@ -151,12 +155,8 @@ internal class AdminUserCreateInputHandler :
                 marketingEmails = state.marketingEmails,
                 marketingSms = state.marketingSms,
             ).fold(
-                onSuccess = { data ->
-                    postEvent(AdminCustomerCreateContract.Events.GoToUser(data.createCustomer.id))
-                },
-                onFailure = {
-                    postEvent(AdminCustomerCreateContract.Events.OnError(it.message ?: "Error while creating new user"))
-                },
+                { postEvent(AdminCustomerCreateContract.Events.OnError(it.mapToUiMessage())) },
+                { postEvent(AdminCustomerCreateContract.Events.GoToUser(it.createCustomer.id)) },
             )
         }
     }

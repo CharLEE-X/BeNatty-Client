@@ -1,9 +1,9 @@
 package feature.product.catalog
 
 import component.localization.getString
+import data.GetAllCategoriesAsMinimalQuery
 import data.GetCatalogConfigQuery
 import data.GetCatalogPageQuery
-import data.GetCategoriesAllMinimalQuery
 import kotlinx.serialization.Serializable
 
 private val defaultPageInfo = GetCatalogPageQuery.Info(
@@ -32,7 +32,7 @@ object CatalogContract {
         val selectedPriceTo: String? = null,
 
         val catalogConfig: GetCatalogConfigQuery.GetCatalogConfig? = null,
-        val categories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal> = emptyList(),
+        val categories: List<GetAllCategoriesAsMinimalQuery.GetAllCategoriesAsMinimal> = emptyList(),
         val products: List<GetCatalogPageQuery.Product> = emptyList(),
         val pageInfo: GetCatalogPageQuery.Info = defaultPageInfo,
     )
@@ -47,7 +47,10 @@ object CatalogContract {
         data class OnCategoryClicked(val categoryId: String) : Inputs
 
         data class SetIsLoading(val isLoading: Boolean) : Inputs
-        data class SetCategories(val categories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal>) : Inputs
+        data class SetCategories(
+            val categories: List<GetAllCategoriesAsMinimalQuery.GetAllCategoriesAsMinimal>
+        ) : Inputs
+
         data class SetProducts(val products: List<GetCatalogPageQuery.Product>) : Inputs
         data class SetPageInfo(val pageInfo: GetCatalogPageQuery.Info) : Inputs
         data class SetCatalogueConfig(val catalogueConfig: GetCatalogConfigQuery.GetCatalogConfig) : Inputs

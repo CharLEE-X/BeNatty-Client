@@ -4,6 +4,7 @@ import com.apollographql.apollo3.api.Optional
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
+import core.mapToUiMessage
 import core.util.millisToTime
 import data.AdminProductGetByIdQuery
 import data.GetCategoryByIdQuery
@@ -136,7 +137,6 @@ internal class AdminProductPageInputHandler :
                         url = mediaString,
                         mediaType = MediaType.Image,
                         altText = "",
-                        createdAt = "0",
                         updatedAt = "0",
                     )
                     postInput(AdminProductPageContract.Inputs.SetLocalMedia(currentLocalMedia + newMedia))
@@ -236,14 +236,10 @@ internal class AdminProductPageInputHandler :
         sideJob("handleGetPresetCategory") {
             categoryService.getById(categoryId).collect { result ->
                 result.fold(
-                    onSuccess = { data ->
+                    { postEvent(AdminProductPageContract.Events.OnError(it.mapToUiMessage())) },
+                    { data ->
                         postInput(AdminProductPageContract.Inputs.SetShippingPresetId(categoryId))
                         postInput(AdminProductPageContract.Inputs.SetPresetCategory(data.getCategoryById))
-                    },
-                    onFailure = {
-                        postEvent(
-                            AdminProductPageContract.Events.OnError(it.message ?: "Error while getting category")
-                        )
                     },
                 )
             }
@@ -404,15 +400,8 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleGetAllCategories() {
         sideJob("handleGetAllCategories") {
             categoryService.getCategoriesAllMinimal().fold(
-                onSuccess = { data ->
-                    val categories = data.getCategoriesAllMinimal
-                    postInput(AdminProductPageContract.Inputs.SetAllCategories(categories))
-                },
-                onFailure = {
-                    postEvent(
-                        AdminProductPageContract.Events.OnError(it.message ?: "Error while getting all categories")
-                    )
-                },
+                { postEvent(AdminProductPageContract.Events.OnError(it.mapToUiMessage())) },
+                { postInput(AdminProductPageContract.Inputs.SetAllCategories(it.getAllCategoriesAsMinimal)) },
             )
         }
     }
@@ -420,14 +409,8 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleGetAllTags() {
         sideJob("handleGetAllTags") {
             tagService.getTagsAllMinimal().fold(
-                onSuccess = { data ->
-                    postInput(AdminProductPageContract.Inputs.SetAllTags(data.getTagsAllMinimal))
-                },
-                onFailure = {
-                    postEvent(
-                        AdminProductPageContract.Events.OnError(it.message ?: "Error while getting all tags")
-                    )
-                },
+                { postEvent(AdminProductPageContract.Events.OnError(it.mapToUiMessage())) },
+                { postInput(AdminProductPageContract.Inputs.SetAllTags(it.getAllTagsAsMinimal)) },
             )
         }
     }
@@ -436,8 +419,9 @@ internal class AdminProductPageInputHandler :
         sideJob("handleGetProduct") {
             productService.getById(id).collect { result ->
                 result.fold(
-                    onSuccess = { data ->
-                        with(data.getAdminProductById) {
+                    { postEvent(AdminProductPageContract.Events.OnError(it.mapToUiMessage())) },
+                    {
+                        with(it.getProductById) {
                             val createdAt = millisToTime(createdAt.toLong())
                             val updatedAt = millisToTime(updatedAt.toLong())
                             val originalProduct = copy(
@@ -466,11 +450,6 @@ internal class AdminProductPageInputHandler :
                             postInput(AdminProductPageContract.Inputs.SetCurrentProduct(originalProduct))
                         }
                     },
-                    onFailure = {
-                        postEvent(
-                            AdminProductPageContract.Events.OnError(it.message ?: "Error while getting user profile")
-                        )
-                    },
                 )
             }
         }
@@ -483,7 +462,7 @@ internal class AdminProductPageInputHandler :
                 title = it.title,
                 description = it.description,
                 postStatus = it.postStatus,
-                media = it.media.map { it.id },
+                media = it.media.map { media -> media.id },
                 categoryId = Optional.present(it.categoryId),
                 tags = it.tags,
                 isFeatured = it.isFeatured,
@@ -526,19 +505,13 @@ internal class AdminProductPageInputHandler :
             sideJob("handleCreateNewProduct") {
                 postInput(AdminProductPageContract.Inputs.SetLoading(isLoading = true))
                 productService.create(input).fold(
-                    onSuccess = { data ->
-                        state.localMedia.forEach {
-                            postInput(AdminProductPageContract.Inputs.UploadMedia(it.url))
+                    { postEvent(AdminProductPageContract.Events.OnError(it.mapToUiMessage())) },
+                    { data ->
+                        state.localMedia.forEach { media ->
+                            postInput(AdminProductPageContract.Inputs.UploadMedia(media.url))
                         }
 
                         postEvent(AdminProductPageContract.Events.GoToProduct(data.createProduct.product.id))
-                    },
-                    onFailure = {
-                        postEvent(
-                            AdminProductPageContract.Events.OnError(
-                                it.message ?: "Error while creating new user"
-                            )
-                        )
                     },
                 )
                 postInput(AdminProductPageContract.Inputs.SetLoading(isLoading = false))
@@ -552,14 +525,12 @@ internal class AdminProductPageInputHandler :
             sideJob("handleDeleteImage") {
                 postInput(AdminProductPageContract.Inputs.SetImagesLoading(isImagesLoading = true))
                 productService.deleteImage(current.id, imageId).fold(
-                    onSuccess = {
+                    { postEvent(AdminProductPageContract.Events.OnError(it.mapToUiMessage())) },
+                    {
                         val media = state.current.media.filter { it.id != imageId }
                         val updatedProduct = state.current.copy(media = media)
                         postInput(AdminProductPageContract.Inputs.SetOriginalProduct(updatedProduct))
                         postInput(AdminProductPageContract.Inputs.SetCurrentProduct(updatedProduct))
-                    },
-                    onFailure = {
-                        postEvent(AdminProductPageContract.Events.OnError(it.message ?: "Error while deleting image"))
                     },
                 )
                 postInput(AdminProductPageContract.Inputs.SetImagesLoading(isImagesLoading = false))
@@ -575,23 +546,20 @@ internal class AdminProductPageInputHandler :
                 postInput(AdminProductPageContract.Inputs.SetImagesLoading(isImagesLoading = true))
                 val mediaType = MediaType.Image
                 productService.uploadImage(current.id, BlobInput(imageString), mediaType).fold(
-                    onSuccess = { data ->
-                        val media = data.uploadMediaToProduct.media.map {
+                    { postEvent(AdminProductPageContract.Events.OnError(it.mapToUiMessage())) },
+                    { data ->
+                        val media = data.uploadProductMedia.media.map {
                             AdminProductGetByIdQuery.Medium(
                                 id = it.id,
                                 url = it.url,
                                 mediaType = it.mediaType,
                                 altText = it.altText,
-                                createdAt = it.createdAt,
                                 updatedAt = it.updatedAt,
                             )
                         }
                         val updatedProduct = current.copy(media = media)
                         postInput(AdminProductPageContract.Inputs.SetOriginalProduct(updatedProduct))
                         postInput(AdminProductPageContract.Inputs.SetCurrentProduct(updatedProduct))
-                    },
-                    onFailure = {
-                        postEvent(AdminProductPageContract.Events.OnError(it.message ?: "Error while uploading image"))
                     },
                 )
                 postInput(AdminProductPageContract.Inputs.SetImagesLoading(isImagesLoading = false))
@@ -653,10 +621,11 @@ internal class AdminProductPageInputHandler :
                         weight = if (current.shipping.weight != state.original.shipping.weight) current.shipping.weight else null,
                         width = if (current.shipping.width != state.original.shipping.width) current.shipping.width else null,
                     ).fold(
-                        onSuccess = { data ->
+                        { postEvent(AdminProductPageContract.Events.OnError(it.mapToUiMessage())) },
+                        { data ->
                             postInput(
                                 AdminProductPageContract.Inputs.SetOriginalProduct(
-                                    product = AdminProductGetByIdQuery.GetAdminProductById(
+                                    product = AdminProductGetByIdQuery.GetProductById(
                                         id = data.updateProduct.id,
                                         title = data.updateProduct.title,
                                         description = data.updateProduct.description,
@@ -711,13 +680,6 @@ internal class AdminProductPageInputHandler :
                                 )
                             )
                         },
-                        onFailure = {
-                            postEvent(
-                                AdminProductPageContract.Events.OnError(
-                                    it.message ?: "Error while updating product details"
-                                )
-                            )
-                        },
                     )
                 }
             }
@@ -728,16 +690,8 @@ internal class AdminProductPageInputHandler :
         getCurrentState().current.let {
             sideJob("handleDeleteUser") {
                 productService.delete(it.id).fold(
-                    onSuccess = {
-                        postEvent(AdminProductPageContract.Events.GoBackToProducts)
-                    },
-                    onFailure = {
-                        postEvent(
-                            AdminProductPageContract.Events.OnError(
-                                it.message ?: "Error while deleting product"
-                            )
-                        )
-                    },
+                    { postEvent(AdminProductPageContract.Events.OnError(it.mapToUiMessage())) },
+                    { postEvent(AdminProductPageContract.Events.GoBackToProducts) },
                 )
             }
         }

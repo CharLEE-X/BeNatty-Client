@@ -1,9 +1,9 @@
 plugins {
-    id("convention.multiplatform")
+    id("common")
     alias(libs.plugins.jetbrains.compose)
 }
 
-group = COMPONENTS + project.name
+group = COMPONENT + project.name
 
 kotlin {
     sourceSets {

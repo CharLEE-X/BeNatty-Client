@@ -5,22 +5,15 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.apollo)
     alias(libs.plugins.build.konfig)
-    id("convention.multiplatform")
+    id("common")
 }
 
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.components.core)
-
-            implementation(libs.coroutines.core)
-            implementation(libs.koin.core)
-            implementation(libs.kermit)
-            implementation(libs.kotlin.datetime)
-
             implementation(libs.multiplatformSettings.common)
 
-            implementation(libs.apollo.runtime)
+            api(libs.apollo.runtime)
             implementation(libs.apollo.normalizedCache)
             implementation(libs.apollo.ktorEngine)
 

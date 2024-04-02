@@ -1,7 +1,7 @@
 package feature.admin.category.page
 
 import component.localization.getString
-import data.GetCategoriesAllMinimalQuery
+import data.GetAllCategoriesAsMinimalQuery
 import data.GetCategoryByIdQuery
 
 object AdminCategoryPageContract {
@@ -11,7 +11,7 @@ object AdminCategoryPageContract {
 
         val wasEdited: Boolean = false,
 
-        val allCategories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal> = emptyList(),
+        val allCategories: List<GetAllCategoriesAsMinimalQuery.GetAllCategoriesAsMinimal> = emptyList(),
 
         val nameError: String? = null,
         val shakeName: Boolean = false,
@@ -76,7 +76,7 @@ object AdminCategoryPageContract {
             data class Loading(val isLoading: Boolean) : Inputs
             data class StateOfScreen(val screenState: ScreenState) : Inputs
 
-            data class AllCategories(val categories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal>) :
+            data class AllCategories(val categories: List<GetAllCategoriesAsMinimalQuery.GetAllCategoriesAsMinimal>) :
                 Inputs
 
             data class OriginalCategory(val category: GetCategoryByIdQuery.GetCategoryById) : Inputs
@@ -150,8 +150,7 @@ object AdminCategoryPageContract {
         val info: String = getString(component.localization.Strings.Info),
         val createdByDesc: String = getString(component.localization.Strings.CreatedByDesc),
         val categoryOrganization: String = getString(component.localization.Strings.CategoryOrganization),
-    ) {
-    }
+    )
 
     sealed interface ScreenState {
         data object New : ScreenState

@@ -2,6 +2,7 @@ package feature.admin.list
 
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
+import core.mapToUiMessage
 import core.util.millisToDate
 import data.service.CategoryService
 import data.service.OrderService
@@ -127,8 +128,9 @@ internal class AdminListInputHandler :
                         sortBy = state.sortBy,
                         sortDirection = state.sortDirection
                     ).fold(
-                        onSuccess = {
-                            val items = it.getAllCustomersPage.users.map { user ->
+                        { postEvent(AdminListContract.Events.OnError(it.mapToUiMessage())) },
+                        {
+                            val items = it.getAllUsersAsPage.users.map { user ->
                                 ListItem(
                                     id = user.id,
                                     slot1 = millisToDate(user.createdAt.toLong()),
@@ -142,14 +144,13 @@ internal class AdminListInputHandler :
                             postInput(AdminListContract.Inputs.Set.Items(items))
 
                             val info = PageInfo(
-                                count = it.getAllCustomersPage.info.count,
-                                pages = it.getAllCustomersPage.info.pages,
-                                prev = it.getAllCustomersPage.info.prev,
-                                next = it.getAllCustomersPage.info.next,
+                                count = it.getAllUsersAsPage.info.count,
+                                pages = it.getAllUsersAsPage.info.pages,
+                                prev = it.getAllUsersAsPage.info.prev,
+                                next = it.getAllUsersAsPage.info.next,
                             )
                             postInput(AdminListContract.Inputs.Set.Info(info))
                         },
-                        onFailure = { postEvent(AdminListContract.Events.OnError(it.message ?: "")) }
                     )
                 }
 
@@ -163,8 +164,9 @@ internal class AdminListInputHandler :
                         sortBy = state.sortBy,
                         sortDirection = state.sortDirection
                     ).fold(
-                        onSuccess = {
-                            with(it.getAllAdminProductsPage) {
+                        { postEvent(AdminListContract.Events.OnError(it.mapToUiMessage())) },
+                        {
+                            with(it.getAllProductsAsPage) {
                                 val items = products.map { product ->
                                     ListItem(
                                         id = product.id,
@@ -187,7 +189,6 @@ internal class AdminListInputHandler :
                                 postInput(AdminListContract.Inputs.Set.Info(info))
                             }
                         },
-                        onFailure = { postEvent(AdminListContract.Events.OnError(it.message ?: "")) }
                     )
                 }
 
@@ -200,8 +201,9 @@ internal class AdminListInputHandler :
                         sortBy = state.sortBy,
                         sortDirection = state.sortDirection
                     ).fold(
-                        onSuccess = {
-                            val items = it.getCategoriesAsPage.categories.map { order ->
+                        { postEvent(AdminListContract.Events.OnError(it.mapToUiMessage())) },
+                        {
+                            val items = it.getAllCategoriesAsPage.categories.map { order ->
                                 ListItem(
                                     id = order.id,
                                     slot1 = order.name, // millisToMonthYear(order.createdAt.toLong())
@@ -215,14 +217,13 @@ internal class AdminListInputHandler :
                             postInput(AdminListContract.Inputs.Set.Items(items))
 
                             val info = PageInfo(
-                                count = it.getCategoriesAsPage.info.count,
-                                pages = it.getCategoriesAsPage.info.pages,
-                                prev = it.getCategoriesAsPage.info.prev,
-                                next = it.getCategoriesAsPage.info.next,
+                                count = it.getAllCategoriesAsPage.info.count,
+                                pages = it.getAllCategoriesAsPage.info.pages,
+                                prev = it.getAllCategoriesAsPage.info.prev,
+                                next = it.getAllCategoriesAsPage.info.next,
                             )
                             postInput(AdminListContract.Inputs.Set.Info(info))
                         },
-                        onFailure = { postEvent(AdminListContract.Events.OnError(it.message ?: "")) }
                     )
                 }
 
@@ -234,8 +235,9 @@ internal class AdminListInputHandler :
                         sortBy = state.sortBy,
                         sortDirection = state.sortDirection
                     ).fold(
-                        onSuccess = {
-                            val items = it.getCategoriesAsPage.categories.map { category ->
+                        { postEvent(AdminListContract.Events.OnError(it.mapToUiMessage())) },
+                        {
+                            val items = it.getAllCategoriesAsPage.categories.map { category ->
                                 ListItem(
                                     id = category.id,
                                     slot1 = millisToDate(category.createdAt.toLong()),
@@ -249,14 +251,13 @@ internal class AdminListInputHandler :
                             postInput(AdminListContract.Inputs.Set.Items(items))
 
                             val info = PageInfo(
-                                count = it.getCategoriesAsPage.info.count,
-                                pages = it.getCategoriesAsPage.info.pages,
-                                prev = it.getCategoriesAsPage.info.prev,
-                                next = it.getCategoriesAsPage.info.next,
+                                count = it.getAllCategoriesAsPage.info.count,
+                                pages = it.getAllCategoriesAsPage.info.pages,
+                                prev = it.getAllCategoriesAsPage.info.prev,
+                                next = it.getAllCategoriesAsPage.info.next,
                             )
                             postInput(AdminListContract.Inputs.Set.Info(info))
                         },
-                        onFailure = { postEvent(AdminListContract.Events.OnError(it.message ?: "")) }
                     )
                 }
 
@@ -269,8 +270,9 @@ internal class AdminListInputHandler :
                         sortBy = state.sortBy,
                         sortDirection = state.sortDirection
                     ).fold(
-                        onSuccess = {
-                            val items = it.getTagsAsPage.tags.map { tag ->
+                        { postEvent(AdminListContract.Events.OnError(it.mapToUiMessage())) },
+                        {
+                            val items = it.getAllTagsAsPage.tags.map { tag ->
                                 ListItem(
                                     id = tag.id,
                                     slot1 = millisToDate(tag.createdAt.toLong()),
@@ -284,14 +286,13 @@ internal class AdminListInputHandler :
                             postInput(AdminListContract.Inputs.Set.Items(items))
 
                             val info = PageInfo(
-                                count = it.getTagsAsPage.info.count,
-                                pages = it.getTagsAsPage.info.pages,
-                                prev = it.getTagsAsPage.info.prev,
-                                next = it.getTagsAsPage.info.next,
+                                count = it.getAllTagsAsPage.info.count,
+                                pages = it.getAllTagsAsPage.info.pages,
+                                prev = it.getAllTagsAsPage.info.prev,
+                                next = it.getAllTagsAsPage.info.next,
                             )
                             postInput(AdminListContract.Inputs.Set.Info(info))
                         },
-                        onFailure = { postEvent(AdminListContract.Events.OnError(it.message ?: "")) }
                     )
                 }
             }

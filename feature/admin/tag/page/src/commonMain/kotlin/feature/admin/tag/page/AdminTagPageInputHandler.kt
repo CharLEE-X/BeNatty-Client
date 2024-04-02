@@ -3,6 +3,7 @@ package feature.admin.tag.page
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
+import core.mapToUiMessage
 import core.util.millisToTime
 import data.service.TagService
 import kotlinx.coroutines.delay
@@ -77,15 +78,11 @@ internal class AdminTagPageInputHandler :
     private suspend fun InputScope.handleGetAllTags(currentTagId: String?) {
         sideJob("handleGetAllTags") {
             tagService.getTagsAllMinimal().fold(
-                onSuccess = { data ->
-                    val allTags = data.getTagsAllMinimal
+                { postEvent(AdminTagPageContract.Events.OnError(it.mapToUiMessage())) },
+                { data ->
+                    val allTags = data.getAllTagsAsMinimal
                         .filter { currentTagId?.let { categoryId -> it.id != categoryId } ?: true }
                     postInput(AdminTagPageContract.Inputs.Set.AllTags(allTags))
-                },
-                onFailure = {
-                    postEvent(
-                        AdminTagPageContract.Events.OnError(it.message ?: "Error while getting all tags")
-                    )
                 },
             )
         }
@@ -94,13 +91,9 @@ internal class AdminTagPageInputHandler :
     private suspend fun InputScope.handleDelete() {
         val state = getCurrentState()
         sideJob("handleDeleteTag") {
-            tagService.deleteById(state.current.id.toString()).fold(
-                onSuccess = {
-                    postEvent(AdminTagPageContract.Events.GoToList)
-                },
-                onFailure = {
-                    postEvent(AdminTagPageContract.Events.OnError(it.message ?: "Error while deleting tag"))
-                },
+            tagService.deleteById(state.current.id).fold(
+                { postEvent(AdminTagPageContract.Events.OnError(it.mapToUiMessage())) },
+                { postEvent(AdminTagPageContract.Events.GoToList) },
             )
         }
     }
@@ -124,12 +117,8 @@ internal class AdminTagPageInputHandler :
         val state = getCurrentState()
         sideJob("handleCreateNewUser") {
             tagService.create(name = state.current.name).fold(
-                onSuccess = { data ->
-                    postEvent(AdminTagPageContract.Events.GoToTag(data.createTag.id.toString()))
-                },
-                onFailure = {
-                    postEvent(AdminTagPageContract.Events.OnError(it.message ?: "Error while creating new tag"))
-                },
+                { postEvent(AdminTagPageContract.Events.OnError(it.mapToUiMessage())) },
+                { postEvent(AdminTagPageContract.Events.GoToTag(it.createTag.id)) },
             )
         }
     }
@@ -161,10 +150,11 @@ internal class AdminTagPageInputHandler :
             } else {
                 sideJob("handleSavePersonalDetails") {
                     tagService.update(
-                        id = current.id.toString(),
+                        id = current.id,
                         name = if (current.name != original.name) current.name else null,
                     ).fold(
-                        onSuccess = { data ->
+                        { postEvent(AdminTagPageContract.Events.OnError(it.mapToUiMessage())) },
+                        { data ->
                             postInput(
                                 AdminTagPageContract.Inputs.Set.OriginalTag(
                                     category = this@with.original.copy(
@@ -174,13 +164,6 @@ internal class AdminTagPageInputHandler :
                                 )
                             )
                             postInput(AdminTagPageContract.Inputs.OnClick.CancelEdit)
-                        },
-                        onFailure = {
-                            postEvent(
-                                AdminTagPageContract.Events.OnError(
-                                    it.message ?: "Error while updating tag details"
-                                )
-                            )
                         },
                     )
                 }
@@ -192,7 +175,8 @@ internal class AdminTagPageInputHandler :
         sideJob("handleGetUserProfile") {
             tagService.getById(id).collect { result ->
                 result.fold(
-                    onSuccess = { data ->
+                    { postEvent(AdminTagPageContract.Events.OnError(it.mapToUiMessage())) },
+                    { data ->
                         val createdAt = millisToTime(data.getTagById.createdAt.toLong())
                         val updatedAt = millisToTime(data.getTagById.updatedAt.toLong())
                         val category = data.getTagById.copy(
@@ -201,11 +185,6 @@ internal class AdminTagPageInputHandler :
                         )
                         postInput(AdminTagPageContract.Inputs.Set.OriginalTag(category))
                         postInput(AdminTagPageContract.Inputs.Set.CurrentTag(category))
-                    },
-                    onFailure = {
-                        postEvent(
-                            AdminTagPageContract.Events.OnError(it.message ?: "Error while getting tag profile")
-                        )
                     },
                 )
             }

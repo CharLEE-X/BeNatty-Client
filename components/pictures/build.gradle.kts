@@ -1,14 +1,13 @@
 plugins {
-    id("convention.multiplatform")
+    id("common")
 }
 
-group = COMPONENTS + project.name
+group = COMPONENT + project.name
 
 kotlin {
     sourceSets {
-        commonMain.dependencies {
-            implementation(projects.components.core)
-        }
+        commonMain.dependencies {}
+
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
             implementation("androidx.exifinterface:exifinterface:1.3.7")

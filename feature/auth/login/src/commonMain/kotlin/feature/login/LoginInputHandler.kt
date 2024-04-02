@@ -3,6 +3,7 @@ package feature.login
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
+import core.mapToUiMessage
 import data.service.AuthService
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -85,8 +86,8 @@ internal class LoginInputHandler :
         val state = getCurrentState()
         sideJob("handleLogin") {
             authService.login(state.email, state.password).fold(
-                onSuccess = { postEvent(LoginContract.Events.OnAuthenticated) },
-                onFailure = { postEvent(LoginContract.Events.OnError(it.message ?: "Login failed")) },
+                { postEvent(LoginContract.Events.OnError(it.mapToUiMessage())) },
+                { postEvent(LoginContract.Events.OnAuthenticated) },
             )
         }
     }
@@ -94,8 +95,8 @@ internal class LoginInputHandler :
     private suspend fun LoginInputScope.loginDefaultUser() {
         sideJob("handleLogin") {
             authService.login("test@test.com", "P@ss1234").fold(
-                onSuccess = { postEvent(LoginContract.Events.OnAuthenticated) },
-                onFailure = { postEvent(LoginContract.Events.OnError(it.message ?: "Login failed")) },
+                { postEvent(LoginContract.Events.OnError(it.mapToUiMessage())) },
+                { postEvent(LoginContract.Events.OnAuthenticated) },
             )
         }
     }

@@ -30,8 +30,8 @@ include(
 //    ":composeApp",
 
     ":data",
+    ":core",
 
-    ":components:core",
     ":components:location",
     ":components:notification",
     ":components:pictures",

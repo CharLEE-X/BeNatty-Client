@@ -31,7 +31,7 @@ const val ACCOUNT = "account."
 const val ADMIN = "admin."
 const val AUTH = "auth."
 const val CATEGORY = "category."
-const val COMPONENTS = "components."
+const val COMPONENT = "components."
 const val FEATURE = "feature."
 const val PRODUCT = "product."
 const val CONFIG = "config."
@@ -39,3 +39,9 @@ const val ORDER = "order."
 const val SHOP = "shop."
 const val TAG = "tag."
 const val USER = "user."
+
+object Plugins {
+    const val COMMON = "common"
+    const val COMPONENT = "component"
+    const val FEATURE = "feature"
+}

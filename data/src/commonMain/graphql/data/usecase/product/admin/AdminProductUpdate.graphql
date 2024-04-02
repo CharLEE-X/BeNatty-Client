@@ -5,7 +5,13 @@ mutation AdminProductUpdate($input: ProductUpdateInput!) {
     description
     sold
     postStatus
-    media
+    media {
+      id
+      url
+      altText
+      mediaType
+      updatedAt
+    }
     categoryId
     tags
     isFeatured

@@ -5,11 +5,13 @@ mutation UploadConfigBannerImage($input: ConfigBannerMediaUploadInput!) {
         description
         mediaUrl
         title
+        alt
       }
       right {
         description
         mediaUrl
         title
+        alt
       }
     }
   }

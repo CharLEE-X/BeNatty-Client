@@ -7,6 +7,7 @@ import component.pictures.PicturesService
 import component.pictures.model.MediaSource
 import core.Platform
 import core.currentPlatform
+import core.mapToUiMessage
 import core.models.PermissionStatus
 import core.util.infiniteFlow
 import data.service.DebugService
@@ -211,8 +212,8 @@ internal class DebugInputHandler : KoinComponent,
     private suspend fun DebugInputScope.handleCacheClear() {
         sideJob("ClearCache") {
             debugService.clearCache().fold(
-                onSuccess = { postEvent(DebugContract.Events.OnError("Cache cleared")) },
-                onFailure = { postEvent(DebugContract.Events.OnError(it.message ?: "Error clearing cache")) },
+                { postEvent(DebugContract.Events.OnError(it.mapToUiMessage())) },
+                { postEvent(DebugContract.Events.OnError("Cache cleared")) },
             )
         }
     }

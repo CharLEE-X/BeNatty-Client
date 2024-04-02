@@ -170,7 +170,6 @@ fun AdminConfigPage(
                     OpeningTimes(vm, state)
                 }
                 CardSection(title = state.strings.info) {
-                    CreatedAt(state)
                     UpdatedAt(state)
                 }
             }
@@ -200,7 +199,7 @@ fun BannerSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
                 textPosition = TextPosition.LeftBottom,
                 image = { imageModifier ->
                     MediaSlot(
-                        url = bannerSection.left.imageUrl,
+                        url = bannerSection.left.mediaUrl,
                         alt = bannerSection.left.alt,
                         errorText = state.bannerLeftMediaDropError,
                         hasDeleteButton = false,
@@ -212,8 +211,8 @@ fun BannerSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
                                     ?: vm.trySend(AdminConfigContract.Inputs.SetBannerLeftImageDropError(error = "Not a PNG?"))
                             }
                         },
-                        onImageClick = { imageUrl ->
-                            imageUrl?.let { vm.trySend(AdminConfigContract.Inputs.OnImageClick(bannerSection.left.toPreviewImage())) }
+                        onImageClick = { mediaUrl ->
+                            mediaUrl?.let { vm.trySend(AdminConfigContract.Inputs.OnImageClick(bannerSection.left.toPreviewImage())) }
                         },
                         onDeleteClick = { },
                         modifier = imageModifier
@@ -228,7 +227,7 @@ fun BannerSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
                 textPosition = TextPosition.RightTop,
                 image = { imageModifier ->
                     MediaSlot(
-                        url = bannerSection.right.imageUrl,
+                        url = bannerSection.right.mediaUrl,
                         alt = bannerSection.right.alt,
                         errorText = state.bannerRightMediaDropError,
                         onFileDropped = { file ->
@@ -239,8 +238,8 @@ fun BannerSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
                                     ?: vm.trySend(AdminConfigContract.Inputs.SetBannerRightImageDropError(error = "Not a PNG?"))
                             }
                         },
-                        onImageClick = { imageUrl ->
-                            imageUrl?.let { vm.trySend(AdminConfigContract.Inputs.OnImageClick(bannerSection.right.toPreviewImage())) }
+                        onImageClick = { mediaUrl ->
+                            mediaUrl?.let { vm.trySend(AdminConfigContract.Inputs.OnImageClick(bannerSection.right.toPreviewImage())) }
                         },
                         onDeleteClick = {},
                         modifier = imageModifier
@@ -286,7 +285,7 @@ fun CollageSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) 
                 modifier = Modifier.thenIf(index == 0) { CollageBigItemStyle.toModifier() }
             ) { imageModifier ->
                 MediaSlot(
-                    url = item.imageUrl,
+                    url = item.mediaUrl,
                     alt = item.alt,
                     errorText = null,
                     onFileDropped = { file ->
@@ -298,9 +297,9 @@ fun CollageSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) 
                                 ?: vm.trySend(AdminConfigContract.Inputs.SetCollageImageDropError(error = "Not a PNG?"))
                         }
                     },
-                    onImageClick = { imageUrl ->
-                        println("Image clicked: $imageUrl")
-                        imageUrl?.let { vm.trySend(AdminConfigContract.Inputs.OnImageClick(item.toPreviewImage())) }
+                    onImageClick = { mediaUrl ->
+                        println("Image clicked: $mediaUrl")
+                        mediaUrl?.let { vm.trySend(AdminConfigContract.Inputs.OnImageClick(item.toPreviewImage())) }
                     },
                     onDeleteClick = { vm.trySend(AdminConfigContract.Inputs.OnImageDeleteClick(item.id)) },
                     modifier = imageModifier
@@ -569,18 +568,6 @@ fun UpdatedAt(state: AdminConfigContract.State) {
         if (updatedAt.isNotEmpty()) {
             SpanText(
                 text = "${state.strings.updatedAt}: $updatedAt",
-                modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
-            )
-        }
-    }
-}
-
-@Composable
-fun CreatedAt(state: AdminConfigContract.State) {
-    state.current?.createdAt?.let { createdAt ->
-        if (createdAt.isNotEmpty()) {
-            SpanText(
-                text = "${state.strings.createdAt}: $createdAt",
                 modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
             )
         }

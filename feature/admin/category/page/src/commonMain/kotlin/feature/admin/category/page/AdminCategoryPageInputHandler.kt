@@ -4,6 +4,7 @@ import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import com.copperleaf.ballast.postInput
 import component.localization.InputValidator
+import core.mapToUiMessage
 import core.util.millisToTime
 import data.GetCategoryByIdQuery
 import data.service.CategoryService
@@ -75,7 +76,7 @@ internal class AdminUserPageInputHandler :
         is AdminCategoryPageContract.Inputs.Set.IsWidthShake -> updateState { it.copy(shakeWidth = input.shake) }
     }
 
-    private suspend fun InputScope.handleImproveDescription() {
+    private fun InputScope.handleImproveDescription() {
         noOp()
     }
 
@@ -174,26 +175,26 @@ internal class AdminUserPageInputHandler :
 
     private suspend fun InputScope.handleGoToCreator() {
         val state = getCurrentState()
-        postEvent(AdminCategoryPageContract.Events.GoToUser(state.current.creator.id.toString()))
+        postEvent(AdminCategoryPageContract.Events.GoToUser(state.current.creator.id))
     }
 
     private suspend fun InputScope.handleGoToParent() {
         val state = getCurrentState()
-        state.current.parent?.let { postEvent(AdminCategoryPageContract.Events.GoToUser(it.id.toString())) }
+        state.current.parent?.let { postEvent(AdminCategoryPageContract.Events.GoToUser(it.id)) }
     }
 
     private suspend fun InputScope.handleGetAllCategories(currentCategoryId: String?) {
         sideJob("handleGetAllCategories") {
             categoryService.getCategoriesAllMinimal().fold(
-                onSuccess = { data ->
-                    val allCategories = data.getCategoriesAllMinimal
+                {
+                    postEvent(
+                        AdminCategoryPageContract.Events.OnError(it.mapToUiMessage())
+                    )
+                },
+                { data ->
+                    val allCategories = data.getAllCategoriesAsMinimal
                         .filter { currentCategoryId?.let { categoryId -> it.id != categoryId } ?: true }
                     postInput(AdminCategoryPageContract.Inputs.Set.AllCategories(allCategories))
-                },
-                onFailure = {
-                    postEvent(
-                        AdminCategoryPageContract.Events.OnError(it.message ?: "Error while getting all categories")
-                    )
                 },
             )
         }
@@ -206,13 +207,9 @@ internal class AdminUserPageInputHandler :
     private suspend fun InputScope.handleDelete() {
         val state = getCurrentState()
         sideJob("handleDeleteCategory") {
-            categoryService.deleteById(state.current.id.toString()).fold(
-                onSuccess = {
-                    postEvent(AdminCategoryPageContract.Events.GoToList)
-                },
-                onFailure = {
-                    postEvent(AdminCategoryPageContract.Events.OnError(it.message ?: "Error while deleting category"))
-                },
+            categoryService.deleteById(state.current.id).fold(
+                { postEvent(AdminCategoryPageContract.Events.OnError(it.mapToUiMessage())) },
+                { postEvent(AdminCategoryPageContract.Events.GoToList) },
             )
         }
     }
@@ -236,12 +233,8 @@ internal class AdminUserPageInputHandler :
         val state = getCurrentState()
         sideJob("handleCreateNewUser") {
             categoryService.create(name = state.current.name).fold(
-                onSuccess = { data ->
-                    postEvent(AdminCategoryPageContract.Events.GoToCategory(data.createCategory.id.toString()))
-                },
-                onFailure = {
-                    postEvent(AdminCategoryPageContract.Events.OnError(it.message ?: "Error while creating new user"))
-                },
+                { postEvent(AdminCategoryPageContract.Events.OnError(it.mapToUiMessage())) },
+                { postEvent(AdminCategoryPageContract.Events.GoToCategory(it.createCategory)) },
             )
         }
     }
@@ -293,10 +286,10 @@ internal class AdminUserPageInputHandler :
             } else {
                 sideJob("handleSavePersonalDetails") {
                     categoryService.update(
-                        id = current.id.toString(),
+                        id = current.id,
                         name = if (current.name != original.name) current.name else null,
                         description = if (current.description != original.description) current.description else null,
-                        parentId = current.parent?.id?.toString(),
+                        parentId = current.parent?.id,
                         display = if (current.display != original.display) current.display else null,
                         weight = if (current.shippingPreset?.weight != original.shippingPreset?.weight) current.shippingPreset?.weight else null,
                         length = if (current.shippingPreset?.length != original.shippingPreset?.length) current.shippingPreset?.length else null,
@@ -304,39 +297,32 @@ internal class AdminUserPageInputHandler :
                         height = if (current.shippingPreset?.height != original.shippingPreset?.height) current.shippingPreset?.height else null,
                         requiresShipping = if (current.shippingPreset?.isPhysicalProduct != original.shippingPreset?.isPhysicalProduct) current.shippingPreset?.isPhysicalProduct else null,
                     ).fold(
-                        onSuccess = { data ->
+                        { postEvent(AdminCategoryPageContract.Events.OnError(it.mapToUiMessage())) },
+                        { data ->
                             postInput(
                                 AdminCategoryPageContract.Inputs.Set.OriginalCategory(
                                     category = this@with.original.copy(
                                         name = data.updateCategory.name,
                                         description = data.updateCategory.description,
-                                        parent = data.updateCategory.parentId?.toString()?.let { id ->
-                                            GetCategoryByIdQuery.Parent(
-                                                id = id,
-                                                firstName = original.parent?.firstName ?: "",
-                                                lastName = original.parent?.lastName ?: ""
-                                            )
-                                        },
+                                        parent = GetCategoryByIdQuery.Parent(
+                                            id = data.updateCategory.parent?.id ?: "",
+                                            firstName = original.parent?.firstName ?: "",
+                                            lastName = original.parent?.lastName ?: "",
+                                        ),
                                         display = data.updateCategory.display,
                                         updatedAt = data.updateCategory.updatedAt,
                                         shippingPreset = GetCategoryByIdQuery.ShippingPreset(
-                                            weight = data.updateCategory.shippingPreset.weight ?: "",
-                                            length = data.updateCategory.shippingPreset.length ?: "",
-                                            width = data.updateCategory.shippingPreset.width ?: "",
-                                            height = data.updateCategory.shippingPreset.height ?: "",
-                                            isPhysicalProduct = data.updateCategory.shippingPreset.isPhysicalProduct,
+                                            weight = data.updateCategory.shippingPreset?.weight ?: "",
+                                            length = data.updateCategory.shippingPreset?.length ?: "",
+                                            width = data.updateCategory.shippingPreset?.width ?: "",
+                                            height = data.updateCategory.shippingPreset?.height ?: "",
+                                            isPhysicalProduct = data.updateCategory.shippingPreset?.isPhysicalProduct
+                                                ?: true,
                                         ),
                                     )
                                 )
                             )
                             postInput(AdminCategoryPageContract.Inputs.OnClick.CancelEdit)
-                        },
-                        onFailure = {
-                            postEvent(
-                                AdminCategoryPageContract.Events.OnError(
-                                    it.message ?: "Error while updating details"
-                                )
-                            )
                         },
                     )
                 }
@@ -348,7 +334,8 @@ internal class AdminUserPageInputHandler :
         sideJob("handleGetUserProfile") {
             categoryService.getById(id).collect { result ->
                 result.fold(
-                    onSuccess = { data ->
+                    { postEvent(AdminCategoryPageContract.Events.OnError(it.mapToUiMessage())) },
+                    { data ->
                         val createdAt = millisToTime(data.getCategoryById.createdAt.toLong())
                         val updatedAt = millisToTime(data.getCategoryById.updatedAt.toLong())
                         val category = data.getCategoryById.copy(
@@ -358,11 +345,6 @@ internal class AdminUserPageInputHandler :
                         postInput(AdminCategoryPageContract.Inputs.Set.Display(category.display))
                         postInput(AdminCategoryPageContract.Inputs.Set.OriginalCategory(category))
                         postInput(AdminCategoryPageContract.Inputs.Set.CurrentCategory(category))
-                    },
-                    onFailure = {
-                        postEvent(
-                            AdminCategoryPageContract.Events.OnError(it.message ?: "Error while getting user profile")
-                        )
                     },
                 )
             }

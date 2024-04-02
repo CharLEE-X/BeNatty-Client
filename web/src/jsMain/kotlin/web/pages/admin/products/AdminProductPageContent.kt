@@ -400,7 +400,6 @@ private fun Media(
                 altText = medium.altText,
                 url = url,
                 mediaType = MediaType.Image,
-                createdAt = "",
                 updatedAt = "",
             )
         }

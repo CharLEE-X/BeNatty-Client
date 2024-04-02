@@ -10,18 +10,18 @@ data class ImagePreview(
 
 fun GetConfigQuery.CollageItem.toPreviewImage() = ImagePreview(
     id = id,
-    url = imageUrl ?: "",
+    url = mediaUrl ?: "",
     alt = alt ?: "",
 )
 
 fun GetConfigQuery.Left.toPreviewImage() = ImagePreview(
     id = "",
-    url = imageUrl ?: "",
-    alt = alt ?: "",
+    url = mediaUrl ?: "",
+    alt = "",
 )
 
 fun GetConfigQuery.Right.toPreviewImage() = ImagePreview(
     id = "",
-    url = imageUrl ?: "",
-    alt = alt ?: "",
+    url = mediaUrl ?: "",
+    alt = "",
 )

@@ -5,6 +5,7 @@ import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import com.copperleaf.ballast.postInput
 import component.localization.InputValidator
+import core.mapToUiMessage
 import data.GetConfigQuery
 import data.service.ConfigService
 import data.type.BannerItemInput
@@ -76,7 +77,6 @@ internal class AdminConfigInputHandler :
         is AdminConfigContract.Inputs.SetCompanyWebsite -> handleSetCompanyWebsite(input.companyWebsite)
         is AdminConfigContract.Inputs.SetCloseTime -> handleSetCloseTime(input.closeTime)
         is AdminConfigContract.Inputs.SetOpenTime -> handleSetOpenTime(input.openTime)
-        is AdminConfigContract.Inputs.SetCreatedAt -> handleSetCreatedAt(input.createdAt)
         is AdminConfigContract.Inputs.SetUpdatedAt -> handleSetUpdatedAt(input.updatedAt)
         is AdminConfigContract.Inputs.SetPreviewDialogOpen -> updateState { it.copy(isPreviewDialogOpen = input.isOpen) }
         is AdminConfigContract.Inputs.SetCollageImageDropError -> updateState { it.copy(collageMediaDropError = input.error) }
@@ -166,8 +166,8 @@ internal class AdminConfigInputHandler :
     }
 
     private suspend fun InputScope.handleOnCollageItemDescriptionChanged(imageId: String, description: String) {
-        updateState {
-            it.current?.landingConfig?.collageItems?.let { collageItems ->
+        updateState { state ->
+            state.current?.landingConfig?.collageItems?.let { collageItems ->
                 val newCollageItems = collageItems.toMutableList()
                 val index = newCollageItems.indexOfFirst { it.id == imageId }
                 val currentCollageItem = newCollageItems[index]
@@ -176,18 +176,18 @@ internal class AdminConfigInputHandler :
                     id = imageId,
                     title = currentCollageItem.title,
                     description = description,
-                    imageUrl = currentCollageItem.imageUrl,
+                    mediaUrl = currentCollageItem.mediaUrl,
                     alt = currentCollageItem.alt,
                 )
 
-                it.copy(
-                    current = it.current.copy(
-                        landingConfig = it.current.landingConfig.copy(
+                state.copy(
+                    current = state.current.copy(
+                        landingConfig = state.current.landingConfig.copy(
                             collageItems = newCollageItems.toList()
                         )
                     ),
                 ).wasEdited()
-            } ?: it
+            } ?: state
         }
     }
 
@@ -202,7 +202,7 @@ internal class AdminConfigInputHandler :
                     id = imageId,
                     title = title,
                     description = currentCollageItem.description,
-                    imageUrl = currentCollageItem.imageUrl,
+                    mediaUrl = currentCollageItem.mediaUrl,
                     alt = currentCollageItem.alt,
                 )
 
@@ -225,16 +225,17 @@ internal class AdminConfigInputHandler :
                 postInput(AdminConfigContract.Inputs.SetCollageImagesLoading(isLoading = true))
                 val mediaType = MediaType.Image // TODO: Support more media types
                 configService.uploadCollageImage(
-                    configId = id,
+                    configId = id.toString(),
                     imageId = imageId,
                     blob = BlobInput(blob),
                     mediaType = mediaType,
                 ).fold(
-                    onSuccess = { data ->
+                    { postEvent(AdminConfigContract.Events.OnError(it.mapToUiMessage())) },
+                    { data ->
                         val media = data.uploadConfigCollageImage.collageItems.map {
                             GetConfigQuery.CollageItem(
                                 id = it.id,
-                                imageUrl = it.imageUrl,
+                                mediaUrl = it.mediaUrl,
                                 title = it.title,
                                 description = it.description,
                                 alt = it.alt,
@@ -245,9 +246,6 @@ internal class AdminConfigInputHandler :
                         )
                         postInput(AdminConfigContract.Inputs.SetOriginalConfig(config))
                         postInput(AdminConfigContract.Inputs.SetCurrentConfig(config))
-                    },
-                    onFailure = {
-                        postEvent(AdminConfigContract.Events.OnError(it.message ?: "Error while uploading image"))
                     },
                 )
                 postInput(AdminConfigContract.Inputs.SetCollageImagesLoading(isLoading = false))
@@ -263,24 +261,25 @@ internal class AdminConfigInputHandler :
                 postInput(AdminConfigContract.Inputs.SetBannerRightImageDropError(error = null))
                 val mediaType = MediaType.Image // TODO: Support more media types
                 configService.uploadBannerMedia(
-                    configId = id,
+                    configId = id.toString(),
                     side = side,
                     blob = BlobInput(blob),
                     mediaType = mediaType,
                 ).fold(
-                    onSuccess = { data ->
+                    { postEvent(AdminConfigContract.Events.OnError(it.mapToUiMessage())) },
+                    { data ->
                         val bannerSection = with(data.uploadConfigBannerImage.bannerSection) {
                             GetConfigQuery.BannerSection(
                                 left = GetConfigQuery.Left(
                                     title = left.title,
                                     description = left.description,
-                                    imageUrl = left.imageUrl,
+                                    mediaUrl = left.mediaUrl,
                                     alt = left.alt,
                                 ),
                                 right = GetConfigQuery.Right(
                                     title = right.title,
                                     description = right.description,
-                                    imageUrl = right.imageUrl,
+                                    mediaUrl = right.mediaUrl,
                                     alt = right.alt,
                                 ),
                             )
@@ -290,9 +289,6 @@ internal class AdminConfigInputHandler :
                         )
                         postInput(AdminConfigContract.Inputs.SetOriginalConfig(config))
                         postInput(AdminConfigContract.Inputs.SetCurrentConfig(config))
-                    },
-                    onFailure = {
-                        postEvent(AdminConfigContract.Events.OnError(it.message ?: "Error while uploading image"))
                     },
                 )
                 postInput(AdminConfigContract.Inputs.SetBannerLeftImagesLoading(isLoading = false))
@@ -381,17 +377,11 @@ internal class AdminConfigInputHandler :
 
     private suspend fun InputScope.handleFetchConfig() {
         sideJob("handleFetchConfig") {
-            configService.config().fold(
-                onSuccess = {
+            configService.fetchConfig().fold(
+                { postEvent(AdminConfigContract.Events.OnError(it.mapToUiMessage())) },
+                {
                     postInput(AdminConfigContract.Inputs.SetOriginalConfig(config = it.getConfig))
                     postInput(AdminConfigContract.Inputs.SetCurrentConfig(config = it.getConfig))
-                },
-                onFailure = {
-                    postEvent(
-                        AdminConfigContract.Events.OnError(
-                            it.message ?: "Error while fetching product details"
-                        )
-                    )
                 },
             )
         }
@@ -443,10 +433,6 @@ internal class AdminConfigInputHandler :
         updateState { it.copy(current = it.current?.copy(updatedAt = updatedAt)).wasEdited() }
     }
 
-    private suspend fun InputScope.handleSetCreatedAt(createdAt: String) {
-        updateState { it.copy(current = it.current?.copy(createdAt = createdAt)).wasEdited() }
-    }
-
     private suspend fun InputScope.handleUpdateConfig() {
         with(getCurrentState()) {
             current?.id?.let { id ->
@@ -475,7 +461,7 @@ internal class AdminConfigInputHandler :
                                     id = it.id,
                                     title = Optional.present(it.title),
                                     description = Optional.present(it.description),
-                                    imageUrl = Optional.present(it.imageUrl),
+                                    mediaId = Optional.present(it.mediaUrl), // FIXME: mediaId
                                     alt = Optional.present(it.alt),
                                 )
                             } else null,
@@ -493,21 +479,19 @@ internal class AdminConfigInputHandler :
                             BannerItemInput(
                                 title = Optional.present(current.landingConfig.bannerSection.left.title),
                                 description = Optional.present(current.landingConfig.bannerSection.left.description),
-                                imageUrl = Optional.present(current.landingConfig.bannerSection.left.imageUrl),
-                                alt = Optional.present(current.landingConfig.bannerSection.left.alt),
+                                mediaId = Optional.present(current.landingConfig.bannerSection.left.mediaUrl), // FIXME: mediaId
                             ) else null,
                         bannerSectionRight = if (current.landingConfig.bannerSection.right != original?.landingConfig?.bannerSection?.right)
                             BannerItemInput(
                                 title = Optional.present(current.landingConfig.bannerSection.right.title),
                                 description = Optional.present(current.landingConfig.bannerSection.right.description),
-                                imageUrl = Optional.present(current.landingConfig.bannerSection.right.imageUrl),
-                                alt = Optional.present(current.landingConfig.bannerSection.right.alt),
+                                mediaId = Optional.present(current.landingConfig.bannerSection.right.mediaUrl), // FIXME: mediaId
                             ) else null,
                     ).fold(
-                        onSuccess = { data ->
+                        { postEvent(AdminConfigContract.Events.OnError(it.mapToUiMessage())) },
+                        { data ->
                             val config = GetConfigQuery.GetConfig(
                                 id = data.updateConfig.id,
-                                createdAt = data.updateConfig.createdAt,
                                 updatedAt = data.updateConfig.updatedAt,
                                 companyInfo = GetConfigQuery.CompanyInfo(
                                     contactInfo = GetConfigQuery.ContactInfo(
@@ -536,7 +520,7 @@ internal class AdminConfigInputHandler :
                                             id = it.id,
                                             title = it.title,
                                             description = it.description,
-                                            imageUrl = it.imageUrl,
+                                            mediaUrl = it.mediaUrl,
                                             alt = it.alt
                                         )
                                     },
@@ -544,13 +528,13 @@ internal class AdminConfigInputHandler :
                                         left = GetConfigQuery.Left(
                                             title = data.updateConfig.landingConfig.bannerSection.left.title,
                                             description = data.updateConfig.landingConfig.bannerSection.left.description,
-                                            imageUrl = data.updateConfig.landingConfig.bannerSection.left.imageUrl,
+                                            mediaUrl = data.updateConfig.landingConfig.bannerSection.left.mediaUrl,
                                             alt = data.updateConfig.landingConfig.bannerSection.left.alt,
                                         ),
                                         right = GetConfigQuery.Right(
                                             title = data.updateConfig.landingConfig.bannerSection.right.title,
                                             description = data.updateConfig.landingConfig.bannerSection.right.description,
-                                            imageUrl = data.updateConfig.landingConfig.bannerSection.right.imageUrl,
+                                            mediaUrl = data.updateConfig.landingConfig.bannerSection.right.mediaUrl,
                                             alt = data.updateConfig.landingConfig.bannerSection.right.alt,
                                         ),
                                     ),
@@ -559,40 +543,33 @@ internal class AdminConfigInputHandler :
                                     bannerConfig = GetConfigQuery.BannerConfig(
                                         catalog = GetConfigQuery.Catalog(
                                             title = data.updateConfig.catalogConfig.bannerConfig.catalog.title,
-                                            imageUrl = data.updateConfig.catalogConfig.bannerConfig.catalog.imageUrl,
+                                            mediaUrl = data.updateConfig.catalogConfig.bannerConfig.catalog.mediaUrl,
                                         ),
                                         popular = GetConfigQuery.Popular(
                                             title = data.updateConfig.catalogConfig.bannerConfig.popular.title,
-                                            imageUrl = data.updateConfig.catalogConfig.bannerConfig.popular.imageUrl,
+                                            mediaUrl = data.updateConfig.catalogConfig.bannerConfig.popular.mediaUrl,
                                         ),
                                         sales = GetConfigQuery.Sales(
                                             title = data.updateConfig.catalogConfig.bannerConfig.sales.title,
-                                            imageUrl = data.updateConfig.catalogConfig.bannerConfig.sales.imageUrl,
+                                            mediaUrl = data.updateConfig.catalogConfig.bannerConfig.sales.mediaUrl,
                                         ),
                                         mens = GetConfigQuery.Mens(
                                             title = data.updateConfig.catalogConfig.bannerConfig.mens.title,
-                                            imageUrl = data.updateConfig.catalogConfig.bannerConfig.mens.imageUrl,
+                                            mediaUrl = data.updateConfig.catalogConfig.bannerConfig.mens.mediaUrl,
                                         ),
                                         women = GetConfigQuery.Women(
                                             title = data.updateConfig.catalogConfig.bannerConfig.women.title,
-                                            imageUrl = data.updateConfig.catalogConfig.bannerConfig.women.imageUrl,
+                                            mediaUrl = data.updateConfig.catalogConfig.bannerConfig.women.mediaUrl,
                                         ),
                                         kids = GetConfigQuery.Kids(
                                             title = data.updateConfig.catalogConfig.bannerConfig.kids.title,
-                                            imageUrl = data.updateConfig.catalogConfig.bannerConfig.kids.imageUrl,
+                                            mediaUrl = data.updateConfig.catalogConfig.bannerConfig.kids.mediaUrl,
                                         ),
                                     ),
                                 )
                             )
                             postInput(AdminConfigContract.Inputs.SetOriginalConfig(config = config))
                             postInput(AdminConfigContract.Inputs.SetCurrentConfig(config = config))
-                        },
-                        onFailure = {
-                            postEvent(
-                                AdminConfigContract.Events.OnError(
-                                    it.message ?: "Error while updating product details"
-                                )
-                            )
                         },
                     )
                 }

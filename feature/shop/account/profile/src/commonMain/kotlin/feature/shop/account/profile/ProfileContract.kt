@@ -60,37 +60,33 @@ object ProfileContract {
         val isAddressEditing: Boolean = false,
         val isSaveAddressButtonDisabled: Boolean = true,
 
-        val original: GetCustomerQuery.GetCustomer = GetCustomerQuery.GetCustomer(
-            customer = GetCustomerQuery.Customer(
-                id = "",
-                details = GetCustomerQuery.Details(
-                    email = email,
-                    firstName = detailsFirstName,
-                    lastName = "lastName",
-                    language = "language",
-                    phone = phone,
-                ),
-                address = GetCustomerQuery.Address(
-                    address = address,
-                    postcode = postcode,
-                    city = city,
-                    country = country,
-                    apartment = "apartment",
-                    company = "company",
-                    firstName = "firstName",
-                    lastName = "lastName", phone = null,
-
-                    ),
-                createdAt = "createdAt",
-                collectTax = true,
-                marketingEmails = true,
-                marketingSms = true,
-                emailVerified = true,
-                updatedAt = "updatedAt",
-                wishlist = emptyList(),
-                role = Role.User,
-                __typename = "__typename",
+        val original: GetCustomerQuery.GetUserById = GetCustomerQuery.GetUserById(
+            id = "",
+            details = GetCustomerQuery.Details(
+                email = email,
+                firstName = detailsFirstName,
+                lastName = "lastName",
+                language = "language",
+                phone = phone,
             ),
+            address = GetCustomerQuery.Address(
+                address = address,
+                postcode = postcode,
+                city = city,
+                country = country,
+                apartment = "apartment",
+                company = "company",
+                firstName = "firstName",
+                lastName = "lastName", phone = null,
+
+                ),
+            collectTax = true,
+            marketingEmails = true,
+            marketingSms = true,
+            emailVerified = true,
+            updatedAt = "updatedAt",
+            wishlist = emptyList(),
+            role = Role.User,
         ),
 
         val strings: Strings = Strings()
@@ -98,7 +94,7 @@ object ProfileContract {
 
     sealed interface Inputs {
         data object GetUserProfile : Inputs
-        data class SetUserProfile(val user: GetCustomerQuery.GetCustomer) : Inputs
+        data class SetUserProfile(val user: GetCustomerQuery.GetUserById) : Inputs
         data object OnLogoutClicked : Inputs
 
         data class SetDetailsFullName(val fullName: String) : Inputs

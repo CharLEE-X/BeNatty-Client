@@ -1,13 +1,16 @@
 package data.service
 
+import arrow.core.Either
+import arrow.core.raise.either
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.cache.normalized.apolloStore
+import core.RemoteError
 
 interface DebugService {
     //    suspend fun generateUsers(target: Int = 100): Result<GenerateUsersQuery.Data>
 //    suspend fun deleteAllUsers(): Result<DeleteAllUsersQuery.Data>
 //    suspend fun deleteGeneratedUsers(): Result<DeleteGeneratedUsersQuery.Data>
-    suspend fun clearCache(): Result<Boolean>
+    suspend fun clearCache(): Either<RemoteError, Boolean>
 }
 
 internal class DebugServiceImpl(private val apolloClient: ApolloClient) : DebugService {
@@ -23,7 +26,7 @@ internal class DebugServiceImpl(private val apolloClient: ApolloClient) : DebugS
 //        return apolloClient.query(DeleteGeneratedUsersQuery()).handle()
 //    }
 
-    override suspend fun clearCache(): Result<Boolean> = runCatching {
+    override suspend fun clearCache(): Either<RemoteError, Boolean> = either {
         apolloClient.apolloStore.clearAll()
     }
 }

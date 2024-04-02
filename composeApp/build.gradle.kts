@@ -53,7 +53,7 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.data)
 
-            implementation(projects.components.core)
+            implementation(projects.core)
             implementation(projects.components.localization)
             implementation(projects.components.theme)
 

@@ -28,19 +28,21 @@ query GetConfig($configId: String) {
         alt
         description
         id
-        mediaId
+        mediaUrl
         title
       }
       bannerSection {
         left {
-          mediaId
+          mediaUrl
           description
           title
+          alt
         }
         right {
-          mediaId
+          mediaUrl
           description
           title
+          alt
         }
       }
     }
@@ -48,27 +50,27 @@ query GetConfig($configId: String) {
       bannerConfig {
         catalog {
           title
-          mediaId
+          mediaUrl
         }
         sales {
           title
-          mediaId
+          mediaUrl
         }
         popular {
           title
-          mediaId
+          mediaUrl
         }
         mens {
           title
-          mediaId
+          mediaUrl
         }
         women {
           title
-          mediaId
+          mediaUrl
         }
         kids {
           title
-          mediaId
+          mediaUrl
         }
       }
     }

@@ -22,7 +22,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiBrokenImage
 import com.varabyte.kobweb.silk.components.text.SpanText
-import data.GetCategoriesAllMinimalQuery
+import data.GetAllCategoriesAsMinimalQuery
 import feature.product.catalog.CatalogContract
 import feature.product.catalog.CatalogViewModel
 import org.jetbrains.compose.web.css.DisplayStyle
@@ -32,7 +32,6 @@ import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import theme.MaterialTheme
 import web.compose.material3.component.Divider
-
 
 @Composable
 fun CatalogueFilters(
@@ -56,7 +55,7 @@ fun CatalogueFilters(
 @Composable
 private fun MatchAllSection(
     matchAllText: String,
-    categories: List<GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal>,
+    categories: List<GetAllCategoriesAsMinimalQuery.GetAllCategoriesAsMinimal>,
     onClick: (String) -> Unit
 ) {
     SpanText(
@@ -82,7 +81,7 @@ private fun MatchAllSection(
 
 @Composable
 fun CategoryFilter(
-    category: GetCategoriesAllMinimalQuery.GetCategoriesAllMinimal,
+    category: GetAllCategoriesAsMinimalQuery.GetAllCategoriesAsMinimal,
     onClick: () -> Unit,
 ) {
     Column(

@@ -11,7 +11,7 @@ object AdminTagPageContract {
 
         val wasEdited: Boolean = false,
 
-        val allTags: List<TagsGetAllMinimalQuery.GetTagsAllMinimal> = emptyList(),
+        val allTags: List<TagsGetAllMinimalQuery.GetAllTagsAsMinimal> = emptyList(),
 
         val nameError: String? = null,
         val shakeName: Boolean = false,
@@ -53,7 +53,7 @@ object AdminTagPageContract {
             data class Loading(val isLoading: Boolean) : Inputs
             data class StateOfScreen(val screenState: ScreenState) : Inputs
 
-            data class AllTags(val categories: List<TagsGetAllMinimalQuery.GetTagsAllMinimal>) : Inputs
+            data class AllTags(val categories: List<TagsGetAllMinimalQuery.GetAllTagsAsMinimal>) : Inputs
 
             data class OriginalTag(val category: GetTagByIdQuery.GetTagById) : Inputs
             data class CurrentTag(val category: GetTagByIdQuery.GetTagById) : Inputs

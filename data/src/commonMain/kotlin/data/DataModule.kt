@@ -74,7 +74,6 @@ val dataModule = module {
     single<ProductService> {
         ProductServiceImpl(
             apolloClient = get(),
-            authService = get(),
         )
     }
     single<AdminService> {
@@ -100,7 +99,6 @@ val dataModule = module {
     single<ConfigService> {
         ConfigServiceImpl(
             apolloClient = get(),
-            authService = get(),
         )
     }
 }

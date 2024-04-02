@@ -5,43 +5,44 @@ android-minSdk = "26"
 android-targetSdk = "34"
 projectName = "nataliashop"
 packageName = "com.charleex.benatty"
-jvmTarget = "17"
+jvmTarget = "21"
 
 # VERSIONS  -----------------------------------------------------------------------------------------------------------
 agp = "8.1.4"
 androidx-activityCompose = "1.8.2"
 androidxCore = "1.12.0"
 apollo = "4.0.0-beta.2"
+arrow = "1.2.3"
+arrowDetekt = "0.4.0"
 ballast = "4.1.0"
 buildkonfig = "0.15.0"
 coil = "2.5.0"
-compose = "1.5.12"
-composeGoogle = "1.5.4"
-coroutines = "1.7.3"
+compose = "1.6.1"
+composeGoogle = "1.6.4"
+coroutines = "1.8.0"
 datetime = "0.5.0"
-detekt = "1.23.0"
+detekt = "1.23.5"
 google-services = "4.4.1"
 kamelImage = "0.8.3"
 kermit = "2.0.2"
 kmpnotifier = "0.1.9"
-kobweb = "0.16.2"
+kobweb = "0.17.1"
 koin = "3.5.3"
 koin-compose = "1.1.2"
 koinKtor = "3.5.3"
-kotlin = "1.9.22"
-kotlinxCoroutinesTest = "1.7.3"
-kotlinxSerializationJson = "1.6.2"
-kover = "0.7.4"
-ksp = "1.9.22-1.0.17"
-ktLint = "11.6.1"
-ktor = "2.3.7"
+kotlin = "1.9.23"
+kotlinxSerializationJson = "1.6.3"
+kover = "0.7.6"
+ksp = "1.9.23-1.0.19"
+ktLint = "12.1.0"
+ktor = "2.3.9"
 maps-compose = "2.15.0"
 maps-secrets = "2.0.1"
 mockative = "2.0.1"
 multiplatformSettings = "1.1.0"
 okio = "3.8.0"
 pagingComposeCommon = "3.3.0-alpha02-0.4.0"
-playServices = "21.1.0"
+playServices = "21.2.0"
 playServicesMaps = "18.2.0"
 security = "1.1.0-alpha06"
 turbine = "1.0.0"
@@ -64,6 +65,11 @@ apollo-normalizedCacheSqlite = { module = "com.apollographql.apollo3:apollo-norm
 apollo-ktorEngine = { module = "com.apollographql.apollo3:apollo-engine-ktor", version.ref = "apollo" }
 apollo-mockserver = { module = "com.apollographql.apollo3:apollo-mockserver", version.ref = "apollo" }
 apollo-testingSupport = { module = "com.apollographql.apollo3:apollo-testing-support", version.ref = "apollo" }
+
+arrow-core = { module = "io.arrow-kt:arrow-core", version.ref = "arrow" }
+arrow-core-serialization = { module = "io.arrow-kt:arrow-core-serialization", version.ref = "arrow" }
+arrow-detekt-rules = { module = "com.wolt.arrow.detekt:rules", version.ref = "arrowDetekt" }
+arrow-fx-coroutines = { module = "io.arrow-kt:arrow-fx-coroutines", version.ref = "arrow" }
 
 ballast-core = { module = "io.github.copper-leaf:ballast-core", version.ref = "ballast" }
 ballast-navigation = { module = "io.github.copper-leaf:ballast-navigation", version.ref = "ballast" }
@@ -95,7 +101,7 @@ koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-com
 koin-logger = { module = "io.insert-koin:koin-logger-slf4j", version.ref = "koinKtor" }
 
 kotlin-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }

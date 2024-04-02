@@ -2,18 +2,15 @@ import com.codingfeline.buildkonfig.compiler.FieldSpec
 import org.jetbrains.compose.internal.utils.getLocalProperty
 
 plugins {
-    id("convention.multiplatform")
+    id("common")
     alias(libs.plugins.build.konfig)
 }
 
-group = COMPONENTS + project.name
+group = COMPONENT + project.name
 
 kotlin {
     sourceSets {
-        commonMain.dependencies {
-            implementation(projects.components.core)
-            implementation(libs.kotlin.datetime)
-        }
+        commonMain.dependencies {}
     }
 }
 

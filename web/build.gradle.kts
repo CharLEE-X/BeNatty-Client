@@ -34,7 +34,7 @@ kotlin {
         jsMain.dependencies {
             with(projects) {
                 implementation(data)
-                implementation(components.core)
+                implementation(core)
                 implementation(components.theme)
                 implementation(components.material3)
                 implementation(components.localization)

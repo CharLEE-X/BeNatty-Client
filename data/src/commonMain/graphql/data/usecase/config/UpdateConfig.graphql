@@ -36,11 +36,13 @@ mutation UpdateConfig($input: ConfigUpdateInput!) {
           mediaUrl
           description
           title
+          alt
         }
         right {
           mediaUrl
           description
           title
+          alt
         }
       }
     }

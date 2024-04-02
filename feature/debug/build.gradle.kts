@@ -1,5 +1,5 @@
 plugins {
-    id("convention.multiplatform")
+    id("feature")
 }
 
 group = FEATURE + project.name
@@ -7,15 +7,9 @@ group = FEATURE + project.name
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.data)
-            implementation(projects.components.core)
-            implementation(projects.components.location)
             implementation(projects.components.notification)
+            implementation(projects.components.location)
             api(projects.components.pictures)
-
-            implementation(libs.ballast.core)
-            implementation(libs.koin.core)
-            implementation(libs.apollo.runtime)
         }
     }
 }

@@ -1,16 +1,12 @@
 plugins {
-    id("convention.multiplatform")
+    id("common")
 }
 
-group = COMPONENTS + project.name
+group = COMPONENT + project.name
 
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.components.core)
-
-            implementation(libs.coroutines.core)
-            implementation(libs.kotlin.datetime)
             implementation(libs.kotlin.uuid)
         }
         androidMain.dependencies {

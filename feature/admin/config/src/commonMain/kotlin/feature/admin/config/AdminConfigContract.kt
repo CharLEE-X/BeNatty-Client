@@ -71,7 +71,6 @@ object AdminConfigContract {
         data class SetCompanyWebsite(val companyWebsite: String) : Inputs
         data class SetOpenTime(val openTime: String) : Inputs
         data class SetCloseTime(val closeTime: String) : Inputs
-        data class SetCreatedAt(val createdAt: String) : Inputs
         data class SetUpdatedAt(val updatedAt: String) : Inputs
         data class SetCollageImageDropError(val error: String?) : Inputs
         data class SetCollageImagesLoading(val isLoading: Boolean) : Inputs
@@ -112,6 +111,5 @@ object AdminConfigContract {
         val shopNow: String = getString(component.localization.Strings.ShopNow),
         val deleteExplain: String = getString(component.localization.Strings.DeleteExplain),
         val banner: String = getString(component.localization.Strings.Banner),
-    ) {
-    }
+    )
 }

@@ -2,6 +2,7 @@ package feature.shop.footer
 
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
+import core.mapToUiMessage
 import data.service.AuthService
 import data.service.ConfigService
 import data.type.Role
@@ -59,17 +60,11 @@ internal class FooterInputHandler :
 
     private suspend fun InputScope.handleFetchConfig() {
         sideJob("handleFetchConfig") {
-            configService.config().fold(
-                onSuccess = {
+            configService.fetchConfig().fold(
+                { postEvent(FooterContract.Events.OnError(it.mapToUiMessage())) },
+                {
                     postInput(FooterContract.Inputs.SetCompanyInfo(companyInfo = it.getConfig.companyInfo))
                     postInput(FooterContract.Inputs.SetFooterConfig(footerConfig = it.getConfig.footerConfig))
-                },
-                onFailure = {
-                    postEvent(
-                        FooterContract.Events.OnError(
-                            it.message ?: "Error while fetching product details"
-                        )
-                    )
                 },
             )
         }

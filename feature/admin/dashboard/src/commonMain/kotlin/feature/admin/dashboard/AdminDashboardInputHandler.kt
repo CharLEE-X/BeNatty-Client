@@ -2,6 +2,7 @@ package feature.admin.dashboard
 
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
+import core.mapToUiMessage
 import data.service.AdminService
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -26,12 +27,10 @@ internal class AdminDashboardInputHandler :
         sideJob("handleGetStats") {
             postInput(AdminDashboardContract.Inputs.SetIsLoading(true))
             adminService.getStats().fold(
-                onSuccess = { data ->
-                    postInput(AdminDashboardContract.Inputs.SetStats(data.getStats))
+                { e ->
+                    postEvent(AdminDashboardContract.Events.OnError(e.mapToUiMessage()))
                 },
-                onFailure = { error ->
-                    postEvent(AdminDashboardContract.Events.OnError(error.message ?: "Error getting stats"))
-                }
+                { postInput(AdminDashboardContract.Inputs.SetStats(it.getStats)) },
             )
             postInput(AdminDashboardContract.Inputs.SetIsLoading(false))
         }

@@ -1,11 +1,13 @@
 package data.service
 
+import arrow.core.Either
 import co.touchlab.kermit.Logger
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.cache.normalized.apolloStore
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.nullableString
-import data.ForgotPasswordQuery
+import core.RemoteError
+import data.ForgotPasswordMutation
 import data.LoginMutation
 import data.RegisterMutation
 import data.type.LoginInput
@@ -23,9 +25,9 @@ import kotlinx.coroutines.isActive
 interface AuthService {
     val userId: String?
     val userRole: Role?
-    suspend fun login(email: String, password: String): Result<LoginMutation.Data>
-    suspend fun register(email: String, password: String, name: String): Result<RegisterMutation.Data>
-    suspend fun forgotPassword(email: String): Result<ForgotPasswordQuery.Data>
+    suspend fun login(email: String, password: String): Either<RemoteError, LoginMutation.Data>
+    suspend fun register(email: String, password: String, name: String): Either<RemoteError, RegisterMutation.Data>
+    suspend fun forgotPassword(email: String): Either<RemoteError, ForgotPasswordMutation.Data>
     suspend fun signOut()
     fun isAuth(): Boolean
     suspend fun observeToken(): Flow<String?>
@@ -44,22 +46,26 @@ internal class AuthServiceImpl(
     private var _role by settings.nullableString()
     override val userRole: Role? get() = _role?.let { Role.valueOf(it) }
 
-    override suspend fun login(email: String, password: String): Result<LoginMutation.Data> {
+    override suspend fun login(email: String, password: String): Either<RemoteError, LoginMutation.Data> {
         val authInput = LoginInput(email = email, password = password)
         return apolloClient.mutation(LoginMutation(authInput)).handle {
-            saveData(it.login.customerMinimal.id, it.login.token, it.login.customerMinimal.role)
+            saveData(it.login.userMinimal.id, it.login.token, it.login.userMinimal.role)
         }
     }
 
-    override suspend fun register(email: String, password: String, name: String): Result<RegisterMutation.Data> {
+    override suspend fun register(
+        email: String,
+        password: String,
+        name: String
+    ): Either<RemoteError, RegisterMutation.Data> {
         val authInput = RegisterInput(email = email, password = password, name = name)
         return apolloClient.mutation(RegisterMutation(authInput)).handle {
-            saveData(it.register.customerMinimal.id, it.register.token, it.register.customerMinimal.role)
+            saveData(it.register.userMinimal.id, it.register.token, it.register.userMinimal.role)
         }
     }
 
-    override suspend fun forgotPassword(email: String): Result<ForgotPasswordQuery.Data> {
-        return apolloClient.query(ForgotPasswordQuery(email)).handle()
+    override suspend fun forgotPassword(email: String): Either<RemoteError, ForgotPasswordMutation.Data> {
+        return apolloClient.mutation(ForgotPasswordMutation(email)).handle()
     }
 
     override suspend fun signOut() {

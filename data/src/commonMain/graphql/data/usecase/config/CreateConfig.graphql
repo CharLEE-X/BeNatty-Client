@@ -34,11 +34,13 @@ mutation CreateConfig($input: CreateConfigInput!) {
           mediaUrl
           description
           title
+          alt
         }
         right {
           mediaUrl
           description
           title
+          alt
         }
       }
     }

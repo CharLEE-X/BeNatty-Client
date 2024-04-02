@@ -2,6 +2,7 @@ package feature.updatepassword
 
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
+import core.mapToUiMessage
 import data.service.AuthService
 import data.service.UserService
 import org.koin.core.component.KoinComponent
@@ -57,14 +58,10 @@ internal class UpdatePasswordInputHandler :
                         marketingEmails = null,
                         marketingSms = null,
                     ).fold(
-                        onSuccess = {
+                        { postInput(UpdatePasswordContract.Inputs.ShowError(it.mapToUiMessage())) },
+                        {
                             postInput(
                                 UpdatePasswordContract.Inputs.SetScreenState(UpdatePasswordContract.ScreenState.Success)
-                            )
-                        },
-                        onFailure = {
-                            postInput(
-                                UpdatePasswordContract.Inputs.ShowError(it.message ?: "Error while updating password")
                             )
                         },
                     )

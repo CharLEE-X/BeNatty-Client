@@ -3,6 +3,7 @@ package feature.shop.home
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
+import core.mapToUiMessage
 import data.GetLandingConfigQuery
 import data.service.AuthService
 import data.service.ConfigService
@@ -47,12 +48,8 @@ internal class HomeInputHandler :
     private suspend fun InputScope.handleFetchLandingConfig() {
         sideJob("handleFetchHomeConfig") {
             configService.getLandingConfig().fold(
-                onSuccess = { config ->
-                    postInput(HomeContract.Inputs.SetLandingConfig(config.getLandingConfig))
-                },
-                onFailure = { error ->
-                    postEvent(HomeContract.Events.OnError(error.message ?: "Unknown error"))
-                }
+                { postEvent(HomeContract.Events.OnError(it.mapToUiMessage())) },
+                { postInput(HomeContract.Inputs.SetLandingConfig(it.getLandingConfig)) },
             )
         }
     }
