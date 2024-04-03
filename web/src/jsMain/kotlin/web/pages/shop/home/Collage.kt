@@ -112,7 +112,7 @@ fun Collage(
                         .thenIf(index == 0) { CollageBigItemStyle.toModifier() }
                 ) { imageModifier ->
                     Image(
-                        src = item.mediaUrl ?: "",
+                        src = item.media?.url ?: "",
                         alt = item.title ?: "",
                         modifier = imageModifier
                     )

@@ -118,7 +118,7 @@ fun AdminProductPageContent(
                     ImagePreviewDialog(
                         open = previewDialogOpen,
                         imageUrl = image.url,
-                        alt = image.altText,
+                        alt = image.alt,
                         onClose = { previewDialogOpen = false }
                     )
                 }
@@ -396,11 +396,10 @@ private fun Media(
             val file = convertBase64ToFile(medium.url, index.toString())
             val url = URL.createObjectURL(file)
             AdminProductGetByIdQuery.Medium(
-                id = medium.id,
-                altText = medium.altText,
+                keyName = medium.keyName,
+                alt = medium.alt,
                 url = url,
-                mediaType = MediaType.Image,
-                updatedAt = "",
+                type = MediaType.Image,
             )
         }
     }
@@ -419,11 +418,11 @@ private fun Media(
         media.forEach { image ->
             MediaSlot(
                 url = image.url,
-                alt = image.altText,
+                alt = image.alt,
                 errorText = null,
                 onFileDropped = {},
                 onImageClick = { onImageClick(image) },
-                onDeleteClick = { onImageDeleteClick(image.id) }
+                onDeleteClick = { onImageDeleteClick(image.keyName) }
             )
         }
         MediaSlot(

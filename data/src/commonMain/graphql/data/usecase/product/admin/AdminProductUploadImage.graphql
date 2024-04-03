@@ -1,11 +1,10 @@
 mutation AdminProductUploadImage($input: ProductMediaUploadInput!) {
   uploadProductMedia(input: $input) {
     media {
-      id
-      altText
+      keyName
       url
-      mediaType
-      updatedAt
+      alt
+      type
     }
   }
 }

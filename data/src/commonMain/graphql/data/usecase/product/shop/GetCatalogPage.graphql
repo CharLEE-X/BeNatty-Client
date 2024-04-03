@@ -9,10 +9,10 @@ query GetCatalogPage($catalogPageInput: CatalogPageInput!) {
     products {
       id
       media {
-        alt
-        id
-        mediaType
+        keyName
         url
+        alt
+        type
       }
       price
       title

@@ -6,12 +6,11 @@ mutation AdminCreateProduct($input: ProductCreateInput!) {
       description
       sold
       postStatus
-      media{
-        id
+      media {
+        keyName
         url
-        altText
-        mediaType
-        updatedAt
+        alt
+        type
       }
       categoryId
       tags

@@ -51,6 +51,24 @@
               "defaultValue": null,
               "isDeprecated": false,
               "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "type",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "MediaType",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "interfaces": null,
@@ -585,7 +603,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "OBJECT",
-                      "name": "MediaProfile",
+                      "name": "Media",
                       "ofType": null
                     }
                   }
@@ -1396,13 +1414,13 @@
               "deprecationReason": null
             },
             {
-              "name": "mediaId",
+              "name": "media",
               "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "ObjectId",
+                "kind": "OBJECT",
+                "name": "Media",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -1451,12 +1469,12 @@
             },
             {
               "__typename": "__InputValue",
-              "name": "mediaId",
+              "name": "media",
               "description": null,
               "type": {
                 "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "ObjectId",
+                "kind": "INPUT_OBJECT",
+                "name": "MediaInput",
                 "ofType": null
               },
               "defaultValue": null,
@@ -1490,19 +1508,6 @@
           "description": null,
           "fields": [
             {
-              "name": "alt",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "description",
               "description": null,
               "args": [],
@@ -1516,13 +1521,13 @@
               "deprecationReason": null
             },
             {
-              "name": "mediaUrl",
+              "name": "media",
               "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "String",
+                "kind": "OBJECT",
+                "name": "Media",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -1782,13 +1787,13 @@
           "description": null,
           "fields": [
             {
-              "name": "mediaId",
+              "name": "media",
               "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "ObjectId",
+                "kind": "OBJECT",
+                "name": "Media",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -1827,12 +1832,12 @@
           "inputFields": [
             {
               "__typename": "__InputValue",
-              "name": "mediaId",
+              "name": "media",
               "description": null,
               "type": {
                 "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "ObjectId",
+                "kind": "INPUT_OBJECT",
+                "name": "MediaInput",
                 "ofType": null
               },
               "defaultValue": null,
@@ -1870,13 +1875,13 @@
           "description": null,
           "fields": [
             {
-              "name": "mediaUrl",
+              "name": "media",
               "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "String",
+                "kind": "OBJECT",
+                "name": "Media",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -1915,12 +1920,12 @@
           "inputFields": [
             {
               "__typename": "__InputValue",
-              "name": "mediaId",
+              "name": "media",
               "description": null,
               "type": {
                 "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "String",
+                "kind": "INPUT_OBJECT",
+                "name": "MediaInput",
                 "ofType": null
               },
               "defaultValue": null,
@@ -3263,19 +3268,6 @@
           "description": null,
           "fields": [
             {
-              "name": "alt",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "description",
               "description": null,
               "args": [],
@@ -3306,13 +3298,13 @@
               "deprecationReason": null
             },
             {
-              "name": "mediaId",
+              "name": "media",
               "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "ObjectId",
+                "kind": "OBJECT",
+                "name": "Media",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -3347,20 +3339,6 @@
           "inputFields": [
             {
               "__typename": "__InputValue",
-              "name": "alt",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "__typename": "__InputValue",
               "name": "description",
               "description": null,
               "type": {
@@ -3393,12 +3371,12 @@
             },
             {
               "__typename": "__InputValue",
-              "name": "mediaId",
+              "name": "media",
               "description": null,
               "type": {
                 "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "ObjectId",
+                "kind": "INPUT_OBJECT",
+                "name": "MediaInput",
                 "ofType": null
               },
               "defaultValue": null,
@@ -3432,19 +3410,6 @@
           "description": null,
           "fields": [
             {
-              "name": "alt",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "description",
               "description": null,
               "args": [],
@@ -3475,13 +3440,13 @@
               "deprecationReason": null
             },
             {
-              "name": "mediaUrl",
+              "name": "media",
               "description": null,
               "args": [],
               "type": {
                 "__typename": "__Type",
-                "kind": "SCALAR",
-                "name": "String",
+                "kind": "OBJECT",
+                "name": "Media",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -5170,12 +5135,6 @@
             {
               "__typename": "__Type",
               "kind": "OBJECT",
-              "name": "Media",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "OBJECT",
               "name": "Product",
               "ofType": null
             },
@@ -5835,325 +5794,6 @@
           "description": null,
           "fields": [
             {
-              "name": "altText",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "id",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ObjectId",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "mediaType",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "ENUM",
-                  "name": "MediaType",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "updatedAt",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "url",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [
-            {
-              "__typename": "__Type",
-              "kind": "INTERFACE",
-              "name": "Identifiable",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "INTERFACE",
-              "name": "TimeTrackable",
-              "ofType": null
-            }
-          ],
-          "enumValues": null,
-          "possibleTypes": null,
-          "specifiedByURL": null
-        },
-        {
-          "__typename": "__Type",
-          "kind": "INPUT_OBJECT",
-          "name": "MediaInput",
-          "description": null,
-          "fields": null,
-          "inputFields": [
-            {
-              "__typename": "__InputValue",
-              "name": "altText",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "__typename": "__InputValue",
-              "name": "id",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ObjectId",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "__typename": "__InputValue",
-              "name": "mediaType",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "ENUM",
-                  "name": "MediaType",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "__typename": "__InputValue",
-              "name": "updatedAt",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "__typename": "__InputValue",
-              "name": "url",
-              "description": null,
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null,
-          "specifiedByURL": null
-        },
-        {
-          "__typename": "__Type",
-          "kind": "OBJECT",
-          "name": "MediaProfile",
-          "description": null,
-          "fields": [
-            {
-              "name": "altText",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "id",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "mediaType",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "ENUM",
-                  "name": "MediaType",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "updatedAt",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "url",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [
-            {
-              "__typename": "__Type",
-              "kind": "INTERFACE",
-              "name": "TimeTrackable",
-              "ofType": null
-            }
-          ],
-          "enumValues": null,
-          "possibleTypes": null,
-          "specifiedByURL": null
-        },
-        {
-          "__typename": "__Type",
-          "kind": "OBJECT",
-          "name": "MediaSimple",
-          "description": null,
-          "fields": [
-            {
               "name": "alt",
               "description": null,
               "args": [],
@@ -6171,7 +5811,7 @@
               "deprecationReason": null
             },
             {
-              "name": "id",
+              "name": "keyName",
               "description": null,
               "args": [],
               "type": {
@@ -6188,7 +5828,7 @@
               "deprecationReason": null
             },
             {
-              "name": "mediaType",
+              "name": "type",
               "description": null,
               "args": [],
               "type": {
@@ -6224,6 +5864,91 @@
           ],
           "inputFields": null,
           "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "INPUT_OBJECT",
+          "name": "MediaInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "__typename": "__InputValue",
+              "name": "alt",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "keyName",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "type",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "MediaType",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "url",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "interfaces": null,
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -7812,8 +7537,8 @@
                     "kind": "NON_NULL",
                     "name": null,
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "ObjectId",
+                      "kind": "OBJECT",
+                      "name": "Media",
                       "ofType": null
                     }
                   }
@@ -8102,8 +7827,8 @@
                     "kind": "NON_NULL",
                     "name": null,
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
+                      "kind": "INPUT_OBJECT",
+                      "name": "MediaInput",
                       "ofType": null
                     }
                   }
@@ -8411,7 +8136,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "OBJECT",
-                      "name": "MediaProfile",
+                      "name": "Media",
                       "ofType": null
                     }
                   }
@@ -9974,7 +9699,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "OBJECT",
-                      "name": "MediaSimple",
+                      "name": "Media",
                       "ofType": null
                     }
                   }
@@ -10651,18 +10376,6 @@
               "__typename": "__Type",
               "kind": "OBJECT",
               "name": "ConfigProfile",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "OBJECT",
-              "name": "Media",
-              "ofType": null
-            },
-            {
-              "__typename": "__Type",
-              "kind": "OBJECT",
-              "name": "MediaProfile",
               "ofType": null
             },
             {

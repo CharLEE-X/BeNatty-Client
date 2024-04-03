@@ -199,8 +199,8 @@ fun BannerSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
                 textPosition = TextPosition.LeftBottom,
                 image = { imageModifier ->
                     MediaSlot(
-                        url = bannerSection.left.mediaUrl,
-                        alt = bannerSection.left.alt,
+                        url = bannerSection.left.media?.url,
+                        alt = bannerSection.left.media?.alt,
                         errorText = state.bannerLeftMediaDropError,
                         hasDeleteButton = false,
                         onFileDropped = { file ->
@@ -227,8 +227,8 @@ fun BannerSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
                 textPosition = TextPosition.RightTop,
                 image = { imageModifier ->
                     MediaSlot(
-                        url = bannerSection.right.mediaUrl,
-                        alt = bannerSection.right.alt,
+                        url = bannerSection.right.media?.url,
+                        alt = bannerSection.right.media?.alt,
                         errorText = state.bannerRightMediaDropError,
                         onFileDropped = { file ->
                             scope.launch {
@@ -285,8 +285,8 @@ fun CollageSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) 
                 modifier = Modifier.thenIf(index == 0) { CollageBigItemStyle.toModifier() }
             ) { imageModifier ->
                 MediaSlot(
-                    url = item.mediaUrl,
-                    alt = item.alt,
+                    url = item.media?.url,
+                    alt = item.media?.alt,
                     errorText = null,
                     onFileDropped = { file ->
                         println("Dropped file: $file")

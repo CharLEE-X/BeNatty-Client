@@ -1,24 +1,36 @@
 query GetLandingConfig($configId: String) {
   getLandingConfig(configId: $configId) {
     collageItems {
-      alt
       description
       id
-      mediaUrl
+      media {
+        keyName
+        url
+        alt
+        type
+      }
       title
     }
     bannerSection {
       left {
-        mediaUrl
+        media {
+          keyName
+          url
+          alt
+          type
+        }
         description
         title
-        alt
       }
       right {
-        mediaUrl
+        media {
+          keyName
+          url
+          alt
+          type
+        }
         description
         title
-        alt
       }
     }
   }

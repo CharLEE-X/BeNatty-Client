@@ -6,11 +6,10 @@ query AdminProductGetById($getProductByIdId: String!) {
     postStatus
     sold
     media {
-      id
+      keyName
       url
-      mediaType
-      altText
-      updatedAt
+      alt
+      type
     }
     categoryId
     tags

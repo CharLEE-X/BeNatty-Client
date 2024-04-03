@@ -1,10 +1,14 @@
 mutation UploadConfigCollageImage($input: ConfigCollageMediaUploadInput!) {
   uploadConfigCollageImage(input: $input) {
     collageItems {
-      alt
       description
       id
-      mediaUrl
+      media {
+        keyName
+        url
+        alt
+        type
+      }
       title
     }
   }

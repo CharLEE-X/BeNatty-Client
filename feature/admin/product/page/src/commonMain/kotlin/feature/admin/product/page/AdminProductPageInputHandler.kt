@@ -14,6 +14,7 @@ import data.service.TagService
 import data.type.BackorderStatus
 import data.type.BlobInput
 import data.type.InventoryInput
+import data.type.MediaInput
 import data.type.MediaType
 import data.type.PricingCreateInput
 import data.type.ProductCreateInput
@@ -133,11 +134,10 @@ internal class AdminProductPageInputHandler :
                 AdminProductPageContract.ScreenState.New -> {
                     val currentLocalMedia = state.localMedia
                     val newMedia = AdminProductGetByIdQuery.Medium(
-                        id = currentLocalMedia.size.toString(),
+                        keyName = currentLocalMedia.size.toString(),
                         url = mediaString,
-                        mediaType = MediaType.Image,
-                        altText = "",
-                        updatedAt = "0",
+                        type = MediaType.Image,
+                        alt = "",
                     )
                     postInput(AdminProductPageContract.Inputs.SetLocalMedia(currentLocalMedia + newMedia))
                 }
@@ -151,7 +151,7 @@ internal class AdminProductPageInputHandler :
             when (state.screenState) {
                 AdminProductPageContract.ScreenState.Existing -> {
                     state.current.let {
-                        val id = it.media[index].id
+                        val id = it.media[index].keyName
                         postInput(AdminProductPageContract.Inputs.OnDeleteImageClick(id))
                     }
                 }
@@ -462,7 +462,14 @@ internal class AdminProductPageInputHandler :
                 title = it.title,
                 description = it.description,
                 postStatus = it.postStatus,
-                media = it.media.map { media -> media.id },
+                media = it.media.map {
+                    MediaInput(
+                        keyName = it.keyName,
+                        url = it.url,
+                        type = it.type,
+                        alt = it.alt,
+                    )
+                },
                 categoryId = Optional.present(it.categoryId),
                 tags = it.tags,
                 isFeatured = it.isFeatured,
@@ -527,7 +534,7 @@ internal class AdminProductPageInputHandler :
                 productService.deleteImage(current.id, imageId).fold(
                     { postEvent(AdminProductPageContract.Events.OnError(it.mapToUiMessage())) },
                     {
-                        val media = state.current.media.filter { it.id != imageId }
+                        val media = state.current.media.filter { it.keyName != imageId }
                         val updatedProduct = state.current.copy(media = media)
                         postInput(AdminProductPageContract.Inputs.SetOriginalProduct(updatedProduct))
                         postInput(AdminProductPageContract.Inputs.SetCurrentProduct(updatedProduct))
@@ -550,11 +557,10 @@ internal class AdminProductPageInputHandler :
                     { data ->
                         val media = data.uploadProductMedia.media.map {
                             AdminProductGetByIdQuery.Medium(
-                                id = it.id,
+                                keyName = it.keyName,
                                 url = it.url,
-                                mediaType = it.mediaType,
-                                altText = it.altText,
-                                updatedAt = it.updatedAt,
+                                type = it.type,
+                                alt = it.alt,
                             )
                         }
                         val updatedProduct = current.copy(media = media)

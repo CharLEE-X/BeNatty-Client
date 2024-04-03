@@ -36,7 +36,7 @@ fun BannerSection(vm: HomeViewModel, state: HomeContract.State) {
                 textPosition = TextPosition.LeftBottom,
             ) { imageModifier ->
                 Image(
-                    src = state.landingConfig?.bannerSection?.left?.mediaUrl ?: "",
+                    src = state.landingConfig?.bannerSection?.left?.media?.url ?: "",
                     alt = state.landingConfig?.bannerSection?.left?.title ?: "",
                     modifier = imageModifier
                 )
@@ -49,7 +49,7 @@ fun BannerSection(vm: HomeViewModel, state: HomeContract.State) {
                 textPosition = TextPosition.RightTop,
             ) { imageModifier ->
                 Image(
-                    src = state.landingConfig?.bannerSection?.right?.mediaUrl ?: "",
+                    src = state.landingConfig?.bannerSection?.right?.media?.url ?: "",
                     alt = state.landingConfig?.bannerSection?.right?.title ?: "",
                     modifier = imageModifier
                 )

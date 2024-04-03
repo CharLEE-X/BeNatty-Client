@@ -23,24 +23,36 @@ mutation CreateConfig($input: CreateConfigInput!) {
     }
     landingConfig {
       collageItems {
-        alt
         description
         id
-        mediaUrl
+        media {
+          keyName
+          url
+          alt
+          type
+        }
         title
       }
       bannerSection {
         left {
-          mediaUrl
+          media {
+            keyName
+            url
+            alt
+            type
+          }
           description
           title
-          alt
         }
         right {
-          mediaUrl
+          media {
+            keyName
+            url
+            alt
+            type
+          }
           description
           title
-          alt
         }
       }
     }
@@ -48,27 +60,57 @@ mutation CreateConfig($input: CreateConfigInput!) {
       bannerConfig {
         catalog {
           title
-          mediaUrl
+          media {
+            keyName
+            url
+            alt
+            type
+          }
         }
         sales {
           title
-          mediaUrl
+          media {
+            keyName
+            url
+            alt
+            type
+          }
         }
         popular {
           title
-          mediaUrl
+          media {
+            keyName
+            url
+            alt
+            type
+          }
         }
         mens {
           title
-          mediaUrl
+          media {
+            keyName
+            url
+            alt
+            type
+          }
         }
         women {
           title
-          mediaUrl
+          media {
+            keyName
+            url
+            alt
+            type
+          }
         }
         kids {
           title
-          mediaUrl
+          media {
+            keyName
+            url
+            alt
+            type
+          }
         }
       }
     }

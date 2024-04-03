@@ -74,12 +74,12 @@ internal class CatalogInputHandler :
                 {
                     val bannerImageUrl = with(it.getCatalogConfig.bannerConfig) {
                         when (state.variant) {
-                            Variant.Catalog -> catalog.mediaUrl
-                            Variant.Kids -> kids.mediaUrl
-                            Variant.Men -> mens.mediaUrl
-                            Variant.Popular -> popular.mediaUrl
-                            Variant.Sales -> sales.mediaUrl
-                            Variant.Women -> women.mediaUrl
+                            Variant.Catalog -> catalog.media?.url
+                            Variant.Kids -> kids.media?.url
+                            Variant.Men -> mens.media?.url
+                            Variant.Popular -> popular.media?.url
+                            Variant.Sales -> sales.media?.url
+                            Variant.Women -> women.media?.url
                             is Variant.Search -> null
                         }
                     }
@@ -132,40 +132,40 @@ internal class CatalogInputHandler :
                 price = "${index}0.0",
                 media = listOf(
                     GetCatalogPageQuery.Medium(
-                        id = "$index",
+                        keyName = "$index",
                         url = "https://minion-fashion.myshopify.com/cdn/shop/products/1_7_800x.png?v=1663060580",
                         alt = "Product $index",
-                        mediaType = MediaType.Image,
+                        type = MediaType.Image,
                     ),
                     GetCatalogPageQuery.Medium(
-                        id = "$index",
+                        keyName = "$index",
                         url = "https://minion-fashion.myshopify.com/cdn/shop/products/1_7_800x.png?v=1663060580",
                         alt = "Product $index",
-                        mediaType = MediaType.Image,
+                        type = MediaType.Image,
                     ),
                     GetCatalogPageQuery.Medium(
-                        id = "$index",
+                        keyName = "$index",
                         url = "https://minion-fashion.myshopify.com/cdn/shop/products/3_3_800x.png?v=1663062969",
                         alt = "Product $index",
-                        mediaType = MediaType.Image,
+                        type = MediaType.Image,
                     ),
                     GetCatalogPageQuery.Medium(
-                        id = "$index",
+                        keyName = "$index",
                         url = "https://minion-fashion.myshopify.com/cdn/shop/products/11_5_800x.png?v=1663063289",
                         alt = "Product $index",
-                        mediaType = MediaType.Image,
+                        type = MediaType.Image,
                     ),
                     GetCatalogPageQuery.Medium(
-                        id = "$index",
+                        keyName = "$index",
                         url = "https://minion-fashion.myshopify.com/cdn/shop/products/6_3_800x.png?v=1663062851",
                         alt = "Product $index",
-                        mediaType = MediaType.Image,
+                        type = MediaType.Image,
                     ),
                     GetCatalogPageQuery.Medium(
-                        id = "$index",
+                        keyName = "$index",
                         url = "https://minion-fashion.myshopify.com/cdn/shop/products/4_2.png?v=1663061599&width=1240",
                         alt = "Product $index",
-                        mediaType = MediaType.Image,
+                        type = MediaType.Image,
                     ),
                 ).shuffled(),
             )

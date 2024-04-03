@@ -18,6 +18,7 @@ import data.type.AddMediaToCategoryInput
 import data.type.BlobInput
 import data.type.CategoryCreateInput
 import data.type.CategoryUpdateInput
+import data.type.MediaType
 import data.type.PageInput
 import data.type.ShippingPresetInput
 import data.type.SortDirection
@@ -53,7 +54,11 @@ interface CategoryService {
         requiresShipping: Boolean?,
     ): Either<RemoteError, UpdateCategoryMutation.Data>
 
-    suspend fun addCategoryImage(categoryId: String, blob: String): Either<RemoteError, AddCategoryImageMutation.Data>
+    suspend fun addCategoryImage(
+        categoryId: String,
+        blob: String,
+        type: MediaType,
+    ): Either<RemoteError, AddCategoryImageMutation.Data>
 }
 
 internal class CategoryServiceImpl(private val apolloClient: ApolloClient) : CategoryService {
@@ -143,11 +148,13 @@ internal class CategoryServiceImpl(private val apolloClient: ApolloClient) : Cat
 
     override suspend fun addCategoryImage(
         categoryId: String,
-        blob: String
+        blob: String,
+        type: MediaType,
     ): Either<RemoteError, AddCategoryImageMutation.Data> {
         val input = AddMediaToCategoryInput(
             categoryId = categoryId,
             blob = BlobInput(blob),
+            type = type,
         )
         return apolloClient.mutation(AddCategoryImageMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
