@@ -45,7 +45,12 @@ mutation AdminCreateProduct($input: ProductCreateInput!) {
         }
         price
         quantity
-        media
+        media {
+          keyName
+          url
+          alt
+          type
+        }
       }
     }
   }

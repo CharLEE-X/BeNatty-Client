@@ -28,7 +28,7 @@ internal class AdminConfigInputHandler :
     InputHandler<AdminConfigContract.Inputs, AdminConfigContract.Events, AdminConfigContract.State> {
 
     private val configService: ConfigService by inject()
-    private val inputValidator by inject<InputValidator>()
+    private val inputValidator: InputValidator by inject()
 
     override suspend fun InputScope.handleInput(input: AdminConfigContract.Inputs) = when (input) {
         is AdminConfigContract.Inputs.Init -> handleInit()
@@ -87,6 +87,7 @@ internal class AdminConfigInputHandler :
 
         is AdminConfigContract.Inputs.SetCollageImageDropError ->
             updateState { it.copy(collageMediaDropError = input.error) }
+
         is AdminConfigContract.Inputs.SetDeleteImageDialogOpen ->
             updateState { it.copy(deleteImageDialogOpen = input.isOpen) }
 
@@ -108,61 +109,53 @@ internal class AdminConfigInputHandler :
 
     private suspend fun InputScope.handleOnBannerRightDescriptionChanged(description: String) {
         updateState {
-            it.current?.landingConfig?.bannerSection?.right?.let { right ->
-                val newRight = right.copy(description = description)
-                val newBannerSection =
-                    it.current.landingConfig.bannerSection.copy(right = newRight)
-                it.copy(
-                    current = it.current.copy(
-                        landingConfig = it.current.landingConfig.copy(bannerSection = newBannerSection)
-                    ),
-                ).wasEdited()
-            } ?: it
+            val newRight = it.current.landingConfig.bannerSection.right.copy(description = description)
+            val newBannerSection =
+                it.current.landingConfig.bannerSection.copy(right = newRight)
+            it.copy(
+                current = it.current.copy(
+                    landingConfig = it.current.landingConfig.copy(bannerSection = newBannerSection)
+                ),
+            ).wasEdited()
         }
     }
 
     private suspend fun InputScope.handleOnBannerRightTitleChanged(title: String) {
         updateState {
-            it.current?.landingConfig?.bannerSection?.right?.let { right ->
-                val newRight = right.copy(title = title)
-                val newBannerSection =
-                    it.current.landingConfig.bannerSection.copy(right = newRight)
-                it.copy(
-                    current = it.current.copy(
-                        landingConfig = it.current.landingConfig.copy(bannerSection = newBannerSection)
-                    ),
-                ).wasEdited()
-            } ?: it
+            val newRight = it.current.landingConfig.bannerSection.right.copy(title = title)
+            val newBannerSection =
+                it.current.landingConfig.bannerSection.copy(right = newRight)
+            it.copy(
+                current = it.current.copy(
+                    landingConfig = it.current.landingConfig.copy(bannerSection = newBannerSection)
+                ),
+            ).wasEdited()
         }
     }
 
     private suspend fun InputScope.handleOnBannerLeftDescriptionChanged(description: String) {
         updateState {
-            it.current?.landingConfig?.bannerSection?.left?.let { left ->
-                val newLeft = left.copy(description = description)
-                val newBannerSection =
-                    it.current.landingConfig.bannerSection.copy(left = newLeft)
-                it.copy(
-                    current = it.current.copy(
-                        landingConfig = it.current.landingConfig.copy(bannerSection = newBannerSection)
-                    ),
-                ).wasEdited()
-            } ?: it
+            val newLeft = it.current.landingConfig.bannerSection.left.copy(description = description)
+            val newBannerSection =
+                it.current.landingConfig.bannerSection.copy(left = newLeft)
+            it.copy(
+                current = it.current.copy(
+                    landingConfig = it.current.landingConfig.copy(bannerSection = newBannerSection)
+                ),
+            ).wasEdited()
         }
     }
 
     private suspend fun InputScope.handleOnBannerLeftTitleChanged(title: String) {
         updateState {
-            it.current?.landingConfig?.bannerSection?.left?.let { left ->
-                val newLeft = left.copy(title = title)
-                val newBannerSection =
-                    it.current.landingConfig.bannerSection.copy(left = newLeft)
-                it.copy(
-                    current = it.current.copy(
-                        landingConfig = it.current.landingConfig.copy(bannerSection = newBannerSection)
-                    ),
-                ).wasEdited()
-            } ?: it
+            val newLeft = it.current.landingConfig.bannerSection.left.copy(title = title)
+            val newBannerSection =
+                it.current.landingConfig.bannerSection.copy(left = newLeft)
+            it.copy(
+                current = it.current.copy(
+                    landingConfig = it.current.landingConfig.copy(bannerSection = newBannerSection)
+                ),
+            ).wasEdited()
         }
     }
 
@@ -178,144 +171,136 @@ internal class AdminConfigInputHandler :
 
     private suspend fun InputScope.handleOnCollageItemDescriptionChanged(imageId: String, description: String) {
         updateState { state ->
-            state.current?.landingConfig?.collageItems?.let { collageItems ->
-                val newCollageItems = collageItems.toMutableList()
-                val index = newCollageItems.indexOfFirst { it.id == imageId }
-                val currentCollageItem = newCollageItems[index]
+            val newCollageItems = state.current.landingConfig.collageItems.toMutableList()
+            val index = newCollageItems.indexOfFirst { it.id == imageId }
+            val currentCollageItem = newCollageItems[index]
 
-                newCollageItems[index] = GetConfigQuery.CollageItem(
-                    id = imageId,
-                    title = currentCollageItem.title,
-                    description = description,
-                    media = currentCollageItem.media,
-                )
+            newCollageItems[index] = GetConfigQuery.CollageItem(
+                id = imageId,
+                title = currentCollageItem.title,
+                description = description,
+                media = currentCollageItem.media,
+            )
 
-                state.copy(
-                    current = state.current.copy(
-                        landingConfig = state.current.landingConfig.copy(
-                            collageItems = newCollageItems.toList()
-                        )
-                    ),
-                ).wasEdited()
-            } ?: state
+            state.copy(
+                current = state.current.copy(
+                    landingConfig = state.current.landingConfig.copy(
+                        collageItems = newCollageItems.toList()
+                    )
+                ),
+            ).wasEdited()
         }
     }
 
     private suspend fun InputScope.handleOnCollageItemTitleChanged(imageId: String, title: String) {
         updateState {
-            it.current?.landingConfig?.collageItems?.let { collageItems ->
-                val newCollageItems = collageItems.toMutableList()
-                val index = newCollageItems.indexOfFirst { it.id == imageId }
-                val currentCollageItem = newCollageItems[index]
+            val newCollageItems = it.current.landingConfig.collageItems.toMutableList()
+            val index = newCollageItems.indexOfFirst { it.id == imageId }
+            val currentCollageItem = newCollageItems[index]
 
-                newCollageItems[index] = GetConfigQuery.CollageItem(
-                    id = imageId,
-                    title = title,
-                    description = currentCollageItem.description,
-                    media = currentCollageItem.media,
-                )
+            newCollageItems[index] = GetConfigQuery.CollageItem(
+                id = imageId,
+                title = title,
+                description = currentCollageItem.description,
+                media = currentCollageItem.media,
+            )
 
-                it.copy(
-                    current = it.current.copy(
-                        landingConfig = it.current.landingConfig.copy(
-                            collageItems = newCollageItems.toList()
-                        )
-                    ),
-                ).wasEdited()
-            } ?: it
+            it.copy(
+                current = it.current.copy(
+                    landingConfig = it.current.landingConfig.copy(
+                        collageItems = newCollageItems.toList()
+                    )
+                ),
+            ).wasEdited()
         }
     }
 
     private suspend fun InputScope.handleUploadCollageMedia(imageId: String, blob: String) {
         val state = getCurrentState()
-        state.current?.id?.let { id ->
-            sideJob("handleUploadCollageMedia") {
-                postInput(AdminConfigContract.Inputs.SetCollageImageDropError(error = null))
-                postInput(AdminConfigContract.Inputs.SetCollageImagesLoading(isLoading = true))
-                val mediaType = MediaType.Image // TODO: Support more media types
-                configService.uploadCollageImage(
-                    configId = id.toString(),
-                    imageId = imageId,
-                    blob = BlobInput(blob),
-                    mediaType = mediaType,
-                ).fold(
-                    { postEvent(AdminConfigContract.Events.OnError(it.mapToUiMessage())) },
-                    { data ->
-                        val media = data.uploadConfigCollageImage.collageItems.map {
-                            GetConfigQuery.CollageItem(
-                                id = it.id,
-                                media = GetConfigQuery.Media(
-                                    keyName = it.media?.keyName ?: "",
-                                    url = it.media?.url ?: "",
-                                    alt = it.media?.alt ?: "",
-                                    type = it.media?.type ?: MediaType.Image,
-                                ),
-                                title = it.title,
-                                description = it.description,
-                            )
-                        }
-                        val config = state.current.copy(
-                            landingConfig = state.current.landingConfig.copy(collageItems = media)
+        sideJob("handleUploadCollageMedia") {
+            postInput(AdminConfigContract.Inputs.SetCollageImageDropError(error = null))
+            postInput(AdminConfigContract.Inputs.SetCollageImagesLoading(isLoading = true))
+            val mediaType = MediaType.Image
+            configService.uploadCollageImage(
+                configId = state.current.id,
+                imageId = imageId,
+                blob = BlobInput(blob),
+                mediaType = mediaType,
+            ).fold(
+                { postEvent(AdminConfigContract.Events.OnError(it.mapToUiMessage())) },
+                { data ->
+                    val media = data.uploadConfigCollageImage.collageItems.map {
+                        GetConfigQuery.CollageItem(
+                            id = it.id.toString(),
+                            media = GetConfigQuery.Media(
+                                keyName = it.media?.keyName ?: "",
+                                url = it.media?.url ?: "",
+                                alt = it.media?.alt ?: "",
+                                type = it.media?.type ?: MediaType.Image,
+                            ),
+                            title = it.title,
+                            description = it.description,
                         )
-                        postInput(AdminConfigContract.Inputs.SetOriginalConfig(config))
-                        postInput(AdminConfigContract.Inputs.SetCurrentConfig(config))
-                    },
-                )
-                postInput(AdminConfigContract.Inputs.SetCollageImagesLoading(isLoading = false))
-            }
-        } ?: noOp()
+                    }
+                    val config = state.current.copy(
+                        landingConfig = state.current.landingConfig.copy(collageItems = media)
+                    )
+                    postInput(AdminConfigContract.Inputs.SetOriginalConfig(config))
+                    postInput(AdminConfigContract.Inputs.SetCurrentConfig(config))
+                },
+            )
+            postInput(AdminConfigContract.Inputs.SetCollageImagesLoading(isLoading = false))
+        }
     }
 
     private suspend fun InputScope.handleUploadBannerMedia(side: Side, blob: String) {
         val state = getCurrentState()
-        state.current?.id?.let { id ->
-            sideJob("handleUploadBannerMedia") {
-                postInput(AdminConfigContract.Inputs.SetBannerLeftImageDropError(error = null))
-                postInput(AdminConfigContract.Inputs.SetBannerRightImageDropError(error = null))
-                val mediaType = MediaType.Image // TODO: Support more media types
-                configService.uploadBannerMedia(
-                    configId = id.toString(),
-                    side = side,
-                    blob = BlobInput(blob),
-                    mediaType = mediaType,
-                ).fold(
-                    { postEvent(AdminConfigContract.Events.OnError(it.mapToUiMessage())) },
-                    { data ->
-                        val bannerSection = with(data.uploadConfigBannerImage.bannerSection) {
-                            GetConfigQuery.BannerSection(
-                                left = GetConfigQuery.Left(
-                                    title = left.title,
-                                    description = left.description,
-                                    media = GetConfigQuery.Media1(
-                                        keyName = left.media?.keyName ?: "",
-                                        url = left.media?.url ?: "",
-                                        alt = left.media?.alt ?: "",
-                                        type = left.media?.type ?: MediaType.Image,
-                                    ),
+        sideJob("handleUploadBannerMedia") {
+            postInput(AdminConfigContract.Inputs.SetBannerLeftImageDropError(error = null))
+            postInput(AdminConfigContract.Inputs.SetBannerRightImageDropError(error = null))
+            val mediaType = MediaType.Image
+            configService.uploadBannerMedia(
+                configId = state.current.id,
+                side = side,
+                blob = BlobInput(blob),
+                mediaType = mediaType,
+            ).fold(
+                { postEvent(AdminConfigContract.Events.OnError(it.mapToUiMessage())) },
+                { data ->
+                    val bannerSection = with(data.uploadConfigBannerImage.bannerSection) {
+                        GetConfigQuery.BannerSection(
+                            left = GetConfigQuery.Left(
+                                title = left.title,
+                                description = left.description,
+                                media = GetConfigQuery.Media1(
+                                    keyName = left.media?.keyName ?: "",
+                                    url = left.media?.url ?: "",
+                                    alt = left.media?.alt ?: "",
+                                    type = left.media?.type ?: MediaType.Image,
                                 ),
-                                right = GetConfigQuery.Right(
-                                    title = right.title,
-                                    description = right.description,
-                                    media = GetConfigQuery.Media2(
-                                        keyName = right.media?.keyName ?: "",
-                                        url = right.media?.url ?: "",
-                                        alt = right.media?.alt ?: "",
-                                        type = right.media?.type ?: MediaType.Image,
-                                    ),
+                            ),
+                            right = GetConfigQuery.Right(
+                                title = right.title,
+                                description = right.description,
+                                media = GetConfigQuery.Media2(
+                                    keyName = right.media?.keyName ?: "",
+                                    url = right.media?.url ?: "",
+                                    alt = right.media?.alt ?: "",
+                                    type = right.media?.type ?: MediaType.Image,
                                 ),
-                            )
-                        }
-                        val config = state.current.copy(
-                            landingConfig = state.current.landingConfig.copy(bannerSection = bannerSection)
+                            ),
                         )
-                        postInput(AdminConfigContract.Inputs.SetOriginalConfig(config))
-                        postInput(AdminConfigContract.Inputs.SetCurrentConfig(config))
-                    },
-                )
-                postInput(AdminConfigContract.Inputs.SetBannerLeftImagesLoading(isLoading = false))
-                postInput(AdminConfigContract.Inputs.SetBannerRightImagesLoading(isLoading = false))
-            }
-        } ?: noOp()
+                    }
+                    val config = state.current.copy(
+                        landingConfig = state.current.landingConfig.copy(bannerSection = bannerSection)
+                    )
+                    postInput(AdminConfigContract.Inputs.SetOriginalConfig(config))
+                    postInput(AdminConfigContract.Inputs.SetCurrentConfig(config))
+                },
+            )
+            postInput(AdminConfigContract.Inputs.SetBannerLeftImagesLoading(isLoading = false))
+            postInput(AdminConfigContract.Inputs.SetBannerRightImagesLoading(isLoading = false))
+        }
     }
 
     private suspend fun InputScope.handleOnCollageMediaDrop(imageId: String, blob: String) {
@@ -328,7 +313,7 @@ internal class AdminConfigInputHandler :
         updateState { state ->
             val imageId = state.deleteImageDialogImageId ?: return@updateState state
 
-            state.current?.landingConfig?.collageItems?.let { collageItems ->
+            state.current.landingConfig.collageItems.let { collageItems ->
                 val newCollageItems = collageItems.toMutableList()
                 val index = newCollageItems.indexOfFirst { it.id == imageId }
                 newCollageItems.removeAt(index)
@@ -342,14 +327,14 @@ internal class AdminConfigInputHandler :
                         )
                     ),
                 ).wasEdited()
-            } ?: state
+            }
         }
     }
 
     private suspend fun InputScope.handleOnOpenDayFromSelected(day: DayOfWeek) {
         updateState {
             it.copy(
-                current = it.current?.copy(
+                current = it.current.copy(
                     companyInfo = it.current.companyInfo.copy(
                         openingTimes = it.current.companyInfo.openingTimes.copy(
                             dayFrom = if (it.current.companyInfo.openingTimes.dayTo == day) null else day
@@ -363,7 +348,7 @@ internal class AdminConfigInputHandler :
     private suspend fun InputScope.handleOnOpenDayToSelected(day: DayOfWeek) {
         updateState {
             it.copy(
-                current = it.current?.copy(
+                current = it.current.copy(
                     companyInfo = it.current.companyInfo.copy(
                         openingTimes = it.current.companyInfo.openingTimes.copy(
                             dayTo = if (it.current.companyInfo.openingTimes.dayFrom == day) null else day
@@ -378,7 +363,7 @@ internal class AdminConfigInputHandler :
         updateState {
             val isValidated = inputValidator.validateText(companyWebsite)
             it.copy(
-                current = it.current?.copy(
+                current = it.current.copy(
                     companyInfo = it.current.companyInfo.copy(
                         contactInfo = it.current.companyInfo.contactInfo.copy(companyWebsite = companyWebsite)
                     )
@@ -412,7 +397,7 @@ internal class AdminConfigInputHandler :
         updateState {
             val isValidated = inputValidator.validateText(closeTime)
             it.copy(
-                current = it.current?.copy(
+                current = it.current.copy(
                     companyInfo = it.current.companyInfo.copy(
                         openingTimes = it.current.companyInfo.openingTimes.copy(close = closeTime)
                     )
@@ -426,7 +411,7 @@ internal class AdminConfigInputHandler :
         updateState {
             val isValidated = inputValidator.validateText(openTime)
             it.copy(
-                current = it.current?.copy(
+                current = it.current.copy(
                     companyInfo = it.current.companyInfo.copy(
                         openingTimes = it.current.companyInfo.openingTimes.copy(open = openTime)
                     )
@@ -440,7 +425,7 @@ internal class AdminConfigInputHandler :
         updateState {
             val isValidated = inputValidator.validateText(phone)
             it.copy(
-                current = it.current?.copy(
+                current = it.current.copy(
                     companyInfo = it.current.companyInfo.copy(
                         contactInfo = it.current.companyInfo.contactInfo.copy(phone = phone)
                     )
@@ -451,64 +436,37 @@ internal class AdminConfigInputHandler :
     }
 
     private suspend fun InputScope.handleSetUpdatedAt(updatedAt: String) {
-        updateState { it.copy(current = it.current?.copy(updatedAt = updatedAt)).wasEdited() }
+        updateState { it.copy(current = it.current.copy(updatedAt = updatedAt)).wasEdited() }
     }
 
     private suspend fun InputScope.handleUpdateConfig() {
         with(getCurrentState()) {
-            current?.id?.let { id ->
-                sideJob("handleUpdateDetails") {
-                    configService.updateConfig(
-                        configId = id,
-                        companyName = if (current.companyInfo.contactInfo.companyName != original?.companyInfo?.contactInfo?.companyName)
-                            current.companyInfo.contactInfo.companyName else null,
-                        companyWebsite = if (current.companyInfo.contactInfo.companyWebsite != original?.companyInfo?.contactInfo?.companyWebsite)
-                            current.companyInfo.contactInfo.companyWebsite else null,
-                        email = if (current.companyInfo.contactInfo.email != original?.companyInfo?.contactInfo?.email)
-                            current.companyInfo.contactInfo.email else null,
-                        phone = if (current.companyInfo.contactInfo.phone != original?.companyInfo?.contactInfo?.phone)
-                            current.companyInfo.contactInfo.phone else null,
-                        dayFrom = if (current.companyInfo.openingTimes.dayFrom != original?.companyInfo?.openingTimes?.dayFrom)
-                            current.companyInfo.openingTimes.dayFrom else null,
-                        dayTo = if (current.companyInfo.openingTimes.dayTo != original?.companyInfo?.openingTimes?.dayTo)
-                            current.companyInfo.openingTimes.dayTo else null,
-                        open = if (current.companyInfo.openingTimes.open != original?.companyInfo?.openingTimes?.open)
-                            current.companyInfo.openingTimes.open else null,
-                        close = if (current.companyInfo.openingTimes.close != original?.companyInfo?.openingTimes?.close)
-                            current.companyInfo.openingTimes.close else null,
-                        collageItems = if (current.landingConfig.collageItems != original?.landingConfig?.collageItems)
-                            current.landingConfig.collageItems.map {
-                                CollageItemInput(
-                                    id = it.id,
-                                    title = Optional.present(it.title),
-                                    description = Optional.present(it.description),
-                                    media = it.media?.let {
-                                        Optional.present(
-                                            MediaInput(
-                                                keyName = it.keyName,
-                                                url = it.url,
-                                                alt = it.alt,
-                                                type = it.type
-                                            )
-                                        )
-                                    } ?: Optional.absent()
-                                )
-                            } else null,
-                        showCareer = if (current.footerConfig.showCareer != original?.footerConfig?.showCareer)
-                            current.footerConfig.showCareer else null,
-                        showCyberSecurity = if (current.footerConfig.showCyberSecurity != original?.footerConfig?.showCyberSecurity)
-                            current.footerConfig.showCyberSecurity else null,
-                        showPress = if (current.footerConfig.showPress != original?.footerConfig?.showPress)
-                            current.footerConfig.showPress else null,
-                        showStartChat = if (current.footerConfig.showStartChat != original?.footerConfig?.showStartChat)
-                            current.footerConfig.showStartChat else null,
-                        showOpeningTimes = if (current.footerConfig.showOpeningTimes != original?.footerConfig?.showOpeningTimes)
-                            current.footerConfig.showOpeningTimes else null,
-                        bannerSectionLeft = if (current.landingConfig.bannerSection.left != original?.landingConfig?.bannerSection?.left)
-                            BannerItemInput(
-                                title = Optional.present(current.landingConfig.bannerSection.left.title),
-                                description = Optional.present(current.landingConfig.bannerSection.left.description),
-                                media = current.landingConfig.bannerSection.left.media?.let {
+            sideJob("handleUpdateDetails") {
+                configService.updateConfig(
+                    configId = current.id,
+                    companyName = if (current.companyInfo.contactInfo.companyName != original.companyInfo.contactInfo.companyName)
+                        current.companyInfo.contactInfo.companyName else null,
+                    companyWebsite = if (current.companyInfo.contactInfo.companyWebsite != original.companyInfo.contactInfo.companyWebsite)
+                        current.companyInfo.contactInfo.companyWebsite else null,
+                    email = if (current.companyInfo.contactInfo.email != original.companyInfo.contactInfo.email)
+                        current.companyInfo.contactInfo.email else null,
+                    phone = if (current.companyInfo.contactInfo.phone != original.companyInfo.contactInfo.phone)
+                        current.companyInfo.contactInfo.phone else null,
+                    dayFrom = if (current.companyInfo.openingTimes.dayFrom != original.companyInfo.openingTimes.dayFrom)
+                        current.companyInfo.openingTimes.dayFrom else null,
+                    dayTo = if (current.companyInfo.openingTimes.dayTo != original.companyInfo.openingTimes.dayTo)
+                        current.companyInfo.openingTimes.dayTo else null,
+                    open = if (current.companyInfo.openingTimes.open != original.companyInfo.openingTimes.open)
+                        current.companyInfo.openingTimes.open else null,
+                    close = if (current.companyInfo.openingTimes.close != original.companyInfo.openingTimes.close)
+                        current.companyInfo.openingTimes.close else null,
+                    collageItems = if (current.landingConfig.collageItems != original.landingConfig.collageItems)
+                        current.landingConfig.collageItems.map {
+                            CollageItemInput(
+                                id = it.id,
+                                title = Optional.present(it.title),
+                                description = Optional.present(it.description),
+                                media = it.media?.let {
                                     Optional.present(
                                         MediaInput(
                                             keyName = it.keyName,
@@ -517,163 +475,188 @@ internal class AdminConfigInputHandler :
                                             type = it.type
                                         )
                                     )
-                                } ?: Optional.absent(),
-                            ) else null,
-                        bannerSectionRight = if (current.landingConfig.bannerSection.right != original?.landingConfig?.bannerSection?.right)
-                            BannerItemInput(
-                                title = Optional.present(current.landingConfig.bannerSection.right.title),
-                                description = Optional.present(current.landingConfig.bannerSection.right.description),
-                                media = current.landingConfig.bannerSection.right.media?.let {
-                                    Optional.present(
-                                        MediaInput(
-                                            keyName = it.keyName,
-                                            url = it.url,
-                                            alt = it.alt,
-                                            type = it.type
-                                        )
-                                    )
-                                } ?: Optional.absent(),
-                            ) else null,
-                    ).fold(
-                        { postEvent(AdminConfigContract.Events.OnError(it.mapToUiMessage())) },
-                        { data ->
-                            val config = with(data.updateConfig) {
-                                GetConfigQuery.GetConfig(
-                                    id = id,
-                                    updatedAt = updatedAt,
-                                    companyInfo = GetConfigQuery.CompanyInfo(
-                                        contactInfo = GetConfigQuery.ContactInfo(
-                                            companyName = companyInfo.contactInfo.companyName,
-                                            email = companyInfo.contactInfo.email,
-                                            phone = companyInfo.contactInfo.phone,
-                                            companyWebsite = companyInfo.contactInfo.companyWebsite,
-                                        ),
-                                        openingTimes = GetConfigQuery.OpeningTimes(
-                                            close = companyInfo.openingTimes.close,
-                                            dayFrom = companyInfo.openingTimes.dayFrom,
-                                            dayTo = companyInfo.openingTimes.dayTo,
-                                            open = companyInfo.openingTimes.open
-                                        ),
-                                    ),
-                                    footerConfig = GetConfigQuery.FooterConfig(
-                                        showStartChat = footerConfig.showStartChat,
-                                        showOpeningTimes = footerConfig.showOpeningTimes,
-                                        showCareer = footerConfig.showCareer,
-                                        showCyberSecurity = footerConfig.showCyberSecurity,
-                                        showPress = footerConfig.showPress,
-                                    ),
-                                    landingConfig = GetConfigQuery.LandingConfig(
-                                        collageItems = landingConfig.collageItems.map {
-                                            GetConfigQuery.CollageItem(
-                                                id = it.id,
-                                                title = it.title,
-                                                description = it.description,
-                                                media = GetConfigQuery.Media(
-                                                    keyName = it.media?.keyName ?: "",
-                                                    url = it.media?.url ?: "",
-                                                    alt = it.media?.alt ?: "",
-                                                    type = it.media?.type ?: MediaType.Image,
-                                                ),
-                                            )
-                                        },
-                                        bannerSection = GetConfigQuery.BannerSection(
-                                            left = with(landingConfig.bannerSection.left) {
-                                                GetConfigQuery.Left(
-                                                    title = title,
-                                                    description = description,
-                                                    media = GetConfigQuery.Media1(
-                                                        keyName = media?.keyName ?: "",
-                                                        url = media?.url ?: "",
-                                                        alt = media?.alt ?: "",
-                                                        type = media?.type ?: MediaType.Image,
-                                                    )
-                                                )
-                                            },
-                                            right = with(landingConfig.bannerSection.right) {
-                                                GetConfigQuery.Right(
-                                                    title = title,
-                                                    description = description,
-                                                    media = GetConfigQuery.Media2(
-                                                        keyName = media?.keyName ?: "",
-                                                        url = media?.url ?: "",
-                                                        alt = media?.alt ?: "",
-                                                        type = media?.type ?: MediaType.Image,
-                                                    )
-                                                )
-                                            },
-                                        ),
-                                    ),
-                                    catalogConfig = GetConfigQuery.CatalogConfig(
-                                        bannerConfig = with(catalogConfig.bannerConfig) {
-                                            GetConfigQuery.BannerConfig(
-                                                catalog = with(catalog) {
-                                                    GetConfigQuery.Catalog(
-                                                        title = title,
-                                                        media = GetConfigQuery.Media3(
-                                                            keyName = media?.keyName ?: "",
-                                                            url = media?.url ?: "",
-                                                            alt = media?.alt ?: "",
-                                                            type = media?.type ?: MediaType.Image,
-                                                        )
-                                                    )
-                                                },
-                                                popular = with(popular) {
-                                                    GetConfigQuery.Popular(
-                                                        title = title,
-                                                        media = GetConfigQuery.Media5(
-                                                            keyName = media?.keyName ?: "",
-                                                            url = media?.url ?: "",
-                                                            alt = media?.alt ?: "",
-                                                            type = media?.type ?: MediaType.Image,
-                                                        )
-                                                    )
-                                                },
-                                                sales = GetConfigQuery.Sales(
-                                                    title = sales.title,
-                                                    media = GetConfigQuery.Media4(
-                                                        keyName = sales.media?.keyName ?: "",
-                                                        url = sales.media?.url ?: "",
-                                                        alt = sales.media?.alt ?: "",
-                                                        type = sales.media?.type ?: MediaType.Image,
-                                                    ),
-                                                ),
-                                                mens = GetConfigQuery.Mens(
-                                                    title = mens.title,
-                                                    media = GetConfigQuery.Media6(
-                                                        keyName = mens.media?.keyName ?: "",
-                                                        url = mens.media?.url ?: "",
-                                                        alt = mens.media?.alt ?: "",
-                                                        type = mens.media?.type ?: MediaType.Image,
-                                                    )
-                                                ),
-                                                women = GetConfigQuery.Women(
-                                                    title = women.title,
-                                                    media = GetConfigQuery.Media7(
-                                                        keyName = women.media?.keyName ?: "",
-                                                        url = women.media?.url ?: "",
-                                                        alt = women.media?.alt ?: "",
-                                                        type = women.media?.type ?: MediaType.Image,
-                                                    ),
-                                                ),
-                                                kids = GetConfigQuery.Kids(
-                                                    title = kids.title,
-                                                    media = GetConfigQuery.Media8(
-                                                        keyName = women.media?.keyName ?: "",
-                                                        url = women.media?.url ?: "",
-                                                        alt = women.media?.alt ?: "",
-                                                        type = women.media?.type ?: MediaType.Image,
-                                                    ),
-                                                ),
-                                            )
-                                        },
+                                } ?: Optional.absent()
+                            )
+                        } else null,
+                    showCareer = if (current.footerConfig.showCareer != original.footerConfig.showCareer)
+                        current.footerConfig.showCareer else null,
+                    showCyberSecurity = if (current.footerConfig.showCyberSecurity != original.footerConfig.showCyberSecurity)
+                        current.footerConfig.showCyberSecurity else null,
+                    showPress = if (current.footerConfig.showPress != original.footerConfig.showPress)
+                        current.footerConfig.showPress else null,
+                    showStartChat = if (current.footerConfig.showStartChat != original.footerConfig.showStartChat)
+                        current.footerConfig.showStartChat else null,
+                    showOpeningTimes = if (current.footerConfig.showOpeningTimes != original.footerConfig.showOpeningTimes)
+                        current.footerConfig.showOpeningTimes else null,
+                    bannerSectionLeft = if (current.landingConfig.bannerSection.left != original.landingConfig.bannerSection.left)
+                        BannerItemInput(
+                            title = Optional.present(current.landingConfig.bannerSection.left.title),
+                            description = Optional.present(current.landingConfig.bannerSection.left.description),
+                            media = current.landingConfig.bannerSection.left.media?.let {
+                                Optional.present(
+                                    MediaInput(
+                                        keyName = it.keyName,
+                                        url = it.url,
+                                        alt = it.alt,
+                                        type = it.type
                                     )
                                 )
-                            }
-                            postInput(AdminConfigContract.Inputs.SetOriginalConfig(config = config))
-                            postInput(AdminConfigContract.Inputs.SetCurrentConfig(config = config))
-                        },
-                    )
-                }
+                            } ?: Optional.absent(),
+                        ) else null,
+                    bannerSectionRight = if (current.landingConfig.bannerSection.right != original.landingConfig.bannerSection.right)
+                        BannerItemInput(
+                            title = Optional.present(current.landingConfig.bannerSection.right.title),
+                            description = Optional.present(current.landingConfig.bannerSection.right.description),
+                            media = current.landingConfig.bannerSection.right.media?.let {
+                                Optional.present(
+                                    MediaInput(
+                                        keyName = it.keyName,
+                                        url = it.url,
+                                        alt = it.alt,
+                                        type = it.type
+                                    )
+                                )
+                            } ?: Optional.absent(),
+                        ) else null,
+                ).fold(
+                    { postEvent(AdminConfigContract.Events.OnError(it.mapToUiMessage())) },
+                    { data ->
+                        val config = with(data.updateConfig) {
+                            GetConfigQuery.GetConfig(
+                                id = id,
+                                updatedAt = updatedAt,
+                                companyInfo = GetConfigQuery.CompanyInfo(
+                                    contactInfo = GetConfigQuery.ContactInfo(
+                                        companyName = companyInfo.contactInfo.companyName,
+                                        email = companyInfo.contactInfo.email,
+                                        phone = companyInfo.contactInfo.phone,
+                                        companyWebsite = companyInfo.contactInfo.companyWebsite,
+                                    ),
+                                    openingTimes = GetConfigQuery.OpeningTimes(
+                                        close = companyInfo.openingTimes.close,
+                                        dayFrom = companyInfo.openingTimes.dayFrom,
+                                        dayTo = companyInfo.openingTimes.dayTo,
+                                        open = companyInfo.openingTimes.open
+                                    ),
+                                ),
+                                footerConfig = GetConfigQuery.FooterConfig(
+                                    showStartChat = footerConfig.showStartChat,
+                                    showOpeningTimes = footerConfig.showOpeningTimes,
+                                    showCareer = footerConfig.showCareer,
+                                    showCyberSecurity = footerConfig.showCyberSecurity,
+                                    showPress = footerConfig.showPress,
+                                ),
+                                landingConfig = GetConfigQuery.LandingConfig(
+                                    collageItems = landingConfig.collageItems.map {
+                                        GetConfigQuery.CollageItem(
+                                            id = it.id,
+                                            title = it.title,
+                                            description = it.description,
+                                            media = GetConfigQuery.Media(
+                                                keyName = it.media?.keyName ?: "",
+                                                url = it.media?.url ?: "",
+                                                alt = it.media?.alt ?: "",
+                                                type = it.media?.type ?: MediaType.Image,
+                                            ),
+                                        )
+                                    },
+                                    bannerSection = GetConfigQuery.BannerSection(
+                                        left = with(landingConfig.bannerSection.left) {
+                                            GetConfigQuery.Left(
+                                                title = title,
+                                                description = description,
+                                                media = GetConfigQuery.Media1(
+                                                    keyName = media?.keyName ?: "",
+                                                    url = media?.url ?: "",
+                                                    alt = media?.alt ?: "",
+                                                    type = media?.type ?: MediaType.Image,
+                                                )
+                                            )
+                                        },
+                                        right = with(landingConfig.bannerSection.right) {
+                                            GetConfigQuery.Right(
+                                                title = title,
+                                                description = description,
+                                                media = GetConfigQuery.Media2(
+                                                    keyName = media?.keyName ?: "",
+                                                    url = media?.url ?: "",
+                                                    alt = media?.alt ?: "",
+                                                    type = media?.type ?: MediaType.Image,
+                                                )
+                                            )
+                                        },
+                                    ),
+                                ),
+                                catalogConfig = GetConfigQuery.CatalogConfig(
+                                    bannerConfig = with(catalogConfig.bannerConfig) {
+                                        GetConfigQuery.BannerConfig(
+                                            catalog = with(catalog) {
+                                                GetConfigQuery.Catalog(
+                                                    title = title,
+                                                    media = GetConfigQuery.Media3(
+                                                        keyName = media?.keyName ?: "",
+                                                        url = media?.url ?: "",
+                                                        alt = media?.alt ?: "",
+                                                        type = media?.type ?: MediaType.Image,
+                                                    )
+                                                )
+                                            },
+                                            popular = with(popular) {
+                                                GetConfigQuery.Popular(
+                                                    title = title,
+                                                    media = GetConfigQuery.Media5(
+                                                        keyName = media?.keyName ?: "",
+                                                        url = media?.url ?: "",
+                                                        alt = media?.alt ?: "",
+                                                        type = media?.type ?: MediaType.Image,
+                                                    )
+                                                )
+                                            },
+                                            sales = GetConfigQuery.Sales(
+                                                title = sales.title,
+                                                media = GetConfigQuery.Media4(
+                                                    keyName = sales.media?.keyName ?: "",
+                                                    url = sales.media?.url ?: "",
+                                                    alt = sales.media?.alt ?: "",
+                                                    type = sales.media?.type ?: MediaType.Image,
+                                                ),
+                                            ),
+                                            mens = GetConfigQuery.Mens(
+                                                title = mens.title,
+                                                media = GetConfigQuery.Media6(
+                                                    keyName = mens.media?.keyName ?: "",
+                                                    url = mens.media?.url ?: "",
+                                                    alt = mens.media?.alt ?: "",
+                                                    type = mens.media?.type ?: MediaType.Image,
+                                                )
+                                            ),
+                                            women = GetConfigQuery.Women(
+                                                title = women.title,
+                                                media = GetConfigQuery.Media7(
+                                                    keyName = women.media?.keyName ?: "",
+                                                    url = women.media?.url ?: "",
+                                                    alt = women.media?.alt ?: "",
+                                                    type = women.media?.type ?: MediaType.Image,
+                                                ),
+                                            ),
+                                            kids = GetConfigQuery.Kids(
+                                                title = kids.title,
+                                                media = GetConfigQuery.Media8(
+                                                    keyName = women.media?.keyName ?: "",
+                                                    url = women.media?.url ?: "",
+                                                    alt = women.media?.alt ?: "",
+                                                    type = women.media?.type ?: MediaType.Image,
+                                                ),
+                                            ),
+                                        )
+                                    },
+                                )
+                            )
+                        }
+                        postInput(AdminConfigContract.Inputs.SetOriginalConfig(config = config))
+                        postInput(AdminConfigContract.Inputs.SetCurrentConfig(config = config))
+                    },
+                )
             }
         }
     }
@@ -682,7 +665,7 @@ internal class AdminConfigInputHandler :
         updateState {
             val isValidated = inputValidator.validateText(email)
             it.copy(
-                current = it.current?.copy(
+                current = it.current.copy(
                     companyInfo = it.current.companyInfo.copy(
                         contactInfo = it.current.companyInfo.contactInfo.copy(email = email)
                     )

@@ -2,13 +2,11 @@ package web.components.layouts
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.copperleaf.ballast.navigation.routing.RouterContract.Inputs.ReplaceTopDestination
-import com.copperleaf.ballast.navigation.routing.currentDestinationOrNull
+import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.varabyte.kobweb.compose.css.AlignItems
 import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
@@ -62,7 +60,6 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import component.localization.Strings
 import component.localization.getString
-import feature.router.RouterViewModel
 import feature.router.Screen
 import kotlinx.browser.document
 import org.jetbrains.compose.web.css.Position
@@ -82,14 +79,16 @@ private val topBarHeight = 4.em
 private val sideBarWidth = 18.em
 
 data class AdminRoutes(
+    val adminSideNavRoutes: AdminSideNavRoutes,
     val goToAdminHome: () -> Unit,
     val goToShopHome: () -> Unit,
+    val goBack: () -> Unit,
 )
 
 @Composable
 fun AdminLayout(
+    adminRoutes: AdminRoutes,
     modifier: Modifier = Modifier,
-    router: RouterViewModel,
     title: String,
     searchPlaceholder: String = getString(Strings.Search),
     isLoading: Boolean,
@@ -100,7 +99,6 @@ fun AdminLayout(
     saveText: String = "",
     onCancel: () -> Unit = {},
     onSave: () -> Unit = {},
-    adminRoutes: AdminRoutes,
     overlay: @Composable BoxScope.() -> Unit = {},
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -134,9 +132,7 @@ fun AdminLayout(
             Row(
                 modifier = Modifier.fillMaxSize()
             ) {
-                AdminSideBar(
-                    router = router,
-                )
+                AdminSideBar(adminRoutes.adminSideNavRoutes)
                 Column(
                     modifier = Modifier
                         .margin(top = topBarHeight)
@@ -156,11 +152,20 @@ fun AdminLayout(
     }
 }
 
-@Composable
-private fun AdminSideBar(router: RouterViewModel) {
-    val routerState by router.observeStates().collectAsState()
-    val currentDestination = routerState.currentDestinationOrNull
+data class AdminSideNavRoutes(
+    val routerState: RouterContract.State<Screen>,
+    val currentDestination: Screen?,
+    val goToAdminHome: () -> Unit,
+    val goToAdminOrderList: () -> Unit,
+    val goToAdminProducts: () -> Unit,
+    val goToAdminCategoryList: () -> Unit,
+    val goToAdminTagList: () -> Unit,
+    val goToAdminUsers: () -> Unit,
+    val goToAdminConfig: () -> Unit,
+)
 
+@Composable
+private fun AdminSideBar(routes: AdminSideNavRoutes) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -174,51 +179,51 @@ private fun AdminSideBar(router: RouterViewModel) {
     ) {
         SideNavMainItem(
             label = "Home",
-            isCurrent = currentDestination?.originalRoute == Screen.AdminHome,
+            isCurrent = routes.currentDestination == Screen.AdminHome,
             icon = { MdiHome() },
-            onMenuItemClicked = { router.trySend(ReplaceTopDestination(Screen.AdminHome.route)) }
+            onMenuItemClicked = routes.goToAdminHome
         )
         SideNavMainItem(
             label = "Orders",
-            isCurrent = currentDestination?.originalRoute == Screen.AdminOrderList,
+            isCurrent = routes.currentDestination == Screen.AdminOrderList,
             icon = { MdiShoppingBasket() },
-            onMenuItemClicked = { router.trySend(ReplaceTopDestination(Screen.AdminOrderList.route)) }
+            onMenuItemClicked = routes.goToAdminOrderList
         )
         SideNavMainItem(
             label = "Products",
             isCurrent = listOf(
                 Screen.AdminProducts,
                 Screen.AdminProductCreate,
-                Screen.AdminProductPage
-            ).any { currentDestination?.originalRoute == it },
+                Screen.AdminProductProfile
+            ).any { routes.currentDestination == it },
             icon = { MdiStyle() },
-            onMenuItemClicked = { router.trySend(ReplaceTopDestination(Screen.AdminProducts.route)) }
+            onMenuItemClicked = routes.goToAdminProducts
         )
         SideNavSubItem(
             label = "Categories",
-            isSubCurrent = currentDestination?.originalRoute == Screen.AdminCategoryList,
-            onMenuItemClicked = { router.trySend(ReplaceTopDestination(Screen.AdminCategoryList.route)) }
+            isSubCurrent = routes.currentDestination == Screen.AdminCategoryList,
+            onMenuItemClicked = routes.goToAdminCategoryList
         )
         SideNavSubItem(
             label = "Tags",
-            isSubCurrent = currentDestination?.originalRoute == Screen.AdminTagList,
-            onMenuItemClicked = { router.trySend(ReplaceTopDestination(Screen.AdminTagList.route)) }
+            isSubCurrent = routes.currentDestination == Screen.AdminTagList,
+            onMenuItemClicked = routes.goToAdminTagList
         )
         SideNavMainItem(
             label = "Customers",
             isCurrent = listOf(
-                Screen.AdminCustomers,
-                Screen.AdminCustomerCreate,
-                Screen.AdminCustomerProfile
-            ).any { currentDestination?.originalRoute == it },
+                Screen.AdminUsers,
+                Screen.AdminUserCreate,
+                Screen.AdminUserProfile
+            ).any { routes.currentDestination == it },
             icon = { MdiPerson() },
-            onMenuItemClicked = { router.trySend(ReplaceTopDestination(Screen.AdminCustomers.route)) }
+            onMenuItemClicked = routes.goToAdminUsers
         )
         SideNavMainItem(
             label = "Shop config",
-            isCurrent = listOf(Screen.AdminConfig).any { currentDestination?.originalRoute == it },
+            isCurrent = listOf(Screen.AdminConfig).any { routes.currentDestination == it },
             icon = { MdiPerson() },
-            onMenuItemClicked = { router.trySend(ReplaceTopDestination(Screen.AdminConfig.route)) }
+            onMenuItemClicked = routes.goToAdminConfig
         )
     }
 }

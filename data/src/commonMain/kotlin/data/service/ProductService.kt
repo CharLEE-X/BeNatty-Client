@@ -5,7 +5,6 @@ import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
-import com.apollographql.apollo3.cache.normalized.watch
 import core.RemoteError
 import data.AdminCreateProductMutation
 import data.AdminDeleteProductMediaMutation
@@ -33,8 +32,6 @@ import data.type.SortDirection
 import data.type.StockStatus
 import data.utils.handle
 import data.utils.skipIfNull
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 interface ProductService {
     suspend fun create(input: ProductCreateInput): Either<RemoteError, AdminCreateProductMutation.Data>
@@ -52,12 +49,12 @@ interface ProductService {
         categories: List<String>?,
         colors: List<String>?,
         sizes: List<String>?,
-        priceFrom: String?,
-        priceTo: String?,
+        priceFrom: Double?,
+        priceTo: Double?,
         sortBy: ProductsSort?,
     ): Either<RemoteError, GetCatalogPageQuery.Data>
 
-    suspend fun getById(id: String): Flow<Either<RemoteError, AdminProductGetByIdQuery.Data>>
+    suspend fun getById(id: String): Either<RemoteError, AdminProductGetByIdQuery.Data>
     suspend fun delete(id: String): Either<RemoteError, AdminDeleteProductMutation.Data>
     suspend fun update(
         id: String,
@@ -73,8 +70,8 @@ interface ProductService {
         remainingStock: Int?,
         stockStatus: StockStatus?,
         trackQuantity: Boolean?,
-        price: String?,
-        regularPrice: String?,
+        price: Double?,
+        regularPrice: Double?,
         chargeTax: Boolean?,
         presetId: String?,
         height: String?,
@@ -134,8 +131,8 @@ internal class ProductServiceImpl(
         remainingStock: Int?,
         stockStatus: StockStatus?,
         trackQuantity: Boolean?,
-        price: String?,
-        regularPrice: String?,
+        price: Double?,
+        regularPrice: Double?,
         chargeTax: Boolean?,
         presetId: String?,
         height: String?,
@@ -236,8 +233,8 @@ internal class ProductServiceImpl(
         categories: List<String>?,
         colors: List<String>?,
         sizes: List<String>?,
-        priceFrom: String?,
-        priceTo: String?,
+        priceFrom: Double?,
+        priceTo: Double?,
         sortBy: ProductsSort?,
     ): Either<RemoteError, GetCatalogPageQuery.Data> {
         val pageInput = CatalogPageInput(
@@ -256,11 +253,10 @@ internal class ProductServiceImpl(
             .handle()
     }
 
-    override suspend fun getById(id: String): Flow<Either<RemoteError, AdminProductGetByIdQuery.Data>> {
+    override suspend fun getById(id: String): Either<RemoteError, AdminProductGetByIdQuery.Data> {
         return apolloClient.query(AdminProductGetByIdQuery(id))
             .fetchPolicy(FetchPolicy.NetworkOnly)
-            .watch()
-            .map { it.handle() }
+            .handle()
     }
 
     override suspend fun delete(id: String): Either<RemoteError, AdminDeleteProductMutation.Data> {

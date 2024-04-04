@@ -8,12 +8,54 @@ import feature.admin.config.model.ImagePreview
 
 object AdminConfigContract {
     data class State(
-        val strings: Strings = Strings(),
         val isLoading: Boolean = false,
         val wasEdited: Boolean = false,
 
-        val original: GetConfigQuery.GetConfig? = null,
-        val current: GetConfigQuery.GetConfig? = null,
+        val original: GetConfigQuery.GetConfig = GetConfigQuery.GetConfig(
+            id = "",
+            updatedAt = "",
+            companyInfo = GetConfigQuery.CompanyInfo(
+                contactInfo = GetConfigQuery.ContactInfo(
+                    companyName = "",
+                    companyWebsite = null,
+                    email = null,
+                    phone = null
+                ), openingTimes = GetConfigQuery.OpeningTimes(
+                    close = null,
+                    dayFrom = DayOfWeek.MONDAY,
+                    dayTo = DayOfWeek.FRIDAY,
+                    open = null
+                )
+            ), footerConfig = GetConfigQuery.FooterConfig(
+                showStartChat = false,
+                showOpeningTimes = false,
+                showCareer = false,
+                showCyberSecurity = false,
+                showPress = false
+            ), landingConfig = GetConfigQuery.LandingConfig(
+                collageItems = listOf(), bannerSection = GetConfigQuery.BannerSection(
+                    left = GetConfigQuery.Left(
+                        media = null,
+                        description = null,
+                        title = null
+                    ), right = GetConfigQuery.Right(media = null, description = null, title = null)
+                )
+            ), catalogConfig = GetConfigQuery.CatalogConfig(
+                bannerConfig = GetConfigQuery.BannerConfig(
+                    catalog = GetConfigQuery.Catalog(
+                        title = "",
+                        media = null
+                    ),
+                    sales = GetConfigQuery.Sales(title = "", media = null),
+                    popular = GetConfigQuery.Popular(title = "", media = null),
+                    mens = GetConfigQuery.Mens(title = "", media = null),
+                    women = GetConfigQuery.Women(title = "", media = null),
+                    kids = GetConfigQuery.Kids(title = "", media = null)
+                )
+            )
+
+        ),
+        val current: GetConfigQuery.GetConfig = original,
 
         val emailError: String? = null,
         val phoneError: String? = null,
@@ -83,33 +125,35 @@ object AdminConfigContract {
     sealed interface Events {
         data class OnError(val message: String) : Events
     }
-
-    data class Strings(
-        val save: String = getString(component.localization.Strings.Save),
-        val discard: String = getString(component.localization.Strings.Discard),
-        val delete: String = getString(component.localization.Strings.Delete),
-        val dismiss: String = getString(component.localization.Strings.Dismiss),
-        val shopSettings: String = getString(component.localization.Strings.ShopSettings),
-        val createdAt: String = getString(component.localization.Strings.CreatedAt),
-        val updatedAt: String = getString(component.localization.Strings.LastUpdatedAt),
-        val unsavedChanges: String = getString(component.localization.Strings.UnsavedChanges),
-        val saveChanges: String = getString(component.localization.Strings.SaveChanges),
-        val info: String = getString(component.localization.Strings.Info),
-        val companyInfo: String = getString(component.localization.Strings.CompanyInfo),
-        val contactInfo: String = getString(component.localization.Strings.ContactInfo),
-        val email: String = getString(component.localization.Strings.Email),
-        val phone: String = getString(component.localization.Strings.Phone),
-        val companyWebsite: String = getString(component.localization.Strings.CompanyWebsite),
-        val openingTimes: String = getString(component.localization.Strings.OpeningTimes),
-        val openDayFrom: String = getString(component.localization.Strings.OpenDayFrom),
-        val openDayTo: String = getString(component.localization.Strings.OpenDayTo),
-        val openTime: String = getString(component.localization.Strings.OpenTime),
-        val closeTime: String = getString(component.localization.Strings.CloseTime),
-        val landingPageSettings: String = getString(component.localization.Strings.LandingPageSettings),
-        val homePageSettings: String = getString(component.localization.Strings.HomePageSettings),
-        val collage: String = getString(component.localization.Strings.Collage),
-        val shopNow: String = getString(component.localization.Strings.ShopNow),
-        val deleteExplain: String = getString(component.localization.Strings.DeleteExplain),
-        val banner: String = getString(component.localization.Strings.Banner),
-    )
 }
+
+val adminConfigStrings: AdminConfigStrings = AdminConfigStrings()
+
+data class AdminConfigStrings(
+    val save: String = getString(component.localization.Strings.Save),
+    val discard: String = getString(component.localization.Strings.Discard),
+    val delete: String = getString(component.localization.Strings.Delete),
+    val dismiss: String = getString(component.localization.Strings.Dismiss),
+    val shopSettings: String = getString(component.localization.Strings.ShopSettings),
+    val createdAt: String = getString(component.localization.Strings.CreatedAt),
+    val updatedAt: String = getString(component.localization.Strings.LastUpdatedAt),
+    val unsavedChanges: String = getString(component.localization.Strings.UnsavedChanges),
+    val saveChanges: String = getString(component.localization.Strings.SaveChanges),
+    val info: String = getString(component.localization.Strings.Info),
+    val companyInfo: String = getString(component.localization.Strings.CompanyInfo),
+    val contactInfo: String = getString(component.localization.Strings.ContactInfo),
+    val email: String = getString(component.localization.Strings.Email),
+    val phone: String = getString(component.localization.Strings.Phone),
+    val companyWebsite: String = getString(component.localization.Strings.CompanyWebsite),
+    val openingTimes: String = getString(component.localization.Strings.OpeningTimes),
+    val openDayFrom: String = getString(component.localization.Strings.OpenDayFrom),
+    val openDayTo: String = getString(component.localization.Strings.OpenDayTo),
+    val openTime: String = getString(component.localization.Strings.OpenTime),
+    val closeTime: String = getString(component.localization.Strings.CloseTime),
+    val landingPageSettings: String = getString(component.localization.Strings.LandingPageSettings),
+    val homePageSettings: String = getString(component.localization.Strings.HomePageSettings),
+    val collage: String = getString(component.localization.Strings.Collage),
+    val shopNow: String = getString(component.localization.Strings.ShopNow),
+    val deleteExplain: String = getString(component.localization.Strings.DeleteExplain),
+    val banner: String = getString(component.localization.Strings.Banner),
+)

@@ -5,17 +5,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import com.copperleaf.ballast.navigation.routing.RouterContract
-import com.copperleaf.ballast.navigation.routing.build
-import com.copperleaf.ballast.navigation.routing.directions
-import com.copperleaf.ballast.navigation.routing.pathParameter
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.thenIf
+import core.models.PageScreenState
 import feature.admin.tag.page.AdminTagPageContract
 import feature.admin.tag.page.AdminTagPageViewModel
-import feature.router.RouterViewModel
-import feature.router.Screen
+import feature.admin.tag.page.adminTagPageStrings
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.DetailPageLayout
@@ -29,10 +25,12 @@ import web.util.onEnterKeyDown
 
 @Composable
 fun AdminTagPage(
-    router: RouterViewModel,
     id: String?,
     onError: suspend (String) -> Unit,
     adminRoutes: AdminRoutes,
+    goToTagList: () -> Unit,
+    goToUserPage: (String) -> Unit,
+    goToTagPage: (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -40,59 +38,36 @@ fun AdminTagPage(
             id = id,
             scope = scope,
             onError = onError,
-            goToUserList = {
-                router.trySend(
-                    RouterContract.Inputs.GoToDestination(
-                        Screen.AdminTagList.matcher.routeFormat
-                    )
-                )
-            },
-            goToUser = { id ->
-                router.trySend(
-                    RouterContract.Inputs.GoToDestination(
-                        Screen.AdminCustomerProfile.directions()
-                            .pathParameter("id", id)
-                            .build()
-                    )
-                )
-            },
-            goToTag = { id ->
-                router.trySend(
-                    RouterContract.Inputs.GoToDestination(
-                        Screen.AdminTagPageExisting.directions()
-                            .pathParameter("id", id)
-                            .build()
-                    )
-                )
-            },
+            goToTagList = goToTagList,
+            goToUser = goToUserPage,
+            goToTag = goToTagPage,
         )
     }
     val state by vm.observeStates().collectAsState()
 
-    val title = if (state.screenState is AdminTagPageContract.ScreenState.New) {
-        state.strings.createTag
+    val title = if (state.pageScreenState is PageScreenState.New) {
+        adminTagPageStrings.createTag
     } else {
-        state.strings.category
+        adminTagPageStrings.category
     }
 
     AdminLayout(
         title = title,
-        router = router,
         isLoading = state.isLoading,
-        showEditedButtons = state.wasEdited || state.screenState is AdminTagPageContract.ScreenState.New,
+        showEditedButtons = state.wasEdited || state.pageScreenState is PageScreenState.New,
         isSaveEnabled = state.wasEdited,
-        unsavedChangesText = state.strings.unsavedChanges,
-        saveText = state.strings.save,
-        discardText = state.strings.discard,
+        unsavedChangesText = adminTagPageStrings.unsavedChanges,
+        saveText = adminTagPageStrings.save,
+        discardText = adminTagPageStrings.discard,
         onCancel = { vm.trySend(AdminTagPageContract.Inputs.OnClick.CancelEdit) },
         onSave = { vm.trySend(AdminTagPageContract.Inputs.OnClick.SaveEdit) },
         adminRoutes = adminRoutes,
         overlay = {
             HasChangesWidget(
                 hasChanges = state.wasEdited,
-                messageText = state.strings.unsavedChanges,
-                saveText = state.strings.save,
-                resetText = state.strings.dismiss,
+                messageText = adminTagPageStrings.unsavedChanges,
+                saveText = adminTagPageStrings.save,
+                resetText = adminTagPageStrings.dismiss,
                 onSave = { vm.trySend(AdminTagPageContract.Inputs.OnClick.SaveEdit) },
                 onCancel = { vm.trySend(AdminTagPageContract.Inputs.OnClick.CancelEdit) },
             )
@@ -100,52 +75,47 @@ fun AdminTagPage(
     ) {
         DetailPageLayout(
             title = title,
-            showDelete = state.screenState !is AdminTagPageContract.ScreenState.New,
-            deleteText = state.strings.delete,
-            createdAtText = state.strings.createdAt,
-            updatedAtText = state.strings.lastUpdatedAt,
+            subtitle = if (state.pageScreenState == PageScreenState.Existing) state.original.id else null,
+            showDelete = state.pageScreenState !is PageScreenState.New,
+            deleteText = adminTagPageStrings.delete,
+            createdAtText = adminTagPageStrings.createdAt,
+            updatedAtText = adminTagPageStrings.lastUpdatedAt,
             createdAtValue = state.current.createdAt,
             updatedAtValue = state.current.updatedAt,
             onDeleteClick = { vm.trySend(AdminTagPageContract.Inputs.OnClick.Delete) },
-            onGoBack = {
-                router.trySend(
-                    RouterContract.Inputs.GoToDestination(
-                        Screen.AdminCategoryList.matcher.routeFormat
-                    )
-                )
-            }
+            onGoBack = adminRoutes.goBack,
         ) {
-            CardSection(title = state.strings.details) {
+            CardSection(title = adminTagPageStrings.details) {
                 AppOutlinedTextField(
                     value = state.current.name,
                     onValueChange = { vm.trySend(AdminTagPageContract.Inputs.Set.Name(it)) },
-                    label = state.strings.name,
+                    label = adminTagPageStrings.name,
                     errorText = state.nameError,
                     leadingIcon = null,
                     shake = state.shakeName,
                     required = true,
                     trailingIcon = {
                         ImproveWithButton(
-                            tooltipText = state.strings.improveWithAi,
+                            tooltipText = adminTagPageStrings.improveWithAi,
                             onImproveClick = { vm.trySend(AdminTagPageContract.Inputs.OnClick.ImproveName) }
                         )
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .thenIf(
-                            state.screenState is AdminTagPageContract.ScreenState.New,
+                            state.pageScreenState is PageScreenState.New,
                             Modifier.onEnterKeyDown { vm.trySend(AdminTagPageContract.Inputs.OnClick.Create) }
                         )
                 )
-                if (state.screenState is AdminTagPageContract.ScreenState.New) {
+                if (state.pageScreenState is PageScreenState.New) {
                     SaveButton(
-                        text = state.strings.create,
+                        text = adminTagPageStrings.create,
                         disabled = false,
                         onClick = { vm.trySend(AdminTagPageContract.Inputs.OnClick.Create) },
                     )
                 } else {
                     CreatorSection(
-                        title = state.strings.createdBy,
+                        title = adminTagPageStrings.createdBy,
                         creatorName = "${state.current.creator.firstName} ${state.current.creator.lastName}",
                         onClick = { vm.trySend(AdminTagPageContract.Inputs.OnClick.GotToUserCreator) },
                     )

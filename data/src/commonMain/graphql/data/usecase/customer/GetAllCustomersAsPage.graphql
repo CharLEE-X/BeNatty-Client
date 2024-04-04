@@ -1,4 +1,4 @@
-query CustomerGetAllPage($pageInput: PageInput!) {
+query GetAllCustomersAsPage($pageInput: PageInput!) {
   getAllUsersAsPage(pageInput: $pageInput) {
     info {
       count

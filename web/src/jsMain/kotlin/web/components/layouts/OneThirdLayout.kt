@@ -32,6 +32,7 @@ val oneLayoutMaxWidth = 1300.px
 @Composable
 fun OneThirdLayout(
     title: String,
+    subtitle: String? = null,
     gap: CSSLengthOrPercentageNumericValue = 1.5.em,
     onGoBack: () -> Unit,
     hasBackButton: Boolean,
@@ -51,6 +52,7 @@ fun OneThirdLayout(
     ) {
         NavTopSection(
             title = title,
+            subtitle = subtitle,
             onGoBack = onGoBack,
             hasBackButton = hasBackButton,
             actions = actions,

@@ -62,7 +62,7 @@ fun CatalogItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     title: String,
-    price: String?,
+    price: Double?,
     media: List<GetCatalogPageQuery.Medium>,
     borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
     imageHeight: CSSLengthOrPercentageNumericValue = 600.px

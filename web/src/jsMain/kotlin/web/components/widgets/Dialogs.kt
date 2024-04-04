@@ -16,6 +16,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
+import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.objectFit
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
@@ -157,7 +158,16 @@ fun TakeActionDialog(
                 }
             }
         ) {
-            SpanText(contentText)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .margin(
+                        topBottom = 0.5.em,
+                        leftRight = 2.em
+                    )
+            ) {
+                SpanText(contentText)
+            }
         }
     }
 }

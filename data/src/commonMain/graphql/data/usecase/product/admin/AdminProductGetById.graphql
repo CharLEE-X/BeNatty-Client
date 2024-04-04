@@ -53,7 +53,12 @@ query AdminProductGetById($getProductByIdId: String!) {
       }
       price
       quantity
-      media
+      media {
+        keyName
+        url
+        alt
+        type
+      }
     }
   }
 }

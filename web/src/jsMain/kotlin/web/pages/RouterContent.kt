@@ -24,19 +24,20 @@ import feature.router.idPath
 import feature.shop.navbar.DesktopNavContract
 import kotlinx.serialization.json.Json
 import web.components.layouts.AdminRoutes
+import web.components.layouts.AdminSideNavRoutes
 import web.components.layouts.MainRoutes
 import web.pages.admin.category.AdminCategoryListPage
 import web.pages.admin.category.AdminCategoryPage
 import web.pages.admin.config.AdminConfigPage
+import web.pages.admin.customer.AdminCustomerListPage
+import web.pages.admin.customer.AdminCustomerPagePage
 import web.pages.admin.dashboard.AdminDashboardPage
 import web.pages.admin.orders.AdminOrderListPage
 import web.pages.admin.orders.AdminOrderPagePage
-import web.pages.admin.products.AdminProductListPage
-import web.pages.admin.products.AdminProductPageContent
+import web.pages.admin.product.AdminProductListPage
+import web.pages.admin.product.AdminProductPageContent
 import web.pages.admin.tag.AdminTagListPage
 import web.pages.admin.tag.AdminTagPage
-import web.pages.admin.users.AdminCustomerCreatePage
-import web.pages.admin.users.AdminCustomersPage
 import web.pages.shop.account.TrackOrderPage
 import web.pages.shop.account.order.OrderPage
 import web.pages.shop.account.profile.ProfilePage
@@ -85,7 +86,7 @@ fun RouterContent(
 //            extraInterceptors = listOf(BrowserHistoryNavigationInterceptor("/", initialRoute)),
         )
     }
-    val routerState by router.observeStates().collectAsState()
+    val routerState: RouterContract.State<Screen> by router.observeStates().collectAsState()
     val currentDestination = routerState.currentDestinationOrNull
 
     LaunchedEffect(routerState.backstack) {
@@ -131,6 +132,18 @@ fun RouterContent(
     val adminRoutes = AdminRoutes(
         goToAdminHome = goToAdminHome,
         goToShopHome = goToShopHome,
+        adminSideNavRoutes = AdminSideNavRoutes(
+            routerState = routerState,
+            currentDestination = currentDestination?.originalRoute,
+            goToAdminHome = goToAdminHome,
+            goToAdminConfig = { router.trySend(GoToDestination(Screen.AdminConfig.route)) },
+            goToAdminUsers = { router.trySend(GoToDestination(Screen.AdminUsers.route)) },
+            goToAdminProducts = { router.trySend(GoToDestination(Screen.AdminProducts.route)) },
+            goToAdminOrderList = { router.trySend(GoToDestination(Screen.AdminOrderList.route)) },
+            goToAdminCategoryList = { router.trySend(GoToDestination(Screen.AdminCategoryList.route)) },
+            goToAdminTagList = { router.trySend(GoToDestination(Screen.AdminTagList.route)) },
+        ),
+        goBack = goBack,
     )
 
     @Composable
@@ -259,7 +272,6 @@ fun RouterContent(
                 Screen.Press -> PressPage()
                 Screen.AdminHome -> authenticatedRoute {
                     AdminDashboardPage(
-                        router = router,
                         onError = onError,
                         adminRoutes = adminRoutes,
                     )
@@ -267,105 +279,94 @@ fun RouterContent(
 
                 Screen.AdminConfig -> authenticatedRoute {
                     AdminConfigPage(
-                        router = router,
-                        onError = onError,
-                        adminRoutes = adminRoutes,
-                        goBack = goBack,
-                    )
-                }
-
-                Screen.AdminCustomers -> authenticatedRoute {
-                    AdminCustomersPage(
-                        router = router,
-                        onError = onError,
-                        goBack = goBack,
-                        adminRoutes = adminRoutes,
-                        goToCreateCustomer = { router.trySend(GoToDestination(Screen.AdminCustomerCreate.route)) },
-                        goToCustomer = { router.trySend(GoToDestination(Screen.AdminCustomerProfile.idPath(it))) },
-                    )
-                }
-
-                Screen.AdminCustomerCreate -> authenticatedRoute {
-                    AdminCustomerCreatePage(
-                        router = router,
                         onError = onError,
                         adminRoutes = adminRoutes,
                     )
                 }
 
-                Screen.AdminCustomerProfile -> authenticatedRoute {
+                Screen.AdminUsers -> authenticatedRoute {
+                    AdminCustomerListPage(
+                        onError = onError,
+                        adminRoutes = adminRoutes,
+                        goToCreateCustomer = { router.trySend(GoToDestination(Screen.AdminUserCreate.route)) },
+                        goToCustomer = { router.trySend(GoToDestination(Screen.AdminUserProfile.idPath(it))) },
+                    )
+                }
+
+                Screen.AdminUserCreate -> authenticatedRoute {
+                    AdminCustomerPagePage(
+                        onError = onError,
+                        adminRoutes = adminRoutes,
+                        userId = null,
+                        goToCustomerPage = { router.trySend(ReplaceTopDestination(Screen.AdminUserProfile.idPath(it))) },
+                    )
+                }
+
+                Screen.AdminUserProfile -> authenticatedRoute {
                     val id by stringPath()
-                    AdminCustomerCreatePage(
-                        router = router,
-//                        userId = id,
+                    AdminCustomerPagePage(
+                        userId = id,
                         onError = onError,
                         adminRoutes = adminRoutes,
+                        goToCustomerPage = {
+                            router.trySend(ReplaceTopDestination(Screen.AdminUserProfile.idPath(it)))
+                        },
                     )
                 }
 
                 Screen.AdminProducts -> authenticatedRoute {
                     AdminProductListPage(
-                        router = router,
                         onError = onError,
-                        goBack = goBack,
                         adminRoutes = adminRoutes,
                         goToCreateProduct = { router.trySend(GoToDestination(Screen.AdminProductCreate.route)) },
-                        goToProduct = { router.trySend(GoToDestination(Screen.AdminProductPage.idPath(it))) }
+                        goToProduct = { router.trySend(ReplaceTopDestination(Screen.AdminProductProfile.idPath(it))) }
                     )
                 }
 
                 Screen.AdminProductCreate -> authenticatedRoute {
                     AdminProductPageContent(
                         productId = null,
-                        router = router,
                         onError = onError,
                         adminRoutes = adminRoutes,
-                        goBackToProducts = goBack,
-                        goToCreateCategory = { router.trySend(ReplaceTopDestination(Screen.AdminCategoryPageNew.route)) },
-                        goToCreateTag = { router.trySend(ReplaceTopDestination(Screen.AdminTagCreate.route)) },
-                        goToCustomer = { router.trySend(ReplaceTopDestination(Screen.AdminCustomerProfile.idPath(it))) },
-                        goToProduct = { router.trySend(ReplaceTopDestination(Screen.AdminProductPage.idPath(it))) },
+                        goToCreateCategory = { router.trySend(ReplaceTopDestination(Screen.AdminCategoryCreate.route)) },
+                        goToProduct = { router.trySend(ReplaceTopDestination(Screen.AdminProductProfile.idPath(it))) },
+                        goToCreateTag = { router.trySend(GoToDestination(Screen.AdminTagCreate.route)) },
+                        goToCustomer = { router.trySend(GoToDestination(Screen.AdminUserProfile.idPath(it))) },
                     )
                 }
 
-                Screen.AdminProductPage -> authenticatedRoute {
+                Screen.AdminProductProfile -> authenticatedRoute {
                     val id: String by stringPath()
                     AdminProductPageContent(
                         productId = id,
-                        router = router,
                         onError = onError,
                         adminRoutes = adminRoutes,
-                        goBackToProducts = goBack,
-                        goToCreateCategory = { router.trySend(ReplaceTopDestination(Screen.AdminCategoryPageNew.route)) },
+                        goToCreateCategory = { router.trySend(ReplaceTopDestination(Screen.AdminCategoryCreate.route)) },
                         goToCreateTag = { router.trySend(ReplaceTopDestination(Screen.AdminTagCreate.route)) },
-                        goToCustomer = { router.trySend(ReplaceTopDestination(Screen.AdminCustomerProfile.idPath(it))) },
-                        goToProduct = { router.trySend(ReplaceTopDestination(Screen.AdminProductPage.idPath(it))) },
+                        goToCustomer = { router.trySend(ReplaceTopDestination(Screen.AdminUserProfile.idPath(it))) },
+                        goToProduct = { router.trySend(ReplaceTopDestination(Screen.AdminProductProfile.idPath(it))) },
                     )
                 }
 
                 Screen.AdminOrderList -> authenticatedRoute {
                     AdminOrderListPage(
-                        router = router,
                         onError = onError,
-                        goBack = goBack,
                         adminRoutes = adminRoutes,
-                        goToCreateOrder = { router.trySend(GoToDestination(Screen.AdminOrderPageNew.route)) },
-                        goToOrder = { router.trySend(GoToDestination(Screen.AdminOrderPageExisting.idPath(it))) },
+                        goToCreateOrder = { router.trySend(GoToDestination(Screen.AdminOrderCreate.route)) },
+                        goToOrder = { router.trySend(GoToDestination(Screen.AdminOrderProfile.idPath(it))) },
                     )
                 }
 
-                Screen.AdminOrderPageNew -> authenticatedRoute {
+                Screen.AdminOrderCreate -> authenticatedRoute {
                     AdminOrderPagePage(
-                        router = router,
                         onError = onError,
                         adminRoutes = adminRoutes,
                     )
                 }
 
-                Screen.AdminOrderPageExisting -> authenticatedRoute {
+                Screen.AdminOrderProfile -> authenticatedRoute {
                     val id: String by stringPath()
                     AdminOrderPagePage(
-                        router = router,
                         onError = onError,
                         adminRoutes = adminRoutes,
                     )
@@ -373,69 +374,67 @@ fun RouterContent(
 
                 Screen.AdminCategoryList -> authenticatedRoute {
                     AdminCategoryListPage(
-                        router = router,
                         onError = onError,
-                        goBack = goBack,
                         adminRoutes = adminRoutes,
-                        goToCreateCategory = { router.trySend(GoToDestination(Screen.AdminCategoryPageNew.route)) },
+                        goToCreateCategory = { router.trySend(GoToDestination(Screen.AdminCategoryCreate.route)) },
                         goToCategory = { router.trySend(GoToDestination(Screen.AdminCategoryProfile.idPath(it))) },
                     )
                 }
 
-                Screen.AdminCategoryPageNew -> authenticatedRoute {
+                Screen.AdminCategoryCreate -> authenticatedRoute {
                     AdminCategoryPage(
-                        router = router,
                         id = null,
                         onError = onError,
                         adminRoutes = adminRoutes,
                         goToCustomers = { router.trySend(GoToDestination(Screen.AdminCategoryList.route)) },
-                        goToCustomer = { router.trySend(GoToDestination(Screen.AdminCustomerProfile.idPath(it))) },
-                        goToCreateCategory = { router.trySend(GoToDestination(Screen.AdminCategoryPageNew.route)) },
-                        goToCategory = { router.trySend(GoToDestination(Screen.AdminCategoryProfile.idPath(it))) },
+                        goToCustomer = { router.trySend(GoToDestination(Screen.AdminUserProfile.idPath(it))) },
+                        goToCreateCategory = { router.trySend(GoToDestination(Screen.AdminCategoryCreate.route)) },
+                        goToCategory = { router.trySend(ReplaceTopDestination(Screen.AdminCategoryProfile.idPath(it))) },
                     )
                 }
 
                 Screen.AdminCategoryProfile -> authenticatedRoute {
                     val id: String by stringPath()
                     AdminCategoryPage(
-                        router = router,
                         id = id,
                         onError = onError,
                         adminRoutes = adminRoutes,
                         goToCustomers = { router.trySend(GoToDestination(Screen.AdminCategoryList.route)) },
-                        goToCustomer = { router.trySend(GoToDestination(Screen.AdminCustomerProfile.idPath(it))) },
-                        goToCreateCategory = { router.trySend(GoToDestination(Screen.AdminCategoryPageNew.route)) },
-                        goToCategory = { router.trySend(GoToDestination(Screen.AdminCategoryProfile.idPath(it))) },
+                        goToCustomer = { router.trySend(GoToDestination(Screen.AdminUserProfile.idPath(it))) },
+                        goToCreateCategory = { router.trySend(GoToDestination(Screen.AdminCategoryCreate.route)) },
+                        goToCategory = { router.trySend(ReplaceTopDestination(Screen.AdminCategoryProfile.idPath(it))) },
                     )
                 }
 
                 Screen.AdminTagList -> authenticatedRoute {
                     AdminTagListPage(
-                        router = router,
                         onError = onError,
-                        goBack = goBack,
                         adminRoutes = adminRoutes,
                         goToTagCreate = { router.trySend(GoToDestination(Screen.AdminTagCreate.route)) },
-                        goToTag = { router.trySend(GoToDestination(Screen.AdminTagPageExisting.idPath(it))) },
+                        goToTag = { router.trySend(GoToDestination(Screen.AdminTagProfile.idPath(it))) },
                     )
                 }
 
                 Screen.AdminTagCreate -> authenticatedRoute {
                     AdminTagPage(
-                        router = router,
                         id = null,
                         onError = onError,
                         adminRoutes = adminRoutes,
+                        goToTagList = { router.trySend(ReplaceTopDestination(Screen.AdminTagList.route)) },
+                        goToTagPage = { router.trySend(ReplaceTopDestination(Screen.AdminTagProfile.idPath(it))) },
+                        goToUserPage = { router.trySend(GoToDestination(Screen.AdminUserProfile.idPath(it))) },
                     )
                 }
 
-                Screen.AdminTagPageExisting -> authenticatedRoute {
+                Screen.AdminTagProfile -> authenticatedRoute {
                     val id: String by stringPath()
                     AdminTagPage(
-                        router = router,
                         id = id,
                         onError = onError,
                         adminRoutes = adminRoutes,
+                        goToTagList = { router.trySend(ReplaceTopDestination(Screen.AdminTagList.route)) },
+                        goToTagPage = { router.trySend(ReplaceTopDestination(Screen.AdminTagProfile.idPath(it))) },
+                        goToUserPage = { router.trySend(GoToDestination(Screen.AdminUserProfile.idPath(it))) },
                     )
                 }
             }

@@ -76,7 +76,7 @@ enum class Strings {
     DeliverTo,
     Language,
     English,
-    Users,
+    Customers,
     Home,
     Stats,
     Products,

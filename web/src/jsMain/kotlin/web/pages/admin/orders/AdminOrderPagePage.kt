@@ -11,7 +11,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.admin.order.page.AdminOrderPageViewModel
-import feature.router.RouterViewModel
 import org.jetbrains.compose.web.css.em
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
@@ -19,7 +18,6 @@ import web.compose.material3.component.Divider
 
 @Composable
 fun AdminOrderPagePage(
-    router: RouterViewModel,
     onError: suspend (String) -> Unit,
     adminRoutes: AdminRoutes,
 ) {
@@ -36,7 +34,6 @@ fun AdminOrderPagePage(
 
     AdminLayout(
         title = "Admin Order Page",
-        router = router,
         isLoading = false,
         showEditedButtons = false,
         unsavedChangesText = "",

@@ -9,7 +9,7 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiCreate
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.admin.list.AdminListContract
 import feature.admin.list.AdminListViewModel
-import feature.router.RouterViewModel
+import feature.admin.list.adminListStrings
 import theme.MaterialTheme
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
@@ -19,10 +19,8 @@ import web.components.widgets.AppFilledButton
 
 @Composable
 fun AdminCategoryListPage(
-    router: RouterViewModel,
-    onError: suspend (String) -> Unit,
-    goBack: () -> Unit,
     adminRoutes: AdminRoutes,
+    onError: suspend (String) -> Unit,
     goToCreateCategory: () -> Unit,
     goToCategory: (String) -> Unit,
 ) {
@@ -39,8 +37,7 @@ fun AdminCategoryListPage(
     val state by vm.observeStates().collectAsState()
 
     AdminLayout(
-        router = router,
-        title = state.strings.title,
+        title = adminListStrings(state.dataType).title,
         isLoading = state.isLoading,
         showEditedButtons = false,
         unsavedChangesText = "",
@@ -49,8 +46,9 @@ fun AdminCategoryListPage(
         adminRoutes = adminRoutes,
     ) {
         OneLayout(
-            title = state.strings.title,
-            onGoBack = goBack,
+            title = adminListStrings(state.dataType).title,
+            subtitle = null,
+            onGoBack = adminRoutes.goBack,
             hasBackButton = false,
             actions = {
                 AppFilledButton(
@@ -58,7 +56,7 @@ fun AdminCategoryListPage(
                     leadingIcon = { MdiCreate() },
                     containerColor = MaterialTheme.colors.tertiary,
                 ) {
-                    SpanText(text = state.strings.create)
+                    SpanText(text = adminListStrings(state.dataType).create)
                 }
             },
             content = {

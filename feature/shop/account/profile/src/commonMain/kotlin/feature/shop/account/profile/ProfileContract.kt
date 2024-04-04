@@ -1,7 +1,7 @@
 package feature.shop.account.profile
 
 import component.localization.getString
-import data.GetCustomerQuery
+import data.GetCustomerByIdQuery
 import data.type.Role
 
 object ProfileContract {
@@ -60,16 +60,16 @@ object ProfileContract {
         val isAddressEditing: Boolean = false,
         val isSaveAddressButtonDisabled: Boolean = true,
 
-        val original: GetCustomerQuery.GetUserById = GetCustomerQuery.GetUserById(
+        val original: GetCustomerByIdQuery.GetUserById = GetCustomerByIdQuery.GetUserById(
             id = "",
-            details = GetCustomerQuery.Details(
+            details = GetCustomerByIdQuery.Details(
                 email = email,
                 firstName = detailsFirstName,
                 lastName = "lastName",
                 language = "language",
                 phone = phone,
             ),
-            address = GetCustomerQuery.Address(
+            address = GetCustomerByIdQuery.Address(
                 address = address,
                 postcode = postcode,
                 city = city,
@@ -94,7 +94,7 @@ object ProfileContract {
 
     sealed interface Inputs {
         data object GetUserProfile : Inputs
-        data class SetUserProfile(val user: GetCustomerQuery.GetUserById) : Inputs
+        data class SetUserProfile(val user: GetCustomerByIdQuery.GetUserById) : Inputs
         data object OnLogoutClicked : Inputs
 
         data class SetDetailsFullName(val fullName: String) : Inputs

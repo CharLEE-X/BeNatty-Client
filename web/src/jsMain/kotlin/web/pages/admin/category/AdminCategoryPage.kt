@@ -7,16 +7,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.varabyte.kobweb.compose.css.Resize
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.resize
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
+import core.models.PageScreenState
 import feature.admin.category.page.AdminCategoryPageContract
 import feature.admin.category.page.AdminCategoryPageViewModel
-import feature.router.RouterViewModel
+import feature.admin.category.page.adminCategoryPageStrings
+import feature.admin.customer.page.adminCustomerPageStrings
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.layouts.AdminLayout
@@ -35,7 +36,6 @@ import web.compose.material3.component.TextFieldType
 
 @Composable
 fun AdminCategoryPage(
-    router: RouterViewModel,
     id: String?,
     onError: suspend (String) -> Unit,
     adminRoutes: AdminRoutes,
@@ -58,10 +58,10 @@ fun AdminCategoryPage(
     }
     val state by vm.observeStates().collectAsState()
 
-    val title = if (state.screenState is AdminCategoryPageContract.ScreenState.New) {
-        state.strings.createCategory
+    val title = if (state.pageScreenState is PageScreenState.New) {
+        adminCategoryPageStrings.createCategory
     } else {
-        state.strings.category
+        adminCategoryPageStrings.category
     }
 
     var deleteDialogOpen by remember { mutableStateOf(false) }
@@ -69,32 +69,31 @@ fun AdminCategoryPage(
 
     AdminLayout(
         title = title,
-        router = router,
         isLoading = state.isLoading,
-        showEditedButtons = state.wasEdited || state.screenState is AdminCategoryPageContract.ScreenState.New,
+        showEditedButtons = state.wasEdited || state.pageScreenState is PageScreenState.New,
         isSaveEnabled = state.wasEdited,
-        unsavedChangesText = state.strings.unsavedChanges,
-        saveText = state.strings.save,
-        discardText = state.strings.discard,
+        unsavedChangesText = adminCategoryPageStrings.unsavedChanges,
+        saveText = adminCategoryPageStrings.save,
+        discardText = adminCategoryPageStrings.discard,
         onCancel = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.CancelEdit) },
         onSave = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.SaveEdit) },
         adminRoutes = adminRoutes,
         overlay = {
             HasChangesWidget(
                 hasChanges = state.wasEdited,
-                messageText = state.strings.unsavedChanges,
-                saveText = state.strings.save,
-                resetText = state.strings.dismiss,
+                messageText = adminCategoryPageStrings.unsavedChanges,
+                saveText = adminCategoryPageStrings.save,
+                resetText = adminCategoryPageStrings.dismiss,
                 onSave = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.SaveEdit) },
                 onCancel = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.CancelEdit) },
             )
             TakeActionDialog(
                 open = deleteDialogOpen && !deleteDialogClosing,
                 closing = deleteDialogClosing,
-                title = state.strings.delete,
-                actionYesText = state.strings.delete,
-                actionNoText = state.strings.discard,
-                contentText = state.strings.deleteExplain,
+                title = "${adminCustomerPageStrings.delete} ${state.original.name}",
+                actionYesText = adminCategoryPageStrings.delete,
+                actionNoText = adminCategoryPageStrings.discard,
+                contentText = adminCategoryPageStrings.deleteExplain,
                 onOpen = { deleteDialogOpen = it },
                 onClosing = { deleteDialogClosing = it },
                 onYes = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.Delete) },
@@ -103,31 +102,32 @@ fun AdminCategoryPage(
         }
     ) {
         OneThirdLayout(
-            title = if (state.screenState is AdminCategoryPageContract.ScreenState.New) {
-                state.strings.createCategory
+            title = if (state.pageScreenState is PageScreenState.New) {
+                adminCategoryPageStrings.createCategory
             } else {
                 state.original.name
             },
+            subtitle = if (state.pageScreenState == PageScreenState.Existing) state.original.id else null,
             hasBackButton = true,
             actions = {
-                if (state.screenState is AdminCategoryPageContract.ScreenState.Existing) {
+                if (state.pageScreenState is PageScreenState.Existing) {
                     AppFilledButton(
                         onClick = { deleteDialogOpen = !deleteDialogOpen },
                         leadingIcon = { MdiDelete() },
                         containerColor = MaterialTheme.colors.error,
                     ) {
-                        SpanText(text = state.strings.delete)
+                        SpanText(text = adminCategoryPageStrings.delete)
                     }
                 }
             },
-            onGoBack = { router.trySend(RouterContract.Inputs.GoBack()) },
+            onGoBack = adminRoutes.goBack,
             content = {
                 CardSection(title = null) {
                     Title(vm, state)
                     Description(vm, state)
                 }
-                if (state.screenState !is AdminCategoryPageContract.ScreenState.New) {
-                    CardSection(title = state.strings.shipping) {
+                if (state.pageScreenState !is PageScreenState.New) {
+                    CardSection(title = adminCategoryPageStrings.shipping) {
                         ShippingPreset(vm, state)
                     }
                 }
@@ -136,14 +136,14 @@ fun AdminCategoryPage(
                 CardSection(title = null) {
                     Status(vm, state)
                 }
-                CardSection(title = state.strings.insights) {
-                    SpanText(text = state.strings.noInsights)
+                CardSection(title = adminCategoryPageStrings.insights) {
+                    SpanText(text = adminCategoryPageStrings.noInsights)
                 }
-                CardSection(title = state.strings.categoryOrganization) {
+                CardSection(title = adminCategoryPageStrings.categoryOrganization) {
                     ParentCategory(vm, state)
                 }
-                if (state.screenState is AdminCategoryPageContract.ScreenState.Existing) {
-                    CardSection(title = state.strings.info) {
+                if (state.pageScreenState is PageScreenState.Existing) {
+                    CardSection(title = adminCategoryPageStrings.info) {
                         Creator(vm, state)
                         CreatedAt(state)
                         UpdatedAt(state)
@@ -159,7 +159,7 @@ private fun Title(vm: AdminCategoryPageViewModel, state: AdminCategoryPageContra
     AppOutlinedTextField(
         value = state.current.name,
         onValueChange = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Name(it)) },
-        label = state.strings.name,
+        label = adminCategoryPageStrings.name,
         errorText = state.nameError,
         leadingIcon = null,
         shake = state.shakeName,
@@ -173,7 +173,7 @@ fun Description(vm: AdminCategoryPageViewModel, state: AdminCategoryPageContract
     AppOutlinedTextField(
         value = state.current.description ?: "",
         onValueChange = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Description(it)) },
-        label = state.strings.description,
+        label = adminCategoryPageStrings.description,
         errorText = null,
         leadingIcon = null,
         shake = false,
@@ -188,7 +188,7 @@ fun Description(vm: AdminCategoryPageViewModel, state: AdminCategoryPageContract
 @Composable
 fun Status(vm: AdminCategoryPageViewModel, state: AdminCategoryPageContract.State) {
     SwitchSection(
-        title = state.strings.status,
+        title = adminCategoryPageStrings.status,
         selected = state.current.display,
         onClick = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Display(!state.current.display)) },
     )
@@ -197,10 +197,10 @@ fun Status(vm: AdminCategoryPageViewModel, state: AdminCategoryPageContract.Stat
 @Composable
 private fun Creator(vm: AdminCategoryPageViewModel, state: AdminCategoryPageContract.State) {
     CreatorSection(
-        title = state.strings.createdBy,
+        title = adminCategoryPageStrings.createdBy,
         creatorName = "${state.current.creator.firstName} ${state.current.creator.lastName}",
         onClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.GoToUserCreator) },
-        afterTitle = { AppTooltip(state.strings.createdByDesc) },
+        afterTitle = { AppTooltip(adminCategoryPageStrings.createdByDesc) },
     )
 }
 
@@ -208,7 +208,7 @@ private fun Creator(vm: AdminCategoryPageViewModel, state: AdminCategoryPageCont
 fun UpdatedAt(state: AdminCategoryPageContract.State) {
     if (state.current.updatedAt.isNotEmpty()) {
         SpanText(
-            text = "${state.strings.lastUpdatedAt}: ${state.current.updatedAt}",
+            text = "${adminCategoryPageStrings.lastUpdatedAt}: ${state.current.updatedAt}",
             modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
         )
     }
@@ -218,7 +218,7 @@ fun UpdatedAt(state: AdminCategoryPageContract.State) {
 fun CreatedAt(state: AdminCategoryPageContract.State) {
     if (state.current.createdAt.isNotEmpty()) {
         SpanText(
-            text = "${state.strings.createdAt}: ${state.current.createdAt}",
+            text = "${adminCategoryPageStrings.createdAt}: ${state.current.createdAt}",
             modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
         )
     }
@@ -227,7 +227,7 @@ fun CreatedAt(state: AdminCategoryPageContract.State) {
 @Composable
 private fun ShippingPreset(vm: AdminCategoryPageViewModel, state: AdminCategoryPageContract.State) {
     SwitchSection(
-        title = state.strings.isPhysicalProduct,
+        title = adminCategoryPageStrings.isPhysicalProduct,
         selected = state.current.shippingPreset?.isPhysicalProduct ?: false,
         onClick = {
             vm.trySend(
@@ -240,49 +240,49 @@ private fun ShippingPreset(vm: AdminCategoryPageViewModel, state: AdminCategoryP
     AppOutlinedTextField(
         value = state.current.shippingPreset?.weight ?: "",
         onValueChange = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Weight(it)) },
-        label = state.strings.weight,
+        label = adminCategoryPageStrings.weight,
         errorText = state.weightError,
         leadingIcon = null,
         shake = state.shakeWeight,
         required = state.current.shippingPreset?.isPhysicalProduct == true,
         type = TextFieldType.NUMBER,
-        suffixText = state.strings.kg,
+        suffixText = adminCategoryPageStrings.kg,
         modifier = Modifier.fillMaxWidth(),
     )
     AppOutlinedTextField(
         value = state.current.shippingPreset?.length ?: "",
         onValueChange = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Length(it)) },
-        label = state.strings.length,
+        label = adminCategoryPageStrings.length,
         errorText = state.lengthError,
         leadingIcon = null,
         shake = state.shakeLength,
         required = state.current.shippingPreset?.isPhysicalProduct ?: false,
         type = TextFieldType.NUMBER,
-        suffixText = state.strings.cm,
+        suffixText = adminCategoryPageStrings.cm,
         modifier = Modifier.fillMaxWidth(),
     )
     AppOutlinedTextField(
         value = state.current.shippingPreset?.width ?: "",
         onValueChange = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Width(it)) },
-        label = state.strings.width,
+        label = adminCategoryPageStrings.width,
         errorText = state.widthError,
         leadingIcon = null,
         shake = state.shakeWidth,
         required = state.current.shippingPreset?.isPhysicalProduct ?: false,
         type = TextFieldType.NUMBER,
-        suffixText = state.strings.cm,
+        suffixText = adminCategoryPageStrings.cm,
         modifier = Modifier.fillMaxWidth(),
     )
     AppOutlinedTextField(
         value = state.current.shippingPreset?.height ?: "",
         onValueChange = { vm.trySend(AdminCategoryPageContract.Inputs.Set.Height(it)) },
-        label = state.strings.height,
+        label = adminCategoryPageStrings.height,
         errorText = state.heightError,
         leadingIcon = null,
         shake = state.shakeHeight,
         required = state.current.shippingPreset?.isPhysicalProduct ?: false,
         type = TextFieldType.NUMBER,
-        suffixText = state.strings.cm,
+        suffixText = adminCategoryPageStrings.cm,
         modifier = Modifier.fillMaxWidth(),
     )
 }
@@ -292,13 +292,13 @@ private fun ParentCategory(
     vm: AdminCategoryPageViewModel,
     state: AdminCategoryPageContract.State,
 ) {
-    SpanText(text = state.strings.parentCategory)
+    SpanText(text = adminCategoryPageStrings.parentCategory)
     FilterChipSection(
         chips = state.allCategories.map { it.name },
         selectedChips = state.current.parent?.let { listOf(it.firstName).mapNotNull { it } } ?: emptyList(),
         onChipClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.ParentCategorySelected(it)) },
         onCreateClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.GoToCreateCategory) },
-        noChipsText = state.strings.noCategories,
-        createText = state.strings.createCategory,
+        noChipsText = adminCategoryPageStrings.noCategories,
+        createText = adminCategoryPageStrings.createCategory,
     )
 }

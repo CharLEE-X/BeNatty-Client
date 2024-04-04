@@ -1,7 +1,13 @@
 package web.components.layouts
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.AlignItems
+import com.varabyte.kobweb.compose.css.CSSTransition
+import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -16,14 +22,19 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.flex
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
+import com.varabyte.kobweb.compose.ui.modifiers.onMouseOut
+import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
+import com.varabyte.kobweb.compose.ui.modifiers.opacity
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.size
+import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiArrowBack
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.s
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.widgets.AppFilledButton
@@ -34,6 +45,7 @@ import web.util.glossy
 @Composable
 fun DetailPageLayout(
     title: String,
+    subtitle: String?,
     showDelete: Boolean,
     deleteText: String,
     createdAtText: String,
@@ -54,6 +66,7 @@ fun DetailPageLayout(
     ) {
         NavTopSection(
             title = title,
+            subtitle = subtitle,
             onGoBack = onGoBack,
             hasBackButton = true,
             actions = {
@@ -117,6 +130,7 @@ fun BottomSection(
 @Composable
 fun NavTopSection(
     title: String,
+    subtitle: String?,
     hasBackButton: Boolean,
     onGoBack: () -> Unit,
     actions: @Composable RowScope.() -> Unit,
@@ -138,10 +152,28 @@ fun NavTopSection(
             }
         }
 
-        SpanText(
-            text = title,
-            modifier = Modifier.roleStyle(MaterialTheme.typography.displaySmall)
-        )
+        Column(
+            modifier = Modifier.gap(0.5.em)
+        ) {
+            SpanText(
+                text = title,
+                modifier = Modifier.roleStyle(MaterialTheme.typography.headlineLarge)
+            )
+            subtitle?.let {
+                var subHovered by remember { mutableStateOf(false) }
+                val subOpacity = if (subHovered) 1f else 0.6f
+
+                SpanText(
+                    text = it,
+                    modifier = Modifier
+                        .roleStyle(MaterialTheme.typography.bodySmall)
+                        .opacity(subOpacity)
+                        .onMouseOver { subHovered = true }
+                        .onMouseOut { subHovered = false }
+                        .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
+                )
+            }
+        }
         Spacer()
         actions()
     }

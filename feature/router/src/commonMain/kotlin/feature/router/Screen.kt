@@ -49,25 +49,25 @@ enum class Screen(routeFormat: String, override val annotations: Set<RouteAnnota
     AdminHome(ADMIN),
     AdminConfig(ADMIN + CONFIG),
 
-    AdminCustomers(ADMIN + CUSTOMERS),
-    AdminCustomerCreate(ADMIN + CUSTOMERS + NEW),
-    AdminCustomerProfile(ADMIN + CUSTOMERS + ID),
+    AdminUsers(ADMIN + CUSTOMERS),
+    AdminUserCreate(ADMIN + CUSTOMERS + NEW),
+    AdminUserProfile(ADMIN + CUSTOMERS + ID),
 
     AdminProducts(ADMIN + PRODUCTS),
     AdminProductCreate(ADMIN + PRODUCTS + NEW),
-    AdminProductPage(ADMIN + PRODUCTS + ID),
+    AdminProductProfile(ADMIN + PRODUCTS + ID),
 
     AdminCategoryList(ADMIN + CATEGORIES),
-    AdminCategoryPageNew(ADMIN + CATEGORIES + NEW),
+    AdminCategoryCreate(ADMIN + CATEGORIES + NEW),
     AdminCategoryProfile(ADMIN + CATEGORIES + ID),
 
     AdminTagList(ADMIN + TAGS),
     AdminTagCreate(ADMIN + TAGS + NEW),
-    AdminTagPageExisting(ADMIN + TAGS + ID),
+    AdminTagProfile(ADMIN + TAGS + ID),
 
     AdminOrderList(ADMIN + ORDERS),
-    AdminOrderPageNew(ADMIN + ORDERS + NEW),
-    AdminOrderPageExisting(ADMIN + ORDERS + ID),
+    AdminOrderCreate(ADMIN + ORDERS + NEW),
+    AdminOrderProfile(ADMIN + ORDERS + ID),
 
     // Auth
     Login(LOGIN),

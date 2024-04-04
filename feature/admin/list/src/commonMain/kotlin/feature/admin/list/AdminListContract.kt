@@ -2,55 +2,11 @@ package feature.admin.list
 
 import component.localization.getString
 import data.type.SortDirection
+import feature.admin.list.AdminListContract.DataType
 
 object AdminListContract {
     data class State(
         val dataType: DataType,
-
-        val strings: ListStrings = ListStrings(
-            title = when (dataType) {
-                DataType.USER -> getString(component.localization.Strings.Users)
-                DataType.PRODUCT -> getString(component.localization.Strings.Products)
-                DataType.ORDER -> getString(component.localization.Strings.Orders)
-                DataType.CATEGORY -> getString(component.localization.Strings.Categories)
-                DataType.TAG -> getString(component.localization.Strings.Tags)
-            },
-            slot1Text = when (dataType) {
-                DataType.USER -> getString(component.localization.Strings.CreatedAt)
-                DataType.PRODUCT -> getString(component.localization.Strings.CreatedAt)
-                DataType.ORDER -> getString(component.localization.Strings.CreatedAt)
-                DataType.CATEGORY -> getString(component.localization.Strings.CreatedAt)
-                DataType.TAG -> getString(component.localization.Strings.CreatedAt)
-            },
-            slot2Text = when (dataType) {
-                DataType.USER -> getString(component.localization.Strings.Email)
-                DataType.PRODUCT -> getString(component.localization.Strings.Name)
-                DataType.ORDER -> getString(component.localization.Strings.Name)
-                DataType.CATEGORY -> getString(component.localization.Strings.Name)
-                DataType.TAG -> getString(component.localization.Strings.Name)
-            },
-            slot3Text = when (dataType) {
-                DataType.USER -> getString(component.localization.Strings.FirstName)
-                DataType.PRODUCT -> getString(component.localization.Strings.Price)
-                DataType.ORDER -> getString(component.localization.Strings.Description)
-                DataType.CATEGORY -> getString(component.localization.Strings.Description)
-                DataType.TAG -> getString(component.localization.Strings.InProducts)
-            },
-            slot4Text = when (dataType) {
-                DataType.USER -> getString(component.localization.Strings.Orders)
-                DataType.PRODUCT -> getString(component.localization.Strings.Sold)
-                DataType.ORDER -> getString(component.localization.Strings.StockStatus)
-                DataType.CATEGORY -> getString(component.localization.Strings.Display)
-                DataType.TAG -> ""
-            },
-            slot5Text = when (dataType) {
-                DataType.USER -> ""
-                DataType.PRODUCT -> getString(component.localization.Strings.CatalogVisibility)
-                DataType.ORDER -> ""
-                DataType.CATEGORY -> getString(component.localization.Strings.InProducts)
-                DataType.TAG -> ""
-            },
-        ),
 
         val isLoading: Boolean = false,
 
@@ -60,7 +16,7 @@ object AdminListContract {
 
         val searchValue: String = "",
         val sortBy: String = when (dataType) {
-            DataType.USER -> UserSlot.CreatedAt.name
+            DataType.Customer -> CustomerSlot.CreatedAt.name
             DataType.PRODUCT -> ProductSlot.CreatedAt.name
             DataType.ORDER -> OrderSlot.CreatedAt.name
             DataType.CATEGORY -> CategorySlot.CreatedAt.name
@@ -118,32 +74,15 @@ object AdminListContract {
         }
     }
 
-    data class ListStrings(
-        val title: String,
-        val slot1Text: String,
-        val slot2Text: String,
-        val slot3Text: String,
-        val slot4Text: String,
-        val slot5Text: String,
-        val press: String = getString(component.localization.Strings.Press),
-        val create: String = getString(component.localization.Strings.Create),
-        val toStart: String = getString(component.localization.Strings.ToStart),
-        val previous: String = getString(component.localization.Strings.Previous),
-        val next: String = getString(component.localization.Strings.Next),
-        val search: String = getString(component.localization.Strings.Search),
-        val show: String = getString(component.localization.Strings.Show),
-        val filter: String = getString(component.localization.Strings.Filter),
-    )
-
     enum class DataType {
-        USER,
+        Customer,
         PRODUCT,
         ORDER,
         CATEGORY,
         TAG,
     }
 
-    enum class UserSlot {
+    enum class CustomerSlot {
         CreatedAt, Email, FullName, Orders;
 
         fun asString(): String = when (this) {
@@ -226,4 +165,66 @@ data class PageInfo(
     val pages: Int,
     val prev: Int?,
     val next: Int?,
+)
+
+fun adminListStrings(dataType: DataType): AdminListStrings = AdminListStrings(
+    title = when (dataType) {
+        DataType.Customer -> getString(component.localization.Strings.Customers)
+        DataType.PRODUCT -> getString(component.localization.Strings.Products)
+        DataType.ORDER -> getString(component.localization.Strings.Orders)
+        DataType.CATEGORY -> getString(component.localization.Strings.Categories)
+        DataType.TAG -> getString(component.localization.Strings.Tags)
+    },
+    slot1Text = when (dataType) {
+        DataType.Customer -> getString(component.localization.Strings.CreatedAt)
+        DataType.PRODUCT -> getString(component.localization.Strings.CreatedAt)
+        DataType.ORDER -> getString(component.localization.Strings.CreatedAt)
+        DataType.CATEGORY -> getString(component.localization.Strings.CreatedAt)
+        DataType.TAG -> getString(component.localization.Strings.CreatedAt)
+    },
+    slot2Text = when (dataType) {
+        DataType.Customer -> getString(component.localization.Strings.Email)
+        DataType.PRODUCT -> getString(component.localization.Strings.Name)
+        DataType.ORDER -> getString(component.localization.Strings.Name)
+        DataType.CATEGORY -> getString(component.localization.Strings.Name)
+        DataType.TAG -> getString(component.localization.Strings.Name)
+    },
+    slot3Text = when (dataType) {
+        DataType.Customer -> getString(component.localization.Strings.FirstName)
+        DataType.PRODUCT -> getString(component.localization.Strings.Price)
+        DataType.ORDER -> getString(component.localization.Strings.Description)
+        DataType.CATEGORY -> getString(component.localization.Strings.Description)
+        DataType.TAG -> getString(component.localization.Strings.InProducts)
+    },
+    slot4Text = when (dataType) {
+        DataType.Customer -> getString(component.localization.Strings.Orders)
+        DataType.PRODUCT -> getString(component.localization.Strings.Sold)
+        DataType.ORDER -> getString(component.localization.Strings.StockStatus)
+        DataType.CATEGORY -> getString(component.localization.Strings.Display)
+        DataType.TAG -> ""
+    },
+    slot5Text = when (dataType) {
+        DataType.Customer -> ""
+        DataType.PRODUCT -> getString(component.localization.Strings.CatalogVisibility)
+        DataType.ORDER -> ""
+        DataType.CATEGORY -> getString(component.localization.Strings.InProducts)
+        DataType.TAG -> ""
+    },
+)
+
+data class AdminListStrings(
+    val title: String,
+    val slot1Text: String,
+    val slot2Text: String,
+    val slot3Text: String,
+    val slot4Text: String,
+    val slot5Text: String,
+    val press: String = getString(component.localization.Strings.Press),
+    val create: String = getString(component.localization.Strings.Create),
+    val toStart: String = getString(component.localization.Strings.ToStart),
+    val previous: String = getString(component.localization.Strings.Previous),
+    val next: String = getString(component.localization.Strings.Next),
+    val search: String = getString(component.localization.Strings.Search),
+    val show: String = getString(component.localization.Strings.Show),
+    val filter: String = getString(component.localization.Strings.Filter),
 )

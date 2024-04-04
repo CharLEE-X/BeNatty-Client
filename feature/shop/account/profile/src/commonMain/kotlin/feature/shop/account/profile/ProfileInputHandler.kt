@@ -407,29 +407,27 @@ internal class ProfileInputHandler :
     private suspend fun InputScope.handleGetUserProfile() {
         sideJob("handleGetUserProfile") {
             authService.userId?.let {
-                userService.getById("1").collect {
-                    it.fold(
-                        { postEvent(ProfileContract.Events.OnError(it.mapToUiMessage())) },
-                        {
-                            postInput(ProfileContract.Inputs.SetEmail(it.getUserById.details.email))
-                            postInput(
-                                ProfileContract.Inputs.SetDetailsFullName(
-                                    it.getUserById.details.firstName ?: ""
-                                )
+                userService.getById("1").fold(
+                    { postEvent(ProfileContract.Events.OnError(it.mapToUiMessage())) },
+                    {
+                        postInput(ProfileContract.Inputs.SetEmail(it.getUserById.details.email))
+                        postInput(
+                            ProfileContract.Inputs.SetDetailsFullName(
+                                it.getUserById.details.firstName ?: ""
                             )
-                            it.getUserById.details.phone?.let { postInput(ProfileContract.Inputs.SetPhone(it)) }
-                            postInput(ProfileContract.Inputs.SetPersonalDetailsButtonDisabled(isDisabled = true))
+                        )
+                        it.getUserById.details.phone?.let { postInput(ProfileContract.Inputs.SetPhone(it)) }
+                        postInput(ProfileContract.Inputs.SetPersonalDetailsButtonDisabled(isDisabled = true))
 
-                            postInput(ProfileContract.Inputs.SetPasswordButtonDisabled(isDisabled = true))
+                        postInput(ProfileContract.Inputs.SetPasswordButtonDisabled(isDisabled = true))
 
-                            it.getUserById.address.address?.let { postInput(ProfileContract.Inputs.SetAddress(it)) }
-                            it.getUserById.address.postcode?.let { postInput(ProfileContract.Inputs.SetPostcode(it)) }
-                            it.getUserById.address.city?.let { postInput(ProfileContract.Inputs.SetCity(it)) }
-                            it.getUserById.address.country?.let { postInput(ProfileContract.Inputs.SetCountry(it)) }
-                            postInput(ProfileContract.Inputs.SetAddressButtonDisabled(isDisabled = true))
-                        },
-                    )
-                }
+                        it.getUserById.address.address?.let { postInput(ProfileContract.Inputs.SetAddress(it)) }
+                        it.getUserById.address.postcode?.let { postInput(ProfileContract.Inputs.SetPostcode(it)) }
+                        it.getUserById.address.city?.let { postInput(ProfileContract.Inputs.SetCity(it)) }
+                        it.getUserById.address.country?.let { postInput(ProfileContract.Inputs.SetCountry(it)) }
+                        postInput(ProfileContract.Inputs.SetAddressButtonDisabled(isDisabled = true))
+                    },
+                )
             }
         }
     }

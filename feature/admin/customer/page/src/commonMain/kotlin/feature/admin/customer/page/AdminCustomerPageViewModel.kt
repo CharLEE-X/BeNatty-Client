@@ -1,4 +1,4 @@
-package feature.admin.user.create
+package feature.admin.customer.page
 
 import com.copperleaf.ballast.BallastViewModelConfiguration
 import com.copperleaf.ballast.build
@@ -11,16 +11,17 @@ import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
-class AdminUserCreateViewModel(
+class AdminCustomerPageViewModel(
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
+    userId: String?,
     goBack: () -> Unit,
     showLeavePageWarningDialog: () -> Unit,
-    goToCustomerProfile: (String) -> Unit,
+    goToCustomerPage: (String) -> Unit,
 ) : BasicViewModel<
-    AdminCustomerCreateContract.Inputs,
-    AdminCustomerCreateContract.Events,
-    AdminCustomerCreateContract.State,
+    AdminCustomerPageContract.Inputs,
+    AdminCustomerPageContract.Events,
+    AdminCustomerPageContract.State,
     >(
     config = BallastViewModelConfiguration.Builder()
         .apply {
@@ -28,8 +29,8 @@ class AdminUserCreateViewModel(
             logger = { PrintlnLogger() }
         }
         .withViewModel(
-            initialState = AdminCustomerCreateContract.State(),
-            inputHandler = AdminUserCreateInputHandler(),
+            initialState = AdminCustomerPageContract.State(),
+            inputHandler = AdminCustomerPageInputHandler(),
             name = TAG,
         )
         .dispatchers(
@@ -39,14 +40,18 @@ class AdminUserCreateViewModel(
             interceptorDispatcher = Dispatchers.Default,
         )
         .build(),
-    eventHandler = AdminUserCreateEventHandler(
+    eventHandler = AdminCustomerPageEventHandler(
         onError = onError,
         goBack = goBack,
         showLeavePageWarningDialog = showLeavePageWarningDialog,
-        goToUser = goToCustomerProfile,
+        goToUser = goToCustomerPage,
     ),
     coroutineScope = scope,
 ) {
+    init {
+        trySend(AdminCustomerPageContract.Inputs.Init(userId))
+    }
+
     companion object {
         private val TAG = this::class.simpleName!!
     }

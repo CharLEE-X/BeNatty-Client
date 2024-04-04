@@ -4,7 +4,7 @@ import component.localization.getString
 
 object AdminOrderPageContract {
     data class State(
-        val strings: Strings = Strings()
+        val isLoading: Boolean = false,
     )
 
     sealed interface Inputs {
@@ -15,7 +15,10 @@ object AdminOrderPageContract {
         data class OnError(val message: String) : Events
     }
 
-    data class Strings(
-        val firstName: String = getString(component.localization.Strings.FirstName),
-    )
 }
+
+val adminOrderPageStrings: AdminOrderPageStrings = AdminOrderPageStrings()
+
+data class AdminOrderPageStrings(
+    val firstName: String = getString(component.localization.Strings.FirstName),
+)

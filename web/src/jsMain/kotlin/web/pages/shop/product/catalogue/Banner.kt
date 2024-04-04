@@ -49,7 +49,6 @@ fun CatalogBanner(
         val bannerHeight: CSSLengthOrPercentageNumericValue = 350.px
 
         if (!state.isLoading) {
-
             Banner(
                 title = state.bannerTitle ?: "",
                 height = bannerHeight,

@@ -30,13 +30,7 @@ class AdminCategoryPageViewModel(
             logger = { PrintlnLogger() }
         }
         .withViewModel(
-            initialState = AdminCategoryPageContract.State(
-                screenState = if (id == null) {
-                    AdminCategoryPageContract.ScreenState.New
-                } else {
-                    AdminCategoryPageContract.ScreenState.Existing
-                }
-            ),
+            initialState = AdminCategoryPageContract.State(),
             inputHandler = AdminUserPageInputHandler(),
             name = TAG,
         )

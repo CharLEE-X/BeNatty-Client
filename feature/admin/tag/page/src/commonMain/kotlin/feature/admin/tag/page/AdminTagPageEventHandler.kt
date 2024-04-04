@@ -5,7 +5,7 @@ import com.copperleaf.ballast.EventHandlerScope
 
 internal class AdminTagPageEventHandler(
     private val onError: suspend (String) -> Unit,
-    private val goToUserList: () -> Unit,
+    private val goToTagList: () -> Unit,
     private val goToUser: (String) -> Unit,
     private val goToTag: (String) -> Unit,
 ) : EventHandler<AdminTagPageContract.Inputs, AdminTagPageContract.Events, AdminTagPageContract.State> {
@@ -13,8 +13,8 @@ internal class AdminTagPageEventHandler(
         event: AdminTagPageContract.Events,
     ) = when (event) {
         is AdminTagPageContract.Events.OnError -> onError(event.message)
-        AdminTagPageContract.Events.GoToList -> goToUserList()
-        is AdminTagPageContract.Events.GoToUser -> goToUser(event.id)
+        AdminTagPageContract.Events.GoToTagList -> goToTagList()
         is AdminTagPageContract.Events.GoToTag -> goToTag(event.id)
+        is AdminTagPageContract.Events.GoToUser -> goToUser(event.id)
     }
 }

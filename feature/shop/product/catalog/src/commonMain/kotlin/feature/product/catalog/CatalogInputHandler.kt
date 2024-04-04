@@ -9,7 +9,6 @@ import data.service.CategoryService
 import data.service.ConfigService
 import data.service.ProductService
 import data.type.MediaType
-import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -72,6 +71,8 @@ internal class CatalogInputHandler :
             configService.getCatalogConfig().fold(
                 { postEvent(CatalogContract.Events.OnError(it.mapToUiMessage())) },
                 {
+                    println("getCatalogConfig: $it")
+
                     val bannerImageUrl = with(it.getCatalogConfig.bannerConfig) {
                         when (state.variant) {
                             Variant.Catalog -> catalog.media?.url
@@ -129,7 +130,7 @@ internal class CatalogInputHandler :
             GetCatalogPageQuery.Product(
                 id = "$index",
                 title = "Product $index",
-                price = "${index}0.0",
+                price = "${index}.0".toDouble(),
                 media = listOf(
                     GetCatalogPageQuery.Medium(
                         keyName = "$index",
@@ -188,7 +189,6 @@ private suspend fun InputScope.handleInit(variant: Variant) {
         postInput(CatalogContract.Inputs.SetShowSearch(variant is Variant.Search))
         postInput(CatalogContract.Inputs.FetchCatalogueConfig)
         postInput(CatalogContract.Inputs.FetchProducts(page = 0))
-        delay(5000)
         postInput(CatalogContract.Inputs.SetIsLoading(isLoading = false))
     }
 }

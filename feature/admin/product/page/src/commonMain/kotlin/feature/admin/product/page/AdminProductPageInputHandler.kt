@@ -5,6 +5,7 @@ import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
 import core.mapToUiMessage
+import core.models.PageScreenState
 import core.util.millisToTime
 import data.AdminProductGetByIdQuery
 import data.GetCategoryByIdQuery
@@ -74,7 +75,7 @@ internal class AdminProductPageInputHandler :
         is AdminProductPageContract.Inputs.SetCurrentProduct ->
             updateState { it.copy(current = input.product).wasEdited() }
 
-        is AdminProductPageContract.Inputs.SetStateOfScreen -> updateState { it.copy(screenState = input.screenState) }
+        is AdminProductPageContract.Inputs.SetPageScreenState -> updateState { it.copy(pageScreenState = input.screenState) }
         is AdminProductPageContract.Inputs.SetId -> handleSetId(input.id)
         is AdminProductPageContract.Inputs.SetTitle -> handleSetTitle(input.title)
 
@@ -126,12 +127,12 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleAddMedia(mediaString: String) {
         val state = getCurrentState()
         sideJob("handleAddMedia") {
-            when (state.screenState) {
-                AdminProductPageContract.ScreenState.Existing -> {
+            when (state.pageScreenState) {
+                PageScreenState.Existing -> {
                     postInput(AdminProductPageContract.Inputs.UploadMedia(mediaString))
                 }
 
-                AdminProductPageContract.ScreenState.New -> {
+                PageScreenState.New -> {
                     val currentLocalMedia = state.localMedia
                     val newMedia = AdminProductGetByIdQuery.Medium(
                         keyName = currentLocalMedia.size.toString(),
@@ -148,15 +149,15 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleDeleteMedia(index: Int) {
         val state = getCurrentState()
         sideJob("handleDeleteMedia") {
-            when (state.screenState) {
-                AdminProductPageContract.ScreenState.Existing -> {
+            when (state.pageScreenState) {
+                PageScreenState.Existing -> {
                     state.current.let {
                         val id = it.media[index].keyName
                         postInput(AdminProductPageContract.Inputs.OnDeleteImageClick(id))
                     }
                 }
 
-                AdminProductPageContract.ScreenState.New -> {
+                PageScreenState.New -> {
                     val newMedia = state.localMedia.toMutableList().drop(index)
                     postInput(AdminProductPageContract.Inputs.SetLocalMedia(newMedia))
                 }
@@ -302,7 +303,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetPrice(price: String) {
         updateState {
             it.copy(
-                current = it.current.copy(pricing = it.current.pricing.copy(price = price)),
+                current = it.current.copy(pricing = it.current.pricing.copy(price = price.toDouble())),
                 priceError = if (it.wasEdited) inputValidator.validateNumberPositive(price.toInt()) else null
             ).wasEdited()
         }
@@ -311,7 +312,7 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleSetRegularPrice(regularPrice: String) {
         updateState {
             it.copy(
-                current = it.current.copy(pricing = it.current.pricing.copy(regularPrice = regularPrice)),
+                current = it.current.copy(pricing = it.current.pricing.copy(regularPrice = regularPrice.toDouble())),
                 regularPriceError = if (it.wasEdited) inputValidator.validateNumberPositive(regularPrice.toInt()) else null
             ).wasEdited()
         }
@@ -385,11 +386,11 @@ internal class AdminProductPageInputHandler :
     private suspend fun InputScope.handleInit(id: String?) {
         sideJob("handleInit") {
             if (id == null) {
-                postInput(AdminProductPageContract.Inputs.SetStateOfScreen(AdminProductPageContract.ScreenState.New))
+                postInput(AdminProductPageContract.Inputs.SetPageScreenState(PageScreenState.New))
             } else {
                 postInput(AdminProductPageContract.Inputs.SetLoading(isLoading = true))
                 postInput(AdminProductPageContract.Inputs.GetProductById(id))
-                postInput(AdminProductPageContract.Inputs.SetStateOfScreen(AdminProductPageContract.ScreenState.Existing))
+                postInput(AdminProductPageContract.Inputs.SetPageScreenState(PageScreenState.Existing))
                 postInput(AdminProductPageContract.Inputs.SetLoading(isLoading = false))
             }
             postInput(AdminProductPageContract.Inputs.GetAllCategories)
@@ -417,41 +418,40 @@ internal class AdminProductPageInputHandler :
 
     private suspend fun InputScope.handleGetProductById(id: String) {
         sideJob("handleGetProduct") {
-            productService.getById(id).collect { result ->
-                result.fold(
-                    { postEvent(AdminProductPageContract.Events.OnError(it.mapToUiMessage())) },
-                    {
-                        with(it.getProductById) {
-                            val createdAt = millisToTime(createdAt.toLong())
-                            val updatedAt = millisToTime(updatedAt.toLong())
-                            val originalProduct = copy(
-                                title = title,
-                                description = description,
-                                postStatus = postStatus,
-                                media = media,
-                                categoryId = categoryId,
-                                tags = tags,
-                                isFeatured = isFeatured,
-                                allowReviews = allowReviews,
-                                creator = creator.copy(
-                                    id = creator.id,
-                                    firstName = creator.firstName,
-                                    lastName = creator.lastName,
-                                ),
-                                createdAt = createdAt,
-                                updatedAt = updatedAt,
-                                pricing = pricing.copy(
-                                    price = pricing.price,
-                                    regularPrice = pricing.regularPrice,
-                                    chargeTax = pricing.chargeTax,
-                                ),
-                            )
-                            postInput(AdminProductPageContract.Inputs.SetOriginalProduct(originalProduct))
-                            postInput(AdminProductPageContract.Inputs.SetCurrentProduct(originalProduct))
-                        }
-                    },
-                )
-            }
+            productService.getById(id).fold(
+                { postEvent(AdminProductPageContract.Events.OnError(it.mapToUiMessage())) },
+                {
+                    println("getProductById: $it")
+                    with(it.getProductById) {
+                        val createdAt = millisToTime(createdAt.toLong())
+                        val updatedAt = millisToTime(updatedAt.toLong())
+                        val originalProduct = copy(
+                            title = title,
+                            description = description,
+                            postStatus = postStatus,
+                            media = media,
+                            categoryId = categoryId,
+                            tags = tags,
+                            isFeatured = isFeatured,
+                            allowReviews = allowReviews,
+                            creator = creator.copy(
+                                id = creator.id,
+                                firstName = creator.firstName,
+                                lastName = creator.lastName,
+                            ),
+                            createdAt = createdAt,
+                            updatedAt = updatedAt,
+                            pricing = pricing.copy(
+                                price = pricing.price,
+                                regularPrice = pricing.regularPrice,
+                                chargeTax = pricing.chargeTax,
+                            ),
+                        )
+                        postInput(AdminProductPageContract.Inputs.SetOriginalProduct(originalProduct))
+                        postInput(AdminProductPageContract.Inputs.SetCurrentProduct(originalProduct))
+                    }
+                },
+            )
         }
     }
 
@@ -475,8 +475,8 @@ internal class AdminProductPageInputHandler :
                 isFeatured = it.isFeatured,
                 allowReviews = it.allowReviews,
                 pricing = PricingCreateInput(
-                    price = it.pricing.price ?: "",
-                    regularPrice = it.pricing.regularPrice ?: "",
+                    price = it.pricing.price ?: 100.0,
+                    regularPrice = it.pricing.regularPrice ?: 100.0,
                     chargeTax = it.pricing.chargeTax,
                 ),
                 inventory = InventoryInput(
@@ -502,7 +502,14 @@ internal class AdminProductPageInputHandler :
                                 value = it.value,
                             )
                         },
-                        media = it.media,
+                        media = it.media.map { media ->
+                            MediaInput(
+                                keyName = media.keyName,
+                                url = media.url,
+                                type = media.type,
+                                alt = media.alt,
+                            )
+                        },
                         quantity = it.quantity,
                         price = it.price,
                     )
@@ -579,7 +586,7 @@ internal class AdminProductPageInputHandler :
             state.original.let { original ->
                 sideJob("handleUpdateDetails") {
                     productService.update(
-                        id = current.id,
+                        id = original.id,
                         name = if (current.title != state.original.title) current.title else null,
                         description = if (current.description != state.original.description)
                             current.description else null,
@@ -672,7 +679,14 @@ internal class AdminProductPageInputHandler :
                                                         value = it.value
                                                     )
                                                 },
-                                                media = it.media,
+                                                media = it.media.map {
+                                                    AdminProductGetByIdQuery.Medium1(
+                                                        keyName = it.keyName,
+                                                        url = it.url,
+                                                        alt = it.alt,
+                                                        type = it.type,
+                                                    )
+                                                },
                                                 price = it.price,
                                                 quantity = it.quantity,
                                             )
@@ -694,7 +708,7 @@ internal class AdminProductPageInputHandler :
 
     private suspend fun InputScope.handleDelete() {
         getCurrentState().current.let {
-            sideJob("handleDeleteUser") {
+            sideJob("handleDeleteProduct") {
                 productService.delete(it.id).fold(
                     { postEvent(AdminProductPageContract.Events.OnError(it.mapToUiMessage())) },
                     { postEvent(AdminProductPageContract.Events.GoBackToProducts) },
@@ -731,9 +745,9 @@ internal class AdminProductPageInputHandler :
                 !isWidthError && !isHeightError
 
             if (isNoError) {
-                when (screenState) {
-                    AdminProductPageContract.ScreenState.New -> handleCreateNewProduct()
-                    AdminProductPageContract.ScreenState.Existing -> handleUpdateProduct()
+                when (pageScreenState) {
+                    PageScreenState.New -> handleCreateNewProduct()
+                    PageScreenState.Existing -> handleUpdateProduct()
                 }
             } else noOp()
         }

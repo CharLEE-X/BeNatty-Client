@@ -53,6 +53,7 @@ import feature.admin.list.AdminListContract
 import feature.admin.list.AdminListViewModel
 import feature.admin.list.ListItem
 import feature.admin.list.PageInfo
+import feature.admin.list.adminListStrings
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.deg
 import org.jetbrains.compose.web.css.em
@@ -72,6 +73,8 @@ fun ListPageLayout(
     state: AdminListContract.State,
     vm: AdminListViewModel,
 ) {
+    val strings = adminListStrings(state.dataType)
+
     with(state) {
         Column(
             modifier = Modifier
@@ -157,8 +160,8 @@ fun ListTopBar(
             modifier = gridContainerModifier
         ) {
             when (state.dataType) {
-                AdminListContract.DataType.USER -> {
-                    AdminListContract.UserSlot.entries.forEach { slot ->
+                AdminListContract.DataType.Customer -> {
+                    AdminListContract.CustomerSlot.entries.forEach { slot ->
                         TopBarItem(
                             text = slot.asString(),
                             isSelected = state.sortBy == slot.name,
@@ -248,7 +251,7 @@ fun Item(
             )
     ) {
         when (state.dataType) {
-            AdminListContract.DataType.USER -> {
+            AdminListContract.DataType.Customer -> {
                 SpanText(item.slot1)
                 SpanText(item.slot2 ?: "N/A")
                 SpanText(item.slot3 ?: "N/A")

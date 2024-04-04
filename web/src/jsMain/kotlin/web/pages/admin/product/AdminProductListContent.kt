@@ -1,4 +1,4 @@
-package web.pages.admin.products
+package web.pages.admin.product
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -9,7 +9,7 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiCreate
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.admin.list.AdminListContract
 import feature.admin.list.AdminListViewModel
-import feature.router.RouterViewModel
+import feature.admin.list.adminListStrings
 import theme.MaterialTheme
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
@@ -19,9 +19,7 @@ import web.components.widgets.AppFilledButton
 
 @Composable
 fun AdminProductListPage(
-    router: RouterViewModel,
     onError: suspend (String) -> Unit,
-    goBack: () -> Unit,
     adminRoutes: AdminRoutes,
     goToCreateProduct: () -> Unit,
     goToProduct: (String) -> Unit,
@@ -39,8 +37,7 @@ fun AdminProductListPage(
     val state by vm.observeStates().collectAsState()
 
     AdminLayout(
-        router = router,
-        title = state.strings.title,
+        title = adminListStrings(state.dataType).title,
         isLoading = state.isLoading,
         showEditedButtons = false,
         unsavedChangesText = "",
@@ -49,8 +46,9 @@ fun AdminProductListPage(
         adminRoutes = adminRoutes,
     ) {
         OneLayout(
-            title = state.strings.title,
-            onGoBack = goBack,
+            title = adminListStrings(state.dataType).title,
+            subtitle = null,
+            onGoBack = adminRoutes.goBack,
             hasBackButton = false,
             actions = {
                 AppFilledButton(
@@ -58,7 +56,7 @@ fun AdminProductListPage(
                     leadingIcon = { MdiCreate() },
                     containerColor = MaterialTheme.colors.tertiary,
                 ) {
-                    SpanText(text = state.strings.create)
+                    SpanText(text = adminListStrings(state.dataType).create)
                 }
             },
             content = {

@@ -5,7 +5,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -14,7 +13,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.admin.dashboard.AdminDashboardViewModel
-import feature.router.RouterViewModel
+import feature.admin.dashboard.adminDashboardStrings
 import org.jetbrains.compose.web.css.em
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
@@ -23,7 +22,6 @@ import web.util.glossy
 
 @Composable
 fun AdminDashboardPage(
-    router: RouterViewModel,
     onError: suspend (String) -> Unit,
     adminRoutes: AdminRoutes,
 ) {
@@ -37,8 +35,7 @@ fun AdminDashboardPage(
     val state by vm.observeStates().collectAsState()
 
     AdminLayout(
-        title = state.strings.home,
-        router = router,
+        title = adminDashboardStrings.home,
         isLoading = false,
         showEditedButtons = false,
         unsavedChangesText = "",
@@ -47,8 +44,9 @@ fun AdminDashboardPage(
         adminRoutes = adminRoutes,
     ) {
         OneLayout(
-            title = state.strings.home,
-            onGoBack = { router.trySend(RouterContract.Inputs.GoBack()) },
+            title = adminDashboardStrings.home,
+            subtitle = null,
+            onGoBack = adminRoutes.goBack,
             hasBackButton = false,
             actions = {},
         ) {
@@ -65,10 +63,10 @@ fun AdminDashboardPage(
                     Column(
                         modifier = Modifier.gap(1.em)
                     ) {
-                        SpanText(state.strings.stats)
-                        SpanText("${state.strings.users}: ${state.stats.totalUsers}")
-                        SpanText("${state.strings.products}: ${state.stats.totalProducts}")
-                        SpanText("${state.strings.orders}: ${state.stats.totalOrders}")
+                        SpanText(adminDashboardStrings.stats)
+                        SpanText("${adminDashboardStrings.customers}: ${state.stats.totalUsers}")
+                        SpanText("${adminDashboardStrings.products}: ${state.stats.totalProducts}")
+                        SpanText("${adminDashboardStrings.orders}: ${state.stats.totalOrders}")
                     }
                 }
             }

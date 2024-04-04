@@ -4,6 +4,7 @@ import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
 import core.mapToUiMessage
+import core.models.PageScreenState
 import core.util.millisToTime
 import data.service.TagService
 import kotlinx.coroutines.delay
@@ -35,7 +36,7 @@ internal class AdminTagPageInputHandler :
         AdminTagPageContract.Inputs.OnClick.ImproveName -> handleImproveName()
 
         is AdminTagPageContract.Inputs.Set.Loading -> updateState { it.copy(isLoading = input.isLoading) }
-        is AdminTagPageContract.Inputs.Set.StateOfScreen -> updateState { it.copy(screenState = input.screenState) }
+        is AdminTagPageContract.Inputs.Set.StateOfScreen -> updateState { it.copy(pageScreenState = input.screenState) }
         is AdminTagPageContract.Inputs.Set.AllTags -> updateState { it.copy(allTags = input.categories) }
         is AdminTagPageContract.Inputs.Set.OriginalTag ->
             updateState { it.copy(original = input.category).wasEdited() }
@@ -93,7 +94,7 @@ internal class AdminTagPageInputHandler :
         sideJob("handleDeleteTag") {
             tagService.deleteById(state.current.id).fold(
                 { postEvent(AdminTagPageContract.Events.OnError(it.mapToUiMessage())) },
-                { postEvent(AdminTagPageContract.Events.GoToList) },
+                { postEvent(AdminTagPageContract.Events.GoToTagList) },
             )
         }
     }
@@ -102,12 +103,12 @@ internal class AdminTagPageInputHandler :
         sideJob("handleInit") {
             postInput(AdminTagPageContract.Inputs.Get.AllTags(id))
             if (id == null) {
-                postInput(AdminTagPageContract.Inputs.Set.StateOfScreen(AdminTagPageContract.ScreenState.New))
+                postInput(AdminTagPageContract.Inputs.Set.StateOfScreen(PageScreenState.New))
             } else {
                 postInput(AdminTagPageContract.Inputs.Set.Loading(isLoading = true))
                 postInput(AdminTagPageContract.Inputs.Set.Id(id))
                 postInput(AdminTagPageContract.Inputs.Get.TagById(id))
-                postInput(AdminTagPageContract.Inputs.Set.StateOfScreen(AdminTagPageContract.ScreenState.Existing))
+                postInput(AdminTagPageContract.Inputs.Set.StateOfScreen(PageScreenState.Existing))
                 postInput(AdminTagPageContract.Inputs.Set.Loading(isLoading = false))
             }
         }

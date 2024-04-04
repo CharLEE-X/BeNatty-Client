@@ -11,8 +11,6 @@ object AdminDashboardContract {
             totalProducts = 0,
             totalOrders = 0,
         ),
-
-        val strings: Strings = Strings()
     )
 
     sealed interface Inputs {
@@ -24,12 +22,14 @@ object AdminDashboardContract {
     sealed interface Events {
         data class OnError(val message: String) : Events
     }
-
-    data class Strings(
-        val users: String = getString(component.localization.Strings.Users),
-        val home: String = getString(component.localization.Strings.Home),
-        val stats: String = getString(component.localization.Strings.Stats),
-        val products: String = getString(component.localization.Strings.Products),
-        val orders: String = getString(component.localization.Strings.Orders),
-    )
 }
+
+val adminDashboardStrings: AdminDashboardStrings = AdminDashboardStrings()
+
+data class AdminDashboardStrings(
+    val customers: String = getString(component.localization.Strings.Customers),
+    val home: String = getString(component.localization.Strings.Home),
+    val stats: String = getString(component.localization.Strings.Stats),
+    val products: String = getString(component.localization.Strings.Products),
+    val orders: String = getString(component.localization.Strings.Orders),
+)

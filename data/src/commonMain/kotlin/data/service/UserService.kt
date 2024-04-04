@@ -4,12 +4,11 @@ import arrow.core.Either
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
-import com.apollographql.apollo3.cache.normalized.watch
 import core.RemoteError
 import data.CreateCustomerMutation
-import data.CustomerGetAllPageQuery
 import data.DeleteCustomerByIdMutation
-import data.GetCustomerQuery
+import data.GetAllCustomersAsPageQuery
+import data.GetCustomerByIdQuery
 import data.UpdateCustomerMutation
 import data.type.PageInput
 import data.type.SortDirection
@@ -17,8 +16,6 @@ import data.type.UserCreateInput
 import data.type.UserUpdateInput
 import data.utils.handle
 import data.utils.skipIfNull
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 interface UserService {
     suspend fun create(
@@ -41,14 +38,14 @@ interface UserService {
         marketingSms: Boolean,
     ): Either<RemoteError, CreateCustomerMutation.Data>
 
-    suspend fun getById(id: String): Flow<Either<RemoteError, GetCustomerQuery.Data>>
+    suspend fun getById(id: String): Either<RemoteError, GetCustomerByIdQuery.Data>
     suspend fun getAsPage(
         page: Int,
         size: Int,
         query: String?,
         sortBy: String?,
         sortDirection: SortDirection?,
-    ): Either<RemoteError, CustomerGetAllPageQuery.Data>
+    ): Either<RemoteError, GetAllCustomersAsPageQuery.Data>
 
     suspend fun deleteById(id: String): Either<RemoteError, DeleteCustomerByIdMutation.Data>
 
@@ -119,11 +116,10 @@ internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserSer
             .handle()
     }
 
-    override suspend fun getById(id: String): Flow<Either<RemoteError, GetCustomerQuery.Data>> {
-        return apolloClient.query(GetCustomerQuery(id))
-            .fetchPolicy(FetchPolicy.CacheAndNetwork)
-            .watch()
-            .map { it.handle() }
+    override suspend fun getById(id: String): Either<RemoteError, GetCustomerByIdQuery.Data> {
+        return apolloClient.query(GetCustomerByIdQuery(id))
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .handle()
     }
 
     override suspend fun getAsPage(
@@ -132,7 +128,7 @@ internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserSer
         query: String?,
         sortBy: String?,
         sortDirection: SortDirection?,
-    ): Either<RemoteError, CustomerGetAllPageQuery.Data> {
+    ): Either<RemoteError, GetAllCustomersAsPageQuery.Data> {
         val pageInput = PageInput(
             page = page,
             size = size,
@@ -140,7 +136,7 @@ internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserSer
             sortBy = sortBy.skipIfNull(),
             sortDirection = sortDirection.skipIfNull(),
         )
-        return apolloClient.query(CustomerGetAllPageQuery(pageInput))
+        return apolloClient.query(GetAllCustomersAsPageQuery(pageInput))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }

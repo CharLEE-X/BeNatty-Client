@@ -1,4 +1,4 @@
-query GetCustomer($getUserByIdId: String!) {
+query GetCustomerById($getUserByIdId: String!) {
   getUserById(id: $getUserByIdId) {
     address {
       address

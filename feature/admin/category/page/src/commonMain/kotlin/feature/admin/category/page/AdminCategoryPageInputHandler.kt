@@ -5,6 +5,7 @@ import com.copperleaf.ballast.InputHandlerScope
 import com.copperleaf.ballast.postInput
 import component.localization.InputValidator
 import core.mapToUiMessage
+import core.models.PageScreenState
 import core.util.millisToTime
 import data.GetCategoryByIdQuery
 import data.service.CategoryService
@@ -40,7 +41,7 @@ internal class AdminUserPageInputHandler :
         AdminCategoryPageContract.Inputs.OnClick.ImproveDescription -> handleImproveDescription()
 
         is AdminCategoryPageContract.Inputs.Set.Loading -> updateState { it.copy(isLoading = input.isLoading) }
-        is AdminCategoryPageContract.Inputs.Set.StateOfScreen -> updateState { it.copy(screenState = input.screenState) }
+        is AdminCategoryPageContract.Inputs.Set.StateOfScreen -> updateState { it.copy(pageScreenState = input.screenState) }
         is AdminCategoryPageContract.Inputs.Set.AllCategories -> updateState { it.copy(allCategories = input.categories) }
         is AdminCategoryPageContract.Inputs.Set.OriginalCategory ->
             updateState { it.copy(original = input.category).wasEdited() }
@@ -218,12 +219,12 @@ internal class AdminUserPageInputHandler :
         sideJob("handleInit") {
             postInput(AdminCategoryPageContract.Inputs.Get.AllCategories(id))
             if (id == null) {
-                postInput(AdminCategoryPageContract.Inputs.Set.StateOfScreen(AdminCategoryPageContract.ScreenState.New))
+                postInput(AdminCategoryPageContract.Inputs.Set.StateOfScreen(PageScreenState.New))
             } else {
                 postInput(AdminCategoryPageContract.Inputs.Set.Loading(isLoading = true))
                 postInput(AdminCategoryPageContract.Inputs.Set.Id(id))
                 postInput(AdminCategoryPageContract.Inputs.Get.CategoryById(id))
-                postInput(AdminCategoryPageContract.Inputs.Set.StateOfScreen(AdminCategoryPageContract.ScreenState.Existing))
+                postInput(AdminCategoryPageContract.Inputs.Set.StateOfScreen(PageScreenState.Existing))
                 postInput(AdminCategoryPageContract.Inputs.Set.Loading(isLoading = false))
             }
         }

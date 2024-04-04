@@ -120,7 +120,7 @@ internal class AdminListInputHandler :
 
             postInput(AdminListContract.Inputs.Set.Loading(true))
             when (state.dataType) {
-                AdminListContract.DataType.USER -> {
+                AdminListContract.DataType.Customer -> {
                     userService.getAsPage(
                         page = page,
                         size = state.perPage,
@@ -173,7 +173,7 @@ internal class AdminListInputHandler :
                                         slot1 = millisToDate(product.createdAt.toLong()),
                                         slot2 = product.mediaUrl,
                                         slot3 = product.title,
-                                        slot4 = product.price,
+                                        slot4 = product.price?.toString(),
                                         slot5 = product.sold.toString(),
                                         slot6 = null,
                                     )

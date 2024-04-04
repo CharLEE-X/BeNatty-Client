@@ -15,7 +15,7 @@ class AdminTagPageViewModel(
     id: String?,
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
-    goToUserList: () -> Unit,
+    goToTagList: () -> Unit,
     goToUser: (String) -> Unit,
     goToTag: (String) -> Unit,
 ) : BasicViewModel<
@@ -29,13 +29,7 @@ class AdminTagPageViewModel(
             logger = { PrintlnLogger() }
         }
         .withViewModel(
-            initialState = AdminTagPageContract.State(
-                screenState = if (id == null) {
-                    AdminTagPageContract.ScreenState.New
-                } else {
-                    AdminTagPageContract.ScreenState.Existing
-                }
-            ),
+            initialState = AdminTagPageContract.State(),
             inputHandler = AdminTagPageInputHandler(),
             name = TAG,
         )
@@ -48,9 +42,9 @@ class AdminTagPageViewModel(
         .build(),
     eventHandler = AdminTagPageEventHandler(
         onError = onError,
-        goToUserList = goToUserList,
-        goToUser = goToUser,
+        goToTagList = goToTagList,
         goToTag = goToTag,
+        goToUser = goToUser,
     ),
     coroutineScope = scope,
 ) {

@@ -20,6 +20,7 @@ import org.jetbrains.compose.web.css.px
 @Composable
 fun OneLayout(
     title: String,
+    subtitle: String?,
     gap: CSSLengthOrPercentageNumericValue = 1.5.em,
     hasBackButton: Boolean,
     onGoBack: () -> Unit,
@@ -38,6 +39,7 @@ fun OneLayout(
     ) {
         NavTopSection(
             title = title,
+            subtitle = subtitle,
             hasBackButton = hasBackButton,
             onGoBack = onGoBack,
             actions = actions,

@@ -8,6 +8,7 @@ import com.copperleaf.ballast.core.PrintlnLogger
 import com.copperleaf.ballast.dispatchers
 import com.copperleaf.ballast.plusAssign
 import com.copperleaf.ballast.withViewModel
+import core.models.PageScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
@@ -32,11 +33,7 @@ class AdminProductPageViewModel(
         }
         .withViewModel(
             initialState = AdminProductPageContract.State(
-                screenState = if (productId == null) {
-                    AdminProductPageContract.ScreenState.New
-                } else {
-                    AdminProductPageContract.ScreenState.Existing
-                }
+                pageScreenState = if (productId == null) PageScreenState.New else PageScreenState.Existing,
             ),
             inputHandler = AdminProductPageInputHandler(),
             name = TAG,
