@@ -35,7 +35,7 @@ import web.components.widgets.TakeActionDialog
 import web.compose.material3.component.TextFieldType
 
 @Composable
-fun AdminCategoryPage(
+fun AdminCategoryPageContent(
     id: String?,
     onError: suspend (String) -> Unit,
     adminRoutes: AdminRoutes,
@@ -295,7 +295,7 @@ private fun ParentCategory(
     SpanText(text = adminCategoryPageStrings.parentCategory)
     FilterChipSection(
         chips = state.allCategories.map { it.name },
-        selectedChips = state.current.parent?.let { listOf(it.firstName).mapNotNull { it } } ?: emptyList(),
+        selectedChips = state.current.parent?.let { listOf(it.name) } ?: emptyList(),
         onChipClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.ParentCategorySelected(it)) },
         onCreateClick = { vm.trySend(AdminCategoryPageContract.Inputs.OnClick.GoToCreateCategory) },
         noChipsText = adminCategoryPageStrings.noCategories,

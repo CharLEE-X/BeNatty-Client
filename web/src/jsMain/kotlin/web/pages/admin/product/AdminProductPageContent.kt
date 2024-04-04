@@ -245,17 +245,19 @@ fun AdminProductPageContent(
 
 @Composable
 private fun ManageVariantsSection(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
-    TextButton(
-        leadingIcon = { MdiAdd() },
-        onClick = { vm.trySend(AdminProductPageContract.Inputs.OnCreateVariantClick) },
-    ) {
-        val addVariantText = if (state.current.variants.isEmpty())
-            adminProductPageStrings.addOptionsLikeSizeOrColor else adminProductPageStrings.addAnotherOption
-        SpanText(text = addVariantText)
-    }
-
-    state.current.variants.forEach { variant ->
-        SpanText(text = variant.id)
+    if (state.current.variants.isEmpty()) {
+        TextButton(
+            leadingIcon = { MdiAdd() },
+            onClick = { vm.trySend(AdminProductPageContract.Inputs.OnCreateVariantClick) },
+        ) {
+            val addVariantText = if (state.current.variants.isEmpty())
+                adminProductPageStrings.addOptionsLikeSizeOrColor else adminProductPageStrings.addAnotherOption
+            SpanText(text = addVariantText)
+        }
+    } else {
+        state.current.variants.forEach { variant ->
+            SpanText(text = variant.id)
+        }
     }
 }
 

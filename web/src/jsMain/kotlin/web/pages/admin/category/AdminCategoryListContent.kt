@@ -18,7 +18,7 @@ import web.components.layouts.OneLayout
 import web.components.widgets.AppFilledButton
 
 @Composable
-fun AdminCategoryListPage(
+fun AdminCategoryListContent(
     adminRoutes: AdminRoutes,
     onError: suspend (String) -> Unit,
     goToCreateCategory: () -> Unit,
