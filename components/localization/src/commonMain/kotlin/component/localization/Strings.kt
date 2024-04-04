@@ -273,4 +273,5 @@ enum class Strings {
     Variants,
     AddOptionsLikeSizeOrColor,
     AddAnotherOption,
+    CategoryNameDescription,
 }

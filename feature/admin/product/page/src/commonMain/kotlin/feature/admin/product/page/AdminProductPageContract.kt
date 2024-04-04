@@ -49,8 +49,7 @@ object AdminProductPageContract {
             isFeatured = false,
             creator = AdminProductGetByIdQuery.Creator(
                 id = "",
-                firstName = "",
-                lastName = "",
+                name = "",
             ),
             createdAt = "",
             updatedAt = "",
@@ -267,4 +266,5 @@ data class AdminProductPageStrings(
     val variants: String = getString(component.localization.Strings.Variants),
     val addOptionsLikeSizeOrColor: String = getString(component.localization.Strings.AddOptionsLikeSizeOrColor),
     val addAnotherOption: String = getString(component.localization.Strings.AddAnotherOption),
-)
+) {
+}

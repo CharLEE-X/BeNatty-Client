@@ -11,8 +11,7 @@ query GetCategoryById($getCategoryByIdId: String!) {
     }
     creator {
       id
-      firstName
-      lastName
+      name
     }
     shippingPreset {
       isPhysicalProduct

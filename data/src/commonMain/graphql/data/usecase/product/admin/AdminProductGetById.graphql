@@ -17,8 +17,7 @@ query AdminProductGetById($getProductByIdId: String!) {
     allowReviews
     creator {
       id
-      firstName
-      lastName
+      name
     }
     createdAt
     updatedAt

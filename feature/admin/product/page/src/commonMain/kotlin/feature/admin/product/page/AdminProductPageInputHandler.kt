@@ -235,15 +235,13 @@ internal class AdminProductPageInputHandler :
 
     private suspend fun InputScope.handleGetPresetCategory(categoryId: String) {
         sideJob("handleGetPresetCategory") {
-            categoryService.getById(categoryId).collect { result ->
-                result.fold(
-                    { postEvent(AdminProductPageContract.Events.OnError(it.mapToUiMessage())) },
-                    { data ->
-                        postInput(AdminProductPageContract.Inputs.SetShippingPresetId(categoryId))
-                        postInput(AdminProductPageContract.Inputs.SetPresetCategory(data.getCategoryById))
-                    },
-                )
-            }
+            categoryService.getById(categoryId).fold(
+                { postEvent(AdminProductPageContract.Events.OnError(it.mapToUiMessage())) },
+                { data ->
+                    postInput(AdminProductPageContract.Inputs.SetShippingPresetId(categoryId))
+                    postInput(AdminProductPageContract.Inputs.SetPresetCategory(data.getCategoryById))
+                },
+            )
         }
     }
 
@@ -436,8 +434,7 @@ internal class AdminProductPageInputHandler :
                             allowReviews = allowReviews,
                             creator = creator.copy(
                                 id = creator.id,
-                                firstName = creator.firstName,
-                                lastName = creator.lastName,
+                                name = creator.name,
                             ),
                             createdAt = createdAt,
                             updatedAt = updatedAt,

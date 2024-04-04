@@ -3,8 +3,7 @@ mutation UpdateCategory($input: CategoryUpdateInput!) {
     createdAt
     creator {
       id
-      firstName
-      lastName
+      name
     }
     description
     display

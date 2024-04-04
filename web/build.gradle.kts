@@ -61,10 +61,11 @@ kotlin {
                 implementation(feature.admin.dashboard)
                 implementation(feature.admin.config)
                 implementation(feature.admin.list)
+                implementation(feature.admin.category.create)
+                implementation(feature.admin.category.edit)
                 implementation(feature.admin.customer.page)
                 implementation(feature.admin.product.page)
                 implementation(feature.admin.order.page)
-                implementation(feature.admin.category.page)
                 implementation(feature.admin.tag.page)
 
             }

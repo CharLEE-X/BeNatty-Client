@@ -1,4 +1,4 @@
-package feature.admin.category.page
+package feature.admin.category.create
 
 import com.copperleaf.ballast.BallastViewModelConfiguration
 import com.copperleaf.ballast.build
@@ -11,18 +11,14 @@ import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
-class AdminCategoryPageViewModel(
-    id: String?,
+class AdminCategoryCreateViewModel(
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
-    goToUserList: () -> Unit,
-    goToUser: (String) -> Unit,
-    goToCreateCategory: () -> Unit,
     goToCategory: (String) -> Unit,
 ) : BasicViewModel<
-    AdminCategoryPageContract.Inputs,
-    AdminCategoryPageContract.Events,
-    AdminCategoryPageContract.State,
+    AdminCategoryCreateContract.Inputs,
+    AdminCategoryCreateContract.Events,
+    AdminCategoryCreateContract.State,
     >(
     config = BallastViewModelConfiguration.Builder()
         .apply {
@@ -30,8 +26,8 @@ class AdminCategoryPageViewModel(
             logger = { PrintlnLogger() }
         }
         .withViewModel(
-            initialState = AdminCategoryPageContract.State(),
-            inputHandler = AdminUserPageInputHandler(),
+            initialState = AdminCategoryCreateContract.State(),
+            inputHandler = AdminCategoryCreateInputHandler(),
             name = TAG,
         )
         .dispatchers(
@@ -41,19 +37,12 @@ class AdminCategoryPageViewModel(
             interceptorDispatcher = Dispatchers.Default,
         )
         .build(),
-    eventHandler = AdminCategoryPageEventHandler(
+    eventHandler = AdminCategoryCreateEventHandler(
         onError = onError,
-        goToUserList = goToUserList,
-        goToUser = goToUser,
-        goToCreateCategory = goToCreateCategory,
         goToCategory = goToCategory,
     ),
     coroutineScope = scope,
 ) {
-    init {
-        trySend(AdminCategoryPageContract.Inputs.Init(id = id))
-    }
-
     companion object {
         private val TAG = this::class.simpleName!!
     }

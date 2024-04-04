@@ -1,15 +1,12 @@
 package feature.admin.category.page
 
 import component.localization.getString
-import core.models.PageScreenState
 import data.GetAllCategoriesAsMinimalQuery
 import data.GetCategoryByIdQuery
 
-object AdminCategoryPageContract {
+object AdminCategoryEditContract {
     data class State(
         val isLoading: Boolean = false,
-        val pageScreenState: PageScreenState = PageScreenState.New,
-
         val wasEdited: Boolean = false,
 
         val allCategories: List<GetAllCategoriesAsMinimalQuery.GetAllCategoriesAsMinimal> = emptyList(),
@@ -42,8 +39,7 @@ object AdminCategoryPageContract {
             ),
             creator = GetCategoryByIdQuery.Creator(
                 id = "",
-                firstName = "",
-                lastName = "",
+                name = "",
             ),
             createdAt = "",
             updatedAt = "",
@@ -53,55 +49,54 @@ object AdminCategoryPageContract {
     )
 
     sealed interface Inputs {
-        data class Init(val id: String?) : Inputs
+        data class Init(val id: String) : Inputs
 
-        sealed interface Get : Inputs {
-            data class CategoryById(val id: String) : Inputs
-            data class AllCategories(val currentCategoryId: String?) : Inputs
-        }
+        data class GetCategoryById(val id: String) : Inputs
+        data class GetAllCategories(val currentCategoryId: String?) : Inputs
+        data object SaveEdit : Inputs
+        data class ShakeErrors(
+            val name: Boolean,
+            val display: Boolean,
+            val weight: Boolean,
+            val length: Boolean,
+            val width: Boolean,
+            val height: Boolean
+        ) : Inputs
 
-        sealed interface OnClick : Inputs {
-            data object Create : Inputs
-            data object Delete : Inputs
-            data object SaveEdit : Inputs
-            data object CancelEdit : Inputs
-            data object GoToParent : Inputs
-            data object GoToUserCreator : Inputs
-            data class ParentCategorySelected(val categoryName: String) : Inputs
-            data object GoToCreateCategory : Inputs
-            data object ImproveDescription : Inputs
-        }
+        data object OnDeleteClick : Inputs
+        data object OnSaveEditClick : Inputs
+        data object OnCancelEditClick : Inputs
+        data object OnGoToParentClick : Inputs
+        data object OnGoToUserCreatorClick : Inputs
+        data class OnParentCategoryClick(val categoryName: String) : Inputs
+        data object OnGoToCreateCategoryClick : Inputs
+        data object OnImproveDescriptionClick : Inputs
 
-        sealed interface Set : Inputs {
-            data class Loading(val isLoading: Boolean) : Inputs
-            data class StateOfScreen(val screenState: PageScreenState) : Inputs
+        data class SetLoading(val isLoading: Boolean) : Inputs
+        data class SetAllCategories(val categories: List<GetAllCategoriesAsMinimalQuery.GetAllCategoriesAsMinimal>) :
+            Inputs
 
-            data class AllCategories(val categories: List<GetAllCategoriesAsMinimalQuery.GetAllCategoriesAsMinimal>) :
-                Inputs
-
-            data class OriginalCategory(val category: GetCategoryByIdQuery.GetCategoryById) : Inputs
-            data class CurrentCategory(val category: GetCategoryByIdQuery.GetCategoryById) : Inputs
-
-            data class Id(val id: String) : Inputs
-            data class Name(val fullName: String) : Inputs
-            data class IsNameShake(val shake: Boolean) : Inputs
-            data class Description(val description: String) : Inputs
-            data class Parent(val parent: GetCategoryByIdQuery.Parent?) : Inputs
-            data class Display(val display: Boolean) : Inputs
-            data class IsDisplayShake(val shake: Boolean) : Inputs
-            data class Creator(val creator: GetCategoryByIdQuery.Creator) : Inputs
-            data class CreatedAt(val createdAt: String) : Inputs
-            data class UpdatedAt(val updatedAt: String) : Inputs
-            data class Weight(val weight: String) : Inputs
-            data class IsWeightShake(val shake: Boolean) : Inputs
-            data class Length(val length: String) : Inputs
-            data class IsLengthShake(val shake: Boolean) : Inputs
-            data class Width(val width: String) : Inputs
-            data class IsWidthShake(val shake: Boolean) : Inputs
-            data class Height(val height: String) : Inputs
-            data class IsHeightShake(val shake: Boolean) : Inputs
-            data class RequiresShipping(val requiresShipping: Boolean) : Inputs
-        }
+        data class SetOriginalCategory(val category: GetCategoryByIdQuery.GetCategoryById) : Inputs
+        data class SetCurrentCategory(val category: GetCategoryByIdQuery.GetCategoryById) : Inputs
+        data class SetId(val id: String) : Inputs
+        data class SetName(val fullName: String) : Inputs
+        data class SetIsNameShake(val shake: Boolean) : Inputs
+        data class SetDescription(val description: String) : Inputs
+        data class SetParent(val parent: GetCategoryByIdQuery.Parent?) : Inputs
+        data class SetDisplay(val display: Boolean) : Inputs
+        data class SetIsDisplayShake(val shake: Boolean) : Inputs
+        data class SetCreator(val creator: GetCategoryByIdQuery.Creator) : Inputs
+        data class SetCreatedAt(val createdAt: String) : Inputs
+        data class SetUpdatedAt(val updatedAt: String) : Inputs
+        data class SetWeight(val weight: String) : Inputs
+        data class SetIsWeightShake(val shake: Boolean) : Inputs
+        data class SetLength(val length: String) : Inputs
+        data class SetIsLengthShake(val shake: Boolean) : Inputs
+        data class SetWidth(val width: String) : Inputs
+        data class SetIsWidthShake(val shake: Boolean) : Inputs
+        data class SetHeight(val height: String) : Inputs
+        data class SetIsHeightShake(val shake: Boolean) : Inputs
+        data class SetRequiresShipping(val requiresShipping: Boolean) : Inputs
     }
 
     sealed interface Events {
@@ -113,7 +108,7 @@ object AdminCategoryPageContract {
     }
 }
 
-val adminCategoryPageStrings: AdminCategoryPageStrings = AdminCategoryPageStrings()
+val adminCategoryEditStrings: AdminCategoryPageStrings = AdminCategoryPageStrings()
 
 data class AdminCategoryPageStrings(
     val save: String = getString(component.localization.Strings.Save),

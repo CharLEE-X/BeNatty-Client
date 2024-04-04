@@ -22,8 +22,7 @@ object AdminTagPageContract {
             name = "",
             creator = GetTagByIdQuery.Creator(
                 id = "",
-                firstName = "",
-                lastName = "",
+                name = "",
             ),
             createdAt = "",
             updatedAt = "",

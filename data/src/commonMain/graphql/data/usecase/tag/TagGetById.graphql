@@ -4,8 +4,7 @@ query GetTagById($getTagByIdId: String!) {
     name
     creator {
       id
-      firstName
-      lastName
+      name
     }
     createdAt
     updatedAt

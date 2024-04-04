@@ -99,5 +99,6 @@ internal fun englishLanguage(
     Strings.BeFirstToGetLatestOffers -> "Be the first to get the latest news about trends, promotions and much more!"
     Strings.ByAgreeing -> "By clicking the button you agree to the"
     Strings.EcoFriendlyClothing -> "Eco-Friendly clothing"
+    Strings.CategoryNameDescription -> "The name of the category."
     else -> key.name.enumCapitalized()
 }

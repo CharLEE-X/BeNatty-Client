@@ -64,9 +64,10 @@ include(
     ":feature:admin:dashboard",
     ":feature:admin:config",
     ":feature:admin:list",
+    ":feature:admin:category:create",
+    ":feature:admin:category:edit",
     ":feature:admin:customer:page",
     ":feature:admin:product:page",
     ":feature:admin:order:page",
-    ":feature:admin:category:page",
     ":feature:admin:tag:page",
 )

@@ -116,7 +116,7 @@ fun AdminTagPage(
                 } else {
                     CreatorSection(
                         title = adminTagPageStrings.createdBy,
-                        creatorName = "${state.current.creator.firstName} ${state.current.creator.lastName}",
+                        creatorName = state.current.creator.name,
                         onClick = { vm.trySend(AdminTagPageContract.Inputs.OnClick.GotToUserCreator) },
                     )
                 }

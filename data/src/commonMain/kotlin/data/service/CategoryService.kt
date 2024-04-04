@@ -5,7 +5,6 @@ import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
-import com.apollographql.apollo3.cache.normalized.watch
 import core.RemoteError
 import data.AddCategoryImageMutation
 import data.CreateCategoryMutation
@@ -24,8 +23,6 @@ import data.type.ShippingPresetInput
 import data.type.SortDirection
 import data.utils.handle
 import data.utils.skipIfNull
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 interface CategoryService {
     suspend fun create(name: String): Either<RemoteError, CreateCategoryMutation.Data>
@@ -38,7 +35,7 @@ interface CategoryService {
         sortDirection: SortDirection?,
     ): Either<RemoteError, GetCategoriesAsPageQuery.Data>
 
-    suspend fun getById(id: String): Flow<Either<RemoteError, GetCategoryByIdQuery.Data>>
+    suspend fun getById(id: String): Either<RemoteError, GetCategoryByIdQuery.Data>
     suspend fun getCategoriesAllMinimal(): Either<RemoteError, GetAllCategoriesAsMinimalQuery.Data>
     suspend fun deleteById(id: String): Either<RemoteError, DeleteCategoryMutation.Data>
     suspend fun update(
@@ -88,11 +85,10 @@ internal class CategoryServiceImpl(private val apolloClient: ApolloClient) : Cat
             .handle()
     }
 
-    override suspend fun getById(id: String): Flow<Either<RemoteError, GetCategoryByIdQuery.Data>> {
+    override suspend fun getById(id: String): Either<RemoteError, GetCategoryByIdQuery.Data> {
         return apolloClient.query(GetCategoryByIdQuery(id))
             .fetchPolicy(FetchPolicy.NetworkOnly)
-            .watch()
-            .map { it.handle() }
+            .handle()
     }
 
     override suspend fun getCategoriesAllMinimal(): Either<RemoteError, GetAllCategoriesAsMinimalQuery.Data> {

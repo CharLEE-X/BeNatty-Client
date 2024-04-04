@@ -668,7 +668,7 @@ private fun Tags(vm: AdminProductPageViewModel, state: AdminProductPageContract.
 private fun Creator(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
     CreatorSection(
         title = adminProductPageStrings.createdBy,
-        creatorName = "${state.current.creator.firstName} ${state.current.creator.lastName}",
+        creatorName = state.current.creator.name,
         onClick = { vm.trySend(AdminProductPageContract.Inputs.OnUserCreatorClick) },
         afterTitle = { AppTooltip(adminProductPageStrings.createdByDesc) },
     )

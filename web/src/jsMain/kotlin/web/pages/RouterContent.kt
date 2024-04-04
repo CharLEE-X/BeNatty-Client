@@ -26,8 +26,9 @@ import kotlinx.serialization.json.Json
 import web.components.layouts.AdminRoutes
 import web.components.layouts.AdminSideNavRoutes
 import web.components.layouts.MainRoutes
+import web.pages.admin.category.AdminCategoryCreateContent
+import web.pages.admin.category.AdminCategoryEditContent
 import web.pages.admin.category.AdminCategoryListContent
-import web.pages.admin.category.AdminCategoryPageContent
 import web.pages.admin.config.AdminConfigPage
 import web.pages.admin.customer.AdminCustomerListPage
 import web.pages.admin.customer.AdminCustomerPagePage
@@ -382,20 +383,16 @@ fun RouterContent(
                 }
 
                 Screen.AdminCategoryCreate -> authenticatedRoute {
-                    AdminCategoryPageContent(
-                        id = null,
+                    AdminCategoryCreateContent(
                         onError = onError,
                         adminRoutes = adminRoutes,
-                        goToCustomers = { router.trySend(GoToDestination(Screen.AdminCategoryList.route)) },
-                        goToCustomer = { router.trySend(GoToDestination(Screen.AdminUserProfile.idPath(it))) },
-                        goToCreateCategory = { router.trySend(GoToDestination(Screen.AdminCategoryCreate.route)) },
                         goToCategory = { router.trySend(ReplaceTopDestination(Screen.AdminCategoryProfile.idPath(it))) },
                     )
                 }
 
                 Screen.AdminCategoryProfile -> authenticatedRoute {
                     val id: String by stringPath()
-                    AdminCategoryPageContent(
+                    AdminCategoryEditContent(
                         id = id,
                         onError = onError,
                         adminRoutes = adminRoutes,
