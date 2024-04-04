@@ -6,8 +6,8 @@ query GetCategoryById($getCategoryByIdId: String!) {
     display
     parent {
       id
-      firstName
-      lastName
+      name
+      imageUrl
     }
     creator {
       id

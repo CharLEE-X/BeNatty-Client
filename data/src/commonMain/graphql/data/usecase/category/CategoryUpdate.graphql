@@ -12,8 +12,8 @@ mutation UpdateCategory($input: CategoryUpdateInput!) {
     name
     parent {
       id
-      firstName
-      lastName
+      name
+      imageUrl
     }
     updatedAt
     shippingPreset {

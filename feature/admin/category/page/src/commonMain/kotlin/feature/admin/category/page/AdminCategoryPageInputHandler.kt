@@ -164,8 +164,8 @@ internal class AdminUserPageInputHandler :
                 if (currentParent == null || currentParent.id != chosenCategory.id) {
                     val newParent = GetCategoryByIdQuery.Parent(
                         id = chosenCategory.id,
-                        firstName = chosenCategory.name,
-                        lastName = chosenCategory.name
+                        name = chosenCategory.name,
+                        imageUrl = chosenCategory.imageUrl ?: "",
                     )
                     postInput(AdminCategoryPageContract.Inputs.Set.Parent(newParent))
                 } else {
@@ -307,8 +307,8 @@ internal class AdminUserPageInputHandler :
                                         description = data.updateCategory.description,
                                         parent = GetCategoryByIdQuery.Parent(
                                             id = data.updateCategory.parent?.id ?: "",
-                                            firstName = original.parent?.firstName ?: "",
-                                            lastName = original.parent?.lastName ?: "",
+                                            name = original.parent?.name ?: "",
+                                            imageUrl = original.parent?.imageUrl ?: "",
                                         ),
                                         display = data.updateCategory.display,
                                         updatedAt = data.updateCategory.updatedAt,
