@@ -1,4 +1,4 @@
-package feature.admin.tag.page
+package feature.admin.tag.create
 
 import com.copperleaf.ballast.BallastViewModelConfiguration
 import com.copperleaf.ballast.build
@@ -11,17 +11,15 @@ import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
-class AdminTagPageViewModel(
-    id: String?,
+class AdminTagCreateViewModel(
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
-    goToTagList: () -> Unit,
-    goToUser: (String) -> Unit,
+    goBack: () -> Unit,
     goToTag: (String) -> Unit,
 ) : BasicViewModel<
-    AdminTagPageContract.Inputs,
-    AdminTagPageContract.Events,
-    AdminTagPageContract.State,
+    AdminTagCreateContract.Inputs,
+    AdminTagCreateContract.Events,
+    AdminTagCreateContract.State,
     >(
     config = BallastViewModelConfiguration.Builder()
         .apply {
@@ -29,7 +27,7 @@ class AdminTagPageViewModel(
             logger = { PrintlnLogger() }
         }
         .withViewModel(
-            initialState = AdminTagPageContract.State(),
+            initialState = AdminTagCreateContract.State(),
             inputHandler = AdminTagPageInputHandler(),
             name = TAG,
         )
@@ -40,18 +38,13 @@ class AdminTagPageViewModel(
             interceptorDispatcher = Dispatchers.Default,
         )
         .build(),
-    eventHandler = AdminTagPageEventHandler(
+    eventHandler = AdminTagCreateEventHandler(
         onError = onError,
-        goToTagList = goToTagList,
+        goBack = goBack,
         goToTag = goToTag,
-        goToUser = goToUser,
     ),
     coroutineScope = scope,
 ) {
-    init {
-        trySend(AdminTagPageContract.Inputs.Init(id = id))
-    }
-
     companion object {
         private val TAG = this::class.simpleName!!
     }

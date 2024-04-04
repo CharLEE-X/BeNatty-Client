@@ -38,8 +38,9 @@ import web.pages.admin.orders.AdminOrderListPage
 import web.pages.admin.orders.AdminOrderPagePage
 import web.pages.admin.product.AdminProductListPage
 import web.pages.admin.product.AdminProductPageContent
-import web.pages.admin.tag.AdminTagListPage
-import web.pages.admin.tag.AdminTagPage
+import web.pages.admin.tag.AdminTagCreateContent
+import web.pages.admin.tag.AdminTagEditContent
+import web.pages.admin.tag.AdminTagListContent
 import web.pages.shop.account.TrackOrderPage
 import web.pages.shop.account.order.OrderPage
 import web.pages.shop.account.profile.ProfilePage
@@ -404,7 +405,7 @@ fun RouterContent(
                 }
 
                 Screen.AdminTagList -> authenticatedRoute {
-                    AdminTagListPage(
+                    AdminTagListContent(
                         onError = onError,
                         adminRoutes = adminRoutes,
                         goToTagCreate = { router.trySend(GoToDestination(Screen.AdminTagCreate.route)) },
@@ -413,25 +414,21 @@ fun RouterContent(
                 }
 
                 Screen.AdminTagCreate -> authenticatedRoute {
-                    AdminTagPage(
-                        id = null,
+                    AdminTagCreateContent(
                         onError = onError,
                         adminRoutes = adminRoutes,
-                        goToTagList = { router.trySend(ReplaceTopDestination(Screen.AdminTagList.route)) },
-                        goToTagPage = { router.trySend(ReplaceTopDestination(Screen.AdminTagProfile.idPath(it))) },
-                        goToUserPage = { router.trySend(GoToDestination(Screen.AdminUserProfile.idPath(it))) },
+                        goToTag = { router.trySend(ReplaceTopDestination(Screen.AdminTagProfile.idPath(it))) },
                     )
                 }
 
                 Screen.AdminTagProfile -> authenticatedRoute {
                     val id: String by stringPath()
-                    AdminTagPage(
+                    AdminTagEditContent(
                         id = id,
                         onError = onError,
                         adminRoutes = adminRoutes,
-                        goToTagList = { router.trySend(ReplaceTopDestination(Screen.AdminTagList.route)) },
-                        goToTagPage = { router.trySend(ReplaceTopDestination(Screen.AdminTagProfile.idPath(it))) },
-                        goToUserPage = { router.trySend(GoToDestination(Screen.AdminUserProfile.idPath(it))) },
+                        goToTag = { router.trySend(ReplaceTopDestination(Screen.AdminTagProfile.idPath(it))) },
+                        goToUser = { router.trySend(GoToDestination(Screen.AdminUserProfile.idPath(it))) },
                     )
                 }
             }

@@ -67,7 +67,8 @@ kotlin {
                 implementation(feature.admin.customer.edit)
                 implementation(feature.admin.product.page)
                 implementation(feature.admin.order.page)
-                implementation(feature.admin.tag.page)
+                implementation(feature.admin.tag.create)
+                implementation(feature.admin.tag.edit)
 
             }
             implementation(compose.runtime)

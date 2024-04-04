@@ -32,23 +32,22 @@ internal class AdminCategoryCreateInputHandler : KoinComponent, InputHandler<
         is AdminCategoryCreateContract.Inputs.SetNameShake -> updateState { it.copy(shakeName = input.shake) }
 
         AdminCategoryCreateContract.Inputs.CreateCategory -> handleCreateCategory()
-        is AdminCategoryCreateContract.Inputs.ShakeErrors -> handleShakeErrors(name = input.shakeName)
+        is AdminCategoryCreateContract.Inputs.ShakeErrors -> handleShakeErrors(name = input.name)
     }
 
     private suspend fun InputScope.handleOnCreateClick() {
         val state = getCurrentState()
 
-        if (state.nameError == null) {
+        val isNameError = state.nameError != null
+
+        if (isNameError) {
+            postInput(AdminCategoryCreateContract.Inputs.ShakeErrors(name = isNameError))
+            return
+        } else {
             inputValidator.validateText(state.name, 1)?.let {
                 postInput(AdminCategoryCreateContract.Inputs.SetName(state.name))
                 return
             }
-        }
-
-        val isFullNameError = state.nameError != null
-        if (isFullNameError) {
-            postInput(AdminCategoryCreateContract.Inputs.ShakeErrors(shakeName = isFullNameError))
-            return
         }
 
         postInput(AdminCategoryCreateContract.Inputs.CreateCategory)

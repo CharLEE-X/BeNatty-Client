@@ -18,7 +18,7 @@ import web.components.layouts.OneLayout
 import web.components.widgets.AppFilledButton
 
 @Composable
-fun AdminTagListPage(
+fun AdminTagListContent(
     onError: suspend (String) -> Unit,
     adminRoutes: AdminRoutes,
     goToTagCreate: () -> Unit,

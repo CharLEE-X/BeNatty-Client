@@ -68,7 +68,10 @@ include(
     ":feature:admin:category:edit",
     ":feature:admin:customer:create",
     ":feature:admin:customer:edit",
+//    ":feature:admin:product:create",
     ":feature:admin:product:page",
+    ":feature:admin:order:create",
     ":feature:admin:order:page",
-    ":feature:admin:tag:page",
+    ":feature:admin:tag:create",
+    ":feature:admin:tag:edit",
 )

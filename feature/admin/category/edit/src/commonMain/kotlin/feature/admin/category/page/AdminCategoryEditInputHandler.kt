@@ -317,31 +317,45 @@ internal class AdminUserPageInputHandler :
     }
 
     private suspend fun InputScope.handleOnSaveEditClick() {
-        with(getCurrentState()) {
-            val isFullNameError = nameError != null
-            val isDisplayError = displayError != null
-            val isWeightError = weightError != null
-            val isLengthError = lengthError != null
-            val isWidthError = widthError != null
-            val isHeightError = heightError != null
-            val isNoError = !isFullNameError && !isDisplayError && !isWeightError && !isLengthError &&
-                !isWidthError && !isHeightError
+        val state = getCurrentState()
 
-            if (!isNoError) {
-                postInput(
-                    AdminCategoryEditContract.Inputs.ShakeErrors(
-                        name = isFullNameError,
-                        display = isDisplayError,
-                        weight = isWeightError,
-                        length = isLengthError,
-                        width = isWidthError,
-                        height = isHeightError,
-                    )
+        val isFullNameError = state.nameError != null
+        val isDisplayError = state.displayError != null
+        val isWeightError = state.weightError != null
+        val isLengthError = state.lengthError != null
+        val isWidthError = state.widthError != null
+        val isHeightError = state.heightError != null
+        val isNoError = !isFullNameError && !isDisplayError && !isWeightError && !isLengthError &&
+            !isWidthError && !isHeightError
+
+        if (!isNoError) {
+            postInput(
+                AdminCategoryEditContract.Inputs.ShakeErrors(
+                    name = isFullNameError,
+                    display = isDisplayError,
+                    weight = isWeightError,
+                    length = isLengthError,
+                    width = isWidthError,
+                    height = isHeightError,
                 )
-            } else {
-                postInput(AdminCategoryEditContract.Inputs.SaveEdit)
+            )
+        } else {
+            val errors = mutableListOf<String>().apply {
+                inputValidator.validateText(state.current.name, 1)?.let {
+                    postInput(AdminCategoryEditContract.Inputs.SetName(state.current.name))
+                    add(it)
+                }
+                state.current.description?.let { desc ->
+                    inputValidator.validateText(desc, 1)?.let {
+                        postInput(AdminCategoryEditContract.Inputs.SetDescription(it))
+                        add(it)
+                    }
+                }
             }
+            if (errors.isNotEmpty()) return
         }
+
+        postInput(AdminCategoryEditContract.Inputs.SaveEdit)
     }
 
     private suspend fun InputScope.handleGetById(id: String) {

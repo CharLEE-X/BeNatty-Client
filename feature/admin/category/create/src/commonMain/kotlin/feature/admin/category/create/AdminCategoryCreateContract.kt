@@ -13,7 +13,7 @@ object AdminCategoryCreateContract {
 
     sealed interface Inputs {
         data object CreateCategory : Inputs
-        data class ShakeErrors(val shakeName: Boolean) : Inputs
+        data class ShakeErrors(val name: Boolean) : Inputs
 
         data object OnCreateClick : Inputs
 

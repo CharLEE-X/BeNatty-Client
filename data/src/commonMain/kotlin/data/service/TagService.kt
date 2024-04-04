@@ -4,7 +4,6 @@ import arrow.core.Either
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
-import com.apollographql.apollo3.cache.normalized.watch
 import core.RemoteError
 import data.CreateTagMutation
 import data.DeleteTagMutation
@@ -18,8 +17,6 @@ import data.type.TagCreateInput
 import data.type.TagUpdateInput
 import data.utils.handle
 import data.utils.skipIfNull
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 interface TagService {
     suspend fun create(name: String): Either<RemoteError, CreateTagMutation.Data>
@@ -32,7 +29,7 @@ interface TagService {
         sortDirection: SortDirection?,
     ): Either<RemoteError, GetTagsAsPageQuery.Data>
 
-    suspend fun getById(id: String): Flow<Either<RemoteError, GetTagByIdQuery.Data>>
+    suspend fun getById(id: String): Either<RemoteError, GetTagByIdQuery.Data>
     suspend fun getTagsAllMinimal(): Either<RemoteError, TagsGetAllMinimalQuery.Data>
     suspend fun deleteById(id: String): Either<RemoteError, DeleteTagMutation.Data>
     suspend fun update(
@@ -68,11 +65,10 @@ internal class TagServiceImpl(private val apolloClient: ApolloClient) : TagServi
             .handle()
     }
 
-    override suspend fun getById(id: String): Flow<Either<RemoteError, GetTagByIdQuery.Data>> {
+    override suspend fun getById(id: String): Either<RemoteError, GetTagByIdQuery.Data> {
         return apolloClient.query(GetTagByIdQuery(id))
             .fetchPolicy(FetchPolicy.NetworkOnly)
-            .watch()
-            .map { it.handle() }
+            .handle()
     }
 
     override suspend fun getTagsAllMinimal(): Either<RemoteError, TagsGetAllMinimalQuery.Data> {
