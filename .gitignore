@@ -16,3 +16,4 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 kotlin-js-store
+/web/.kobweb/server/logs/kobweb-server.log
