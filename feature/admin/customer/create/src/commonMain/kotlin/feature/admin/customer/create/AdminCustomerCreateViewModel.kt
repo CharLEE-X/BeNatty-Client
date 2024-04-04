@@ -1,4 +1,4 @@
-package feature.admin.customer.page
+package feature.admin.customer.create
 
 import com.copperleaf.ballast.BallastViewModelConfiguration
 import com.copperleaf.ballast.build
@@ -11,17 +11,15 @@ import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
-class AdminCustomerPageViewModel(
+class AdminCustomerCreateViewModel(
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
-    userId: String?,
     goBack: () -> Unit,
-    showLeavePageWarningDialog: () -> Unit,
     goToCustomerPage: (String) -> Unit,
 ) : BasicViewModel<
-    AdminCustomerPageContract.Inputs,
-    AdminCustomerPageContract.Events,
-    AdminCustomerPageContract.State,
+    AdminCustomerCreateContract.Inputs,
+    AdminCustomerCreateContract.Events,
+    AdminCustomerCreateContract.State,
     >(
     config = BallastViewModelConfiguration.Builder()
         .apply {
@@ -29,8 +27,8 @@ class AdminCustomerPageViewModel(
             logger = { PrintlnLogger() }
         }
         .withViewModel(
-            initialState = AdminCustomerPageContract.State(),
-            inputHandler = AdminCustomerPageInputHandler(),
+            initialState = AdminCustomerCreateContract.State(),
+            inputHandler = AdminCustomerCreateInputHandler(),
             name = TAG,
         )
         .dispatchers(
@@ -40,18 +38,13 @@ class AdminCustomerPageViewModel(
             interceptorDispatcher = Dispatchers.Default,
         )
         .build(),
-    eventHandler = AdminCustomerPageEventHandler(
+    eventHandler = AdminCustomerCreateEventHandler(
         onError = onError,
         goBack = goBack,
-        showLeavePageWarningDialog = showLeavePageWarningDialog,
         goToUser = goToCustomerPage,
     ),
     coroutineScope = scope,
 ) {
-    init {
-        trySend(AdminCustomerPageContract.Inputs.Init(userId))
-    }
-
     companion object {
         private val TAG = this::class.simpleName!!
     }

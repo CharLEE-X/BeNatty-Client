@@ -2,6 +2,7 @@ package data.service
 
 import arrow.core.Either
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import core.RemoteError
@@ -20,22 +21,8 @@ import data.utils.skipIfNull
 interface UserService {
     suspend fun create(
         email: String,
-        detailsFirstName: String?,
-        detailsLastName: String?,
-        language: String?,
-        detailPhone: String?,
-        country: String?,
-        addressFirstName: String?,
-        addressLastName: String?,
-        addressPhone: String?,
-        company: String?,
-        address: String?,
-        apartment: String?,
-        city: String?,
-        postcode: String?,
-        collectTax: Boolean,
-        marketingEmails: Boolean,
-        marketingSms: Boolean,
+        firstName: String,
+        lastName: String,
     ): Either<RemoteError, CreateCustomerMutation.Data>
 
     suspend fun getById(id: String): Either<RemoteError, GetCustomerByIdQuery.Data>
@@ -75,41 +62,13 @@ interface UserService {
 internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserService {
     override suspend fun create(
         email: String,
-        detailsFirstName: String?,
-        detailsLastName: String?,
-        language: String?,
-        detailPhone: String?,
-        country: String?,
-        addressFirstName: String?,
-        addressLastName: String?,
-        addressPhone: String?,
-        company: String?,
-        address: String?,
-        apartment: String?,
-        city: String?,
-        postcode: String?,
-        collectTax: Boolean,
-        marketingEmails: Boolean,
-        marketingSms: Boolean,
+        firstName: String,
+        lastName: String,
     ): Either<RemoteError, CreateCustomerMutation.Data> {
         val input = UserCreateInput(
             email = email,
-            detailFirstName = detailsFirstName.skipIfNull(),
-            detailLastName = detailsLastName.skipIfNull(),
-            language = language.skipIfNull(),
-            detailPhone = detailPhone.skipIfNull(),
-            country = country.skipIfNull(),
-            addressFirstName = addressFirstName.skipIfNull(),
-            addressLastName = addressLastName.skipIfNull(),
-            addressPhone = addressPhone.skipIfNull(),
-            company = company.skipIfNull(),
-            address = address.skipIfNull(),
-            apartment = apartment.skipIfNull(),
-            city = city.skipIfNull(),
-            postcode = postcode.skipIfNull(),
-            collectTax = collectTax,
-            marketingEmails = marketingEmails,
-            marketingSms = marketingSms,
+            firstName = Optional.present(firstName),
+            lastName = Optional.present(lastName),
         )
         return apolloClient.mutation(CreateCustomerMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)

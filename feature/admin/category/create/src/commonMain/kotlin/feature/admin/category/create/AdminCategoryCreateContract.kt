@@ -19,8 +19,7 @@ object AdminCategoryCreateContract {
 
         data class SetLoading(val isLoading: Boolean) : Inputs
         data class SetName(val name: String) : Inputs
-        data class SetNameError(val error: String?) : Inputs
-        data class SetIsNameShake(val shake: Boolean) : Inputs
+        data class SetNameShake(val shake: Boolean) : Inputs
     }
 
     sealed interface Events {

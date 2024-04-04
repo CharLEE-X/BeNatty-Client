@@ -29,11 +29,29 @@ internal class AdminCategoryCreateInputHandler : KoinComponent, InputHandler<
 
         is AdminCategoryCreateContract.Inputs.SetLoading -> updateState { it.copy(isLoading = input.isLoading) }
         is AdminCategoryCreateContract.Inputs.SetName -> handleSetName(input.name)
-        is AdminCategoryCreateContract.Inputs.SetIsNameShake -> updateState { it.copy(shakeName = input.shake) }
+        is AdminCategoryCreateContract.Inputs.SetNameShake -> updateState { it.copy(shakeName = input.shake) }
 
         AdminCategoryCreateContract.Inputs.CreateCategory -> handleCreateCategory()
-        is AdminCategoryCreateContract.Inputs.ShakeErrors -> handleShakeErrors(shakeName = input.shakeName)
-        is AdminCategoryCreateContract.Inputs.SetNameError -> updateState { it.copy(nameError = input.error) }
+        is AdminCategoryCreateContract.Inputs.ShakeErrors -> handleShakeErrors(name = input.shakeName)
+    }
+
+    private suspend fun InputScope.handleOnCreateClick() {
+        val state = getCurrentState()
+
+        if (state.nameError == null) {
+            inputValidator.validateText(state.name, 1)?.let {
+                postInput(AdminCategoryCreateContract.Inputs.SetName(state.name))
+                return
+            }
+        }
+
+        val isFullNameError = state.nameError != null
+        if (isFullNameError) {
+            postInput(AdminCategoryCreateContract.Inputs.ShakeErrors(shakeName = isFullNameError))
+            return
+        }
+
+        postInput(AdminCategoryCreateContract.Inputs.CreateCategory)
     }
 
     private suspend fun InputScope.handleSetName(name: String) {
@@ -57,32 +75,13 @@ internal class AdminCategoryCreateInputHandler : KoinComponent, InputHandler<
         }
     }
 
-    private suspend fun InputScope.handleOnCreateClick() {
-        val state = getCurrentState()
-
-        if (state.nameError == null) {
-            inputValidator.validateText(state.name, 1)?.let {
-                postInput(AdminCategoryCreateContract.Inputs.SetName(state.name))
-                return
-            }
-        }
-
-        val isFullNameError = state.nameError != null
-        if (isFullNameError) {
-            postInput(AdminCategoryCreateContract.Inputs.ShakeErrors(shakeName = isFullNameError))
-            return
-        }
-
-        postInput(AdminCategoryCreateContract.Inputs.CreateCategory)
-    }
-
-    private suspend fun InputScope.handleShakeErrors(shakeName: Boolean) {
+    private suspend fun InputScope.handleShakeErrors(name: Boolean) {
         sideJob("ShakeErrors") {
-            if (shakeName) postInput(AdminCategoryCreateContract.Inputs.SetIsNameShake(shake = true))
+            if (name) postInput(AdminCategoryCreateContract.Inputs.SetNameShake(shake = true))
 
             delay(Constants.shakeAnimantionDuration)
 
-            if (shakeName) postInput(AdminCategoryCreateContract.Inputs.SetIsNameShake(shake = false))
+            if (name) postInput(AdminCategoryCreateContract.Inputs.SetNameShake(shake = false))
         }
     }
 }

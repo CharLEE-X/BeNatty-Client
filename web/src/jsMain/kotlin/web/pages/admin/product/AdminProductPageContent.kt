@@ -26,7 +26,7 @@ import data.type.BackorderStatus
 import data.type.MediaType
 import data.type.PostStatus
 import data.type.StockStatus
-import feature.admin.customer.page.adminCustomerPageStrings
+import feature.admin.customer.edit.adminCustomerEditStrings
 import feature.admin.product.page.AdminProductPageContract
 import feature.admin.product.page.AdminProductPageViewModel
 import feature.admin.product.page.adminProductPageStrings
@@ -125,7 +125,7 @@ fun AdminProductPageContent(
             TakeActionDialog(
                 open = deleteProductDialogOpen && !deleteProductDialogClosing,
                 closing = deleteProductDialogClosing,
-                title = "${adminCustomerPageStrings.delete} ${state.original.title}",
+                title = "${adminCustomerEditStrings.delete} ${state.original.title}",
                 actionYesText = adminProductPageStrings.delete,
                 actionNoText = adminProductPageStrings.discard,
                 contentText = adminProductPageStrings.deleteExplain,

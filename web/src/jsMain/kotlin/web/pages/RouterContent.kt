@@ -30,8 +30,9 @@ import web.pages.admin.category.AdminCategoryCreateContent
 import web.pages.admin.category.AdminCategoryEditContent
 import web.pages.admin.category.AdminCategoryListContent
 import web.pages.admin.config.AdminConfigPage
+import web.pages.admin.customer.AdminCustomerCreateContent
+import web.pages.admin.customer.AdminCustomerEditContent
 import web.pages.admin.customer.AdminCustomerListPage
-import web.pages.admin.customer.AdminCustomerPagePage
 import web.pages.admin.dashboard.AdminDashboardPage
 import web.pages.admin.orders.AdminOrderListPage
 import web.pages.admin.orders.AdminOrderPagePage
@@ -295,17 +296,16 @@ fun RouterContent(
                 }
 
                 Screen.AdminUserCreate -> authenticatedRoute {
-                    AdminCustomerPagePage(
+                    AdminCustomerCreateContent(
                         onError = onError,
                         adminRoutes = adminRoutes,
-                        userId = null,
                         goToCustomerPage = { router.trySend(ReplaceTopDestination(Screen.AdminUserProfile.idPath(it))) },
                     )
                 }
 
                 Screen.AdminUserProfile -> authenticatedRoute {
                     val id by stringPath()
-                    AdminCustomerPagePage(
+                    AdminCustomerEditContent(
                         userId = id,
                         onError = onError,
                         adminRoutes = adminRoutes,
