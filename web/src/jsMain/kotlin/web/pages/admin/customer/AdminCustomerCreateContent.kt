@@ -3,29 +3,30 @@ package web.pages.admin.customer
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.foundation.layout.Row
-import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
-import com.varabyte.kobweb.compose.ui.modifiers.width
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiCreate
-import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
+import com.varabyte.kobweb.compose.ui.modifiers.onFocusOut
 import feature.admin.customer.create.AdminCustomerCreateContract
 import feature.admin.customer.create.AdminCustomerCreateViewModel
 import feature.admin.customer.create.adminCustomerCreateStrings
 import org.jetbrains.compose.web.css.em
-import org.jetbrains.compose.web.css.px
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.OneLayout
-import web.components.widgets.AppFilledButton
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.CardSection
-import web.compose.material3.component.TextFieldType
+import web.components.widgets.CreateButton
+import web.components.widgets.TrailingIconGoToNext
+import web.components.widgets.TrailingIconGoToNextOrSubmit
+import web.util.onEnterKeyDown
 
 @Composable
 fun AdminCustomerCreateContent(
@@ -44,6 +45,10 @@ fun AdminCustomerCreateContent(
         )
     }
     val state by vm.observeStates().collectAsState()
+
+    var emailFocused by remember { mutableStateOf(false) }
+    var firstNameFocused by remember { mutableStateOf(false) }
+    var lastNameFocused by remember { mutableStateOf(false) }
 
     AdminLayout(
         title = adminCustomerCreateStrings.newCustomer,
@@ -72,10 +77,15 @@ fun AdminCustomerCreateContent(
                         label = adminCustomerCreateStrings.email,
                         errorText = state.emailError,
                         error = state.emailError != null,
-                        type = TextFieldType.EMAIL,
+//                        type = TextFieldType.EMAIL, // Email has bug with typing
                         required = true,
                         shake = state.emailShake,
-                        modifier = Modifier.fillMaxWidth(),
+                        trailingIcon = { TrailingIconGoToNextOrSubmit(show = emailFocused && state.emailError == null) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onEnterKeyDown { vm.trySend(AdminCustomerCreateContract.Inputs.OnCreateClick) }
+                            .onFocusIn { emailFocused = true }
+                            .onFocusOut { emailFocused = false }
                     )
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -87,27 +97,26 @@ fun AdminCustomerCreateContent(
                             value = state.firstName,
                             onValueChange = { vm.trySend(AdminCustomerCreateContract.Inputs.SetDetailFirstName(it)) },
                             label = adminCustomerCreateStrings.firstName,
-                            modifier = Modifier.weight(1f)
+                            trailingIcon = { TrailingIconGoToNext(show = firstNameFocused) },
+                            modifier = Modifier
+                                .weight(1f)
+                                .onFocusIn { firstNameFocused = true }
+                                .onFocusOut { firstNameFocused = false }
                         )
                         AppOutlinedTextField(
                             value = state.lastName,
                             onValueChange = { vm.trySend(AdminCustomerCreateContract.Inputs.SetDetailLastName(it)) },
                             label = adminCustomerCreateStrings.lastName,
-                            modifier = Modifier.weight(1f)
+                            trailingIcon = { TrailingIconGoToNextOrSubmit(show = lastNameFocused) },
+                            modifier = Modifier
+                                .weight(1f)
+                                .onFocusIn { lastNameFocused = true }
+                                .onFocusOut { lastNameFocused = false }
                         )
                     }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Spacer()
-                        AppFilledButton(
-                            onClick = { vm.trySend(AdminCustomerCreateContract.Inputs.OnCreateClick) },
-                            leadingIcon = { MdiCreate() },
-                            modifier = Modifier.width(150.px)
-                        ) {
-                            SpanText(adminCustomerCreateStrings.create.uppercase())
-                        }
-                    }
+                    CreateButton(
+                        onClick = { vm.trySend(AdminCustomerCreateContract.Inputs.OnCreateClick) },
+                    )
                 }
             },
         )

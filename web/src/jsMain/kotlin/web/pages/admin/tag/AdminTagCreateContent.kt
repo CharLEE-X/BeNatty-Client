@@ -3,25 +3,24 @@ package web.pages.admin.tag
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import com.varabyte.kobweb.compose.foundation.layout.Row
-import com.varabyte.kobweb.compose.foundation.layout.Spacer
+import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
-import com.varabyte.kobweb.compose.ui.modifiers.width
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiCreate
-import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
+import com.varabyte.kobweb.compose.ui.modifiers.onFocusOut
 import feature.admin.tag.create.AdminTagCreateContract
 import feature.admin.tag.create.AdminTagCreateViewModel
 import feature.admin.tag.create.adminTagCreateStrings
-import org.jetbrains.compose.web.css.px
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.OneLayout
-import web.components.widgets.AppFilledButton
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.CardSection
+import web.components.widgets.CreateButton
+import web.components.widgets.TrailingIconSubmit
 import web.util.onEnterKeyDown
 
 @Composable
@@ -40,6 +39,8 @@ fun AdminTagCreateContent(
         )
     }
     val state by vm.observeStates().collectAsState()
+
+    var nameFocused by remember { mutableStateOf(false) }
 
     AdminLayout(
         title = adminTagCreateStrings.createTag,
@@ -71,22 +72,16 @@ fun AdminTagCreateContent(
                     leadingIcon = null,
                     shake = state.shakeName,
                     required = true,
+                    trailingIcon = { TrailingIconSubmit(show = nameFocused && state.nameError == null) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .onEnterKeyDown { vm.trySend(AdminTagCreateContract.Inputs.OnCreateClick) }
+                        .onFocusIn { nameFocused = true }
+                        .onFocusOut { nameFocused = false }
                 )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Spacer()
-                    AppFilledButton(
-                        onClick = { vm.trySend(AdminTagCreateContract.Inputs.OnCreateClick) },
-                        leadingIcon = { MdiCreate() },
-                        modifier = Modifier.width(150.px)
-                    ) {
-                        SpanText(adminTagCreateStrings.create.uppercase())
-                    }
-                }
+                CreateButton(
+                    onClick = { vm.trySend(AdminTagCreateContract.Inputs.OnCreateClick) },
+                )
             }
         }
     }

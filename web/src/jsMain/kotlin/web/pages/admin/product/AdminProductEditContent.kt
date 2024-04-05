@@ -210,7 +210,7 @@ fun AdminProductEditContent(
             },
             contentThird = {
                 CardSection(title = adminProductPageStrings.status) {
-//                    PostStatus(vm, state)
+                    PostStatus(vm, state)
                 }
                 CardSection(title = null) {
                     IsFeatured(vm, state)

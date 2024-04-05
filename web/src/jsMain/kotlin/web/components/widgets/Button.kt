@@ -3,8 +3,16 @@ package web.components.widgets
 import androidx.compose.runtime.Composable
 import androidx.compose.web.events.SyntheticMouseEvent
 import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
+import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.RowScope
+import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.width
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiCreate
+import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
+import component.localization.getString
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.px
 import web.compose.material3.component.ElevatedButton
@@ -144,4 +152,23 @@ fun AppTextButton(
         labelTextFont = labelTextFont,
         content = content
     )
+}
+
+@Composable
+fun CreateButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Spacer()
+        AppFilledButton(
+            onClick = onClick,
+            leadingIcon = { MdiCreate() },
+            modifier = modifier.width(150.px)
+        ) {
+            SpanText(getString(Strings.Create).uppercase())
+        }
+    }
 }
