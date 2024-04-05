@@ -42,6 +42,7 @@ object AdminTagEditContract {
         data object OnCancelEditClick : Inputs
         data object OnGotToUserCreatorClick : Inputs
         data object OnImproveNameClick : Inputs
+        data object OnUserCreatorClick : Inputs
 
         data class SetLoading(val isLoading: Boolean) : Inputs
         data class SetAllTags(val tags: List<TagsGetAllMinimalQuery.GetAllTagsAsMinimal>) : Inputs
@@ -81,4 +82,5 @@ object AdminTagEditStrings {
     val unsavedChanges: String = getString(component.localization.Strings.UnsavedChanges)
     val dismiss: String = getString(component.localization.Strings.Dismiss)
     val improveWithAi: String = getString(component.localization.Strings.ImproveWithAi)
+    val deleteExplain: String = getString(component.localization.Strings.DeleteExplain)
 }

@@ -20,16 +20,15 @@ import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiAdd
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
-import core.models.PageScreenState
 import data.AdminProductGetByIdQuery
 import data.type.BackorderStatus
 import data.type.MediaType
 import data.type.PostStatus
 import data.type.StockStatus
 import feature.admin.customer.edit.adminCustomerEditStrings
-import feature.admin.product.page.AdminProductPageContract
-import feature.admin.product.page.AdminProductPageViewModel
-import feature.admin.product.page.adminProductPageStrings
+import feature.admin.product.edit.AdminProductEditContract
+import feature.admin.product.edit.AdminProductEditViewModel
+import feature.admin.product.edit.adminProductPageStrings
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.FlexWrap
 import org.jetbrains.compose.web.css.em
@@ -58,8 +57,8 @@ import web.util.convertBase64ToFile
 import web.util.convertImageToBase64
 
 @Composable
-fun AdminProductPageContent(
-    productId: String?,
+fun AdminProductEditContent(
+    productId: String,
     onError: suspend (String) -> Unit,
     adminRoutes: AdminRoutes,
     goToCreateCategory: () -> Unit,
@@ -69,15 +68,15 @@ fun AdminProductPageContent(
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
-        AdminProductPageViewModel(
+        AdminProductEditViewModel(
             productId = productId,
             scope = scope,
             onError = onError,
-            goBackToProducts = adminRoutes.goBack,
+            goBack = adminRoutes.goBack,
             goToCreateCategory = goToCreateCategory,
             goToCreateTag = goToCreateTag,
-            goToCustomerDetails = goToCustomer,
-            goToProductDetail = goToProduct,
+            goToCustomer = goToCustomer,
+            goToProduct = goToProduct,
         )
     }
     val state by vm.observeStates().collectAsState()
@@ -95,13 +94,13 @@ fun AdminProductPageContent(
     AdminLayout(
         title = adminProductPageStrings.products,
         isLoading = state.isLoading,
-        showEditedButtons = state.wasEdited || state.pageScreenState is PageScreenState.New,
+        showEditedButtons = state.wasEdited,
         isSaveEnabled = state.wasEdited,
         unsavedChangesText = adminProductPageStrings.unsavedChanges,
         saveText = adminProductPageStrings.save,
         discardText = adminProductPageStrings.discard,
-        onCancel = { if (state.wasEdited) vm.trySend(AdminProductPageContract.Inputs.OnDiscardClick) },
-        onSave = { vm.trySend(AdminProductPageContract.Inputs.OnSaveClick) },
+        onCancel = { if (state.wasEdited) vm.trySend(AdminProductEditContract.Inputs.OnDiscardClick) },
+        onSave = { vm.trySend(AdminProductEditContract.Inputs.OnSaveClick) },
         adminRoutes = adminRoutes,
         overlay = {
             HasChangesWidget(
@@ -109,8 +108,8 @@ fun AdminProductPageContent(
                 messageText = adminProductPageStrings.unsavedChanges,
                 saveText = adminProductPageStrings.saveChanges,
                 resetText = adminProductPageStrings.dismiss,
-                onSave = { vm.trySend(AdminProductPageContract.Inputs.OnSaveClick) },
-                onCancel = { vm.trySend(AdminProductPageContract.Inputs.OnDiscardClick) },
+                onSave = { vm.trySend(AdminProductEditContract.Inputs.OnSaveClick) },
+                onCancel = { vm.trySend(AdminProductEditContract.Inputs.OnDiscardClick) },
             )
             if (previewDialogOpen) {
                 previewDialogImage?.let { image ->
@@ -125,13 +124,13 @@ fun AdminProductPageContent(
             TakeActionDialog(
                 open = deleteProductDialogOpen && !deleteProductDialogClosing,
                 closing = deleteProductDialogClosing,
-                title = "${adminCustomerEditStrings.delete} ${state.original.title}",
+                title = "${adminCustomerEditStrings.delete} ${state.original.name}",
                 actionYesText = adminProductPageStrings.delete,
                 actionNoText = adminProductPageStrings.discard,
                 contentText = adminProductPageStrings.deleteExplain,
                 onOpen = { deleteProductDialogOpen = it },
                 onClosing = { deleteProductDialogClosing = it },
-                onYes = { vm.trySend(AdminProductPageContract.Inputs.OnDeleteClick) },
+                onYes = { vm.trySend(AdminProductEditContract.Inputs.OnDeleteClick) },
                 onNo = { deleteProductDialogClosing = true },
             )
             TakeActionDialog(
@@ -145,7 +144,7 @@ fun AdminProductPageContent(
                 onClosing = { deleteProductImageDialogClosing = it },
                 onYes = {
                     deleteProductImageDialogImageId?.let {
-                        vm.trySend(AdminProductPageContract.Inputs.OnDeleteImageClick(it))
+                        vm.trySend(AdminProductEditContract.Inputs.OnDeleteImageClick(it))
                     }
                 },
                 onNo = { deleteProductImageDialogClosing = true },
@@ -153,28 +152,22 @@ fun AdminProductPageContent(
         },
     ) {
         OneThirdLayout(
-            title = if (state.pageScreenState is PageScreenState.New) {
-                adminProductPageStrings.createProduct
-            } else {
-                state.original.title
-            },
-            subtitle = if (state.pageScreenState == PageScreenState.Existing) state.original.id else null,
+            title = state.original.name,
+            subtitle = state.original.id,
             onGoBack = adminRoutes.goBack,
             hasBackButton = true,
             actions = {
-                if (state.pageScreenState is PageScreenState.Existing) {
-                    AppFilledButton(
-                        onClick = { deleteProductDialogOpen = !deleteProductDialogOpen },
-                        leadingIcon = { MdiDelete() },
-                        containerColor = MaterialTheme.colors.error,
-                    ) {
-                        SpanText(text = adminProductPageStrings.delete)
-                    }
+                AppFilledButton(
+                    onClick = { deleteProductDialogOpen = !deleteProductDialogOpen },
+                    leadingIcon = { MdiDelete() },
+                    containerColor = MaterialTheme.colors.error,
+                ) {
+                    SpanText(text = adminProductPageStrings.delete)
                 }
             },
             content = {
                 CardSection(title = null) {
-                    Title(state, vm)
+                    Name(state, vm)
                     Description(state, vm)
                 }
                 CardSection(title = adminProductPageStrings.media) {
@@ -231,12 +224,10 @@ fun AdminProductPageContent(
                     Divider()
                     Tags(vm, state)
                 }
-                if (state.pageScreenState is PageScreenState.Existing) {
-                    CardSection(title = adminProductPageStrings.info) {
-                        Creator(vm, state)
-                        CreatedAt(state)
-                        UpdatedAt(state)
-                    }
+                CardSection(title = adminProductPageStrings.info) {
+                    Creator(vm, state)
+                    CreatedAt(state)
+                    UpdatedAt(state)
                 }
             }
         )
@@ -244,11 +235,11 @@ fun AdminProductPageContent(
 }
 
 @Composable
-private fun ManageVariantsSection(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun ManageVariantsSection(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     if (state.current.variants.isEmpty()) {
         TextButton(
             leadingIcon = { MdiAdd() },
-            onClick = { vm.trySend(AdminProductPageContract.Inputs.OnCreateVariantClick) },
+            onClick = { vm.trySend(AdminProductEditContract.Inputs.OnCreateVariantClick) },
         ) {
             val addVariantText = if (state.current.variants.isEmpty())
                 adminProductPageStrings.addOptionsLikeSizeOrColor else adminProductPageStrings.addAnotherOption
@@ -262,7 +253,7 @@ private fun ManageVariantsSection(vm: AdminProductPageViewModel, state: AdminPro
 }
 
 @Composable
-fun UpdatedAt(state: AdminProductPageContract.State) {
+private fun UpdatedAt(state: AdminProductEditContract.State) {
     if (state.current.updatedAt.isNotEmpty()) {
         SpanText(
             text = "${adminProductPageStrings.lastUpdatedAt}: ${state.current.updatedAt}",
@@ -272,7 +263,7 @@ fun UpdatedAt(state: AdminProductPageContract.State) {
 }
 
 @Composable
-fun CreatedAt(state: AdminProductPageContract.State) {
+private fun CreatedAt(state: AdminProductEditContract.State) {
     if (state.current.createdAt.isNotEmpty()) {
         SpanText(
             text = "${adminProductPageStrings.createdAt}: ${state.current.createdAt}",
@@ -282,27 +273,27 @@ fun CreatedAt(state: AdminProductPageContract.State) {
 }
 
 @Composable
-private fun ShippingPreset(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun ShippingPreset(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     SpanText(text = adminProductPageStrings.shippingPreset)
     FilterChipSection(
         chips = state.allCategories.map { it.name },
         selectedChips = state.current.categoryId?.let { categoryId ->
             listOf(state.allCategories.first { it.id == categoryId }.name)
         } ?: emptyList(),
-        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.OnPresetSelected(it)) },
+        onChipClick = { vm.trySend(AdminProductEditContract.Inputs.OnPresetSelected(it)) },
         noChipsText = adminProductPageStrings.noCategories,
         createText = adminProductPageStrings.createCategory,
-        onCreateClick = { vm.trySend(AdminProductPageContract.Inputs.OnCreateCategoryClick) },
+        onCreateClick = { vm.trySend(AdminProductEditContract.Inputs.OnCreateCategoryClick) },
         afterTitle = { AppTooltip(adminProductPageStrings.shippingPresetDesc) },
     )
     Box(Modifier.size(0.5.em))
 }
 
 @Composable
-private fun Height(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun Height(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     AppOutlinedTextField(
         value = state.current.shipping.height.toString(),
-        onValueChange = { vm.trySend(AdminProductPageContract.Inputs.SetHeight(it)) },
+        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetHeight(it)) },
         label = adminProductPageStrings.height,
         errorText = state.heightError,
         type = TextFieldType.NUMBER,
@@ -313,10 +304,10 @@ private fun Height(vm: AdminProductPageViewModel, state: AdminProductPageContrac
 }
 
 @Composable
-private fun Width(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun Width(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     AppOutlinedTextField(
         value = state.current.shipping.width.toString(),
-        onValueChange = { vm.trySend(AdminProductPageContract.Inputs.SetWidth(it)) },
+        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetWidth(it)) },
         label = adminProductPageStrings.width,
         errorText = state.widthError,
         type = TextFieldType.NUMBER,
@@ -327,10 +318,10 @@ private fun Width(vm: AdminProductPageViewModel, state: AdminProductPageContract
 }
 
 @Composable
-private fun Length(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun Length(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     AppOutlinedTextField(
         value = state.current.shipping.length.toString(),
-        onValueChange = { vm.trySend(AdminProductPageContract.Inputs.SetLength(it)) },
+        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetLength(it)) },
         label = adminProductPageStrings.length,
         errorText = state.lengthError,
         type = TextFieldType.NUMBER,
@@ -341,10 +332,10 @@ private fun Length(vm: AdminProductPageViewModel, state: AdminProductPageContrac
 }
 
 @Composable
-private fun Weight(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun Weight(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     AppOutlinedTextField(
         value = state.current.shipping.weight.toString(),
-        onValueChange = { vm.trySend(AdminProductPageContract.Inputs.SetWeight(it)) },
+        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetWeight(it)) },
         label = adminProductPageStrings.weight,
         errorText = state.weightError,
         type = TextFieldType.NUMBER,
@@ -355,10 +346,10 @@ private fun Weight(vm: AdminProductPageViewModel, state: AdminProductPageContrac
 }
 
 @Composable
-private fun RegularPrice(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun RegularPrice(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     AppOutlinedTextField(
         value = state.current.pricing.regularPrice.toString(),
-        onValueChange = { vm.trySend(AdminProductPageContract.Inputs.SetRegularPrice(it)) },
+        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetRegularPrice(it)) },
         label = adminProductPageStrings.regularPrice,
         errorText = state.regularPriceError,
         type = TextFieldType.NUMBER,
@@ -368,10 +359,10 @@ private fun RegularPrice(vm: AdminProductPageViewModel, state: AdminProductPageC
 }
 
 @Composable
-private fun Price(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun Price(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     AppOutlinedTextField(
         value = state.current.pricing.price.toString(),
-        onValueChange = { vm.trySend(AdminProductPageContract.Inputs.SetPrice(it)) },
+        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetPrice(it)) },
         label = adminProductPageStrings.price,
         errorText = state.priceError,
         type = TextFieldType.NUMBER,
@@ -382,8 +373,8 @@ private fun Price(vm: AdminProductPageViewModel, state: AdminProductPageContract
 
 @Composable
 private fun Media(
-    vm: AdminProductPageViewModel,
-    state: AdminProductPageContract.State,
+    vm: AdminProductEditViewModel,
+    state: AdminProductEditContract.State,
     onImageClick: (AdminProductGetByIdQuery.Medium) -> Unit,
     onImageDeleteClick: (String) -> Unit,
 ) {
@@ -410,12 +401,7 @@ private fun Media(
             .flexWrap(FlexWrap.Wrap)
             .gap(1.em)
     ) {
-        val media = if (state.pageScreenState is PageScreenState.New) {
-            state.localMedia
-        } else {
-            state.current.media
-        }
-        media.forEach { image ->
+        state.current.media.forEach { image ->
             MediaSlot(
                 url = image.url,
                 alt = image.alt,
@@ -433,8 +419,8 @@ private fun Media(
             onFileDropped = { file ->
                 scope.launch {
                     convertImageToBase64(file)?.let { imageString ->
-                        vm.trySend(AdminProductPageContract.Inputs.AddMedia(imageString))
-                    } ?: vm.trySend(AdminProductPageContract.Inputs.SetImageDropError(error = "Not a PNG?"))
+                        vm.trySend(AdminProductEditContract.Inputs.AddMedia(imageString))
+                    } ?: vm.trySend(AdminProductEditContract.Inputs.SetImageDropError(error = "Not a PNG?"))
                 }
             },
             onImageClick = {},
@@ -445,13 +431,13 @@ private fun Media(
 }
 
 @Composable
-private fun TrackQuantity(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun TrackQuantity(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     SwitchSection(
         title = adminProductPageStrings.trackQuantity,
         selected = state.current.inventory.trackQuantity,
         onClick = {
             vm.trySend(
-                AdminProductPageContract.Inputs.SetTrackQuantity(
+                AdminProductEditContract.Inputs.SetTrackQuantity(
                     !state.current.inventory.trackQuantity
                 )
             )
@@ -461,13 +447,13 @@ private fun TrackQuantity(vm: AdminProductPageViewModel, state: AdminProductPage
 }
 
 @Composable
-private fun UseGlobalTracking(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun UseGlobalTracking(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     SwitchSection(
         title = adminProductPageStrings.useGlobalTracking,
         selected = state.current.inventory.useGlobalTracking,
         onClick = {
             vm.trySend(
-                AdminProductPageContract.Inputs.SetUseGlobalTracking(
+                AdminProductEditContract.Inputs.SetUseGlobalTracking(
                     !state.current.inventory.useGlobalTracking
                 )
             )
@@ -477,13 +463,13 @@ private fun UseGlobalTracking(vm: AdminProductPageViewModel, state: AdminProduct
 }
 
 @Composable
-private fun ChargeTax(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun ChargeTax(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     SwitchSection(
         title = adminProductPageStrings.chargeTax,
         selected = state.current.pricing.chargeTax,
         onClick = {
             vm.trySend(
-                AdminProductPageContract.Inputs.SetChargeTax(
+                AdminProductEditContract.Inputs.SetChargeTax(
                     !state.current.pricing.chargeTax
                 )
             )
@@ -493,14 +479,14 @@ private fun ChargeTax(vm: AdminProductPageViewModel, state: AdminProductPageCont
 }
 
 @Composable
-private fun StatusOfStock(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun StatusOfStock(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     SpanText(text = adminProductPageStrings.stockStatus)
     FilterChipSection(
         chips = StockStatus.entries
             .filter { it != StockStatus.UNKNOWN__ }
             .map { it.name },
         selectedChips = listOf(state.current.inventory.stockStatus.name),
-        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.SetStatusOfStock(StockStatus.valueOf(it))) },
+        onChipClick = { vm.trySend(AdminProductEditContract.Inputs.SetStatusOfStock(StockStatus.valueOf(it))) },
         canBeEmpty = false,
         noChipsText = "",
         createText = "",
@@ -510,12 +496,12 @@ private fun StatusOfStock(vm: AdminProductPageViewModel, state: AdminProductPage
 }
 
 @Composable
-private fun LowStockThreshold(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun LowStockThreshold(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     AppOutlinedTextField(
         value = state.current.inventory.lowStockThreshold.toString(),
         onValueChange = {
             vm.trySend(
-                AdminProductPageContract.Inputs.SetLowStockThreshold(
+                AdminProductEditContract.Inputs.SetLowStockThreshold(
                     it.toIntOrNull() ?: 0
                 )
             )
@@ -529,12 +515,12 @@ private fun LowStockThreshold(vm: AdminProductPageViewModel, state: AdminProduct
 }
 
 @Composable
-private fun RemainingStock(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun RemainingStock(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     AppOutlinedTextField(
         value = state.current.inventory.remainingStock.toString(),
         onValueChange = {
             vm.trySend(
-                AdminProductPageContract.Inputs.SetRemainingStock(
+                AdminProductEditContract.Inputs.SetRemainingStock(
                     it.toIntOrNull() ?: 0
                 )
             )
@@ -548,7 +534,7 @@ private fun RemainingStock(vm: AdminProductPageViewModel, state: AdminProductPag
 }
 
 @Composable
-private fun BackorderStatus(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun BackorderStatus(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     SpanText(text = adminProductPageStrings.backorderStatus)
     FilterChipSection(
         chips = BackorderStatus.entries
@@ -557,7 +543,7 @@ private fun BackorderStatus(vm: AdminProductPageViewModel, state: AdminProductPa
         selectedChips = listOf(state.current.inventory.backorderStatus.name),
         onChipClick = {
             vm.trySend(
-                AdminProductPageContract.Inputs.SetStatusOfBackorder(
+                AdminProductEditContract.Inputs.SetStatusOfBackorder(
                     BackorderStatus.valueOf(
                         it
                     )
@@ -573,14 +559,14 @@ private fun BackorderStatus(vm: AdminProductPageViewModel, state: AdminProductPa
 }
 
 @Composable
-private fun Title(
-    state: AdminProductPageContract.State,
-    vm: AdminProductPageViewModel
+private fun Name(
+    state: AdminProductEditContract.State,
+    vm: AdminProductEditViewModel
 ) {
     AppOutlinedTextField(
-        value = state.current.title,
-        onValueChange = { vm.trySend(AdminProductPageContract.Inputs.SetTitle(it)) },
-        label = adminProductPageStrings.title,
+        value = state.current.name,
+        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetName(it)) },
+        label = adminProductPageStrings.name,
         errorText = state.titleError,
         required = true,
         modifier = Modifier.fillMaxWidth()
@@ -589,12 +575,12 @@ private fun Title(
 
 @Composable
 private fun Description(
-    state: AdminProductPageContract.State,
-    vm: AdminProductPageViewModel
+    state: AdminProductEditContract.State,
+    vm: AdminProductEditViewModel
 ) {
     AppOutlinedTextField(
         value = state.current.description,
-        onValueChange = { vm.trySend(AdminProductPageContract.Inputs.SetDescription(it)) },
+        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetDescription(it)) },
         label = adminProductPageStrings.description,
         errorText = state.descriptionError,
         type = TextFieldType.TEXTAREA,
@@ -607,81 +593,81 @@ private fun Description(
 }
 
 @Composable
-private fun IsFeatured(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun IsFeatured(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     SwitchSection(
         title = adminProductPageStrings.isFeatured,
         selected = state.current.isFeatured,
-        onClick = { vm.trySend(AdminProductPageContract.Inputs.SetIsFeatured(!state.current.isFeatured)) },
+        onClick = { vm.trySend(AdminProductEditContract.Inputs.SetIsFeatured(!state.current.isFeatured)) },
     )
     AppTooltip(adminProductPageStrings.isFeaturedDesc)
 }
 
 @Composable
 private fun AllowReviews(
-    vm: AdminProductPageViewModel,
-    state: AdminProductPageContract.State
+    vm: AdminProductEditViewModel,
+    state: AdminProductEditContract.State
 ) {
     SwitchSection(
         title = adminProductPageStrings.allowReviews,
         selected = state.current.allowReviews,
         onClick = {
-            vm.trySend(AdminProductPageContract.Inputs.SetAllowReviews(!state.current.allowReviews))
+            vm.trySend(AdminProductEditContract.Inputs.SetAllowReviews(!state.current.allowReviews))
         },
     )
     AppTooltip(adminProductPageStrings.allowReviewsDesc)
 }
 
 @Composable
-private fun CategoryId(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun CategoryId(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     SpanText(text = adminProductPageStrings.categories)
     FilterChipSection(
         chips = state.allCategories.map { it.name },
         selectedChips = state.current.categoryId?.let { categoryId ->
             listOf(state.allCategories.first { it.id == categoryId }.name)
         } ?: emptyList(),
-        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.OnCategorySelected(it)) },
+        onChipClick = { vm.trySend(AdminProductEditContract.Inputs.OnCategorySelected(it)) },
         noChipsText = adminProductPageStrings.noCategories,
         createText = adminProductPageStrings.createCategory,
-        onCreateClick = { vm.trySend(AdminProductPageContract.Inputs.OnCreateCategoryClick) },
+        onCreateClick = { vm.trySend(AdminProductEditContract.Inputs.OnCreateCategoryClick) },
         afterTitle = { AppTooltip(adminProductPageStrings.categoriesDesc) },
     )
 }
 
 @Composable
-private fun Tags(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun Tags(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     SpanText(text = adminProductPageStrings.tags)
     FilterChipSection(
         chips = state.allTags.map { it.name },
         selectedChips = state.current.tags
             .mapNotNull { id -> state.allTags.firstOrNull { id == it.id }?.name },
-        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.OnTagSelected(it)) },
+        onChipClick = { vm.trySend(AdminProductEditContract.Inputs.OnTagSelected(it)) },
         canBeEmpty = true,
         noChipsText = adminProductPageStrings.noTags,
         createText = adminProductPageStrings.createTag,
-        onCreateClick = { vm.trySend(AdminProductPageContract.Inputs.OnCreateTagClick) },
+        onCreateClick = { vm.trySend(AdminProductEditContract.Inputs.OnCreateTagClick) },
         afterTitle = { AppTooltip(adminProductPageStrings.tagsDesc) },
         modifier = Modifier.fillMaxWidth()
     )
 }
 
 @Composable
-private fun Creator(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun Creator(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     CreatorSection(
         title = adminProductPageStrings.createdBy,
         creatorName = state.current.creator.name,
-        onClick = { vm.trySend(AdminProductPageContract.Inputs.OnUserCreatorClick) },
+        onClick = { vm.trySend(AdminProductEditContract.Inputs.OnUserCreatorClick) },
         afterTitle = { AppTooltip(adminProductPageStrings.createdByDesc) },
     )
 }
 
 @Composable
-private fun PostStatus(vm: AdminProductPageViewModel, state: AdminProductPageContract.State) {
+private fun PostStatus(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     FilterChipSection(
         chips = PostStatus.entries
             .filter { it != PostStatus.UNKNOWN__ }
             .map { it.name },
         selectedChips = listOf(state.current.postStatus.name),
-        onChipClick = { vm.trySend(AdminProductPageContract.Inputs.SetStatusOfPost(PostStatus.valueOf(it))) },
+        onChipClick = { vm.trySend(AdminProductEditContract.Inputs.SetStatusOfPost(PostStatus.valueOf(it))) },
         canBeEmpty = false,
         noChipsText = "",
         createText = "",

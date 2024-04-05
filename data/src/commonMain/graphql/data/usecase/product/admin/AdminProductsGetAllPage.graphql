@@ -13,7 +13,7 @@ query AdminGetAllProductsPage($pageInput: PageInput!) {
       mediaUrl
       price
       sold
-      title
+      name
     }
   }
 }

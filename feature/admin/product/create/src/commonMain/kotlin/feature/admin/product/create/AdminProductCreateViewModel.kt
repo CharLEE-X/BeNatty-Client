@@ -1,4 +1,4 @@
-package feature.admin.product.page
+package feature.admin.product.create
 
 import com.copperleaf.ballast.BallastViewModelConfiguration
 import com.copperleaf.ballast.build
@@ -8,23 +8,18 @@ import com.copperleaf.ballast.core.PrintlnLogger
 import com.copperleaf.ballast.dispatchers
 import com.copperleaf.ballast.plusAssign
 import com.copperleaf.ballast.withViewModel
-import core.models.PageScreenState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
-class AdminProductPageViewModel(
-    productId: String?,
+class AdminProductCreateViewModel(
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
-    goBackToProducts: () -> Unit,
-    goToCreateCategory: () -> Unit,
-    goToCreateTag: () -> Unit,
-    goToCustomerDetails: (String) -> Unit,
-    goToProductDetail: (String) -> Unit,
+    goBack: () -> Unit,
+    goToProduct: (String) -> Unit,
 ) : BasicViewModel<
-    AdminProductPageContract.Inputs,
-    AdminProductPageContract.Events,
-    AdminProductPageContract.State,
+    AdminProductCreateContract.Inputs,
+    AdminProductCreateContract.Events,
+    AdminProductCreateContract.State,
     >(
     config = BallastViewModelConfiguration.Builder()
         .apply {
@@ -32,10 +27,8 @@ class AdminProductPageViewModel(
             logger = { PrintlnLogger() }
         }
         .withViewModel(
-            initialState = AdminProductPageContract.State(
-                pageScreenState = if (productId == null) PageScreenState.New else PageScreenState.Existing,
-            ),
-            inputHandler = AdminProductPageInputHandler(),
+            initialState = AdminProductCreateContract.State(),
+            inputHandler = AdminProductCreateInputHandler(),
             name = TAG,
         )
         .dispatchers(
@@ -45,20 +38,13 @@ class AdminProductPageViewModel(
             interceptorDispatcher = Dispatchers.Default,
         )
         .build(),
-    eventHandler = AdminProductPageEventHandler(
+    eventHandler = AdminProductCreateEventHandler(
         onError = onError,
-        goBackToProducts = goBackToProducts,
-        goToCreateCategory = goToCreateCategory,
-        goToCreateTag = goToCreateTag,
-        goToCustomerDetails = goToCustomerDetails,
-        goToProduct = goToProductDetail,
+        goBack = goBack,
+        goToProduct = goToProduct,
     ),
     coroutineScope = scope,
 ) {
-    init {
-        trySend(AdminProductPageContract.Inputs.Init(productId))
-    }
-
     companion object {
         private val TAG = this::class.simpleName!!
     }

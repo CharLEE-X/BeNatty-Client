@@ -29,7 +29,7 @@ internal class AdminCategoryCreateInputHandler : KoinComponent, InputHandler<
 
         is AdminCategoryCreateContract.Inputs.SetLoading -> updateState { it.copy(isLoading = input.isLoading) }
         is AdminCategoryCreateContract.Inputs.SetName -> handleSetName(input.name)
-        is AdminCategoryCreateContract.Inputs.SetNameShake -> updateState { it.copy(shakeName = input.shake) }
+        is AdminCategoryCreateContract.Inputs.SetNameShake -> updateState { it.copy(nameShake = input.shake) }
 
         AdminCategoryCreateContract.Inputs.CreateCategory -> handleCreateCategory()
         is AdminCategoryCreateContract.Inputs.ShakeErrors -> handleShakeErrors(name = input.name)

@@ -274,4 +274,6 @@ enum class Strings {
     AddOptionsLikeSizeOrColor,
     AddAnotherOption,
     CategoryNameDescription,
+    NewTag,
+    ShopConfig,
 }

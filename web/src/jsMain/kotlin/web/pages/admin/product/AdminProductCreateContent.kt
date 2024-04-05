@@ -1,4 +1,4 @@
-package web.pages.admin.tag
+package web.pages.admin.product
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -12,9 +12,9 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiCreate
 import com.varabyte.kobweb.silk.components.text.SpanText
-import feature.admin.tag.create.AdminTagCreateContract
-import feature.admin.tag.create.AdminTagCreateViewModel
-import feature.admin.tag.create.adminTagCreateStrings
+import feature.admin.product.create.AdminProductCreateContract
+import feature.admin.product.create.AdminProductCreateViewModel
+import feature.admin.product.create.adminProductCreateStrings
 import org.jetbrains.compose.web.css.px
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
@@ -22,27 +22,26 @@ import web.components.layouts.OneLayout
 import web.components.widgets.AppFilledButton
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.CardSection
-import web.util.onEnterKeyDown
 
 @Composable
-fun AdminTagCreateContent(
+fun AdminProductCreateContent(
     onError: suspend (String) -> Unit,
     adminRoutes: AdminRoutes,
-    goToTag: (String) -> Unit,
+    goToProduct: (String) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
-        AdminTagCreateViewModel(
+        AdminProductCreateViewModel(
             scope = scope,
             onError = onError,
             goBack = adminRoutes.goBack,
-            goToTag = goToTag,
+            goToProduct = goToProduct,
         )
     }
     val state by vm.observeStates().collectAsState()
 
     AdminLayout(
-        title = adminTagCreateStrings.createTag,
+        title = adminProductCreateStrings.newProduct,
         isLoading = state.isLoading,
         showEditedButtons = false,
         isSaveEnabled = false,
@@ -52,42 +51,46 @@ fun AdminTagCreateContent(
         onCancel = { },
         onSave = { },
         adminRoutes = adminRoutes,
-        overlay = { }
+        overlay = {},
     ) {
         OneLayout(
-            title = adminTagCreateStrings.createTag,
+            title = adminProductCreateStrings.newProduct,
             subtitle = null,
             onGoBack = adminRoutes.goBack,
             hasBackButton = true,
             actions = {},
         ) {
-            CardSection(null) {
-                AppOutlinedTextField(
-                    value = state.name,
-                    onValueChange = { vm.trySend(AdminTagCreateContract.Inputs.SetName(it)) },
-                    label = adminTagCreateStrings.name,
-                    errorText = state.nameError,
-                    error = state.nameError != null,
-                    leadingIcon = null,
-                    shake = state.shakeName,
-                    required = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onEnterKeyDown { vm.trySend(AdminTagCreateContract.Inputs.OnCreateClick) }
-                )
+            CardSection(title = null) {
+                Name(state, vm)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Spacer()
                     AppFilledButton(
-                        onClick = { vm.trySend(AdminTagCreateContract.Inputs.OnCreateClick) },
+                        onClick = { vm.trySend(AdminProductCreateContract.Inputs.OnCreateClick) },
                         leadingIcon = { MdiCreate() },
                         modifier = Modifier.width(150.px)
                     ) {
-                        SpanText(adminTagCreateStrings.create.uppercase())
+                        SpanText(adminProductCreateStrings.create.uppercase())
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun Name(
+    state: AdminProductCreateContract.State,
+    vm: AdminProductCreateViewModel
+) {
+    AppOutlinedTextField(
+        value = state.name,
+        onValueChange = { vm.trySend(AdminProductCreateContract.Inputs.SetName(it)) },
+        label = adminProductCreateStrings.name,
+        errorText = state.nameError,
+        error = state.nameError != null,
+        required = true,
+        modifier = Modifier.fillMaxWidth()
+    )
 }

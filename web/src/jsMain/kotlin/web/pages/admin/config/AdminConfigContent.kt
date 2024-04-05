@@ -97,7 +97,7 @@ fun AdminConfigPage(
     var deleteImageDialogClosing by remember { mutableStateOf(false) }
 
     AdminLayout(
-        title = adminConfigStrings.shopSettings,
+        title = adminConfigStrings.shopConfig,
         isLoading = state.isLoading,
         showEditedButtons = state.wasEdited,
         isSaveEnabled = state.wasEdited,
@@ -147,6 +147,12 @@ fun AdminConfigPage(
             hasBackButton = false,
             actions = {},
             content = {
+                CardSection(title = adminConfigStrings.homePageSettings) {
+                    CollageSettings(vm, state)
+                    BannerSettings(vm, state)
+                }
+            },
+            contentThird = {
                 CardSection(title = adminConfigStrings.companyInfo) {
                     SpanText(
                         text = adminConfigStrings.contactInfo,
@@ -158,12 +164,6 @@ fun AdminConfigPage(
                     CompanyInfoPhone(vm, state)
                     CompanyInfoCompanyWebsite(vm, state)
                 }
-                CardSection(title = adminConfigStrings.homePageSettings) {
-                    CollageSettings(vm, state)
-                    BannerSettings(vm, state)
-                }
-            },
-            contentThird = {
                 CardSection(title = adminConfigStrings.openingTimes) {
                     OpeningTimes(vm, state)
                 }

@@ -36,8 +36,9 @@ import web.pages.admin.customer.AdminCustomerListPage
 import web.pages.admin.dashboard.AdminDashboardPage
 import web.pages.admin.orders.AdminOrderListPage
 import web.pages.admin.orders.AdminOrderPagePage
+import web.pages.admin.product.AdminProductCreateContent
+import web.pages.admin.product.AdminProductEditContent
 import web.pages.admin.product.AdminProductListPage
-import web.pages.admin.product.AdminProductPageContent
 import web.pages.admin.tag.AdminTagCreateContent
 import web.pages.admin.tag.AdminTagEditContent
 import web.pages.admin.tag.AdminTagListContent
@@ -326,20 +327,16 @@ fun RouterContent(
                 }
 
                 Screen.AdminProductCreate -> authenticatedRoute {
-                    AdminProductPageContent(
-                        productId = null,
+                    AdminProductCreateContent(
                         onError = onError,
                         adminRoutes = adminRoutes,
-                        goToCreateCategory = { router.trySend(ReplaceTopDestination(Screen.AdminCategoryCreate.route)) },
                         goToProduct = { router.trySend(ReplaceTopDestination(Screen.AdminProductProfile.idPath(it))) },
-                        goToCreateTag = { router.trySend(GoToDestination(Screen.AdminTagCreate.route)) },
-                        goToCustomer = { router.trySend(GoToDestination(Screen.AdminUserProfile.idPath(it))) },
                     )
                 }
 
                 Screen.AdminProductProfile -> authenticatedRoute {
                     val id: String by stringPath()
-                    AdminProductPageContent(
+                    AdminProductEditContent(
                         productId = id,
                         onError = onError,
                         adminRoutes = adminRoutes,

@@ -68,7 +68,7 @@ fun AdminCategoryCreateContent(
                         errorText = state.nameError,
                         error = state.nameError != null,
                         leadingIcon = null,
-                        shake = state.shakeName,
+                        shake = state.nameShake,
                         required = true,
                         modifier = Modifier.fillMaxWidth()
                     )

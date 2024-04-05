@@ -65,7 +65,7 @@ fun AdminCustomerCreateContent(
             actions = {},
             hasBackButton = true,
             content = {
-                CardSection(title = adminCustomerCreateStrings.newCustomer) {
+                CardSection(title = null) {
                     AppOutlinedTextField(
                         value = state.email,
                         onValueChange = { vm.trySend(AdminCustomerCreateContract.Inputs.SetEmail(it)) },

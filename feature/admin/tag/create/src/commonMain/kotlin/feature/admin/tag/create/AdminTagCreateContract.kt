@@ -32,23 +32,9 @@ object AdminTagCreateContract {
 val adminTagCreateStrings: AdminTagCreateStrings = AdminTagCreateStrings()
 
 data class AdminTagCreateStrings(
-    val save: String = getString(component.localization.Strings.Save),
-    val edit: String = getString(component.localization.Strings.Edit),
-    val discard: String = getString(component.localization.Strings.Discard),
-    val delete: String = getString(component.localization.Strings.Delete),
-    val createdBy: String = getString(component.localization.Strings.CreatedBy),
-    val createdAt: String = getString(component.localization.Strings.CreatedAt),
-    val lastUpdatedAt: String = getString(component.localization.Strings.LastUpdatedAt),
     val createTag: String = getString(component.localization.Strings.CreateTag),
-    val category: String = getString(component.localization.Strings.Tag),
+    val newTag: String = getString(component.localization.Strings.NewTag),
     val details: String = getString(component.localization.Strings.Details),
     val name: String = getString(component.localization.Strings.Name),
     val create: String = getString(component.localization.Strings.Create),
-    val description: String = getString(component.localization.Strings.Description),
-    val none: String = getString(component.localization.Strings.None),
-    val noOtherTagsToChooseFrom: String = getString(component.localization.Strings.NoOtherTagsToChooseFrom),
-    val unsavedChanges: String = getString(component.localization.Strings.UnsavedChanges),
-    val saveChanges: String = getString(component.localization.Strings.SaveChanges),
-    val dismiss: String = getString(component.localization.Strings.Dismiss),
-    val improveWithAi: String = getString(component.localization.Strings.ImproveWithAi),
 )

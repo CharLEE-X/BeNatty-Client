@@ -127,33 +127,34 @@ object AdminConfigContract {
     }
 }
 
-val adminConfigStrings: AdminConfigStrings = AdminConfigStrings()
+val adminConfigStrings = AdminConfigStrings
 
-data class AdminConfigStrings(
-    val save: String = getString(component.localization.Strings.Save),
-    val discard: String = getString(component.localization.Strings.Discard),
-    val delete: String = getString(component.localization.Strings.Delete),
-    val dismiss: String = getString(component.localization.Strings.Dismiss),
-    val shopSettings: String = getString(component.localization.Strings.ShopSettings),
-    val createdAt: String = getString(component.localization.Strings.CreatedAt),
-    val updatedAt: String = getString(component.localization.Strings.LastUpdatedAt),
-    val unsavedChanges: String = getString(component.localization.Strings.UnsavedChanges),
-    val saveChanges: String = getString(component.localization.Strings.SaveChanges),
-    val info: String = getString(component.localization.Strings.Info),
-    val companyInfo: String = getString(component.localization.Strings.CompanyInfo),
-    val contactInfo: String = getString(component.localization.Strings.ContactInfo),
-    val email: String = getString(component.localization.Strings.Email),
-    val phone: String = getString(component.localization.Strings.Phone),
-    val companyWebsite: String = getString(component.localization.Strings.CompanyWebsite),
-    val openingTimes: String = getString(component.localization.Strings.OpeningTimes),
-    val openDayFrom: String = getString(component.localization.Strings.OpenDayFrom),
-    val openDayTo: String = getString(component.localization.Strings.OpenDayTo),
-    val openTime: String = getString(component.localization.Strings.OpenTime),
-    val closeTime: String = getString(component.localization.Strings.CloseTime),
-    val landingPageSettings: String = getString(component.localization.Strings.LandingPageSettings),
-    val homePageSettings: String = getString(component.localization.Strings.HomePageSettings),
-    val collage: String = getString(component.localization.Strings.Collage),
-    val shopNow: String = getString(component.localization.Strings.ShopNow),
-    val deleteExplain: String = getString(component.localization.Strings.DeleteExplain),
-    val banner: String = getString(component.localization.Strings.Banner),
-)
+object AdminConfigStrings {
+    val save: String = getString(component.localization.Strings.Save)
+    val discard: String = getString(component.localization.Strings.Discard)
+    val delete: String = getString(component.localization.Strings.Delete)
+    val dismiss: String = getString(component.localization.Strings.Dismiss)
+    val shopSettings: String = getString(component.localization.Strings.ShopSettings)
+    val createdAt: String = getString(component.localization.Strings.CreatedAt)
+    val updatedAt: String = getString(component.localization.Strings.LastUpdatedAt)
+    val unsavedChanges: String = getString(component.localization.Strings.UnsavedChanges)
+    val saveChanges: String = getString(component.localization.Strings.SaveChanges)
+    val info: String = getString(component.localization.Strings.Info)
+    val companyInfo: String = getString(component.localization.Strings.CompanyInfo)
+    val contactInfo: String = getString(component.localization.Strings.ContactInfo)
+    val email: String = getString(component.localization.Strings.Email)
+    val phone: String = getString(component.localization.Strings.Phone)
+    val companyWebsite: String = getString(component.localization.Strings.CompanyWebsite)
+    val openingTimes: String = getString(component.localization.Strings.OpeningTimes)
+    val openDayFrom: String = getString(component.localization.Strings.OpenDayFrom)
+    val openDayTo: String = getString(component.localization.Strings.OpenDayTo)
+    val openTime: String = getString(component.localization.Strings.OpenTime)
+    val closeTime: String = getString(component.localization.Strings.CloseTime)
+    val landingPageSettings: String = getString(component.localization.Strings.LandingPageSettings)
+    val homePageSettings: String = getString(component.localization.Strings.HomePageSettings)
+    val collage: String = getString(component.localization.Strings.Collage)
+    val shopNow: String = getString(component.localization.Strings.ShopNow)
+    val deleteExplain: String = getString(component.localization.Strings.DeleteExplain)
+    val banner: String = getString(component.localization.Strings.Banner)
+    val shopConfig: String = getString(component.localization.Strings.ShopConfig)
+}

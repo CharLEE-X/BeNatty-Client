@@ -36,6 +36,8 @@ internal class AdminTagEditInputHandler :
         AdminTagEditContract.Inputs.OnCancelEditClick -> handleCancel()
         AdminTagEditContract.Inputs.OnGotToUserCreatorClick -> handleGoToCreator()
         AdminTagEditContract.Inputs.OnImproveNameClick -> handleImproveName()
+        AdminTagEditContract.Inputs.OnUserCreatorClick ->
+            postEvent(AdminTagEditContract.Events.GoToUser(getCurrentState().original.creator.id))
 
         is AdminTagEditContract.Inputs.SetLoading -> updateState { it.copy(isLoading = input.isLoading) }
         is AdminTagEditContract.Inputs.SetAllTags -> updateState { it.copy(allTags = input.tags) }

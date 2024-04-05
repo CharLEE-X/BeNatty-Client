@@ -34,7 +34,7 @@ import data.utils.handle
 import data.utils.skipIfNull
 
 interface ProductService {
-    suspend fun create(input: ProductCreateInput): Either<RemoteError, AdminCreateProductMutation.Data>
+    suspend fun create(name: String): Either<RemoteError, AdminCreateProductMutation.Data>
     suspend fun getAdminProductsAsPage(
         page: Int,
         size: Int,
@@ -184,7 +184,7 @@ internal class ProductServiceImpl(
 
         val input = ProductUpdateInput(
             id = id,
-            title = name.skipIfNull(),
+            name = name.skipIfNull(),
             description = description.skipIfNull(),
             isFeatured = isFeatured.skipIfNull(),
             allowReviews = allowReviews.skipIfNull(),
@@ -202,7 +202,8 @@ internal class ProductServiceImpl(
             .handle()
     }
 
-    override suspend fun create(input: ProductCreateInput): Either<RemoteError, AdminCreateProductMutation.Data> {
+    override suspend fun create(name: String): Either<RemoteError, AdminCreateProductMutation.Data> {
+        val input = ProductCreateInput(name)
         return apolloClient.mutation(AdminCreateProductMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
