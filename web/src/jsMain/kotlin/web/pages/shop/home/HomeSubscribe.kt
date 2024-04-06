@@ -31,6 +31,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
+import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.components.forms.Input
@@ -51,6 +52,7 @@ import theme.roleStyle
 import web.components.widgets.AppTextButton
 import web.components.widgets.ShimmerText
 import web.util.glossy
+import web.util.onEnterKeyDown
 
 @Composable
 fun HomeSubscribe(
@@ -100,18 +102,21 @@ fun HomeSubscribe(
                 modifier = Modifier
                     .height(60.px)
                     .fillMaxWidth()
+                    .tabIndex(0)
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 SpanText(
                     text = byAgreeingText,
-                    modifier = Modifier
-                        .roleStyle(MaterialTheme.typography.labelLarge)
+                    modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
                 )
                 if (!isLoading) {
                     AppTextButton(
-                        onClick = { onPrivacyPolicyClick() }
+                        onClick = { onPrivacyPolicyClick() },
+                        modifier = Modifier
+                            .tabIndex(0)
+                            .onEnterKeyDown(onPrivacyPolicyClick)
                     ) {
                         SpanText(text = privacyPolicyText)
                     }
@@ -121,7 +126,10 @@ fun HomeSubscribe(
                 SpanText(text = andText)
                 if (!isLoading) {
                     AppTextButton(
-                        onClick = { onTermsOfServiceClick() }
+                        onClick = { onTermsOfServiceClick() },
+                        modifier = Modifier
+                            .tabIndex(0)
+                            .onEnterKeyDown(onTermsOfServiceClick)
                     ) {
                         SpanText(text = termsOfServiceText)
                     }

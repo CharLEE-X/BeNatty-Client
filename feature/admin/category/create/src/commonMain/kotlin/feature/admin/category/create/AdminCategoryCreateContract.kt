@@ -1,7 +1,5 @@
 package feature.admin.category.create
 
-import component.localization.getString
-
 object AdminCategoryCreateContract {
     data class State(
         val isLoading: Boolean = false,
@@ -26,13 +24,4 @@ object AdminCategoryCreateContract {
         data class OnError(val message: String) : Events
         data class GoToCategory(val id: String) : Events
     }
-}
-
-val adminCategoryCreateStrings = AdminCategoryCreateStrings
-
-object AdminCategoryCreateStrings {
-    val createCategory: String = getString(component.localization.Strings.CreateCategory)
-    val name: String = getString(component.localization.Strings.Name)
-    val categoryNameDescription: String = getString(component.localization.Strings.CategoryNameDescription)
-    val create: String = getString(component.localization.Strings.Create)
 }

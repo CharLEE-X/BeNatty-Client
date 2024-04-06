@@ -7,9 +7,11 @@ object AdminDashboardContract {
     data class State(
         val isLoading: Boolean = false,
         val stats: GetStatsQuery.GetStats = GetStatsQuery.GetStats(
-            totalUsers = 0,
+            totalCustomers = 0,
             totalProducts = 0,
             totalOrders = 0,
+            totalCategories = 0,
+            totalTags = 0,
         ),
     )
 

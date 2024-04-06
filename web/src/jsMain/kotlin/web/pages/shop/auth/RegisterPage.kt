@@ -29,6 +29,8 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiPassword
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibilityOff
 import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
+import component.localization.getString
 import feature.register.RegisterContract
 import feature.register.RegisterViewModel
 import feature.router.RouterViewModel
@@ -60,15 +62,9 @@ fun RegisterPage(
             scope = scope,
             onError = onError,
             onAuthenticated = { router.goHome() },
-            goToPrivacyPolicy = {
-                router.trySend(RouterContract.Inputs.GoToDestination(Screen.About.matcher.routeFormat))
-            },
-            goToTnC = {
-                router.trySend(RouterContract.Inputs.GoToDestination(Screen.About.matcher.routeFormat))
-            },
-            goToLogin = {
-                router.trySend(RouterContract.Inputs.GoToDestination(Screen.Login.matcher.routeFormat))
-            },
+            goToPrivacyPolicy = { router.trySend(RouterContract.Inputs.GoToDestination(Screen.About.matcher.routeFormat)) },
+            goToTnC = { router.trySend(RouterContract.Inputs.GoToDestination(Screen.About.matcher.routeFormat)) },
+            goToLogin = { router.trySend(RouterContract.Inputs.GoToDestination(Screen.Login.matcher.routeFormat)) },
         )
     }
     val state by vm.observeStates().collectAsState()
@@ -79,25 +75,22 @@ fun RegisterPage(
             .fillMaxSize()
     ) {
         AppElevatedCard(
-            modifier = Modifier
-//                .fillMaxHeight(80.percent)
-                .fillMaxWidth(50.percent)
+            modifier = Modifier.fillMaxWidth(50.percent)
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .margin(4.em)
+                modifier = Modifier.margin(4.em)
             ) {
                 LogoSection(
-                    logoText = state.strings.logo,
-                    appName = state.strings.shopName,
-                    appMotto = state.strings.appMotto,
+                    logoText = getString(Strings.Logo),
+                    appName = getString(Strings.ShopName),
+                    appMotto = getString(Strings.AppMotto),
                 )
                 SocialButtonsLoginSection(
-                    header = state.strings.signUp,
-                    googleButtonText = state.strings.signUpWithGoogle,
-                    facebookButtonText = state.strings.signUpWithFacebook,
-                    orText = state.strings.or,
+                    header = getString(Strings.SignUp),
+                    googleButtonText = getString(Strings.SignUpWithGoogle),
+                    facebookButtonText = getString(Strings.SignUpWithFacebook),
+                    orText = getString(Strings.Or),
                     onGoogleClick = { vm.trySend(RegisterContract.Inputs.OnGoogleClick) },
                     onFacebookClick = { vm.trySend(RegisterContract.Inputs.OnFacebookClick) },
                 )
@@ -127,7 +120,7 @@ private fun FieldsSection(
             name = it
             vm.trySend(RegisterContract.Inputs.SetName(it))
         },
-        label = state.strings.name,
+        label = getString(Strings.Name),
         type = TextFieldType.TEXT,
         leadingIcon = { MdiPerson() },
         trailingIcon = { state.nameError?.let { MdiError() } },
@@ -141,7 +134,7 @@ private fun FieldsSection(
             email = it
             vm.trySend(RegisterContract.Inputs.SetEmail(it))
         },
-        label = state.strings.email,
+        label = getString(Strings.Email),
         type = TextFieldType.TEXT,
         leadingIcon = { MdiEmail() },
         trailingIcon = { state.emailError?.let { MdiError() } },
@@ -157,7 +150,7 @@ private fun FieldsSection(
             password = it
             vm.trySend(RegisterContract.Inputs.SetPassword(it))
         },
-        label = state.strings.password,
+        label = getString(Strings.Password),
         type = if (state.isPasswordVisible) TextFieldType.TEXT else TextFieldType.PASSWORD,
         leadingIcon = { MdiPassword() },
         trailingIcon = {
@@ -186,7 +179,7 @@ private fun FieldsSection(
             repeatPassword = it
             vm.trySend(RegisterContract.Inputs.SetRepeatPassword(it))
         },
-        label = state.strings.repeatPassword,
+        label = getString(Strings.RepeatPassword),
         type = if (state.isPasswordVisible) TextFieldType.TEXT else TextFieldType.PASSWORD,
         leadingIcon = { MdiPassword() },
         trailingIcon = {
@@ -230,7 +223,7 @@ private fun NewsletterSection(state: RegisterContract.State, vm: RegisterViewMod
                 onClick = { },
             )
             SpanText(
-                text = state.strings.newsletter,
+                text = getString(Strings.Newsletter),
                 modifier = Modifier
                     .roleStyle(MaterialTheme.typography.labelLarge)
             )
@@ -256,7 +249,7 @@ private fun RegisterButton(vm: RegisterViewModel, state: RegisterContract.State)
             )
         } else {
             SpanText(
-                text = state.strings.signUp,
+                text = getString(Strings.SignUp),
                 modifier = Modifier
                     .margin(top = 1.em)
                     .roleStyle(MaterialTheme.typography.headlineSmall)
@@ -273,14 +266,14 @@ private fun DontHaveAccountSection(vm: RegisterViewModel, state: RegisterContrac
             .margin(top = 1.5.em)
     ) {
         SpanText(
-            text = state.strings.alreadyHaveAnAccount,
+            text = getString(Strings.AlreadyHaveAnAccount),
             modifier = Modifier.roleStyle(MaterialTheme.typography.headlineSmall)
         )
         AppTextButton(
             onClick = { vm.trySend(RegisterContract.Inputs.OnAlreadyHaveAccountClick) },
         ) {
             SpanText(
-                text = state.strings.login,
+                text = getString(Strings.Login),
                 modifier = Modifier
                     .roleStyle(MaterialTheme.typography.headlineSmall)
                     .fontWeight(FontWeight.SemiBold)
@@ -296,7 +289,7 @@ private fun AgreeToPrivacySection(vm: RegisterViewModel, state: RegisterContract
         modifier = Modifier.margin(top = 1.em)
     ) {
         SpanText(
-            text = state.strings.bySigningUpAgree,
+            text = getString(Strings.BySigningUpAgree),
             modifier = Modifier
                 .roleStyle(MaterialTheme.typography.labelLarge)
         )
@@ -304,19 +297,19 @@ private fun AgreeToPrivacySection(vm: RegisterViewModel, state: RegisterContract
             onClick = { vm.trySend(RegisterContract.Inputs.OnPrivacyPolicyClick) },
         ) {
             SpanText(
-                text = state.strings.privacyPolicy,
+                text = getString(Strings.PrivacyPolicy),
                 modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
             )
         }
         SpanText(
-            text = state.strings.and,
+            text = getString(Strings.And),
             modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
         )
         AppTextButton(
             onClick = { vm.trySend(RegisterContract.Inputs.OnTnCClick) },
         ) {
             SpanText(
-                text = state.strings.termsOfService,
+                text = getString(Strings.TermsOfService),
                 modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
             )
         }

@@ -9,6 +9,8 @@ import com.varabyte.kobweb.compose.ui.modifiers.maxHeight
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.silk.components.graphics.Image
+import component.localization.Strings
+import component.localization.getString
 import feature.shop.home.HomeContract
 import feature.shop.home.HomeViewModel
 import org.jetbrains.compose.web.css.Position
@@ -29,9 +31,9 @@ fun BannerSection(vm: HomeViewModel, state: HomeContract.State) {
     ) {
         if (!state.isLoading) {
             CollageItem(
-                title = state.landingConfig?.bannerSection?.left?.title ?: state.strings.trendingNow,
+                title = state.landingConfig?.bannerSection?.left?.title ?: getString(Strings.TrendingNow),
                 description = state.landingConfig?.bannerSection?.left?.description
-                    ?: state.strings.exploreLatestFashionTrendsHere,
+                    ?: getString(Strings.ExploreLatestFashionTrendsHere),
                 onClick = { vm.trySend(HomeContract.Inputs.OnBannerLeftClick) },
                 textPosition = TextPosition.LeftBottom,
             ) { imageModifier ->
@@ -42,9 +44,9 @@ fun BannerSection(vm: HomeViewModel, state: HomeContract.State) {
                 )
             }
             CollageItem(
-                title = state.landingConfig?.bannerSection?.right?.title ?: state.strings.ecoFriendlyClothing,
+                title = state.landingConfig?.bannerSection?.right?.title ?: getString(Strings.EcoFriendlyClothing),
                 description = state.landingConfig?.bannerSection?.right?.description
-                    ?: state.strings.cottonNoArtificialIngredients,
+                    ?: getString(Strings.CottonNoArtificialIngredients),
                 onClick = { vm.trySend(HomeContract.Inputs.OnBannerRightClick) },
                 textPosition = TextPosition.RightTop,
             ) { imageModifier ->

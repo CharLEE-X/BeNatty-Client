@@ -1,6 +1,5 @@
 package feature.register
 
-import component.localization.getString
 import org.koin.core.component.KoinComponent
 
 object RegisterContract : KoinComponent {
@@ -24,8 +23,6 @@ object RegisterContract : KoinComponent {
         val newsletterChecked: Boolean = true,
 
         val isButtonDisabled: Boolean = true,
-
-        val strings: Strings = Strings()
     )
 
     sealed interface Inputs {
@@ -54,25 +51,4 @@ object RegisterContract : KoinComponent {
         data object GoToPrivacyPolicy : Events
         data object GoToTnC : Events
     }
-
-    data class Strings(
-        val shopName: String = getString(component.localization.Strings.ShopName),
-        val appMotto: String = getString(component.localization.Strings.AppMotto),
-        val logo: String = getString(component.localization.Strings.Logo),
-        val email: String = getString(component.localization.Strings.Email),
-        val password: String = getString(component.localization.Strings.Password),
-        val login: String = getString(component.localization.Strings.Login),
-        val or: String = getString(component.localization.Strings.Or),
-        val signUp: String = getString(component.localization.Strings.SignUp),
-        val signUpWithGoogle: String = getString(component.localization.Strings.SignUpWithGoogle),
-        val signUpWithFacebook: String = getString(component.localization.Strings.SignUpWithFacebook),
-        val name: String = getString(component.localization.Strings.FirstName),
-        val repeatPassword: String = getString(component.localization.Strings.RepeatPassword),
-        val newsletter: String = getString(component.localization.Strings.Newsletter),
-        val alreadyHaveAnAccount: String = getString(component.localization.Strings.AlreadyHaveAnAccount),
-        val privacyPolicy: String = getString(component.localization.Strings.PrivacyPolicy),
-        val and: String = getString(component.localization.Strings.And),
-        val termsOfService: String = getString(component.localization.Strings.TermsOfService),
-        val bySigningUpAgree: String = getString(component.localization.Strings.BySigningUpAgree),
-    )
 }

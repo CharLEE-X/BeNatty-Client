@@ -15,9 +15,10 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
+import component.localization.getString
 import feature.admin.customer.edit.AdminCustomerEditContract
 import feature.admin.customer.edit.AdminCustomerEditViewModel
-import feature.admin.customer.edit.adminCustomerEditStrings
 import org.jetbrains.compose.web.css.em
 import theme.MaterialTheme
 import web.components.layouts.AdminLayout
@@ -66,28 +67,22 @@ fun AdminCustomerEditContent(
         isLoading = state.isLoading,
         showEditedButtons = state.wasEdited,
         isSaveEnabled = state.wasEdited,
-        unsavedChangesText = adminCustomerEditStrings.unsavedChanges,
-        saveText = adminCustomerEditStrings.save,
-        discardText = adminCustomerEditStrings.discard,
+        unsavedChangesText = getString(Strings.UnsavedChanges),
         onCancel = { vm.trySend(AdminCustomerEditContract.Inputs.OnDiscardClick) },
         onSave = { vm.trySend(AdminCustomerEditContract.Inputs.OnSaveClick) },
         adminRoutes = adminRoutes,
         overlay = {
             HasChangesWidget(
                 hasChanges = state.wasEdited,
-                messageText = adminCustomerEditStrings.unsavedChanges,
-                saveText = adminCustomerEditStrings.saveChanges,
-                resetText = adminCustomerEditStrings.dismiss,
+                messageText = getString(Strings.UnsavedChanges),
                 onSave = { vm.trySend(AdminCustomerEditContract.Inputs.OnSaveClick) },
                 onCancel = { vm.trySend(AdminCustomerEditContract.Inputs.OnDiscardClick) },
             )
             TakeActionDialog(
                 open = deleteCustomerDialogOpen && !deleteCustomerDialogClosing,
                 closing = deleteCustomerDialogClosing,
-                title = "${adminCustomerEditStrings.delete} ${state.original.details.email}",
-                actionYesText = adminCustomerEditStrings.delete,
-                actionNoText = adminCustomerEditStrings.discard,
-                contentText = adminCustomerEditStrings.deleteExplain,
+                title = "${getString(Strings.Delete)} ${state.original.details.email}",
+                contentText = getString(Strings.DeleteExplain),
                 onOpen = { deleteCustomerDialogOpen = it },
                 onClosing = { deleteCustomerDialogClosing = it },
                 onYes = { vm.trySend(AdminCustomerEditContract.Inputs.OnDeleteClick) },
@@ -96,10 +91,8 @@ fun AdminCustomerEditContent(
             TakeActionDialog(
                 open = discardDialogOpen && !discardDialogClosing,
                 closing = discardDialogClosing,
-                title = adminCustomerEditStrings.discardAllUnsavedChanges,
-                actionYesText = adminCustomerEditStrings.discardChanges,
-                actionNoText = adminCustomerEditStrings.continueEditing,
-                contentText = adminCustomerEditStrings.discardAllUnsavedChangesDesc,
+                title = getString(Strings.DiscardAllUnsavedChanges),
+                contentText = getString(Strings.DiscardAllUnsavedChangesDesc),
                 onOpen = { discardDialogOpen = it },
                 onClosing = { discardDialogClosing = it },
                 onYes = { vm.trySend(AdminCustomerEditContract.Inputs.OnDiscardClick) },
@@ -108,10 +101,8 @@ fun AdminCustomerEditContent(
             TakeActionDialog(
                 open = warningDialogOpen && !warningDialogClosing,
                 closing = warningDialogClosing,
-                title = adminCustomerEditStrings.leavePageWithUnsavedChanges,
-                contentText = adminCustomerEditStrings.leavingThisPageWillDiscardAllUnsavedChanges,
-                actionYesText = adminCustomerEditStrings.leavePage,
-                actionNoText = adminCustomerEditStrings.stay,
+                title = getString(Strings.LeavePageWithUnsavedChanges),
+                contentText = getString(Strings.LeavingThisPageWillDiscardAllUnsavedChanges),
                 onOpen = { warningDialogOpen = it },
                 onClosing = { warningDialogClosing = it },
                 onYes = { vm.trySend(AdminCustomerEditContract.Inputs.OnWarningYesClick) },
@@ -129,12 +120,12 @@ fun AdminCustomerEditContent(
                     leadingIcon = { MdiDelete() },
                     containerColor = MaterialTheme.colors.error,
                 ) {
-                    SpanText(text = adminCustomerEditStrings.delete)
+                    SpanText(text = getString(Strings.Delete))
                 }
             },
             hasBackButton = true,
             content = {
-                CardSection(title = adminCustomerEditStrings.newCustomer) {
+                CardSection(title = getString(Strings.NewCustomer)) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
@@ -151,8 +142,8 @@ fun AdminCustomerEditContent(
                     Marketing(vm, state)
                 }
                 CardSection(
-                    title = adminCustomerEditStrings.address,
-                    description = adminCustomerEditStrings.addressDesc,
+                    title = getString(Strings.Address),
+                    description = getString(Strings.AddressDesc),
                 ) {
                     Country(state, vm)
                     Row(
@@ -186,24 +177,24 @@ fun AdminCustomerEditContent(
 @Composable
 private fun Marketing(vm: AdminCustomerEditViewModel, state: AdminCustomerEditContract.State) {
     CheckboxSection(
-        title = adminCustomerEditStrings.marketingEmailsAgreed,
+        title = getString(Strings.MarketingEmailsAgreed),
         selected = state.current.marketingEmails,
         disabled = true,
         onClick = { vm.trySend(AdminCustomerEditContract.Inputs.SetMarketingEmail(!state.current.marketingEmails)) },
     )
     CheckboxSection(
-        title = adminCustomerEditStrings.marketingSMSAgreed,
+        title = getString(Strings.MarketingSMSAgreed),
         selected = state.current.marketingSms,
         disabled = true,
         onClick = { vm.trySend(AdminCustomerEditContract.Inputs.SetMarketingSMS(!state.current.marketingSms)) },
     )
-    SpanText(text = adminCustomerEditStrings.marketingDesc)
+    SpanText(text = getString(Strings.MarketingDesc))
 }
 
 @Composable
 private fun CollectTax(vm: AdminCustomerEditViewModel, state: AdminCustomerEditContract.State) {
     CheckboxSection(
-        title = adminCustomerEditStrings.collectTax,
+        title = getString(Strings.CollectTax),
         selected = state.current.collectTax,
         onClick = { vm.trySend(AdminCustomerEditContract.Inputs.SetCollectTax(!state.current.collectTax)) },
     )
@@ -214,7 +205,7 @@ private fun RowScope.DetailFirstName(vm: AdminCustomerEditViewModel, state: Admi
     AppOutlinedTextField(
         value = state.current.details.firstName ?: "",
         onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetDetailFirstName(it)) },
-        label = adminCustomerEditStrings.firstName,
+        label = getString(Strings.FirstName),
         modifier = Modifier.weight(1f)
     )
 }
@@ -224,7 +215,7 @@ private fun RowScope.DetailLastName(vm: AdminCustomerEditViewModel, state: Admin
     AppOutlinedTextField(
         value = state.current.details.lastName ?: "",
         onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetDetailLastName(it)) },
-        label = adminCustomerEditStrings.lastName,
+        label = getString(Strings.LastName),
         modifier = Modifier.weight(1f)
     )
 }
@@ -234,7 +225,7 @@ private fun RowScope.AddressFirstName(vm: AdminCustomerEditViewModel, state: Adm
     AppOutlinedTextField(
         value = state.current.address.firstName ?: "",
         onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetAddressFirstName(it)) },
-        label = adminCustomerEditStrings.firstName,
+        label = getString(Strings.FirstName),
         modifier = Modifier.weight(1f)
     )
 }
@@ -244,7 +235,7 @@ private fun RowScope.AddressLastName(vm: AdminCustomerEditViewModel, state: Admi
     AppOutlinedTextField(
         value = state.current.address.lastName ?: "",
         onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetAddressLastName(it)) },
-        label = adminCustomerEditStrings.lastName,
+        label = getString(Strings.LastName),
         modifier = Modifier.weight(1f)
     )
 }
@@ -254,10 +245,10 @@ private fun Language(vm: AdminCustomerEditViewModel, state: AdminCustomerEditCon
     AppOutlinedTextField(
         value = state.current.details.language ?: "",
         onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetLanguage(it)) },
-        label = adminCustomerEditStrings.language,
+        label = getString(Strings.Language),
         modifier = Modifier.fillMaxWidth(),
     )
-    SpanText(text = adminCustomerEditStrings.languageDesc)
+    SpanText(text = getString(Strings.LanguageDesc))
 }
 
 @Composable
@@ -265,7 +256,7 @@ private fun Email(vm: AdminCustomerEditViewModel, state: AdminCustomerEditContra
     AppOutlinedTextField(
         value = state.current.details.email,
         onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetEmail(it)) },
-        label = adminCustomerEditStrings.email,
+        label = getString(Strings.Email),
         errorText = state.emailError,
         type = TextFieldType.EMAIL,
         required = true,
@@ -279,7 +270,7 @@ private fun DetailPhone(vm: AdminCustomerEditViewModel, state: AdminCustomerEdit
     AppOutlinedTextField(
         value = state.current.details.phone ?: "",
         onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetDetailPhone(it)) },
-        label = adminCustomerEditStrings.phone,
+        label = getString(Strings.Phone),
         type = TextFieldType.TEL,
         modifier = Modifier.fillMaxWidth(),
     )
@@ -290,7 +281,7 @@ private fun AddressPhone(vm: AdminCustomerEditViewModel, state: AdminCustomerEdi
     AppOutlinedTextField(
         value = state.current.address.phone ?: "",
         onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetAddressPhone(it)) },
-        label = adminCustomerEditStrings.phone,
+        label = getString(Strings.Phone),
         type = TextFieldType.TEL,
         modifier = Modifier.fillMaxWidth(),
     )
@@ -304,7 +295,7 @@ private fun Address(
     AppOutlinedTextField(
         value = state.current.address.address ?: "",
         onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetAddress(it)) },
-        label = adminCustomerEditStrings.address,
+        label = getString(Strings.Address),
         modifier = Modifier.fillMaxWidth(),
     )
 }
@@ -317,7 +308,7 @@ private fun Company(
     AppOutlinedTextField(
         value = state.current.address.company ?: "",
         onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetCompany(it)) },
-        label = adminCustomerEditStrings.company,
+        label = getString(Strings.Company),
         modifier = Modifier.fillMaxWidth()
     )
 }
@@ -330,7 +321,7 @@ private fun Postcode(
     AppOutlinedTextField(
         value = state.current.address.postcode ?: "",
         onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetPostcode(it)) },
-        label = adminCustomerEditStrings.postcode,
+        label = getString(Strings.PostCode),
         modifier = Modifier.fillMaxWidth(),
     )
 }
@@ -343,7 +334,7 @@ private fun City(
     AppOutlinedTextField(
         value = state.current.address.city ?: "",
         onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetCity(it)) },
-        label = adminCustomerEditStrings.city,
+        label = getString(Strings.City),
         modifier = Modifier.fillMaxWidth()
     )
 }
@@ -356,7 +347,7 @@ private fun Apartment(
     AppOutlinedTextField(
         value = state.current.address.apartment ?: "",
         onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetApartment(it)) },
-        label = adminCustomerEditStrings.apartment,
+        label = getString(Strings.Apartment),
         modifier = Modifier.fillMaxWidth()
     )
 }
@@ -369,7 +360,7 @@ private fun Country(
     AppOutlinedTextField(
         value = state.current.address.country ?: "",
         onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetCountry(it)) },
-        label = adminCustomerEditStrings.country,
+        label = getString(Strings.Country),
         modifier = Modifier.fillMaxWidth()
     )
 }

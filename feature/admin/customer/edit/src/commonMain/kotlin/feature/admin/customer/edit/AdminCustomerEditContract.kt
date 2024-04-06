@@ -1,6 +1,5 @@
 package feature.admin.customer.edit
 
-import component.localization.getString
 import data.GetCustomerByIdQuery
 import data.type.Role
 
@@ -85,44 +84,4 @@ object AdminCustomerEditContract {
         data object ShowLeavePageWarningDialog : Events
         data class GoToCustomer(val id: String) : Events
     }
-}
-
-val adminCustomerEditStrings = AdminCustomerPageStrings
-
-object AdminCustomerPageStrings {
-    val save: String = getString(component.localization.Strings.Save)
-    val discard: String = getString(component.localization.Strings.Discard)
-    val delete: String = getString(component.localization.Strings.Delete)
-    val email: String = getString(component.localization.Strings.Email)
-    val firstName: String = getString(component.localization.Strings.FirstName)
-    val lastName: String = getString(component.localization.Strings.LastName)
-    val language: String = getString(component.localization.Strings.Language)
-    val phone: String = getString(component.localization.Strings.Phone)
-    val country: String = getString(component.localization.Strings.Country)
-    val company: String = getString(component.localization.Strings.Company)
-    val address: String = getString(component.localization.Strings.Address)
-    val addressDesc: String = getString(component.localization.Strings.AddressDesc)
-    val apartment: String = getString(component.localization.Strings.Apartment)
-    val postcode: String = getString(component.localization.Strings.PostCode)
-    val city: String = getString(component.localization.Strings.City)
-    val collectTax: String = getString(component.localization.Strings.CollectTax)
-    val marketingEmailsAgreed: String = getString(component.localization.Strings.MarketingEmailsAgreed)
-    val marketingSMSAgreed: String = getString(component.localization.Strings.MarketingSMSAgreed)
-    val newCustomer: String = getString(component.localization.Strings.NewCustomer)
-    val unsavedChanges: String = getString(component.localization.Strings.UnsavedChanges)
-    val saveChanges: String = getString(component.localization.Strings.SaveChanges)
-    val dismiss: String = getString(component.localization.Strings.Dismiss)
-    val id: String = getString(component.localization.Strings.Id)
-    val deleteExplain: String = getString(component.localization.Strings.DeleteExplain)
-    val discardAllUnsavedChanges: String = getString(component.localization.Strings.DiscardAllUnsavedChanges)
-    val discardAllUnsavedChangesDesc: String = getString(component.localization.Strings.DiscardAllUnsavedChangesDesc)
-    val continueEditing: String = getString(component.localization.Strings.ContinueEditing)
-    val discardChanges: String = getString(component.localization.Strings.DiscardChanges)
-    val languageDesc: String = getString(component.localization.Strings.LanguageDesc)
-    val marketingDesc: String = getString(component.localization.Strings.MarketingDesc)
-    val leavePageWithUnsavedChanges: String = getString(component.localization.Strings.LeavePageWithUnsavedChanges)
-    val leavingThisPageWillDiscardAllUnsavedChanges: String =
-        getString(component.localization.Strings.LeavingThisPageWillDiscardAllUnsavedChanges)
-    val leavePage: String = getString(component.localization.Strings.LeavePage)
-    val stay: String = getString(component.localization.Strings.Stay)
 }

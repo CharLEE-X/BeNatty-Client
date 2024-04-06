@@ -1,6 +1,5 @@
 package feature.admin.tag.edit
 
-import component.localization.getString
 import data.GetTagByIdQuery
 import data.TagsGetAllMinimalQuery
 
@@ -62,25 +61,4 @@ object AdminTagEditContract {
         data class GoToUser(val id: String) : Events
         data class GoToTag(val id: String) : Events
     }
-}
-
-val adminTagEditStrings = AdminTagEditStrings
-
-object AdminTagEditStrings {
-    val save: String = getString(component.localization.Strings.Save)
-    val edit: String = getString(component.localization.Strings.Edit)
-    val discard: String = getString(component.localization.Strings.Discard)
-    val delete: String = getString(component.localization.Strings.Delete)
-    val createdBy: String = getString(component.localization.Strings.CreatedBy)
-    val createdAt: String = getString(component.localization.Strings.CreatedAt)
-    val lastUpdatedAt: String = getString(component.localization.Strings.LastUpdatedAt)
-    val createTag: String = getString(component.localization.Strings.CreateTag)
-    val tag: String = getString(component.localization.Strings.Tag)
-    val details: String = getString(component.localization.Strings.Details)
-    val name: String = getString(component.localization.Strings.Name)
-    val description: String = getString(component.localization.Strings.Description)
-    val unsavedChanges: String = getString(component.localization.Strings.UnsavedChanges)
-    val dismiss: String = getString(component.localization.Strings.Dismiss)
-    val improveWithAi: String = getString(component.localization.Strings.ImproveWithAi)
-    val deleteExplain: String = getString(component.localization.Strings.DeleteExplain)
 }

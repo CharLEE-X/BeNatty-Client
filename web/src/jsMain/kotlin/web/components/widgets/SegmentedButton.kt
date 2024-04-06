@@ -5,12 +5,14 @@ import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.ContentBuilder
 import web.compose.material3.common.MdElement
 import web.compose.material3.component.labs.OutlinedSegmentedButtonSet
 import web.compose.material3.component.labs.SegmentedButton
+import web.util.onEnterKeyDown
 
 @Composable
 fun AppOutlinedSegmentedButtonSet(
@@ -182,6 +184,8 @@ fun AppSegmentedButton(
         unselectedIconColor = unselectedIconColor,
         spacingLeading = spacingLeading,
         spacingTrailing = spacingTrailing,
-        modifier = modifier,
+        modifier = modifier
+            .tabIndex(0)
+            .onEnterKeyDown(onClick)
     )
 }

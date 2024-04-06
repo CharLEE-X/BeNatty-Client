@@ -36,6 +36,8 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiCancel
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiSave
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiWarning
 import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
+import component.localization.getString
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.Position
@@ -50,8 +52,8 @@ import web.util.glossy
 fun HasChangesWidget(
     hasChanges: Boolean,
     messageText: String,
-    saveText: String,
-    resetText: String,
+    saveText: String = getString(Strings.SaveChanges),
+    dismissText: String = getString(Strings.Dismiss),
     onSave: () -> Unit,
     onCancel: () -> Unit,
 ) {
@@ -81,7 +83,7 @@ fun HasChangesWidget(
             .fillMaxSize()
             .position(Position.Fixed)
             .pointerEvents(PointerEvents.None)
-            .zIndex(50)
+            .zIndex(500)
     ) {
         if (show) {
             Box(
@@ -126,7 +128,7 @@ fun HasChangesWidget(
                         leadingIcon = { MdiCancel() },
                         containerColor = MaterialTheme.colors.tertiary,
                     ) {
-                        SpanText(resetText)
+                        SpanText(dismissText)
                     }
                     AppFilledTonalButton(
                         onClick = { onSave() },

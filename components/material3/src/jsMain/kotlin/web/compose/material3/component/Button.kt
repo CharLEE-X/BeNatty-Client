@@ -189,6 +189,7 @@ fun TextButton(
     modifier: Modifier = Modifier,
     labelTextColor: CSSColorValue? = null,
     labelTextFont: String? = null,
+    hoverContainerColor: CSSColorValue? = null,
     content: @Composable RowScope.() -> Unit
 ) {
     val tag = "text"
@@ -201,6 +202,7 @@ fun TextButton(
         modifier = modifier.styleModifier {
             labelTextColor?.let { property("--md-$tag-button-label-text-color", it.toString()) }
             labelTextFont?.let { property("--md-$tag-button-label-text-font", it) }
+            hoverContainerColor?.let { property("--md-$tag-button-hover-state-layer-color", it) }
         },
         content = content
     )

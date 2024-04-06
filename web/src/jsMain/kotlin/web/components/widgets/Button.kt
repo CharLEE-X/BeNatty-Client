@@ -1,13 +1,13 @@
 package web.components.widgets
 
 import androidx.compose.runtime.Composable
-import androidx.compose.web.events.SyntheticMouseEvent
 import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.RowScope
 import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiCreate
 import com.varabyte.kobweb.silk.components.text.SpanText
@@ -20,6 +20,7 @@ import web.compose.material3.component.FilledButton
 import web.compose.material3.component.FilledTonalButton
 import web.compose.material3.component.OutlinedButton
 import web.compose.material3.component.TextButton
+import web.util.onEnterKeyDown
 
 @Composable
 fun AppElevatedButton(
@@ -39,12 +40,14 @@ fun AppElevatedButton(
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         disabled = disabled,
-        modifier = modifier,
         containerColor = containerColor,
         labelTextColor = labelTextColor,
         containerShape = containerShape ?: 12.px,
         labelTextFont = labelTextFont,
-        content = content
+        content = content,
+        modifier = modifier
+            .tabIndex(0)
+            .onEnterKeyDown(onClick)
     )
 }
 
@@ -67,13 +70,15 @@ fun AppFilledButton(
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         disabled = disabled,
-        modifier = modifier,
         containerColor = containerColor,
         labelTextColor = labelTextColor,
         disabledContainerColor = disabledContainerColor,
         containerShape = containerShape ?: 12.px,
         labelTextFont = labelTextFont,
-        content = content
+        content = content,
+        modifier = modifier
+            .tabIndex(0)
+            .onEnterKeyDown(onClick)
     )
 }
 
@@ -95,12 +100,14 @@ fun AppOutlinedButton(
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         disabled = disabled,
-        modifier = modifier,
         containerColor = containerColor,
         labelTextColor = labelTextColor,
         containerShape = containerShape ?: 12.px,
         labelTextFont = labelTextFont,
-        content = content
+        content = content,
+        modifier = modifier
+            .tabIndex(0)
+            .onEnterKeyDown(onClick)
     )
 }
 
@@ -122,18 +129,20 @@ fun AppFilledTonalButton(
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         disabled = disabled,
-        modifier = modifier,
         containerColor = containerColor,
         labelTextColor = labelTextColor,
         containerShape = containerShape ?: 12.px,
         labelTextFont = labelTextFont,
-        content = content
+        content = content,
+        modifier = modifier
+            .tabIndex(0)
+            .onEnterKeyDown(onClick)
     )
 }
 
 @Composable
 fun AppTextButton(
-    onClick: (SyntheticMouseEvent) -> Unit,
+    onClick: () -> Unit,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     disabled: Boolean = false,
@@ -143,14 +152,16 @@ fun AppTextButton(
     content: @Composable RowScope.() -> Unit
 ) {
     TextButton(
-        onClick = onClick,
+        onClick = { onClick() },
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         disabled = disabled,
-        modifier = modifier,
         labelTextColor = labelTextColor,
         labelTextFont = labelTextFont,
-        content = content
+        content = content,
+        modifier = modifier
+            .tabIndex(0)
+            .onEnterKeyDown(onClick)
     )
 }
 
@@ -166,7 +177,10 @@ fun CreateButton(
         AppFilledButton(
             onClick = onClick,
             leadingIcon = { MdiCreate() },
-            modifier = modifier.width(150.px)
+            modifier = modifier
+                .width(150.px)
+                .tabIndex(0)
+                .onEnterKeyDown(onClick)
         ) {
             SpanText(getString(Strings.Create).uppercase())
         }

@@ -19,6 +19,8 @@ import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibilityOff
 import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
+import component.localization.getString
 import feature.updatepassword.UpdatePasswordContract
 import feature.updatepassword.UpdatePasswordViewModel
 import org.jetbrains.compose.web.css.em
@@ -48,7 +50,7 @@ fun UpdatePasswordPage(
     val state by vm.observeStates().collectAsState()
 
     ShopMainLayout(
-        title = "Update password", //state.strings.title,
+        title = "Update password",
         mainRoutes = mainRoutes,
     ) {
         Box(
@@ -79,12 +81,12 @@ fun UpdatingPassword(
     var password by remember { mutableStateOf("") }
 
     SpanText(
-        text = state.strings.chooseNewPassword,
+        text = getString(Strings.ChooseNewPassword),
         modifier = Modifier
             .roleStyle(MaterialTheme.typography.headlineLarge)
     )
     SpanText(
-        text = state.strings.chooseNewPasswordDescription,
+        text = getString(Strings.ChooseNewPasswordDescription),
         modifier = Modifier
             .margin(top = 1.em)
             .roleStyle(MaterialTheme.typography.labelLarge)
@@ -96,7 +98,7 @@ fun UpdatingPassword(
             password = it
             vm.trySend(UpdatePasswordContract.Inputs.SetPassword(it))
         },
-        label = state.strings.passwordHint,
+        label = getString(Strings.PasswordHint),
         trailingIcon = {
             val modifier = Modifier
                 .size(1.5.em)
@@ -115,7 +117,7 @@ fun UpdatingPassword(
         modifier = Modifier.margin(top = 1.em)
     ) {
         SpanText(
-            text = state.strings.login,
+            text = getString(Strings.Login),
             modifier = Modifier
                 .margin(topBottom = 0.5.em)
                 .roleStyle(MaterialTheme.typography.headlineSmall)
@@ -127,7 +129,7 @@ fun UpdatingPassword(
         modifier = Modifier.margin(top = 1.em)
     ) {
         SpanText(
-            text = state.strings.backTo,
+            text = getString(Strings.BackTo),
             modifier = Modifier
                 .margin(top = 1.em)
                 .roleStyle(MaterialTheme.typography.labelLarge)
@@ -136,7 +138,7 @@ fun UpdatingPassword(
             onClick = { vm.trySend(UpdatePasswordContract.Inputs.OnLoginClick) },
         ) {
             SpanText(
-                text = state.strings.login,
+                text = getString(Strings.Login),
                 modifier = Modifier.roleStyle(MaterialTheme.typography.headlineSmall)
             )
         }
@@ -149,12 +151,12 @@ private fun PasswordUpdated(
     state: UpdatePasswordContract.State,
 ) {
     SpanText(
-        text = state.strings.youHaveNewPassword,
+        text = getString(Strings.YouHaveNewPassword),
         modifier = Modifier
             .roleStyle(MaterialTheme.typography.headlineLarge)
     )
     SpanText(
-        text = state.strings.youHaveNewPasswordDescription,
+        text = getString(Strings.YouHaveNewPasswordDescription),
         modifier = Modifier
             .margin(top = 1.em)
             .roleStyle(MaterialTheme.typography.labelLarge)
@@ -164,7 +166,7 @@ private fun PasswordUpdated(
         modifier = Modifier.margin(top = 1.em)
     ) {
         SpanText(
-            text = state.strings.login,
+            text = getString(Strings.Login),
             modifier = Modifier
                 .margin(topBottom = 0.5.em)
                 .roleStyle(MaterialTheme.typography.headlineSmall)

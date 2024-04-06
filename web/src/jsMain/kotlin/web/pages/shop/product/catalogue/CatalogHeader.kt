@@ -26,6 +26,8 @@ import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
+import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
+import com.varabyte.kobweb.compose.ui.modifiers.onFocusOut
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOut
@@ -33,6 +35,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.rotate
+import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.compose.ui.modifiers.width
@@ -58,31 +61,27 @@ import web.components.widgets.ShimmerButton
 import web.components.widgets.ShimmerText
 import web.util.glossy
 
-
 @Composable
 fun CatalogueHeader(vm: CatalogViewModel, state: CatalogContract.State) {
     val scope = rememberCoroutineScope()
     var scheduled: Job? = null
 
     var isFiltersButtonHovered by remember { mutableStateOf(false) }
+    var isFiltersButtonFocused by remember { mutableStateOf(false) }
+    var isMenuFocused by remember { mutableStateOf(false) }
     var isMenuHovered by remember { mutableStateOf(isFiltersButtonHovered) }
     var open by remember { mutableStateOf(isFiltersButtonHovered) }
 
     fun scheduleCloseMenu() {
         scheduled = scope.launch {
-            println("scheduleCloseMenu")
             delay(1000)
             if (!(isFiltersButtonHovered || isMenuHovered)) {
-                println("scheduleCloseMenu: close")
                 open = false
-            } else {
-                println("scheduleCloseMenu: open")
             }
         }
     }
 
     LaunchedEffect(isFiltersButtonHovered, isMenuHovered) {
-        println("isFiltersButtonHovered: $isFiltersButtonHovered, isMenuHovered: $isMenuHovered")
         if (isFiltersButtonHovered || isMenuHovered) {
             scheduled?.cancel()
             open = true
@@ -121,12 +120,15 @@ fun CatalogueHeader(vm: CatalogViewModel, state: CatalogContract.State) {
                     modifier = Modifier
                         .onMouseEnter { isFiltersButtonHovered = true }
                         .onMouseLeave { isFiltersButtonHovered = false }
+                        .onFocusIn { isFiltersButtonFocused = true }
+                        .onFocusOut { isFiltersButtonFocused = false }
+                        .tabIndex(0)
                 )
             } else {
                 ShimmerButton(Modifier.width(170.px))
             }
             AppMenu(
-                open = open,
+                open = open || isFiltersButtonFocused || isMenuHovered || isMenuFocused,
                 items = listOf(
                     "Featured",
                     "Best selling",
@@ -137,7 +139,7 @@ fun CatalogueHeader(vm: CatalogViewModel, state: CatalogContract.State) {
                     "Date, New to Old",
                     "Date, Old to New",
                 ),
-                onStoreMenuItemSelected = {
+                onItemSelected = {
                     open = false
                 },
                 modifier = Modifier
@@ -147,6 +149,9 @@ fun CatalogueHeader(vm: CatalogViewModel, state: CatalogContract.State) {
                         isMenuHovered = false
                         scheduleCloseMenu()
                     }
+                    .onFocusIn { isMenuFocused = true }
+                    .onFocusOut { isMenuFocused = false }
+                    .tabIndex(0)
             )
         }
     }

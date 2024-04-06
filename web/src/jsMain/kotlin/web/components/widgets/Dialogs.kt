@@ -25,12 +25,15 @@ import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.scaleY
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.width
+import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiAdd
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiCancel
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiClose
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
+import component.localization.getString
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
@@ -53,6 +56,7 @@ fun ImagePreviewDialog(
         modifier = Modifier
             .fillMaxSize()
             .position(Position.Fixed)
+            .zIndex(200)
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -116,8 +120,8 @@ fun ImagePreviewDialog(
 fun TakeActionDialog(
     open: Boolean,
     title: String,
-    actionYesText: String,
-    actionNoText: String,
+    actionYesText: String = getString(Strings.Delete),
+    actionNoText: String = getString(Strings.Discard),
     contentText: String,
     closing: Boolean,
     onOpen: (Boolean) -> Unit,
@@ -156,7 +160,9 @@ fun TakeActionDialog(
                 ) {
                     Text(actionYesText)
                 }
-            }
+            },
+            modifier = Modifier
+                .zIndex(1000)
         ) {
             Column(
                 modifier = Modifier

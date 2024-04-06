@@ -1,7 +1,5 @@
 package feature.admin.tag.create
 
-import component.localization.getString
-
 object AdminTagCreateContract {
     data class State(
         val isLoading: Boolean = false,
@@ -28,13 +26,3 @@ object AdminTagCreateContract {
         data class GoToTag(val id: String) : Events
     }
 }
-
-val adminTagCreateStrings: AdminTagCreateStrings = AdminTagCreateStrings()
-
-data class AdminTagCreateStrings(
-    val createTag: String = getString(component.localization.Strings.CreateTag),
-    val newTag: String = getString(component.localization.Strings.NewTag),
-    val details: String = getString(component.localization.Strings.Details),
-    val name: String = getString(component.localization.Strings.Name),
-    val create: String = getString(component.localization.Strings.Create),
-)

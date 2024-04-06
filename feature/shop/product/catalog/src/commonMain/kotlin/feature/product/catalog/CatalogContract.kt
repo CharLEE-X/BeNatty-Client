@@ -1,6 +1,5 @@
 package feature.product.catalog
 
-import component.localization.getString
 import data.GetAllCategoriesAsMinimalQuery
 import data.GetCatalogConfigQuery
 import data.GetCatalogPageQuery
@@ -17,7 +16,6 @@ object CatalogContract {
     data class State(
         internal val variant: Variant = Variant.Catalog,
 
-        val strings: Strings = Strings(),
         val isLoading: Boolean = true,
         val pageSize: Int = 10,
         val showBanner: Boolean = variant !is Variant.Search,
@@ -65,19 +63,6 @@ object CatalogContract {
         data class OnError(val message: String) : Events
         data class GoToProduct(val productId: String) : Events
     }
-
-    data class Strings(
-        val productPage: String = getString(component.localization.Strings.ProductPage),
-        val catalogue: String = getString(component.localization.Strings.Catalogue),
-        val popularRightNow: String = getString(component.localization.Strings.PopularRightNow),
-        val sales: String = getString(component.localization.Strings.Sales),
-        val kids: String = getString(component.localization.Strings.Kids),
-        val men: String = getString(component.localization.Strings.Men),
-        val searchResults: String = getString(component.localization.Strings.SearchResults),
-        val women: String = getString(component.localization.Strings.Women),
-        val matchAll: String = getString(component.localization.Strings.MatchAll),
-    )
-
 }
 
 @Serializable

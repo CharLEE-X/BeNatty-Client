@@ -14,9 +14,10 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusOut
+import component.localization.Strings
+import component.localization.getString
 import feature.admin.customer.create.AdminCustomerCreateContract
 import feature.admin.customer.create.AdminCustomerCreateViewModel
-import feature.admin.customer.create.adminCustomerCreateStrings
 import org.jetbrains.compose.web.css.em
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
@@ -51,7 +52,7 @@ fun AdminCustomerCreateContent(
     var lastNameFocused by remember { mutableStateOf(false) }
 
     AdminLayout(
-        title = adminCustomerCreateStrings.newCustomer,
+        title = getString(Strings.NewCustomer),
         isLoading = state.isLoading,
         showEditedButtons = false,
         isSaveEnabled = false,
@@ -64,7 +65,7 @@ fun AdminCustomerCreateContent(
         overlay = {}
     ) {
         OneLayout(
-            title = adminCustomerCreateStrings.newCustomer,
+            title = getString(Strings.NewCustomer),
             subtitle = null,
             onGoBack = { vm.trySend(AdminCustomerCreateContract.Inputs.OnGoBackClick) },
             actions = {},
@@ -74,7 +75,7 @@ fun AdminCustomerCreateContent(
                     AppOutlinedTextField(
                         value = state.email,
                         onValueChange = { vm.trySend(AdminCustomerCreateContract.Inputs.SetEmail(it)) },
-                        label = adminCustomerCreateStrings.email,
+                        label = getString(Strings.Email),
                         errorText = state.emailError,
                         error = state.emailError != null,
 //                        type = TextFieldType.EMAIL, // Email has bug with typing
@@ -96,7 +97,7 @@ fun AdminCustomerCreateContent(
                         AppOutlinedTextField(
                             value = state.firstName,
                             onValueChange = { vm.trySend(AdminCustomerCreateContract.Inputs.SetDetailFirstName(it)) },
-                            label = adminCustomerCreateStrings.firstName,
+                            label = getString(Strings.FirstName),
                             trailingIcon = { TrailingIconGoToNext(show = firstNameFocused) },
                             modifier = Modifier
                                 .weight(1f)
@@ -106,7 +107,7 @@ fun AdminCustomerCreateContent(
                         AppOutlinedTextField(
                             value = state.lastName,
                             onValueChange = { vm.trySend(AdminCustomerCreateContract.Inputs.SetDetailLastName(it)) },
-                            label = adminCustomerCreateStrings.lastName,
+                            label = getString(Strings.LastName),
                             trailingIcon = { TrailingIconGoToNextOrSubmit(show = lastNameFocused) },
                             modifier = Modifier
                                 .weight(1f)

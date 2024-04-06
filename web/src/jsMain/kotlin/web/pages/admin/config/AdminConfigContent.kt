@@ -50,10 +50,11 @@ import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.silk.components.forms.TextInput
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
+import component.localization.getString
 import data.type.DayOfWeek
 import feature.admin.config.AdminConfigContract
 import feature.admin.config.AdminConfigViewModel
-import feature.admin.config.adminConfigStrings
 import feature.admin.config.model.toPreviewImage
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.AlignContent
@@ -97,22 +98,22 @@ fun AdminConfigPage(
     var deleteImageDialogClosing by remember { mutableStateOf(false) }
 
     AdminLayout(
-        title = adminConfigStrings.shopConfig,
+        title = getString(Strings.ShopConfig),
         isLoading = state.isLoading,
         showEditedButtons = state.wasEdited,
         isSaveEnabled = state.wasEdited,
-        unsavedChangesText = adminConfigStrings.unsavedChanges,
-        saveText = adminConfigStrings.save,
-        discardText = adminConfigStrings.discard,
+        unsavedChangesText = getString(Strings.UnsavedChanges),
+        saveText = getString(Strings.Save),
+        discardText = getString(Strings.Discard),
         onCancel = { if (state.wasEdited) vm.trySend(AdminConfigContract.Inputs.OnDiscardSaveClick) },
         onSave = { vm.trySend(AdminConfigContract.Inputs.OnSaveClick) },
         adminRoutes = adminRoutes,
         overlay = {
             HasChangesWidget(
                 hasChanges = state.wasEdited,
-                messageText = adminConfigStrings.unsavedChanges,
-                saveText = adminConfigStrings.saveChanges,
-                resetText = adminConfigStrings.dismiss,
+                messageText = getString(Strings.UnsavedChanges),
+                saveText = getString(Strings.SaveChanges),
+                dismissText = getString(Strings.Dismiss),
                 onSave = { vm.trySend(AdminConfigContract.Inputs.OnSaveClick) },
                 onCancel = { vm.trySend(AdminConfigContract.Inputs.OnDiscardSaveClick) },
             )
@@ -129,10 +130,10 @@ fun AdminConfigPage(
             TakeActionDialog(
                 open = state.deleteImageDialogOpen && !deleteImageDialogClosing,
                 closing = deleteImageDialogClosing,
-                title = adminConfigStrings.delete,
-                actionYesText = adminConfigStrings.delete,
-                actionNoText = adminConfigStrings.discard,
-                contentText = adminConfigStrings.deleteExplain,
+                title = getString(Strings.Delete),
+                actionYesText = getString(Strings.Delete),
+                actionNoText = getString(Strings.Discard),
+                contentText = getString(Strings.DeleteExplain),
                 onOpen = { vm.trySend(AdminConfigContract.Inputs.SetPreviewDialogOpen(it)) },
                 onClosing = { deleteImageDialogClosing = it },
                 onYes = { vm.trySend(AdminConfigContract.Inputs.OnImageDeleteYesClick) },
@@ -141,21 +142,21 @@ fun AdminConfigPage(
         },
     ) {
         OneThirdLayout(
-            title = adminConfigStrings.shopSettings,
+            title = getString(Strings.ShopSettings),
             subtitle = state.original.id,
             onGoBack = adminRoutes.goBack,
             hasBackButton = false,
             actions = {},
             content = {
-                CardSection(title = adminConfigStrings.homePageSettings) {
+                CardSection(title = getString(Strings.HomePageSettings)) {
                     CollageSettings(vm, state)
                     BannerSettings(vm, state)
                 }
             },
             contentThird = {
-                CardSection(title = adminConfigStrings.companyInfo) {
+                CardSection(title = getString(Strings.CompanyInfo)) {
                     SpanText(
-                        text = adminConfigStrings.contactInfo,
+                        text = getString(Strings.ContactInfo),
                         modifier = Modifier
                             .roleStyle(MaterialTheme.typography.headlineSmall)
                             .color(MaterialTheme.colors.onSurface)
@@ -164,10 +165,10 @@ fun AdminConfigPage(
                     CompanyInfoPhone(vm, state)
                     CompanyInfoCompanyWebsite(vm, state)
                 }
-                CardSection(title = adminConfigStrings.openingTimes) {
+                CardSection(title = getString(Strings.OpeningTimes)) {
                     OpeningTimes(vm, state)
                 }
-                CardSection(title = adminConfigStrings.info) {
+                CardSection(title = getString(Strings.Info)) {
                     UpdatedAt(state)
                 }
             }
@@ -180,7 +181,7 @@ fun BannerSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
     val scope = rememberCoroutineScope()
 
     SpanText(
-        text = adminConfigStrings.banner,
+        text = getString(Strings.Banner),
         modifier = Modifier
             .roleStyle(MaterialTheme.typography.headlineSmall)
             .color(MaterialTheme.colors.onSurface)
@@ -253,7 +254,7 @@ private fun CollageSettings(vm: AdminConfigViewModel, state: AdminConfigContract
     val scope = rememberCoroutineScope()
 
     SpanText(
-        text = adminConfigStrings.collage,
+        text = getString(Strings.Collage),
         modifier = Modifier
             .roleStyle(MaterialTheme.typography.headlineSmall)
             .color(MaterialTheme.colors.onSurface)
@@ -265,7 +266,7 @@ private fun CollageSettings(vm: AdminConfigViewModel, state: AdminConfigContract
             AdminCollageItem(
                 title = item.title ?: "",
                 description = item.description ?: "",
-                buttonText = if (index == 0) adminConfigStrings.shopNow else null,
+                buttonText = if (index == 0) getString(Strings.ShopNow) else null,
                 textPosition = if (index == 0) TextPosition.Center else TextPosition.LeftBottom,
                 onTitleChanged = {
                     vm.trySend(
@@ -435,7 +436,7 @@ private fun CompanyInfoEmail(vm: AdminConfigViewModel, state: AdminConfigContrac
     AppOutlinedTextField(
         value = state.current.companyInfo.contactInfo.email ?: "",
         onValueChange = { vm.trySend(AdminConfigContract.Inputs.SetEmail(it)) },
-        label = adminConfigStrings.email,
+        label = getString(Strings.Email),
         errorText = state.emailError,
         required = false,
         modifier = Modifier.fillMaxWidth()
@@ -447,7 +448,7 @@ private fun CompanyInfoPhone(vm: AdminConfigViewModel, state: AdminConfigContrac
     AppOutlinedTextField(
         value = state.current.companyInfo.contactInfo.phone ?: "",
         onValueChange = { vm.trySend(AdminConfigContract.Inputs.SetPhone(it)) },
-        label = adminConfigStrings.phone,
+        label = getString(Strings.Phone),
         errorText = state.phoneError,
         required = false,
         modifier = Modifier.fillMaxWidth()
@@ -459,7 +460,7 @@ private fun CompanyInfoCompanyWebsite(vm: AdminConfigViewModel, state: AdminConf
     AppOutlinedTextField(
         value = state.current.companyInfo.contactInfo.companyWebsite ?: "",
         onValueChange = { vm.trySend(AdminConfigContract.Inputs.SetCompanyWebsite(it)) },
-        label = adminConfigStrings.companyWebsite,
+        label = getString(Strings.CompanyWebsite),
         errorText = state.companyWebsiteError,
         required = false,
         modifier = Modifier.fillMaxWidth()
@@ -478,10 +479,10 @@ fun OpeningTimes(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
                 .weight(1f)
                 .gap(0.5.em)
         ) {
-            SpanText(text = adminConfigStrings.openDayFrom)
+            SpanText(text = getString(Strings.OpenDayFrom))
             OutlinedMenu(
                 items = DayOfWeek.knownEntries.map { it.name },
-                title = adminConfigStrings.openDayFrom,
+                title = getString(Strings.OpenDayFrom),
                 selectedItem = state.current.companyInfo.openingTimes.dayFrom?.name,
                 onItemSelected = {
                     vm.trySend(
@@ -502,10 +503,10 @@ fun OpeningTimes(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
                 .weight(1f)
                 .gap(0.5.em)
         ) {
-            SpanText(text = adminConfigStrings.openDayTo)
+            SpanText(text = getString(Strings.OpenDayTo))
             OutlinedMenu(
                 items = DayOfWeek.knownEntries.map { it.name },
-                title = adminConfigStrings.openDayTo,
+                title = getString(Strings.OpenDayTo),
                 selectedItem = state.current.companyInfo.openingTimes.dayTo?.name,
                 onItemSelected = {
                     vm.trySend(
@@ -532,11 +533,11 @@ fun OpeningTimes(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
                 .weight(1f)
                 .gap(0.5.em)
         ) {
-            SpanText(text = adminConfigStrings.openTime)
+            SpanText(text = getString(Strings.OpenTime))
             AppOutlinedTextField(
                 value = state.current.companyInfo.openingTimes.open ?: "",
                 onValueChange = { vm.trySend(AdminConfigContract.Inputs.OnOpenDayToSelected(DayOfWeek.valueOf(it))) },
-                label = adminConfigStrings.openTime,
+                label = getString(Strings.OpenTime),
                 errorText = state.openTimeError,
                 required = false,
                 modifier = Modifier.fillMaxWidth()
@@ -547,11 +548,11 @@ fun OpeningTimes(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
                 .weight(1f)
                 .gap(0.5.em)
         ) {
-            SpanText(text = adminConfigStrings.closeTime)
+            SpanText(text = getString(Strings.CloseTime))
             AppOutlinedTextField(
                 value = state.current.companyInfo.openingTimes.close ?: "",
                 onValueChange = { vm.trySend(AdminConfigContract.Inputs.SetCloseTime(it)) },
-                label = adminConfigStrings.closeTime,
+                label = getString(Strings.CloseTime),
                 errorText = state.closeTimeError,
                 required = false,
                 modifier = Modifier.fillMaxWidth()
@@ -565,7 +566,7 @@ fun UpdatedAt(state: AdminConfigContract.State) {
     state.current.updatedAt.let { updatedAt ->
         if (updatedAt.isNotEmpty()) {
             SpanText(
-                text = "${adminConfigStrings.updatedAt}: $updatedAt",
+                text = "${getString(Strings.LastUpdatedAt)}: $updatedAt",
                 modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
             )
         }

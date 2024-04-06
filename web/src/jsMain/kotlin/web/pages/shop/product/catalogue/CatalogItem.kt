@@ -31,6 +31,8 @@ import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.objectFit
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
+import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
+import com.varabyte.kobweb.compose.ui.modifiers.onFocusOut
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
@@ -39,6 +41,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.scale
 import com.varabyte.kobweb.compose.ui.modifiers.size
+import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translateY
 import com.varabyte.kobweb.compose.ui.modifiers.whiteSpace
@@ -56,6 +59,7 @@ import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import theme.MaterialTheme
 import web.pages.shop.home.gridModifier
+import web.util.onEnterKeyDown
 
 @Composable
 fun CatalogItem(
@@ -81,13 +85,14 @@ fun CatalogItem(
             media = currentMedia,
             hovered = hovered,
             borderRadius = borderRadius,
-            imageHeight = imageHeight
+            imageHeight = imageHeight,
+            modifier = Modifier
         )
         Box(Modifier.size(0.5.em))
         Miniatures(
             media = media,
             onMiniatureHoveredChanged = { currentMedia = it ?: media.firstOrNull() },
-            onMoreClick = { onClick() }
+            onClick = onClick,
         )
         Box(Modifier.size(0.5.em))
         ItemTitle(
@@ -101,6 +106,7 @@ fun CatalogItem(
 
 @Composable
 private fun MainImage(
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
     media: GetCatalogPageQuery.Medium?,
     hovered: Boolean,
@@ -109,26 +115,31 @@ private fun MainImage(
     imageHeight: CSSLengthOrPercentageNumericValue
 ) {
     var thisHovered by remember { mutableStateOf(false) }
+    var focused by remember { mutableStateOf(false) }
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
+        modifier = modifier
             .backgroundColor(MaterialTheme.colors.surfaceContainerHighest)
             .onClick { onClick() }
             .borderRadius(borderRadius)
             .onMouseEnter { thisHovered = true }
             .onMouseLeave { thisHovered = false }
+            .onFocusIn { focused = true }
+            .onFocusOut { focused = false }
             .cursor(Cursor.Pointer)
             .overflow(Overflow.Hidden)
-            .scale(if (hovered) hoveredScale else 1.0)
+            .scale(if (hovered || focused) hoveredScale else 1.0)
             .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
+            .tabIndex(0)
+            .onEnterKeyDown(onClick)
     ) {
         val imageModifier = Modifier
             .fillMaxWidth()
             .height(imageHeight)
             .borderRadius(borderRadius)
             .objectFit(ObjectFit.Cover)
-            .thenIf(hovered) { Modifier.scale(hoveredScale) }
+            .thenIf(hovered || focused) { Modifier.scale(hoveredScale) }
             .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
         media?.let { media ->
             Image(
@@ -173,7 +184,7 @@ private fun Miniatures(
     media: List<GetCatalogPageQuery.Medium>,
     onMiniatureHoveredChanged: (GetCatalogPageQuery.Medium?) -> Unit,
     totalShow: Int = 4,
-    onMoreClick: () -> Unit,
+    onClick: () -> Unit
 ) {
     val miniatures = media.take(totalShow)
     val hasMore = media.size > totalShow
@@ -183,7 +194,7 @@ private fun Miniatures(
         modifier = gridModifier(
             columns = 5,
             rowMinHeight = 100.px,
-            gap = 0.px,
+            gap = 6.px,
         )
     ) {
         miniatures.forEachIndexed { index, media ->
@@ -193,7 +204,10 @@ private fun Miniatures(
                     val item = if (hovered) media else null
                     onMiniatureHoveredChanged(item)
                 },
-                modifier = Modifier.thenIf(index < (miniatures.size - 1)) { Modifier.padding(right = 0.5.em) }
+                modifier = Modifier
+                    .tabIndex(0)
+                    .onClick { onClick() }
+                    .onEnterKeyDown(onClick)
             )
         }
         repeat(emptyOnes) {
@@ -201,14 +215,18 @@ private fun Miniatures(
         }
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .tabIndex(0)
+                .onClick { }
         ) {
             if (hasMore) {
                 SpanText(
                     text = "+${media.size - totalShow}",
                     modifier = Modifier
                         .cursor(Cursor.Pointer)
-                        .onClick { onMoreClick() }
+                        .onClick { onClick() }
+                        .onEnterKeyDown(onClick)
                 )
             }
         }
@@ -223,19 +241,25 @@ private fun ItemTitle(
     contentColor: CSSColorValue = MaterialTheme.colors.onSurface,
     onClick: () -> Unit,
 ) {
+    var focused by remember { mutableStateOf(false) }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .onClick { onClick() }
             .cursor(Cursor.Pointer)
             .cursor(Cursor.Pointer)
+            .onFocusIn { focused = true }
+            .onFocusOut { focused = false }
+            .tabIndex(0)
+            .onEnterKeyDown(onClick)
     ) {
         ItemText(text = text)
         Box(
             modifier = Modifier
                 .align(Alignment.Start)
                 .height(2.px)
-                .fillMaxWidth(if (hovered) 100.percent else 0.percent)
+                .fillMaxWidth(if (hovered || focused) 100.percent else 0.percent)
                 .backgroundColor(contentColor)
                 .transition(CSSTransition("width", 0.3.s, TransitionTimingFunction.Ease))
         )
@@ -279,6 +303,8 @@ private fun MiniatureItem(
                 hovered = false
                 onHovered(false)
             }
+            .onFocusIn { onHovered(true) }
+            .onFocusOut { onHovered(false) }
             .cursor(Cursor.Pointer)
             .borderRadius(12.px)
             .transition(CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease))

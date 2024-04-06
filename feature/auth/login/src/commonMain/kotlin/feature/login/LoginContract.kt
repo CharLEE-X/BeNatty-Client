@@ -1,6 +1,5 @@
 package feature.login
 
-import component.localization.getString
 import org.koin.core.component.KoinComponent
 
 object LoginContract : KoinComponent {
@@ -15,8 +14,6 @@ object LoginContract : KoinComponent {
         val isButtonDisabled: Boolean = true,
 
         val isLoading: Boolean = false,
-
-        val strings: Strings = Strings()
     )
 
     sealed interface Inputs {
@@ -40,19 +37,4 @@ object LoginContract : KoinComponent {
         data object GoToPrivacyPolicy : Events
         data object GoToTC : Events
     }
-
-    data class Strings(
-        val shopName: String = getString(component.localization.Strings.ShopName),
-        val appMotto: String = getString(component.localization.Strings.AppMotto),
-        val logo: String = getString(component.localization.Strings.Logo),
-        val email: String = getString(component.localization.Strings.Email),
-        val password: String = getString(component.localization.Strings.Password),
-        val forgotPassword: String = getString(component.localization.Strings.ForgotPassword),
-        val dontHaveAccount: String = getString(component.localization.Strings.DontHaveAccount),
-        val login: String = getString(component.localization.Strings.Login),
-        val or: String = getString(component.localization.Strings.Or),
-        val continueWithGoogle: String = getString(component.localization.Strings.ContinueWithGoogle),
-        val continueWithFacebook: String = getString(component.localization.Strings.ContinueWithFacebook),
-        val signUp: String = getString(component.localization.Strings.SignUp),
-    )
 }

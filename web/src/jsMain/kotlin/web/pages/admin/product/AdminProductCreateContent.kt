@@ -11,9 +11,10 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusOut
+import component.localization.Strings
+import component.localization.getString
 import feature.admin.product.create.AdminProductCreateContract
 import feature.admin.product.create.AdminProductCreateViewModel
-import feature.admin.product.create.adminProductCreateStrings
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.OneLayout
@@ -43,7 +44,7 @@ fun AdminProductCreateContent(
     var nameFocused by remember { mutableStateOf(false) }
 
     AdminLayout(
-        title = adminProductCreateStrings.newProduct,
+        title = getString(Strings.NewProduct),
         isLoading = state.isLoading,
         showEditedButtons = false,
         isSaveEnabled = false,
@@ -56,7 +57,7 @@ fun AdminProductCreateContent(
         overlay = {},
     ) {
         OneLayout(
-            title = adminProductCreateStrings.newProduct,
+            title = getString(Strings.NewProduct),
             subtitle = null,
             onGoBack = adminRoutes.goBack,
             hasBackButton = true,
@@ -66,7 +67,7 @@ fun AdminProductCreateContent(
                 AppOutlinedTextField(
                     value = state.name,
                     onValueChange = { vm.trySend(AdminProductCreateContract.Inputs.SetName(it)) },
-                    label = adminProductCreateStrings.name,
+                    label = getString(Strings.Name),
                     errorText = state.nameError,
                     error = state.nameError != null,
                     required = true,

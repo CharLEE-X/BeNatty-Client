@@ -21,6 +21,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
 import com.varabyte.kobweb.compose.ui.modifiers.scale
 import com.varabyte.kobweb.compose.ui.modifiers.size
+import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.toModifier
@@ -33,6 +34,7 @@ import theme.MaterialTheme
 import web.HeadlineTextStyle
 import web.HeadlineTextStyleBold
 import web.HeadlineTextStyleLight
+import web.util.onEnterKeyDown
 
 @Composable
 fun Logo(
@@ -55,6 +57,8 @@ fun Logo(
             .onClick { onClick() }
             .cursor(Cursor.Pointer)
             .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
+            .tabIndex(0)
+            .onEnterKeyDown(onClick)
     ) {
         if (hasLogo) {
             Image(

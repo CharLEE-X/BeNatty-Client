@@ -2,6 +2,8 @@ query GetStats {
   getStats {
     totalOrders
     totalProducts
-    totalUsers
+    totalCustomers
+    totalCategories
+    totalTags
   }
 }

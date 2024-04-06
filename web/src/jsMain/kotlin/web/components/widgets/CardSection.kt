@@ -1,6 +1,7 @@
 package web.components.widgets
 
 import androidx.compose.runtime.Composable
+import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -17,15 +18,17 @@ import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
-import org.jetbrains.compose.web.css.px
 import theme.MaterialTheme
 import theme.roleStyle
+import web.util.cornerRadius
 import web.util.glossy
 
 @Composable
 fun CardSection(
     title: String?,
     description: String? = null,
+    contentPadding: CSSLengthOrPercentageNumericValue = 1.em,
+    gap: CSSLengthOrPercentageNumericValue = 1.em,
     content: @Composable () -> Unit,
 ) {
     Box(
@@ -45,7 +48,7 @@ fun CardSection(
                         .fillMaxWidth()
                         .padding(leftRight = 1.em, topBottom = 0.5.em)
                         .backgroundColor(MaterialTheme.colors.primaryContainer)
-                        .borderRadius(topLeft = 12.px, topRight = 12.px)
+                        .borderRadius(topLeft = cornerRadius, topRight = cornerRadius)
                 ) {
                     Column(
                         modifier = Modifier
@@ -71,8 +74,8 @@ fun CardSection(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(1.em)
-                    .gap(1.em)
+                    .padding(contentPadding)
+                    .gap(gap)
             ) {
                 content()
             }

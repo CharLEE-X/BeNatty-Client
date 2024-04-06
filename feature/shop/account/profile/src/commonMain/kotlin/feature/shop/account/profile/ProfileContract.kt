@@ -1,6 +1,5 @@
 package feature.shop.account.profile
 
-import component.localization.getString
 import data.GetCustomerByIdQuery
 import data.type.Role
 
@@ -88,8 +87,6 @@ object ProfileContract {
             wishlist = emptyList(),
             role = Role.User,
         ),
-
-        val strings: Strings = Strings()
     )
 
     sealed interface Inputs {
@@ -134,27 +131,5 @@ object ProfileContract {
 
     sealed interface Events {
         data class OnError(val message: String) : Events
-    }
-
-    data class Strings(
-        val save: String = getString(component.localization.Strings.Save),
-        val edit: String = getString(component.localization.Strings.Edit),
-        val discard: String = getString(component.localization.Strings.Discard),
-        val firstName: String = getString(component.localization.Strings.FirstName),
-        val email: String = getString(component.localization.Strings.Email),
-        val phone: String = getString(component.localization.Strings.Phone),
-        val personalDetails: String = getString(component.localization.Strings.PersonalDetails),
-        val profile: String = getString(component.localization.Strings.Profile),
-        val oldPassword: String = getString(component.localization.Strings.OldPassword),
-        val newPassword: String = getString(component.localization.Strings.NewPassword),
-        val address: String = getString(component.localization.Strings.Address),
-        val company: String = getString(component.localization.Strings.Company),
-        val postcode: String = getString(component.localization.Strings.PostCode),
-        val city: String = getString(component.localization.Strings.City),
-        val apartment: String = getString(component.localization.Strings.Apartment),
-        val country: String = getString(component.localization.Strings.Country),
-        val password: String = getString(component.localization.Strings.Password),
-        val logout: String = getString(component.localization.Strings.Logout),
-    ) {
     }
 }

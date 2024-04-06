@@ -6,6 +6,7 @@ import com.varabyte.kobweb.compose.css.CSSPercentageNumericValue
 import com.varabyte.kobweb.compose.css.Height
 import com.varabyte.kobweb.compose.css.Width
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.ContentBuilder
@@ -14,6 +15,7 @@ import web.compose.material3.component.FilledIconButton
 import web.compose.material3.component.FilledTonalIconButton
 import web.compose.material3.component.IconButton
 import web.compose.material3.component.OutlinedIconButton
+import web.util.onEnterKeyDown
 
 @Composable
 fun AppIconButton(
@@ -32,11 +34,13 @@ fun AppIconButton(
         selected = selected,
         disabled = disabled,
         onClick = { onClick() },
-        modifier = modifier,
         iconColor = iconColor,
         stateLayerShape = stateLayerShape ?: "12px",
         iconSize = iconSize,
-        content = content
+        content = content,
+        modifier = modifier
+            .tabIndex(0)
+            .onEnterKeyDown(onClick)
     )
 }
 
@@ -59,23 +63,25 @@ fun AppFilledIconButton(
         selected = selected,
         disabled = disabled,
         onClick = { onClick() },
-        modifier = modifier,
         selectedContainerColor = selectedContainerColor,
         buttonContainerShape = buttonContainerShape ?: 12.px,
         buttonContainerWidth = buttonContainerWidth,
         buttonContainerHeight = buttonContainerHeight,
         iconSize = iconSize,
-        content = content
+        content = content,
+        modifier = modifier
+            .tabIndex(0)
+            .onEnterKeyDown(onClick)
     )
 }
 
 @Composable
 fun AppOutlinedIconButton(
+    modifier: Modifier = Modifier,
     toggle: Boolean? = null,
     selected: Boolean? = null,
     disabled: Boolean? = null,
     onClick: () -> Unit = {},
-    modifier: Modifier = Modifier,
     outlineColor: CSSColorValue? = null,
     outlineWidth: CSSLengthOrPercentageNumericValue? = null,
     containerShape: CSSLengthOrPercentageNumericValue? = null,
@@ -89,24 +95,26 @@ fun AppOutlinedIconButton(
         selected = selected,
         disabled = disabled,
         onClick = { onClick() },
-        modifier = modifier,
         outlineColor = outlineColor,
         outlineWidth = outlineWidth,
         containerShape = containerShape ?: 12.px,
         containerWidth = containerWidth,
         containerHeight = containerHeight,
         iconSize = iconSize,
-        content = content
+        content = content,
+        modifier = modifier
+            .tabIndex(0)
+            .onEnterKeyDown(onClick)
     )
 }
 
 @Composable
 fun AppFilledTonalIconButton(
+    modifier: Modifier = Modifier,
     toggle: Boolean? = null,
     selected: Boolean? = null,
     disabled: Boolean? = null,
     onClick: () -> Unit = {},
-    modifier: Modifier = Modifier,
     containerColor: CSSColorValue? = null,
     containerShape: CSSLengthOrPercentageNumericValue? = null,
     containerWidth: Width? = null,
@@ -119,12 +127,14 @@ fun AppFilledTonalIconButton(
         selected = selected,
         disabled = disabled,
         onClick = { onClick() },
-        modifier = modifier,
         containerColor = containerColor,
         containerShape = containerShape ?: 12.px,
         containerWidth = containerWidth,
         containerHeight = containerHeight,
         iconSize = iconSize,
-        content = content
+        content = content,
+        modifier = modifier
+            .tabIndex(0)
+            .onEnterKeyDown(onClick)
     )
 }

@@ -75,7 +75,6 @@ fun AppEntry(content: @Composable () -> Unit) {
                 modules(rootModule)
             }
         } catch (e: Exception) {
-            console.error("Failed to start Koin", e)
         }
 
         MaterialTheme(colorScheme(colorMode), appFontScheme) {

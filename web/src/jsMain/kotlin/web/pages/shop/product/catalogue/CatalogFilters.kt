@@ -22,6 +22,8 @@ import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiBrokenImage
 import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
+import component.localization.getString
 import data.GetAllCategoriesAsMinimalQuery
 import feature.product.catalog.CatalogContract
 import feature.product.catalog.CatalogViewModel
@@ -45,7 +47,7 @@ fun CatalogueFilters(
     ) {
         Divider()
         MatchAllSection(
-            matchAllText = state.strings.matchAll,
+            matchAllText = getString(Strings.MatchAll),
             categories = state.categories,
             onClick = { vm.trySend(CatalogContract.Inputs.OnCategoryClicked(it)) }
         )

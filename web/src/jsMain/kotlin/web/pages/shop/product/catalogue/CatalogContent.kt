@@ -21,6 +21,8 @@ import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.thenIf
+import component.localization.Strings
+import component.localization.getString
 import feature.product.catalog.CatalogContract
 import feature.product.catalog.CatalogViewModel
 import feature.product.catalog.CatalogueRoutes
@@ -54,7 +56,7 @@ fun CataloguePage(
     val state by vm.observeStates().collectAsState()
 
     ShopMainLayout(
-        title = state.strings.productPage,
+        title = getString(Strings.ProductPage),
         mainRoutes = mainRoutes,
         spacing = 1.em
     ) {
@@ -111,7 +113,8 @@ private fun CatalogueContent(
                         media = product.media,
                         imageHeight = imageHeight,
                         onClick = { vm.trySend(CatalogContract.Inputs.OnGoToProductClicked(product.id)) },
-                        modifier = Modifier.thenIf(index > 2) { Modifier.padding(top = 1.em) }
+                        modifier = Modifier
+                            .thenIf(index > 2) { Modifier.padding(top = 1.em) }
                     )
                 }
             } else {

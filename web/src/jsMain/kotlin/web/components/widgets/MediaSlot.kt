@@ -29,6 +29,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
 import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.scale
+import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.silk.components.graphics.Image
@@ -44,6 +45,7 @@ import org.jetbrains.compose.web.css.s
 import org.w3c.files.File
 import theme.MaterialTheme
 import theme.roleStyle
+import web.util.onEnterKeyDown
 
 @Composable
 fun MediaSlot(
@@ -83,6 +85,8 @@ fun MediaSlot(
                     style = LineStyle.Dashed,
                 )
             }
+            .tabIndex(0)
+            .onEnterKeyDown { onImageClick(url) }
     ) {
         url?.let {
             Image(
@@ -116,6 +120,8 @@ fun MediaSlot(
                             CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
                             CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
                         )
+                        .tabIndex(0)
+                        .onEnterKeyDown(onDeleteClick)
                 ) {
                     MdiDelete()
                 }
@@ -152,6 +158,8 @@ fun MediaSlot(
                         CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
                         CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
                     )
+                    .tabIndex(0)
+                    .onEnterKeyDown { onImageClick(url) }
             )
             errorText?.let { errorText ->
                 SpanText(

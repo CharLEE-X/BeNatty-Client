@@ -11,15 +11,14 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
-import feature.admin.product.edit.adminProductPageStrings
+import component.localization.Strings
+import component.localization.getString
 import feature.admin.tag.edit.AdminTagEditContract
 import feature.admin.tag.edit.AdminTagEditViewModel
-import feature.admin.tag.edit.adminTagEditStrings
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
-import web.components.layouts.ImproveWithButton
 import web.components.layouts.OneThirdLayout
 import web.components.widgets.AppFilledButton
 import web.components.widgets.AppOutlinedTextField
@@ -27,6 +26,7 @@ import web.components.widgets.AppTooltip
 import web.components.widgets.CardSection
 import web.components.widgets.CreatorSection
 import web.components.widgets.HasChangesWidget
+import web.components.widgets.ImproveWithButton
 import web.components.widgets.TakeActionDialog
 
 @Composable
@@ -54,32 +54,26 @@ fun AdminTagEditContent(
     var deleteProductDialogClosing by remember { mutableStateOf(false) }
 
     AdminLayout(
-        title = adminTagEditStrings.tag,
+        title = getString(Strings.Tag),
         isLoading = state.isLoading,
         showEditedButtons = state.wasEdited,
         isSaveEnabled = state.wasEdited,
-        unsavedChangesText = adminTagEditStrings.unsavedChanges,
-        saveText = adminTagEditStrings.save,
-        discardText = adminTagEditStrings.discard,
+        unsavedChangesText = getString(Strings.UnsavedChanges),
         onCancel = { vm.trySend(AdminTagEditContract.Inputs.OnCancelEditClick) },
         onSave = { vm.trySend(AdminTagEditContract.Inputs.OnSaveEditClick) },
         adminRoutes = adminRoutes,
         overlay = {
             HasChangesWidget(
                 hasChanges = state.wasEdited,
-                messageText = adminTagEditStrings.unsavedChanges,
-                saveText = adminTagEditStrings.save,
-                resetText = adminTagEditStrings.dismiss,
+                messageText = getString(Strings.UnsavedChanges),
                 onSave = { vm.trySend(AdminTagEditContract.Inputs.OnSaveEditClick) },
                 onCancel = { vm.trySend(AdminTagEditContract.Inputs.OnCancelEditClick) },
             )
             TakeActionDialog(
                 open = deleteProductDialogOpen && !deleteProductDialogClosing,
                 closing = deleteProductDialogClosing,
-                title = "${adminTagEditStrings.delete} ${state.original.name}",
-                actionYesText = adminTagEditStrings.delete,
-                actionNoText = adminTagEditStrings.discard,
-                contentText = adminTagEditStrings.deleteExplain,
+                title = "${getString(Strings.Delete)} ${state.original.name}",
+                contentText = getString(Strings.DeleteExplain),
                 onOpen = { deleteProductDialogOpen = it },
                 onClosing = { deleteProductDialogClosing = it },
                 onYes = { vm.trySend(AdminTagEditContract.Inputs.OnDeleteClick) },
@@ -98,36 +92,36 @@ fun AdminTagEditContent(
                     leadingIcon = { MdiDelete() },
                     containerColor = MaterialTheme.colors.error,
                 ) {
-                    SpanText(text = adminProductPageStrings.delete)
+                    SpanText(getString(Strings.Delete))
                 }
             },
             content = {
-                CardSection(title = adminTagEditStrings.details) {
+                CardSection(getString(Strings.Details)) {
                     AppOutlinedTextField(
                         value = state.current.name,
                         onValueChange = { vm.trySend(AdminTagEditContract.Inputs.SetName(it)) },
-                        label = adminTagEditStrings.name,
+                        label = getString(Strings.Name),
                         errorText = state.nameError,
                         leadingIcon = null,
                         shake = state.shakeName,
                         required = true,
                         trailingIcon = {
                             ImproveWithButton(
-                                tooltipText = adminTagEditStrings.improveWithAi,
-                                onImproveClick = { vm.trySend(AdminTagEditContract.Inputs.OnImproveNameClick) }
+                                tooltipText = getString(Strings.ImproveWithAi),
+                                onClick = { vm.trySend(AdminTagEditContract.Inputs.OnImproveNameClick) }
                             )
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
                     CreatorSection(
-                        title = adminTagEditStrings.createdBy,
+                        title = getString(Strings.CreatedBy),
                         creatorName = state.current.creator.name,
                         onClick = { vm.trySend(AdminTagEditContract.Inputs.OnGotToUserCreatorClick) },
                     )
                 }
             },
             contentThird = {
-                CardSection(title = adminProductPageStrings.info) {
+                CardSection(getString(Strings.Info)) {
                     Creator(vm, state)
                     CreatedAt(state)
                     UpdatedAt(state)
@@ -140,10 +134,10 @@ fun AdminTagEditContent(
 @Composable
 private fun Creator(vm: AdminTagEditViewModel, state: AdminTagEditContract.State) {
     CreatorSection(
-        title = adminProductPageStrings.createdBy,
+        title = getString(Strings.CreatedAt),
         creatorName = state.current.creator.name,
         onClick = { vm.trySend(AdminTagEditContract.Inputs.OnUserCreatorClick) },
-        afterTitle = { AppTooltip(adminProductPageStrings.createdByDesc) },
+        afterTitle = { AppTooltip(getString(Strings.CreatedByDesc)) },
     )
 }
 
@@ -151,7 +145,7 @@ private fun Creator(vm: AdminTagEditViewModel, state: AdminTagEditContract.State
 private fun UpdatedAt(state: AdminTagEditContract.State) {
     if (state.current.updatedAt.isNotEmpty()) {
         SpanText(
-            text = "${adminProductPageStrings.lastUpdatedAt}: ${state.current.updatedAt}",
+            text = "${getString(Strings.LastUpdatedAt)}: ${state.current.updatedAt}",
             modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
         )
     }
@@ -161,7 +155,7 @@ private fun UpdatedAt(state: AdminTagEditContract.State) {
 private fun CreatedAt(state: AdminTagEditContract.State) {
     if (state.current.createdAt.isNotEmpty()) {
         SpanText(
-            text = "${adminProductPageStrings.createdAt}: ${state.current.createdAt}",
+            text = "${getString(Strings.CreatedAt)}: ${state.current.createdAt}",
             modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
         )
     }

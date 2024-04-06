@@ -33,6 +33,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
+import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translateX
 import com.varabyte.kobweb.compose.ui.modifiers.whiteSpace
@@ -51,6 +52,7 @@ import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import theme.MaterialTheme
+import web.util.onEnterKeyDown
 
 val TickerAnimation by Keyframes {
     from { Modifier.translateX(0.percent) }
@@ -91,6 +93,8 @@ fun TickerSection(
             .cursor(Cursor.Pointer)
             .overflow(Overflow.Clip)
             .transition(CSSTransition("background-color", SmoothColorTransitionDurationVar.value()))
+            .tabIndex(0)
+            .onEnterKeyDown(onClick)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

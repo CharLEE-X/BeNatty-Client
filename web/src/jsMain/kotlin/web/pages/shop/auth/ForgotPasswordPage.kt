@@ -23,6 +23,8 @@ import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEmail
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiError
 import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
+import component.localization.getString
 import feature.forgotpassword.ForgotPasswordContract
 import feature.forgotpassword.ForgotPasswordViewModel
 import org.jetbrains.compose.web.css.em
@@ -53,7 +55,7 @@ fun ForgotPasswordPage(
     val state by vm.observeStates().collectAsState()
 
     ShopMainLayout(
-        title = state.strings.forgotPassword,
+        title = getString(Strings.ForgotPassword),
         mainRoutes = mainRoutes,
     ) {
         Box(
@@ -86,11 +88,11 @@ private fun ForgotPassword(
     var email by remember { mutableStateOf("") }
 
     SpanText(
-        text = state.strings.forgotPassword,
+        text = getString(Strings.ForgotPassword),
         modifier = Modifier.roleStyle(MaterialTheme.typography.headlineLarge)
     )
     SpanText(
-        text = state.strings.forgotPasswordDescription,
+        text = getString(Strings.ForgotPasswordDescription),
         modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
     )
     AppOutlinedTextField(
@@ -102,7 +104,7 @@ private fun ForgotPassword(
         leadingIcon = { MdiEmail() },
         trailingIcon = { if (state.showError) MdiError() },
         supportingText = state.errorMessage,
-        label = state.strings.email,
+        label = getString(Strings.Email),
         type = TextFieldType.TEXT,
         error = state.showError,
         errorText = state.errorMessage,
@@ -125,7 +127,7 @@ private fun ForgotPassword(
             )
         } else {
             SpanText(
-                text = state.strings.getAResetLink,
+                text = getString(Strings.GetAResetLink),
                 modifier = Modifier.roleStyle(MaterialTheme.typography.headlineSmall)
             )
         }
@@ -138,11 +140,11 @@ private fun CheckEmail(
     state: ForgotPasswordContract.State,
 ) {
     SpanText(
-        text = state.strings.checkEmail,
+        text = getString(Strings.CheckEmail),
         modifier = Modifier.roleStyle(MaterialTheme.typography.headlineLarge)
     )
     SpanText(
-        text = state.strings.checkEmailDescription,
+        text = getString(Strings.CheckEmailDescription),
         modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
     )
     Row(
@@ -194,14 +196,14 @@ private fun GoBackToLogin(
         modifier = Modifier
     ) {
         SpanText(
-            text = state.strings.backTo,
+            text = getString(Strings.BackTo),
             modifier = Modifier.roleStyle(MaterialTheme.typography.headlineSmall)
         )
         AppTextButton(
             onClick = { vm.trySend(ForgotPasswordContract.Inputs.OnGoToLoginClick) },
         ) {
             SpanText(
-                text = state.strings.login,
+                text = getString(Strings.Login),
                 modifier = Modifier
                     .roleStyle(MaterialTheme.typography.headlineSmall)
                     .fontWeight(FontWeight.SemiBold)

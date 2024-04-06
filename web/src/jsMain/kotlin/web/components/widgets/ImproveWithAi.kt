@@ -1,20 +1,22 @@
-package web.components.layouts
+package web.components.widgets
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPsychology
-import web.components.widgets.AppFilledIconButton
-import web.components.widgets.AppTooltip
+import web.util.onEnterKeyDown
 
 @Composable
 fun ImproveWithButton(
     tooltipText: String,
-    onImproveClick: () -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AppFilledIconButton(
-        onClick = { onImproveClick() },
+        onClick = { onClick() },
         modifier = modifier
+            .tabIndex(0)
+            .onEnterKeyDown(onClick)
     ) {
         MdiPsychology()
     }

@@ -4299,6 +4299,40 @@
           "description": null,
           "fields": [
             {
+              "name": "totalCategories",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "totalCustomers",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "totalOrders",
               "description": null,
               "args": [],
@@ -4333,7 +4367,7 @@
               "deprecationReason": null
             },
             {
-              "name": "totalUsers",
+              "name": "totalTags",
               "description": null,
               "args": [],
               "type": {

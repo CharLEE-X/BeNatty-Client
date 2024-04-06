@@ -20,6 +20,8 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiLocationCity
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPassword
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPhone
+import component.localization.Strings
+import component.localization.getString
 import feature.shop.account.profile.ProfileContract
 import feature.shop.account.profile.ProfileViewModel
 import feature.shop.navbar.DesktopNavContract
@@ -50,11 +52,11 @@ fun ProfilePage(
 
     AccountLayout(
         item = DesktopNavContract.AccountMenuItem.PROFILE,
-        logoutText = state.strings.logout,
+        logoutText = getString(Strings.Logout),
         onLogoutClicked = { vm.trySend(ProfileContract.Inputs.OnLogoutClicked) },
         onMenuItemClicked = onMenuItemClicked,
     ) {
-        PageHeader(state.strings.profile)
+        PageHeader(getString(Strings.Profile))
         PersonalDetails(vm, state)
         Divider(modifier = Modifier.margin(topBottom = 1.em))
         Password(vm, state)
@@ -66,12 +68,12 @@ fun ProfilePage(
 @Composable
 private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) {
     SectionHeader(
-        text = state.strings.personalDetails,
+        text = getString(Strings.PersonalDetails),
     ) {
         EditCancelButton(
             isEditing = state.isPersonalDetailsEditing,
-            editText = state.strings.edit,
-            cancelText = state.strings.discard,
+            editText = getString(Strings.Edit),
+            cancelText = getString(Strings.Discard),
             edit = { vm.trySend(ProfileContract.Inputs.SetPersonalDetailsEditable) },
             cancel = { vm.trySend(ProfileContract.Inputs.SetPersonalDetailsNotEditable) },
         )
@@ -79,7 +81,7 @@ private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) 
     AppOutlinedTextField(
         value = state.detailsFirstName,
         onValueChange = { vm.trySend(ProfileContract.Inputs.SetDetailsFullName(it)) },
-        label = state.strings.firstName,
+        label = getString(Strings.FirstName),
         errorText = state.fullNameError,
         leadingIcon = { MdiPerson() },
         autoComplete = AutoComplete.givenName,
@@ -89,7 +91,7 @@ private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) 
     AppOutlinedTextField(
         value = state.email,
         onValueChange = { vm.trySend(ProfileContract.Inputs.SetEmail(it)) },
-        label = state.strings.email,
+        label = getString(Strings.Email),
         errorText = state.emailError,
         leadingIcon = { MdiEmail() },
         type = TextFieldType.TEXT,
@@ -101,7 +103,7 @@ private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) 
     AppOutlinedTextField(
         value = state.phone,
         onValueChange = { vm.trySend(ProfileContract.Inputs.SetPhone(it)) },
-        label = state.strings.phone,
+        label = getString(Strings.Phone),
         errorText = state.phoneError,
         leadingIcon = { MdiPhone() },
         type = TextFieldType.TEXT,
@@ -110,7 +112,7 @@ private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) 
         modifier = Modifier.fillMaxWidth(),
     )
     SaveButton(
-        text = state.strings.save,
+        text = getString(Strings.Save),
         disabled = state.isSavePersonalDetailsButtonDisabled,
         onClick = { vm.trySend(ProfileContract.Inputs.SavePersonalDetails) },
     )
@@ -119,12 +121,12 @@ private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) 
 @Composable
 fun Password(vm: ProfileViewModel, state: ProfileContract.State) {
     SectionHeader(
-        text = state.strings.password,
+        text = getString(Strings.Password),
     )
     AppOutlinedTextField(
         value = state.oldPassword,
         onValueChange = { vm.trySend(ProfileContract.Inputs.SetOldPassword(it)) },
-        label = state.strings.oldPassword,
+        label = getString(Strings.OldPassword),
         errorText = state.oldPasswordError,
         leadingIcon = { MdiPassword() },
         shake = state.shakeOldPassword,
@@ -133,14 +135,14 @@ fun Password(vm: ProfileViewModel, state: ProfileContract.State) {
     AppOutlinedTextField(
         value = state.newPassword,
         onValueChange = { vm.trySend(ProfileContract.Inputs.SetNewPassword(it)) },
-        label = state.strings.newPassword,
+        label = getString(Strings.NewPassword),
         errorText = state.newPasswordError,
         leadingIcon = { MdiPassword() },
         shake = state.shakeNewPassword,
         modifier = Modifier.fillMaxWidth(),
     )
     SaveButton(
-        text = state.strings.save,
+        text = getString(Strings.Save),
         disabled = state.isSavePasswordButtonDisabled,
         onClick = { vm.trySend(ProfileContract.Inputs.SavePassword) },
     )
@@ -149,12 +151,12 @@ fun Password(vm: ProfileViewModel, state: ProfileContract.State) {
 @Composable
 private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
     SectionHeader(
-        text = state.strings.address,
+        text = getString(Strings.Address),
     ) {
         EditCancelButton(
             isEditing = state.isAddressEditing,
-            editText = state.strings.edit,
-            cancelText = state.strings.discard,
+            editText = getString(Strings.Edit),
+            cancelText = getString(Strings.Discard),
             edit = { vm.trySend(ProfileContract.Inputs.SetAddressEditable) },
             cancel = { vm.trySend(ProfileContract.Inputs.SetAddressNotEditable) },
         )
@@ -162,7 +164,7 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
     AppOutlinedTextField(
         value = state.address,
         onValueChange = { vm.trySend(ProfileContract.Inputs.SetAddress(it)) },
-        label = state.strings.address,
+        label = getString(Strings.Address),
         errorText = state.addressError,
         leadingIcon = { MdiHome() },
         autoComplete = AutoComplete.streetAddress,
@@ -172,7 +174,7 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
     AppOutlinedTextField(
         value = state.additionalInformation,
         onValueChange = { vm.trySend(ProfileContract.Inputs.SetAdditionalInformation(it)) },
-        label = state.strings.company,
+        label = getString(Strings.Company),
         errorText = state.additionalInformationError,
         leadingIcon = { MdiBusiness() },
         autoComplete = AutoComplete.ccAdditionalName,
@@ -186,7 +188,7 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
         AppOutlinedTextField(
             value = state.postcode,
             onValueChange = { vm.trySend(ProfileContract.Inputs.SetPostcode(it)) },
-            label = state.strings.postcode,
+            label = getString(Strings.PostCode),
             errorText = state.postcodeError,
             leadingIcon = { MdiLocalPostOffice() },
             autoComplete = AutoComplete.postalCode,
@@ -196,7 +198,7 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
         AppOutlinedTextField(
             value = state.city,
             onValueChange = { vm.trySend(ProfileContract.Inputs.SetCity(it)) },
-            label = state.strings.city,
+            label = getString(Strings.City),
             errorText = state.cityError,
             leadingIcon = { MdiLocationCity() },
             autoComplete = AutoComplete.addressLevel2,
@@ -212,7 +214,7 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
         AppOutlinedTextField(
             value = state.state,
             onValueChange = { vm.trySend(ProfileContract.Inputs.SetState(it)) },
-            label = state.strings.apartment,
+            label = getString(Strings.Apartment),
             errorText = state.stateError,
             leadingIcon = { MdiGite() },
             autoComplete = AutoComplete.addressLevel1,
@@ -222,7 +224,7 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
         AppOutlinedTextField(
             value = state.country,
             onValueChange = { vm.trySend(ProfileContract.Inputs.SetCountry(it)) },
-            label = state.strings.country,
+            label = getString(Strings.Country),
             errorText = state.countryError,
             leadingIcon = { MdiFlag() },
             autoComplete = AutoComplete.countryName,
@@ -231,7 +233,7 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
         )
     }
     SaveButton(
-        text = state.strings.save,
+        text = getString(Strings.Save),
         disabled = state.isSaveAddressButtonDisabled,
         onClick = { vm.trySend(ProfileContract.Inputs.SaveAddress) },
     )

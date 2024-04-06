@@ -13,9 +13,10 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.resize
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
+import component.localization.getString
 import feature.admin.category.page.AdminCategoryEditContract
 import feature.admin.category.page.AdminCategoryEditViewModel
-import feature.admin.category.page.adminCategoryEditStrings
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.layouts.AdminLayout
@@ -60,32 +61,26 @@ fun AdminCategoryEditContent(
     var deleteDialogClosing by remember { mutableStateOf(false) }
 
     AdminLayout(
-        title = adminCategoryEditStrings.createCategory,
+        title = getString(Strings.CreateCategory),
         isLoading = state.isLoading,
         showEditedButtons = state.wasEdited,
         isSaveEnabled = state.wasEdited,
-        unsavedChangesText = adminCategoryEditStrings.unsavedChanges,
-        saveText = adminCategoryEditStrings.save,
-        discardText = adminCategoryEditStrings.discard,
+        unsavedChangesText = getString(Strings.UnsavedChanges),
         onCancel = { vm.trySend(AdminCategoryEditContract.Inputs.OnCancelEditClick) },
         onSave = { vm.trySend(AdminCategoryEditContract.Inputs.OnSaveEditClick) },
         adminRoutes = adminRoutes,
         overlay = {
             HasChangesWidget(
                 hasChanges = state.wasEdited,
-                messageText = adminCategoryEditStrings.unsavedChanges,
-                saveText = adminCategoryEditStrings.save,
-                resetText = adminCategoryEditStrings.dismiss,
+                messageText = getString(Strings.UnsavedChanges),
                 onSave = { vm.trySend(AdminCategoryEditContract.Inputs.OnSaveEditClick) },
                 onCancel = { vm.trySend(AdminCategoryEditContract.Inputs.OnCancelEditClick) },
             )
             TakeActionDialog(
                 open = deleteDialogOpen && !deleteDialogClosing,
                 closing = deleteDialogClosing,
-                title = "${adminCategoryEditStrings.delete} ${state.original.name}",
-                actionYesText = adminCategoryEditStrings.delete,
-                actionNoText = adminCategoryEditStrings.discard,
-                contentText = adminCategoryEditStrings.deleteExplain,
+                title = "${getString(Strings.Delete)} ${state.original.name}",
+                contentText = getString(Strings.DeleteExplain),
                 onOpen = { deleteDialogOpen = it },
                 onClosing = { deleteDialogClosing = it },
                 onYes = { vm.trySend(AdminCategoryEditContract.Inputs.OnDeleteClick) },
@@ -103,7 +98,7 @@ fun AdminCategoryEditContent(
                     leadingIcon = { MdiDelete() },
                     containerColor = MaterialTheme.colors.error,
                 ) {
-                    SpanText(text = adminCategoryEditStrings.delete)
+                    SpanText(text = getString(Strings.Delete))
                 }
             },
             onGoBack = adminRoutes.goBack,
@@ -111,7 +106,7 @@ fun AdminCategoryEditContent(
                 CardSection(title = null) {
                     Name(vm, state)
                 }
-                CardSection(title = adminCategoryEditStrings.shipping) {
+                CardSection(title = getString(Strings.Shipping)) {
                     ShippingPreset(vm, state)
                 }
             },
@@ -119,13 +114,13 @@ fun AdminCategoryEditContent(
                 CardSection(title = null) {
                     Status(vm, state)
                 }
-                CardSection(title = adminCategoryEditStrings.insights) {
-                    SpanText(text = adminCategoryEditStrings.noInsights)
+                CardSection(title = getString(Strings.Insights)) {
+                    SpanText(text = getString(Strings.NoInsights))
                 }
-                CardSection(title = adminCategoryEditStrings.categoryOrganization) {
+                CardSection(title = getString(Strings.CategoryOrganization)) {
                     ParentCategory(vm, state)
                 }
-                CardSection(title = adminCategoryEditStrings.info) {
+                CardSection(title = getString(Strings.Info)) {
                     Creator(vm, state)
                     CreatedAt(state)
                     UpdatedAt(state)
@@ -140,7 +135,7 @@ private fun Name(vm: AdminCategoryEditViewModel, state: AdminCategoryEditContrac
     AppOutlinedTextField(
         value = state.current.name,
         onValueChange = { vm.trySend(AdminCategoryEditContract.Inputs.SetName(it)) },
-        label = adminCategoryEditStrings.name,
+        label = getString(Strings.Name),
         errorText = state.nameError,
         leadingIcon = null,
         shake = state.shakeName,
@@ -154,7 +149,7 @@ fun Description(vm: AdminCategoryEditViewModel, state: AdminCategoryEditContract
     AppOutlinedTextField(
         value = state.current.description ?: "",
         onValueChange = { vm.trySend(AdminCategoryEditContract.Inputs.SetDescription(it)) },
-        label = adminCategoryEditStrings.description,
+        label = getString(Strings.Description),
         errorText = null,
         leadingIcon = null,
         shake = false,
@@ -169,7 +164,7 @@ fun Description(vm: AdminCategoryEditViewModel, state: AdminCategoryEditContract
 @Composable
 fun Status(vm: AdminCategoryEditViewModel, state: AdminCategoryEditContract.State) {
     SwitchSection(
-        title = adminCategoryEditStrings.status,
+        title = getString(Strings.Status),
         selected = state.current.display,
         onClick = { vm.trySend(AdminCategoryEditContract.Inputs.SetDisplay(!state.current.display)) },
     )
@@ -178,10 +173,10 @@ fun Status(vm: AdminCategoryEditViewModel, state: AdminCategoryEditContract.Stat
 @Composable
 private fun Creator(vm: AdminCategoryEditViewModel, state: AdminCategoryEditContract.State) {
     CreatorSection(
-        title = adminCategoryEditStrings.createdBy,
+        title = getString(Strings.CreatedBy),
         creatorName = state.current.creator.name,
         onClick = { vm.trySend(AdminCategoryEditContract.Inputs.OnGoToUserCreatorClick) },
-        afterTitle = { AppTooltip(adminCategoryEditStrings.createdByDesc) },
+        afterTitle = { AppTooltip(getString(Strings.CreatedByDesc)) },
     )
 }
 
@@ -189,7 +184,7 @@ private fun Creator(vm: AdminCategoryEditViewModel, state: AdminCategoryEditCont
 fun UpdatedAt(state: AdminCategoryEditContract.State) {
     if (state.current.updatedAt.isNotEmpty()) {
         SpanText(
-            text = "${adminCategoryEditStrings.lastUpdatedAt}: ${state.current.updatedAt}",
+            text = "${getString(Strings.LastUpdatedAt)}: ${state.current.updatedAt}",
             modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
         )
     }
@@ -199,7 +194,7 @@ fun UpdatedAt(state: AdminCategoryEditContract.State) {
 fun CreatedAt(state: AdminCategoryEditContract.State) {
     if (state.current.createdAt.isNotEmpty()) {
         SpanText(
-            text = "${adminCategoryEditStrings.createdAt}: ${state.current.createdAt}",
+            text = "${getString(Strings.CreatedAt)}: ${state.current.createdAt}",
             modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
         )
     }
@@ -208,7 +203,7 @@ fun CreatedAt(state: AdminCategoryEditContract.State) {
 @Composable
 private fun ShippingPreset(vm: AdminCategoryEditViewModel, state: AdminCategoryEditContract.State) {
     SwitchSection(
-        title = adminCategoryEditStrings.isPhysicalProduct,
+        title = getString(Strings.IsPhysicalProduct),
         selected = state.current.shippingPreset?.isPhysicalProduct ?: false,
         onClick = {
             vm.trySend(
@@ -221,49 +216,49 @@ private fun ShippingPreset(vm: AdminCategoryEditViewModel, state: AdminCategoryE
     AppOutlinedTextField(
         value = state.current.shippingPreset?.weight ?: "",
         onValueChange = { vm.trySend(AdminCategoryEditContract.Inputs.SetWeight(it)) },
-        label = adminCategoryEditStrings.weight,
+        label = getString(Strings.Weight),
         errorText = state.weightError,
         leadingIcon = null,
         shake = state.shakeWeight,
         required = state.current.shippingPreset?.isPhysicalProduct == true,
         type = TextFieldType.NUMBER,
-        suffixText = adminCategoryEditStrings.kg,
+        suffixText = getString(Strings.Kg),
         modifier = Modifier.fillMaxWidth(),
     )
     AppOutlinedTextField(
         value = state.current.shippingPreset?.length ?: "",
         onValueChange = { vm.trySend(AdminCategoryEditContract.Inputs.SetLength(it)) },
-        label = adminCategoryEditStrings.length,
+        label = getString(Strings.Length),
         errorText = state.lengthError,
         leadingIcon = null,
         shake = state.shakeLength,
         required = state.current.shippingPreset?.isPhysicalProduct ?: false,
         type = TextFieldType.NUMBER,
-        suffixText = adminCategoryEditStrings.cm,
+        suffixText = getString(Strings.Cm),
         modifier = Modifier.fillMaxWidth(),
     )
     AppOutlinedTextField(
         value = state.current.shippingPreset?.width ?: "",
         onValueChange = { vm.trySend(AdminCategoryEditContract.Inputs.SetWidth(it)) },
-        label = adminCategoryEditStrings.width,
+        label = getString(Strings.Width),
         errorText = state.widthError,
         leadingIcon = null,
         shake = state.shakeWidth,
         required = state.current.shippingPreset?.isPhysicalProduct ?: false,
         type = TextFieldType.NUMBER,
-        suffixText = adminCategoryEditStrings.cm,
+        suffixText = getString(Strings.Cm),
         modifier = Modifier.fillMaxWidth(),
     )
     AppOutlinedTextField(
         value = state.current.shippingPreset?.height ?: "",
         onValueChange = { vm.trySend(AdminCategoryEditContract.Inputs.SetHeight(it)) },
-        label = adminCategoryEditStrings.height,
+        label = getString(Strings.Height),
         errorText = state.heightError,
         leadingIcon = null,
         shake = state.shakeHeight,
         required = state.current.shippingPreset?.isPhysicalProduct ?: false,
         type = TextFieldType.NUMBER,
-        suffixText = adminCategoryEditStrings.cm,
+        suffixText = getString(Strings.Cm),
         modifier = Modifier.fillMaxWidth(),
     )
 }
@@ -273,13 +268,13 @@ private fun ParentCategory(
     vm: AdminCategoryEditViewModel,
     state: AdminCategoryEditContract.State,
 ) {
-    SpanText(text = adminCategoryEditStrings.parentCategory)
+    SpanText(text = getString(Strings.ParentCategory))
     FilterChipSection(
         chips = state.allCategories.map { it.name },
         selectedChips = state.current.parent?.let { listOf(it.name) } ?: emptyList(),
         onChipClick = { vm.trySend(AdminCategoryEditContract.Inputs.OnParentCategoryClick(it)) },
         onCreateClick = { vm.trySend(AdminCategoryEditContract.Inputs.OnGoToCreateCategoryClick) },
-        noChipsText = adminCategoryEditStrings.noCategories,
-        createText = adminCategoryEditStrings.createCategory,
+        noChipsText = getString(Strings.NoCategories),
+        createText = getString(Strings.CreateCategory),
     )
 }

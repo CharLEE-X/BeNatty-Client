@@ -1,7 +1,5 @@
 package feature.admin.product.create
 
-import component.localization.getString
-
 object AdminProductCreateContract {
     data class State(
         val isLoading: Boolean = false,
@@ -27,15 +25,4 @@ object AdminProductCreateContract {
         data object GoBack : Events
         data class GoToProduct(val id: String) : Events
     }
-}
-
-val adminProductCreateStrings = AdminProductPageStrings
-
-object AdminProductPageStrings {
-    val save: String = getString(component.localization.Strings.Save)
-    val title: String = getString(component.localization.Strings.Title)
-    val newProduct: String = getString(component.localization.Strings.NewProduct)
-    val create: String = getString(component.localization.Strings.Create)
-    val product: String = getString(component.localization.Strings.Product)
-    val name = getString(component.localization.Strings.Name)
 }

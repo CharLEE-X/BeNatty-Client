@@ -7,9 +7,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import component.localization.Strings
+import component.localization.getString
 import feature.admin.category.create.AdminCategoryCreateContract
 import feature.admin.category.create.AdminCategoryCreateViewModel
-import feature.admin.category.create.adminCategoryCreateStrings
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.OneLayout
@@ -36,7 +37,7 @@ fun AdminCategoryCreateContent(
     val state by vm.observeStates().collectAsState()
 
     AdminLayout(
-        title = adminCategoryCreateStrings.createCategory,
+        title = getString(Strings.CreateCategory),
         isLoading = state.isLoading,
         showEditedButtons = false,
         isSaveEnabled = false,
@@ -49,7 +50,7 @@ fun AdminCategoryCreateContent(
         overlay = {}
     ) {
         OneLayout(
-            title = adminCategoryCreateStrings.createCategory,
+            title = getString(Strings.CreateCategory),
             subtitle = null,
             hasBackButton = true,
             actions = {},
@@ -59,7 +60,7 @@ fun AdminCategoryCreateContent(
                     AppOutlinedTextField(
                         value = state.name,
                         onValueChange = { vm.trySend(AdminCategoryCreateContract.Inputs.SetName(it)) },
-                        label = adminCategoryCreateStrings.name,
+                        label = getString(Strings.Name),
                         errorText = state.nameError,
                         error = state.nameError != null,
                         leadingIcon = null,
@@ -69,7 +70,7 @@ fun AdminCategoryCreateContent(
                             .fillMaxWidth()
                             .onEnterKeyDown { vm.trySend(AdminCategoryCreateContract.Inputs.OnCreateClick) }
                     )
-                    AppTooltip(adminCategoryCreateStrings.categoryNameDescription)
+                    AppTooltip(getString(Strings.CategoryNameDescription))
                     CreateButton(
                         onClick = { vm.trySend(AdminCategoryCreateContract.Inputs.OnCreateClick) },
                     )

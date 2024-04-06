@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.AlignItems
+import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
 import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
@@ -44,6 +45,8 @@ import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.minHeight
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
+import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
+import com.varabyte.kobweb.compose.ui.modifiers.onFocusOut
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOut
@@ -53,6 +56,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.rotate
 import com.varabyte.kobweb.compose.ui.modifiers.size
+import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translate
 import com.varabyte.kobweb.compose.ui.modifiers.translateX
@@ -97,6 +101,7 @@ import web.components.widgets.SearchBar
 import web.components.widgets.ShimmerHeader
 import web.compose.material3.component.IconButton
 import web.util.glossy
+import web.util.onEnterKeyDown
 
 @Composable
 fun NavBar(
@@ -166,7 +171,6 @@ fun NavBar(
     }
 }
 
-
 @Composable
 private fun RightSection(
     isLoading: Boolean,
@@ -204,6 +208,8 @@ private fun RightSection(
                         .fontSize(16.px)
                         .lineHeight(130.percent)
                         .size(30.px)
+                        .tabIndex(0)
+                        .onEnterKeyDown(onBasketClick)
                 )
             }
         }
@@ -235,6 +241,7 @@ private fun RightSection(
                     if (!isLoading) {
                         IconButton(
                             onClick = { onProfileClick() },
+                            modifier = Modifier.onEnterKeyDown(onProfileClick)
                         ) {
                             MdiPerson2(
                                 style = IconStyle.OUTLINED,
@@ -248,6 +255,8 @@ private fun RightSection(
                     var colorMode by ColorMode.currentState
                     IconButton(
                         onClick = { colorMode = colorMode.opposite },
+                        modifier = Modifier
+                            .onEnterKeyDown { colorMode = colorMode.opposite }
                     ) {
                         if (colorMode.isLight) MdiLightMode(iconModifier, iconStyle)
                         else MdiModeNight(iconModifier, iconStyle)
@@ -261,6 +270,7 @@ private fun RightSection(
                     )
                     IconButton(
                         onClick = { onBasketClick() },
+                        modifier = Modifier.onEnterKeyDown(onBasketClick)
                     ) {
                         MdiShoppingBasket(iconModifier, iconStyle)
                     }
@@ -320,6 +330,8 @@ private fun ListMenu(
         }
 
         else -> {
+            var isListMenuItemFocused by remember { mutableStateOf(false) }
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = modifier
@@ -328,6 +340,8 @@ private fun ListMenu(
                     .alignItems(AlignItems.Center)
                     .alignContent(AlignContent.Center)
                     .gap(16.px)
+                    .onFocusIn { isListMenuItemFocused = true }
+                    .onFocusOut { isListMenuItemFocused = false }
             ) {
                 Span(
                     Modifier
@@ -344,9 +358,9 @@ private fun ListMenu(
                             .onMouseLeave { isStoreButtonHovered = false }
                     )
                     AppMenu(
-                        open = open,
+                        open = open || isListMenuItemFocused,
                         items = storeMenuItems,
-                        onStoreMenuItemSelected = onStoreMenuItemSelected,
+                        onItemSelected = onStoreMenuItemSelected,
                         modifier = Modifier
                             .translateX((-16).px)
                             .margin(top = 10.px)
@@ -383,8 +397,11 @@ fun AppMenu(
     modifier: Modifier = Modifier,
     open: Boolean,
     items: List<String>,
-    onStoreMenuItemSelected: (String) -> Unit,
+    onItemSelected: (String) -> Unit,
     underlineColor: CSSColorValue = MaterialTheme.colors.onSurface,
+    fontSize: CSSLengthOrPercentageNumericValue = 14.px,
+    itemsGap: CSSLengthOrPercentageNumericValue = 0.px,
+    bgAlpha: Int = 225,
 ) {
     Box(
         modifier = modifier
@@ -396,7 +413,7 @@ fun AppMenu(
             .userSelect(UserSelect.None)
             .glossy(
                 color = MaterialTheme.colors.background,
-                alpha = 225,
+                alpha = bgAlpha,
             )
             .border(
                 width = 1.px,
@@ -413,9 +430,11 @@ fun AppMenu(
                 CSSTransition("visibility", 0.3.s, TransitionTimingFunction.Ease),
                 CSSTransition("translate", 0.3.s, TransitionTimingFunction.Ease),
             )
+            .tabIndex(0)
     ) {
         Column(
             modifier = Modifier
+                .gap(itemsGap)
                 .fontWeight(400)
                 .fontSize(14.px)
                 .lineHeight(18.px)
@@ -423,10 +442,10 @@ fun AppMenu(
         ) {
             items.forEach { item ->
                 MenuItem(
-                    onStoreMenuItemSelected = onStoreMenuItemSelected,
+                    onStoreMenuItemSelected = onItemSelected,
                     item = item,
-                    modifier = modifier,
-                    underlineColor = underlineColor
+                    underlineColor = underlineColor,
+                    fontSize = fontSize,
                 )
             }
         }
@@ -437,8 +456,9 @@ fun AppMenu(
 private fun MenuItem(
     onStoreMenuItemSelected: (String) -> Unit,
     item: String,
-    modifier: Modifier,
-    underlineColor: CSSColorValue
+    modifier: Modifier = Modifier,
+    underlineColor: CSSColorValue,
+    fontSize: CSSLengthOrPercentageNumericValue
 ) {
     var itemHovered by remember { mutableStateOf(false) }
 
@@ -452,6 +472,8 @@ private fun MenuItem(
                 itemHovered = true
             }
             .onMouseLeave { itemHovered = false }
+            .tabIndex(0)
+            .onEnterKeyDown { onStoreMenuItemSelected(item) }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -461,7 +483,7 @@ private fun MenuItem(
             SpanText(
                 text = item,
                 modifier = Modifier
-                    .fontSize(14.px)
+                    .fontSize(fontSize)
                     .whiteSpace(WhiteSpace.NoWrap)
             )
             Box(
@@ -492,6 +514,8 @@ private fun ListMenuItem(
             .onClick { onClick() }
             .gap(2.px)
             .cursor(Cursor.Pointer)
+            .tabIndex(0)
+            .onEnterKeyDown(onClick)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

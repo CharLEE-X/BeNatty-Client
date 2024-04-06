@@ -28,6 +28,8 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiError
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPassword
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibilityOff
 import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
+import component.localization.getString
 import feature.login.LoginContract
 import feature.login.LoginViewModel
 import feature.router.RouterViewModel
@@ -96,15 +98,15 @@ fun LoginPage(
                     .margin(4.em)
             ) {
                 LogoSection(
-                    logoText = state.strings.logo,
-                    appName = state.strings.shopName,
-                    appMotto = state.strings.appMotto,
+                    logoText = getString(Strings.Logo),
+                    appName = getString(Strings.ShopName),
+                    appMotto = getString(Strings.AppMotto),
                 )
                 SocialButtonsLoginSection(
-                    header = state.strings.login,
-                    googleButtonText = state.strings.continueWithGoogle,
-                    facebookButtonText = state.strings.continueWithFacebook,
-                    orText = state.strings.or,
+                    header = getString(Strings.Login),
+                    googleButtonText = getString(Strings.ContinueWithGoogle),
+                    facebookButtonText = getString(Strings.ContinueWithFacebook),
+                    orText = getString(Strings.Or),
                     onGoogleClick = { vm.trySend(LoginContract.Inputs.OnGoogleClick) },
                     onFacebookClick = { vm.trySend(LoginContract.Inputs.OnFacebookClick) },
                 )
@@ -131,7 +133,7 @@ private fun FieldsSection(
             email = it
             vm.trySend(LoginContract.Inputs.SetEmail(it))
         },
-        label = state.strings.email,
+        label = getString(Strings.Email),
         type = TextFieldType.TEXT,
         leadingIcon = { MdiEmail() },
         trailingIcon = { state.emailError?.let { MdiError() } },
@@ -147,7 +149,7 @@ private fun FieldsSection(
             password = it
             vm.trySend(LoginContract.Inputs.SetPassword(it))
         },
-        label = state.strings.password,
+        label = getString(Strings.Password),
         type = if (state.isPasswordVisible) TextFieldType.TEXT else TextFieldType.PASSWORD,
         leadingIcon = { MdiPassword() },
         trailingIcon = {
@@ -181,7 +183,7 @@ private fun ColumnScope.ForgotPasswordSection(vm: LoginViewModel, state: LoginCo
             .margin(top = 1.em)
     ) {
         SpanText(
-            text = state.strings.forgotPassword,
+            text = getString(Strings.ForgotPassword),
             modifier = Modifier.fontWeight(FontWeight.SemiBold)
         )
     }
@@ -195,14 +197,14 @@ private fun DontHaveAccountSection(vm: LoginViewModel, state: LoginContract.Stat
             .margin(top = 1.5.em)
     ) {
         SpanText(
-            text = state.strings.dontHaveAccount,
+            text = getString(Strings.DontHaveAccount),
             modifier = Modifier.roleStyle(MaterialTheme.typography.headlineSmall)
         )
         AppTextButton(
             onClick = { vm.trySend(LoginContract.Inputs.OnDontHaveAccountClick) },
         ) {
             SpanText(
-                text = state.strings.signUp,
+                text = getString(Strings.SignUp),
                 modifier = Modifier
                     .roleStyle(MaterialTheme.typography.headlineSmall)
                     .fontWeight(FontWeight.SemiBold)
@@ -229,7 +231,7 @@ private fun LoginButton(vm: LoginViewModel, state: LoginContract.State) {
             )
         } else {
             SpanText(
-                text = state.strings.login,
+                text = getString(Strings.Login),
                 modifier = Modifier
                     .margin(top = 1.em)
                     .roleStyle(MaterialTheme.typography.headlineSmall)

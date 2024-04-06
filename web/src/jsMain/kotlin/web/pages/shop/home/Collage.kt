@@ -43,6 +43,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.scale
 import com.varabyte.kobweb.compose.ui.modifiers.size
+import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.textShadow
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.thenIf
@@ -51,7 +52,6 @@ import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.base
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
-import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import data.GetLandingConfigQuery
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.Position
@@ -69,6 +69,7 @@ import web.components.widgets.ShimmerButton
 import web.components.widgets.ShimmerHeader
 import web.components.widgets.ShimmerText
 import web.util.glossy
+import web.util.onEnterKeyDown
 
 fun gridModifier(
     columns: Int = 3,
@@ -192,7 +193,6 @@ fun CollageItem(
     image: @Composable (imageModifier: Modifier) -> Unit,
 ) {
     var hovered by remember { mutableStateOf(false) }
-    val overlayColor = if (ColorMode.current.isLight) shadowColor else Color.rgb(179, 176, 248)
 
     AppElevatedCard(
         elevation = 0,
@@ -207,6 +207,8 @@ fun CollageItem(
             .overflow(Overflow.Hidden)
             .scale(if (hovered) 1.01 else 1.0)
             .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
+            .tabIndex(0)
+            .onEnterKeyDown(onClick)
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -222,11 +224,6 @@ fun CollageItem(
                 .thenIf(hovered) { Modifier.scale(1.04) }
                 .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
             image(imageModifier)
-//            ImageOverlay(
-//                shadowColor = shadowColor,
-//                overlayColor = overlayColor,
-//                hovered = hovered
-//            )
             Column(
                 horizontalAlignment = when (textPosition) {
                     TextPosition.Center -> Alignment.CenterHorizontally
@@ -290,6 +287,8 @@ fun CollageItem(
                         modifier = Modifier
                             .margin(top = 30.px)
                             .size(200.px, 80.px)
+                            .tabIndex(0)
+                            .onEnterKeyDown(onClick)
                     ) {
                         SpanText(
                             text = it,

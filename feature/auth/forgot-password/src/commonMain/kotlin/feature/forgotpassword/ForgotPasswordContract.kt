@@ -1,6 +1,5 @@
 package feature.forgotpassword
 
-import component.localization.getString
 import org.koin.core.component.KoinComponent
 
 object ForgotPasswordContract : KoinComponent {
@@ -12,8 +11,6 @@ object ForgotPasswordContract : KoinComponent {
         val buttonDisabled: Boolean = false,
         val showError: Boolean = false,
         val errorMessage: String? = null,
-
-        val strings: Strings = Strings()
     )
 
     sealed interface Inputs {
@@ -32,19 +29,6 @@ object ForgotPasswordContract : KoinComponent {
     sealed interface Events {
         data object GoToLogin : Events
     }
-
-    data class Strings(
-        val forgotPassword: String = getString(component.localization.Strings.ForgotPassword),
-        val forgotPasswordDescription: String = getString(component.localization.Strings.ForgotPasswordDescription),
-        val email: String = getString(component.localization.Strings.Email),
-        val getAResetLink: String = getString(component.localization.Strings.GetAResetLink),
-        val backTo: String = getString(component.localization.Strings.BackTo),
-        val login: String = getString(component.localization.Strings.Login),
-        val checkEmail: String = "Check your email",
-        val checkEmailDescription: String = "We have sent a password reset link to",
-        val openGmail: String = "Open Gmail",
-        val openOutlook: String = "Open Outlook",
-    )
 
     enum class ScreenState {
         ForgotPassword,

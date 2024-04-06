@@ -27,6 +27,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
 import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.textOverflow
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translateX
@@ -39,6 +40,7 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.s
 import theme.MaterialTheme
+import web.util.onEnterKeyDown
 
 @Composable
 fun AccountLayout(
@@ -89,8 +91,8 @@ private fun MenuItems(
     var currentItem by remember { mutableStateOf(initialItem) }
 
     Column(
-        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.tabIndex(0),
     ) {
         items.forEach { item ->
             SideNavMainItem(
@@ -169,6 +171,8 @@ fun SideNavMainItem(
                 CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease),
                 CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease)
             )
+            .tabIndex(0)
+            .onEnterKeyDown(onMenuItemClicked)
     ) {
         icon?.invoke()
         SpanText(
@@ -210,6 +214,7 @@ fun SideNavSubItem(
             .borderRadius(0.5.em)
             .transition(CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease))
             .cursor(Cursor.Pointer)
+            .tabIndex(0)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

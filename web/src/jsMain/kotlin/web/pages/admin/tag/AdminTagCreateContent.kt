@@ -11,9 +11,10 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusOut
+import component.localization.Strings
+import component.localization.getString
 import feature.admin.tag.create.AdminTagCreateContract
 import feature.admin.tag.create.AdminTagCreateViewModel
-import feature.admin.tag.create.adminTagCreateStrings
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.OneLayout
@@ -43,7 +44,7 @@ fun AdminTagCreateContent(
     var nameFocused by remember { mutableStateOf(false) }
 
     AdminLayout(
-        title = adminTagCreateStrings.createTag,
+        title = getString(Strings.CreateTag),
         isLoading = state.isLoading,
         showEditedButtons = false,
         isSaveEnabled = false,
@@ -56,7 +57,7 @@ fun AdminTagCreateContent(
         overlay = { }
     ) {
         OneLayout(
-            title = adminTagCreateStrings.createTag,
+            title = getString(Strings.CreateTag),
             subtitle = null,
             onGoBack = adminRoutes.goBack,
             hasBackButton = true,
@@ -66,7 +67,7 @@ fun AdminTagCreateContent(
                 AppOutlinedTextField(
                     value = state.name,
                     onValueChange = { vm.trySend(AdminTagCreateContract.Inputs.SetName(it)) },
-                    label = adminTagCreateStrings.name,
+                    label = getString(Strings.Name),
                     errorText = state.nameError,
                     error = state.nameError != null,
                     leadingIcon = null,

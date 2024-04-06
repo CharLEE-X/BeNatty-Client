@@ -5,8 +5,10 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.gap
+import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
+import web.util.onEnterKeyDown
 
 @Composable
 fun NoItemsListAction(
@@ -23,6 +25,9 @@ fun NoItemsListAction(
         SpanText(text = pressText)
         AppOutlinedButton(
             onClick = { onClick() },
+            modifier = Modifier
+                .tabIndex(0)
+                .onEnterKeyDown(onClick)
         ) {
             SpanText(text = createText.lowercase())
         }

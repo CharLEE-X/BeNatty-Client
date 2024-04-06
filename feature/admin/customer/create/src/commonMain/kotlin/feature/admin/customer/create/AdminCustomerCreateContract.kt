@@ -1,7 +1,5 @@
 package feature.admin.customer.create
 
-import component.localization.getString
-
 object AdminCustomerCreateContract {
     data class State(
         val isLoading: Boolean = false,
@@ -33,14 +31,4 @@ object AdminCustomerCreateContract {
         data object GoBack : Events
         data class GoToCustomer(val id: String) : Events
     }
-}
-
-val adminCustomerCreateStrings = AdminCustomerCreateStrings
-
-object AdminCustomerCreateStrings {
-    val newCustomer: String = getString(component.localization.Strings.NewCustomer)
-    val email: String = getString(component.localization.Strings.Email)
-    val firstName: String = getString(component.localization.Strings.FirstName)
-    val lastName: String = getString(component.localization.Strings.LastName)
-    val create: String = getString(component.localization.Strings.Create)
 }

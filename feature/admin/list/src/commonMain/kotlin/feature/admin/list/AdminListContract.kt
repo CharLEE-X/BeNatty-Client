@@ -1,5 +1,6 @@
 package feature.admin.list
 
+import component.localization.Strings
 import component.localization.getString
 import data.type.SortDirection
 import feature.admin.list.AdminListContract.DataType
@@ -86,10 +87,10 @@ object AdminListContract {
         CreatedAt, Email, FullName, Orders;
 
         fun asString(): String = when (this) {
-            CreatedAt -> getString(component.localization.Strings.CreatedAt)
-            Email -> getString(component.localization.Strings.Email)
-            FullName -> getString(component.localization.Strings.FirstName)
-            Orders -> getString(component.localization.Strings.Orders)
+            CreatedAt -> getString(Strings.CreatedAt)
+            Email -> getString(Strings.Email)
+            FullName -> getString(Strings.FirstName)
+            Orders -> getString(Strings.Orders)
         }
     }
 
@@ -97,11 +98,11 @@ object AdminListContract {
         CreatedAt, Image, Name, Price, Sold;
 
         fun asString() = when (this) {
-            CreatedAt -> getString(component.localization.Strings.CreatedAt)
-            Image -> getString(component.localization.Strings.Image)
-            Name -> getString(component.localization.Strings.Name)
-            Price -> getString(component.localization.Strings.Price)
-            Sold -> getString(component.localization.Strings.Sold)
+            CreatedAt -> getString(Strings.CreatedAt)
+            Image -> getString(Strings.Image)
+            Name -> getString(Strings.Name)
+            Price -> getString(Strings.Price)
+            Sold -> getString(Strings.Sold)
         }
     }
 
@@ -109,10 +110,10 @@ object AdminListContract {
         CreatedAt, Name, TotalPrice, Status;
 
         fun asString() = when (this) {
-            CreatedAt -> getString(component.localization.Strings.CreatedAt)
-            Name -> getString(component.localization.Strings.Name)
-            TotalPrice -> getString(component.localization.Strings.Price)
-            Status -> getString(component.localization.Strings.StockStatus)
+            CreatedAt -> getString(Strings.CreatedAt)
+            Name -> getString(Strings.Name)
+            TotalPrice -> getString(Strings.Price)
+            Status -> getString(Strings.StockStatus)
         }
     }
 
@@ -120,11 +121,11 @@ object AdminListContract {
         CreatedAt, Name, Description, Display, InProducts;
 
         fun asString() = when (this) {
-            CreatedAt -> getString(component.localization.Strings.CreatedAt)
-            Name -> getString(component.localization.Strings.Name)
-            Description -> getString(component.localization.Strings.Description)
-            Display -> getString(component.localization.Strings.Display)
-            InProducts -> getString(component.localization.Strings.InProducts)
+            CreatedAt -> getString(Strings.CreatedAt)
+            Name -> getString(Strings.Name)
+            Description -> getString(Strings.Description)
+            Display -> getString(Strings.Display)
+            InProducts -> getString(Strings.InProducts)
         }
     }
 
@@ -132,9 +133,9 @@ object AdminListContract {
         CreatedAt, Name, InProducts;
 
         fun asString() = when (this) {
-            CreatedAt -> getString(component.localization.Strings.CreatedAt)
-            Name -> getString(component.localization.Strings.Name)
-            InProducts -> getString(component.localization.Strings.InProducts)
+            CreatedAt -> getString(Strings.CreatedAt)
+            Name -> getString(Strings.Name)
+            InProducts -> getString(Strings.InProducts)
         }
     }
 }
@@ -169,45 +170,45 @@ data class PageInfo(
 
 fun adminListStrings(dataType: DataType): AdminListStrings = AdminListStrings(
     title = when (dataType) {
-        DataType.Customer -> getString(component.localization.Strings.Customers)
-        DataType.PRODUCT -> getString(component.localization.Strings.Products)
-        DataType.ORDER -> getString(component.localization.Strings.Orders)
-        DataType.CATEGORY -> getString(component.localization.Strings.Categories)
-        DataType.TAG -> getString(component.localization.Strings.Tags)
+        DataType.Customer -> getString(Strings.Customers)
+        DataType.PRODUCT -> getString(Strings.Products)
+        DataType.ORDER -> getString(Strings.Orders)
+        DataType.CATEGORY -> getString(Strings.Categories)
+        DataType.TAG -> getString(Strings.Tags)
     },
     slot1Text = when (dataType) {
-        DataType.Customer -> getString(component.localization.Strings.CreatedAt)
-        DataType.PRODUCT -> getString(component.localization.Strings.CreatedAt)
-        DataType.ORDER -> getString(component.localization.Strings.CreatedAt)
-        DataType.CATEGORY -> getString(component.localization.Strings.CreatedAt)
-        DataType.TAG -> getString(component.localization.Strings.CreatedAt)
+        DataType.Customer -> getString(Strings.CreatedAt)
+        DataType.PRODUCT -> getString(Strings.CreatedAt)
+        DataType.ORDER -> getString(Strings.CreatedAt)
+        DataType.CATEGORY -> getString(Strings.CreatedAt)
+        DataType.TAG -> getString(Strings.CreatedAt)
     },
     slot2Text = when (dataType) {
-        DataType.Customer -> getString(component.localization.Strings.Email)
-        DataType.PRODUCT -> getString(component.localization.Strings.Name)
-        DataType.ORDER -> getString(component.localization.Strings.Name)
-        DataType.CATEGORY -> getString(component.localization.Strings.Name)
-        DataType.TAG -> getString(component.localization.Strings.Name)
+        DataType.Customer -> getString(Strings.Email)
+        DataType.PRODUCT -> getString(Strings.Name)
+        DataType.ORDER -> getString(Strings.Name)
+        DataType.CATEGORY -> getString(Strings.Name)
+        DataType.TAG -> getString(Strings.Name)
     },
     slot3Text = when (dataType) {
-        DataType.Customer -> getString(component.localization.Strings.FirstName)
-        DataType.PRODUCT -> getString(component.localization.Strings.Price)
-        DataType.ORDER -> getString(component.localization.Strings.Description)
-        DataType.CATEGORY -> getString(component.localization.Strings.Description)
-        DataType.TAG -> getString(component.localization.Strings.InProducts)
+        DataType.Customer -> getString(Strings.FirstName)
+        DataType.PRODUCT -> getString(Strings.Price)
+        DataType.ORDER -> getString(Strings.Description)
+        DataType.CATEGORY -> getString(Strings.Description)
+        DataType.TAG -> getString(Strings.InProducts)
     },
     slot4Text = when (dataType) {
-        DataType.Customer -> getString(component.localization.Strings.Orders)
-        DataType.PRODUCT -> getString(component.localization.Strings.Sold)
-        DataType.ORDER -> getString(component.localization.Strings.StockStatus)
-        DataType.CATEGORY -> getString(component.localization.Strings.Display)
+        DataType.Customer -> getString(Strings.Orders)
+        DataType.PRODUCT -> getString(Strings.Sold)
+        DataType.ORDER -> getString(Strings.StockStatus)
+        DataType.CATEGORY -> getString(Strings.Display)
         DataType.TAG -> ""
     },
     slot5Text = when (dataType) {
         DataType.Customer -> ""
-        DataType.PRODUCT -> getString(component.localization.Strings.CatalogVisibility)
+        DataType.PRODUCT -> getString(Strings.CatalogVisibility)
         DataType.ORDER -> ""
-        DataType.CATEGORY -> getString(component.localization.Strings.InProducts)
+        DataType.CATEGORY -> getString(Strings.InProducts)
         DataType.TAG -> ""
     },
 )
@@ -219,12 +220,12 @@ data class AdminListStrings(
     val slot3Text: String,
     val slot4Text: String,
     val slot5Text: String,
-    val press: String = getString(component.localization.Strings.Press),
-    val create: String = getString(component.localization.Strings.Create),
-    val toStart: String = getString(component.localization.Strings.ToStart),
-    val previous: String = getString(component.localization.Strings.Previous),
-    val next: String = getString(component.localization.Strings.Next),
-    val search: String = getString(component.localization.Strings.Search),
-    val show: String = getString(component.localization.Strings.Show),
-    val filter: String = getString(component.localization.Strings.Filter),
+    val press: String = getString(Strings.Press),
+    val create: String = getString(Strings.Create),
+    val toStart: String = getString(Strings.ToStart),
+    val previous: String = getString(Strings.Previous),
+    val next: String = getString(Strings.Next),
+    val search: String = getString(Strings.Search),
+    val show: String = getString(Strings.Show),
+    val filter: String = getString(Strings.Filter),
 )
