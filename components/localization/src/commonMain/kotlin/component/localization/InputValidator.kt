@@ -7,6 +7,7 @@ interface InputValidator {
     fun validateText(text: String, minLength: Int = 2): String?
     fun validatePhone(phone: String, length: Int = 8): String?
     fun validateNumberPositive(number: Int): String?
+    fun validateIsPriceDouble(string: String): String?
     fun validateUrl(url: String): String?
 }
 
@@ -54,6 +55,14 @@ internal class InputValidatorImpl : InputValidator {
     override fun validateNumberPositive(number: Int): String? {
         return when {
             number < 0 -> "Number must be positive"
+            else -> null
+        }
+    }
+
+    override fun validateIsPriceDouble(string: String): String? {
+        return when {
+            string.isBlank() -> "Price cannot be empty"
+            string.toDoubleOrNull() == null -> "Price must be a number"
             else -> null
         }
     }

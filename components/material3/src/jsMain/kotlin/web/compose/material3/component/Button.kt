@@ -182,7 +182,7 @@ fun FilledTonalButton(
 
 @Composable
 fun TextButton(
-    onClick: (SyntheticMouseEvent) -> Unit,
+    onClick: () -> Unit,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     disabled: Boolean = false,
@@ -195,7 +195,7 @@ fun TextButton(
     val tag = "text"
     MdButtonTagElement(
         name = "text",
-        onClick = onClick,
+        onClick = { onClick() },
         disabled = disabled,
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,

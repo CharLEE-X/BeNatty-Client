@@ -294,4 +294,7 @@ enum class Strings {
     YouHaveNewPasswordDescription,
     CheckEmail,
     TotalInventory,
+    ThisVariantWontBeCreated,
+    Undo,
+    FinishAddingOptionToEnableEditing,
 }

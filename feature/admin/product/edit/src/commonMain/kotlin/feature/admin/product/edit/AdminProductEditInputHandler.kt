@@ -136,93 +136,72 @@ internal class AdminProductEditInputHandler :
 
         is AdminProductEditContract.Inputs.OnDeleteVariantClicked -> handleOnDeleteVariantClicked(input.variantIndex)
 
-        is AdminProductEditContract.Inputs.SetDeletedVariants ->
-            updateState { it.copy(deletedVariants = input.variants) }
-
         is AdminProductEditContract.Inputs.OnUndoDeleteVariantClicked ->
             handleOnUndoDeleteVariantClicked(input.deletedVariantIndex)
     }
 
-    private suspend fun InputScope.handleOnUndoDeleteVariantClicked(variantIndex: Int) {
-        updateState {
-            val newVariants = it.deletedVariants.toMutableList()
-            val variant = newVariants.removeAt(variantIndex)
-            val newLocalVariants = it.localVariants.toMutableList().apply {
-                add(variant)
-            }
-            it.copy(deletedVariants = newVariants, localVariants = newLocalVariants).wasEdited()
-        }
+    private suspend fun InputScope.handleOnUndoDeleteVariantClicked(variantIndex: Int) = updateState {
+        val newVariants = it.localVariants.toMutableList()
+        newVariants[variantIndex] = newVariants[variantIndex].copy(enabled = true)
+        it.copy(localVariants = newVariants).wasEdited()
     }
 
-    private suspend fun InputScope.handleOnDeleteVariantClicked(variantIndex: Int) {
-        updateState {
-            val newVariants = it.localVariants.toMutableList()
-            newVariants.removeAt(variantIndex)
-            it.copy(localVariants = newVariants).wasEdited()
-        }
+    private suspend fun InputScope.handleOnDeleteVariantClicked(variantIndex: Int) = updateState {
+        val newVariants = it.localVariants.toMutableList()
+        newVariants[variantIndex] = newVariants[variantIndex].copy(enabled = false)
+        it.copy(localVariants = newVariants).wasEdited()
     }
 
-    private suspend fun InputScope.handleOnVariantQuantityChanged(variantIndex: Int, quantity: String) {
-        updateState {
-            val newVariants = it.localVariants.toMutableList()
-            newVariants[variantIndex] = newVariants[variantIndex].copy(quantity = quantity)
-            it.copy(localVariants = newVariants).wasEdited()
-        }
+    private suspend fun InputScope.handleOnVariantQuantityChanged(variantIndex: Int, quantity: String) = updateState {
+        val newVariants = it.localVariants.toMutableList()
+        newVariants[variantIndex] = newVariants[variantIndex].copy(
+            quantity = quantity,
+            quantityError = inputValidator.validateNumberPositive(quantity.toInt())
+        )
+        it.copy(localVariants = newVariants).wasEdited()
     }
 
-    private suspend fun InputScope.handleOnVariantPriceChanged(variantIndex: Int, price: String) {
-        updateState {
-            val newVariants = it.localVariants.toMutableList()
-            newVariants[variantIndex] = newVariants[variantIndex].copy(price = price)
-            it.copy(localVariants = newVariants).wasEdited()
-        }
+    private suspend fun InputScope.handleOnVariantPriceChanged(variantIndex: Int, price: String) = updateState {
+        val newVariants = it.localVariants.toMutableList()
+        newVariants[variantIndex] = newVariants[variantIndex].copy(
+            price = price,
+            priceError = inputValidator.validateIsPriceDouble(price)
+        )
+        it.copy(localVariants = newVariants).wasEdited()
     }
 
-    private suspend fun InputScope.handleSetLocalOptions(input: AdminProductEditContract.Inputs.SetLocalOptions) {
-        updateState { state ->
+    private suspend fun InputScope.handleSetLocalOptions(input: AdminProductEditContract.Inputs.SetLocalOptions) =
+        updateState {
             val variants = handleGenerateLocalVariants(input.localOptions)
             val totalInventory = countTotalInventory(variants)
 
-            state.copy(
+            it.copy(
                 showAddOptions = input.localOptions.isEmpty(),
                 showAddAnotherOption = input.localOptions.size in 1..2,
                 localOptions = input.localOptions,
                 localVariants = variants,
                 totalInventory = totalInventory,
-                variantEditingEnabled = input.localOptions.none { it.isEditing },
+                variantEditingEnabled = input.localOptions
+                    .none { variant -> variant.isEditing },
             ).wasEdited()
         }
-    }
 
-    private fun countTotalInventory(variants: List<AdminProductEditContract.LocalVariant>): Int =
-        variants
-            .mapNotNull {
-                try {
-                    it.quantity.toInt()
-                } catch (e: NumberFormatException) {
-                    null
-                }
+    private fun countTotalInventory(variants: List<AdminProductEditContract.LocalVariant>): Int = variants
+        .mapNotNull {
+            try {
+                it.quantity.toInt()
+            } catch (e: NumberFormatException) {
+                null
             }
-            .sum()
+        }
+        .sum()
 
-    // Example Options
-    // Size     xl     l
-    // Color    blue   red
-    // Material rubber jeans
-
-    // Created Variants
-    // xl blue rubber
-    // xl blue jeans
-    // xl red  rubber
-    // xl red  jeans
-    // l  blue rubber
-    // l  blue jeans
-    // l  red  rubber
-    // l  red  jeans
     private fun handleGenerateLocalVariants(
         localOptions: List<AdminProductEditContract.LocalOption>
     ): List<AdminProductEditContract.LocalVariant> {
-        val allOptions = localOptions.map { it.attrs.filter { attr -> attr.isNotBlank() } }
+        val allOptions = localOptions.map {
+            it.attrs.filter { attr -> attr.value.isNotBlank() }
+        }
         val allVariants = mutableListOf<AdminProductEditContract.LocalVariant>()
 
         if (allOptions.isNotEmpty()) {
@@ -231,7 +210,13 @@ internal class AdminProductEditInputHandler :
             val restVariants = restOptions.fold(firstOption) { acc, option ->
                 acc.flatMap { a -> option.map { b -> a + b } }
             }
-            allVariants.addAll(restVariants.map { AdminProductEditContract.LocalVariant(attrs = it) })
+            allVariants.addAll(
+                restVariants.map {
+                    AdminProductEditContract.LocalVariant(attrs = it.map { attr ->
+                        attr.value
+                    })
+                }
+            )
         }
 
         return allVariants
@@ -256,9 +241,19 @@ internal class AdminProductEditInputHandler :
     private suspend fun InputScope.handleOnOptionNameChanged(optionIndex: Int, name: String) {
         val state = getCurrentState()
         val newOptions = state.localOptions.toMutableList()
+
+        var nameError = inputValidator.validateText(name, 1)
+        val allValues = state.localOptions.map { it.name }
+        if (nameError == null && name in allValues) nameError = "Value must be unique"
+
+        val anyAttrHasError = state.localOptions.none { it.attrs.any { it.error != null } }
+
+        println("AllLocalVariants handleOnOptionNameChanged: $name $anyAttrHasError")
+
         newOptions[optionIndex] = newOptions[optionIndex].copy(
             name = name,
-            nameError = inputValidator.validateText(name, 1),
+            nameError = nameError,
+            isDoneDisabled = nameError != null || anyAttrHasError
         )
         postInput(AdminProductEditContract.Inputs.SetLocalOptions(newOptions))
     }
@@ -274,7 +269,11 @@ internal class AdminProductEditInputHandler :
         val state = getCurrentState()
         val newOptions = state.localOptions.toMutableList()
         val option = newOptions[optionIndex]
-            .copy(attrs = newOptions[optionIndex].attrs.map { it.trim() }.filter { it.isNotBlank() })
+            .copy(
+                attrs = newOptions[optionIndex].attrs
+                    .map { AdminProductEditContract.Attribute(it.value.trim()) }
+                    .filter { it.value.isNotBlank() }
+            )
         if (option.name.isNotBlank() && option.attrs.isNotEmpty()) {
             newOptions[optionIndex] = option.copy(isEditing = false)
             postInput(AdminProductEditContract.Inputs.SetLocalOptions(newOptions))
@@ -288,11 +287,33 @@ internal class AdminProductEditInputHandler :
             val isLastAttr = attrIndex == state.localOptions[optionIndex].attrs.size - 1
             val isValueNotEmpty = value.isNotEmpty()
 
-            val newAttrs = this[optionIndex].attrs.toMutableList()
-            newAttrs[attrIndex] = value
-            if (isLastAttr && isValueNotEmpty) newAttrs.add("")
+            val option = this[optionIndex]
+            val newAttrs = option.attrs.toMutableList()
 
-            this[optionIndex] = this[optionIndex].copy(attrs = newAttrs)
+            var valueError = inputValidator.validateText(value, 1)
+            val allValues = option.attrs.map { it.value }
+            if (valueError == null && value in allValues) valueError = "Value must be unique"
+
+            newAttrs[attrIndex] = newAttrs[attrIndex].copy(
+                value = value,
+                error = valueError,
+            )
+            if (isLastAttr && isValueNotEmpty) newAttrs.add(AdminProductEditContract.Attribute())
+
+            val anyAttrHasError = option.attrs.any { it.error != null }
+            val allAttrEmpty = (option.attrs + AdminProductEditContract.Attribute(value))
+                .all { it.value.isEmpty() }
+            val nameError = option.nameError != null
+
+            println("AllLocalVariants $value ${valueError != null} $anyAttrHasError $allAttrEmpty $nameError")
+
+            this[optionIndex] = option.copy(
+                attrs = newAttrs,
+                isDoneDisabled = valueError != null ||
+                    anyAttrHasError ||
+                    allAttrEmpty ||
+                    option.nameError != null
+            )
         }
 
         postInput(AdminProductEditContract.Inputs.SetLocalOptions(newOptions))

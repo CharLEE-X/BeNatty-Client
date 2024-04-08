@@ -29,6 +29,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.borderTop
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
+import com.varabyte.kobweb.compose.ui.modifiers.disabled
 import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.flexWrap
@@ -36,6 +37,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.gridColumn
 import com.varabyte.kobweb.compose.ui.modifiers.gridTemplateColumns
+import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
@@ -57,6 +59,7 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiAdd
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiCheck
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEdit
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiUndo
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.Strings.Edit
@@ -361,7 +364,7 @@ private fun ManageOptions(vm: AdminProductEditViewModel, state: AdminProductEdit
                                 .weight(1f)
                         ) {
                             SpanText(
-                                text = getString(Strings.Name),
+                                text = localOption.name,
                                 modifier = Modifier.fontWeight(FontWeight.SemiBold)
                             )
                             Row(
@@ -402,9 +405,9 @@ private fun ManageOptions(vm: AdminProductEditViewModel, state: AdminProductEdit
 }
 
 @Composable
-private fun OptionAttrItem(attr: String) {
+private fun OptionAttrItem(attr: AdminProductEditContract.Attribute) {
     SpanText(
-        text = attr, // TODO: Need to be localized
+        text = attr.value, // TODO: Need to be localized
         modifier = Modifier
             .roleStyle(MaterialTheme.typography.bodyMedium)
             .padding(
@@ -431,6 +434,7 @@ fun InspectVariations(vm: AdminProductEditViewModel, state: AdminProductEditCont
 
     println(
         """
+        AllLocalOptions:\n${state.localOptions.map { "$it\n" }}
         AllLocalVariants:\n${state.localVariants.map { "$it\n" }}
         """.trimIndent()
     )
@@ -485,10 +489,14 @@ fun InspectVariations(vm: AdminProductEditViewModel, state: AdminProductEditCont
             state.localVariants.forEachIndexed { index, variant ->
                 LocalVariantItem(
                     variant = variant,
-                    onDeleteClick = { vm.trySend(AdminProductEditContract.Inputs.OnDeleteVariantClicked(index)) },
+                    disabled = !state.variantEditingEnabled,
                     onPriceChanged = { vm.trySend(AdminProductEditContract.Inputs.OnVariantPriceChanged(index, it)) },
                     onQuantityChanged = {
                         vm.trySend(AdminProductEditContract.Inputs.OnVariantQuantityChanged(index, it))
+                    },
+                    onDeleteClick = { vm.trySend(AdminProductEditContract.Inputs.OnDeleteVariantClicked(index)) },
+                    onUndoDeleteClick = {
+                        vm.trySend(AdminProductEditContract.Inputs.OnUndoDeleteVariantClicked(index))
                     },
                     modifier = gridContainerModifier
                         .padding(left = 2.em, right = 1.em)
@@ -509,9 +517,11 @@ fun InspectVariations(vm: AdminProductEditViewModel, state: AdminProductEditCont
 private fun LocalVariantItem(
     modifier: Modifier,
     variant: AdminProductEditContract.LocalVariant,
+    disabled: Boolean,
     onPriceChanged: (String) -> Unit,
     onQuantityChanged: (String) -> Unit,
     onDeleteClick: () -> Unit,
+    onUndoDeleteClick: () -> Unit,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -529,7 +539,7 @@ private fun LocalVariantItem(
                     .gridColumn(1, 3)
             ) {
                 variant.attrs.forEachIndexed { index, attr ->
-                    OptionAttrItem(attr)
+                    OptionAttrItem(AdminProductEditContract.Attribute(attr))
                     if (index < variant.attrs.size - 1) {
                         Box(
                             modifier = Modifier
@@ -540,28 +550,59 @@ private fun LocalVariantItem(
                     }
                 }
             }
-            AppOutlinedTextField(
-                value = variant.price,
-                onValueChange = onPriceChanged,
-                placeholder = "100.00",
-                prefixText = "£", // TODO: Localize
-                hasTrailingIcon = false,
-                rows = 1,
-                modifier = Modifier.gridColumn(3, 4)
+            if (variant.enabled) {
+                AppOutlinedTextField(
+                    value = variant.price,
+                    onValueChange = onPriceChanged,
+                    placeholder = "100.00",
+                    prefixText = "£", // TODO: Localize
+                    error = variant.priceError != null,
+                    errorText = variant.priceError,
+                    hasTrailingIcon = false,
+                    rows = 1,
+                    disabled = disabled,
+                    modifier = Modifier.gridColumn(3, 4)
+                )
+                if (disabled) AppTooltip(getString(Strings.FinishAddingOptionToEnableEditing))
+                AppOutlinedTextField(
+                    value = variant.quantity,
+                    onValueChange = onQuantityChanged,
+                    error = variant.quantityError != null,
+                    errorText = variant.quantityError,
+                    placeholder = "0",
+                    hasTrailingIcon = false,
+                    rows = 1,
+                    disabled = disabled,
+                    modifier = Modifier.gridColumn(4, 5)
+                )
+                if (disabled) AppTooltip(getString(Strings.FinishAddingOptionToEnableEditing))
+            } else {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .gridColumn(3, 5)
+                        .height(4.em)
+                ) {
+                    Spacer()
+                    SpanText(
+                        text = getString(Strings.ThisVariantWontBeCreated),
+                        modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
+                    )
+                }
+            }
+        }
+        if (variant.enabled) {
+            DeleteButton(
+                modifier = Modifier.padding(right = 1.em),
+                onClick = { onDeleteClick() },
+                disabled = disabled
             )
-            AppOutlinedTextField(
-                value = variant.quantity,
-                onValueChange = onQuantityChanged,
-                placeholder = "0",
-                hasTrailingIcon = false,
-                rows = 1,
-                modifier = Modifier.gridColumn(4, 5)
+        } else {
+            UndoButton(
+                modifier = Modifier.padding(right = 1.em),
+                onClick = onUndoDeleteClick
             )
         }
-        DeleteButton(
-            modifier = Modifier.padding(right = 1.em),
-            onClick = { onDeleteClick() }
-        )
     }
 }
 
@@ -675,7 +716,7 @@ private fun LocalOptionBuilder(
                     .gap(1.em)
             ) {
                 AppOutlinedTextField(
-                    value = attr,
+                    value = attr.value,
                     onValueChange = {
                         vm.trySend(
                             AdminProductEditContract.Inputs.OnOptionAttrValueChanged(
@@ -692,14 +733,15 @@ private fun LocalOptionBuilder(
                         VariantType.Style -> getString(Strings.Classic)
                         else -> getString(Strings.AddAnotherValue)
                     },
-                    errorText = null,
+                    errorText = attr.error,
+                    error = attr.error != null,
                     trailingIcon = { TrailingIconGoToNext(show = isOptionFocused) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .onFocusIn { isOptionFocused = true }
                         .onFocusOut { isOptionFocused = false }
                 )
-                if (attr.isNotBlank()) {
+                if (attr.value.isNotBlank()) {
                     DeleteButton {
                         vm.trySend(AdminProductEditContract.Inputs.OnDeleteOptionAttrClicked(optionIndex, attrIndex))
                     }
@@ -712,6 +754,7 @@ private fun LocalOptionBuilder(
         AppFilledTonalButton(
             onClick = { vm.trySend(AdminProductEditContract.Inputs.OnOptionDoneClicked(optionIndex)) },
             leadingIcon = { MdiCheck() },
+            disabled = variant.isDoneDisabled
         ) {
             SpanText(text = getString(Strings.Done))
         }
@@ -721,11 +764,34 @@ private fun LocalOptionBuilder(
 @Composable
 private fun DeleteButton(
     modifier: Modifier = Modifier,
+    disabled: Boolean = false,
     onClick: () -> Unit,
 ) {
     var hovered by remember { mutableStateOf(false) }
 
     MdiDelete(
+        style = IconStyle.OUTLINED,
+        modifier = modifier
+            .onClick { if (!disabled) onClick() }
+            .onEnterKeyDown { if (!disabled) onClick() }
+            .cursor(if (disabled) Cursor.NotAllowed else Cursor.Pointer)
+            .disabled(disabled)
+            .onMouseOver { hovered = true }
+            .onMouseOut { hovered = false }
+            .opacity(if (hovered && !disabled) 1.0 else 0.5)
+            .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
+            .tabIndex(0)
+    )
+}
+
+@Composable
+private fun UndoButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    var hovered by remember { mutableStateOf(false) }
+
+    MdiUndo(
         style = IconStyle.OUTLINED,
         modifier = modifier
             .onClick { onClick() }
