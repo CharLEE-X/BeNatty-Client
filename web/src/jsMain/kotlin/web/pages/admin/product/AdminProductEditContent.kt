@@ -69,9 +69,9 @@ import data.type.BackorderStatus
 import data.type.MediaType
 import data.type.PostStatus
 import data.type.StockStatus
-import data.type.VariantType
 import feature.admin.product.edit.AdminProductEditContract
 import feature.admin.product.edit.AdminProductEditViewModel
+import feature.admin.product.edit.VariantType
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.attributes.AutoComplete
 import org.jetbrains.compose.web.css.DisplayStyle
@@ -432,13 +432,6 @@ fun InspectVariations(vm: AdminProductEditViewModel, state: AdminProductEditCont
         .gap(1.em)
         .gridTemplateColumns { repeat(4) { size(1.fr) } }
 
-    println(
-        """
-        AllLocalOptions:\n${state.localOptions.map { "$it\n" }}
-        AllLocalVariants:\n${state.localVariants.map { "$it\n" }}
-        """.trimIndent()
-    )
-
     if (state.localVariants.isNotEmpty()) {
         Column(
             modifier = Modifier
@@ -578,6 +571,7 @@ private fun LocalVariantItem(
                 if (disabled) AppTooltip(getString(Strings.FinishAddingOptionToEnableEditing))
             } else {
                 Row(
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
                         .gridColumn(3, 5)
@@ -619,7 +613,7 @@ private fun LocalOptionBuilder(
     var recognisedInputType by remember { mutableStateOf<VariantType?>(null) }
 
     LaunchedEffect(variant.name) {
-        recognisedInputType = VariantType.knownEntries.firstOrNull { it.name == variant.name }
+        recognisedInputType = VariantType.entries.firstOrNull { it.name == variant.name }
     }
 
     Column(
@@ -673,7 +667,7 @@ private fun LocalOptionBuilder(
 
                 AppMenu(
                     open = open || menuFocused,
-                    items = VariantType.knownEntries
+                    items = VariantType.entries
                         .filter { it.name !in optionsBeforeIndex }
                         .map { it.name },
                     onItemSelected = {
@@ -729,8 +723,8 @@ private fun LocalOptionBuilder(
                     placeholder = when (recognisedInputType) {
                         VariantType.Size -> getString(Strings.Small)
                         VariantType.Color -> getString(Strings.Black)
-                        VariantType.Material -> getString(Strings.Cotton)
                         VariantType.Style -> getString(Strings.Classic)
+                        VariantType.Material -> getString(Strings.Cotton)
                         else -> getString(Strings.AddAnotherValue)
                     },
                     errorText = attr.error,

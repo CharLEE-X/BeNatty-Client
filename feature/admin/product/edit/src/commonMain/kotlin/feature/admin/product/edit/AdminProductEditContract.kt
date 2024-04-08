@@ -100,9 +100,10 @@ object AdminProductEditContract {
     )
 
     data class LocalVariant(
+        val id: String? = null,
         val attrs: List<String> = emptyList(),
         val price: String = "500.00",
-        val quantity: String = "2",
+        val quantity: String = "0",
         val enabled: Boolean = true,
         val priceError: String? = null,
         val quantityError: String? = null,
@@ -113,7 +114,11 @@ object AdminProductEditContract {
         data object OnAddAnotherOptionClick : Inputs
         data class SetShowAddOptions(val show: Boolean) : Inputs
         data class SetShowAddAnotherOption(val show: Boolean) : Inputs
-        data class SetLocalOptions(val localOptions: List<LocalOption>) : Inputs
+        data class OnLocalOptionsChanged(val options: List<LocalOption>) : Inputs
+        data class SetLocalOptions(val options: List<LocalOption>) : Inputs
+        data class OnLocalVariantsChanged(val localVariants: List<LocalVariant>) : Inputs
+        data class SetLocalVariants(val localVariants: List<LocalVariant>) : Inputs
+        data class SetTotalInventory(val total: Int) : Inputs
         data class OnOptionNameChanged(val optionIndex: Int, val name: String) : Inputs
         data class OnOptionAttrValueChanged(val optionIndex: Int, val attrIndex: Int, val value: String) : Inputs
         data class OnOptionDoneClicked(val optionIndex: Int) : Inputs
@@ -203,4 +208,11 @@ object AdminProductEditContract {
         data object GoToCreateTag : Events
         data class GoToProduct(val id: String) : Events
     }
+}
+
+enum class VariantType {
+    Size,
+    Color,
+    Style,
+    Material,
 }
