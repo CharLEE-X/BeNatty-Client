@@ -82,7 +82,9 @@ object AdminProductEditContract {
         val showAddAnotherOption: Boolean = false, // When has variants, but less than 3
         val localOptions: List<LocalOption> = listOf(),
         val localVariants: List<LocalVariant> = listOf(),
+        val deletedVariants: List<LocalVariant> = listOf(),
         val totalInventory: Int = 0,
+        val variantEditingEnabled: Boolean = false,
     )
 
     data class LocalOption(
@@ -110,7 +112,12 @@ object AdminProductEditContract {
         data class OnEditOptionClicked(val optionIndex: Int) : Inputs
         data class OnDeleteOptionClicked(val optionIndex: Int) : Inputs
         data class OnDeleteOptionAttrClicked(val optionIndex: Int, val attrIndex: Int) : Inputs
-        data class SetTotalInventory(val total: Int) : Inputs
+        data class SetDeletedVariants(val variants: List<LocalVariant>) : Inputs
+        data class OnUndoDeleteVariantClicked(val deletedVariantIndex: Int) : Inputs
+
+        data class OnVariantPriceChanged(val variantIndex: Int, val price: String) : Inputs
+        data class OnVariantQuantityChanged(val variantIndex: Int, val quantity: String) : Inputs
+        data class OnDeleteVariantClicked(val variantIndex: Int) : Inputs
 
         data class Init(val productId: String) : Inputs
         data class UploadMedia(val mediaString: String) : Inputs

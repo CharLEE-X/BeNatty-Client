@@ -323,7 +323,7 @@ private fun ManageOptions(vm: AdminProductEditViewModel, state: AdminProductEdit
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(leftRight = 1.em, top = 1.em)
+            .padding(leftRight = 1.em, topBottom = 1.em)
     ) {
         if (state.showAddOptions) {
             TextButton(
@@ -427,21 +427,27 @@ fun InspectVariations(vm: AdminProductEditViewModel, state: AdminProductEditCont
         .fillMaxWidth()
         .display(DisplayStyle.Grid)
         .gap(1.em)
-        .gridTemplateColumns { repeat(5) { size(1.fr) } }
+        .gridTemplateColumns { repeat(4) { size(1.fr) } }
+
+    println(
+        """
+        AllLocalVariants:\n${state.localVariants.map { "$it\n" }}
+        """.trimIndent()
+    )
 
     if (state.localVariants.isNotEmpty()) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(bottom = 1.em)
                 .gap(0.5.em)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = gridContainerModifier
-                    .padding(topBottom = 1.5.em, leftRight = 2.em)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .margin(bottom = 1.em)
                     .backgroundColor(MaterialTheme.colors.surfaceContainerHigh)
-                    .roleStyle(MaterialTheme.typography.bodyMedium)
                     .borderTop(
                         width = 1.px,
                         color = MaterialTheme.colors.surface,
@@ -453,25 +459,39 @@ fun InspectVariations(vm: AdminProductEditViewModel, state: AdminProductEditCont
                         style = LineStyle.Solid
                     )
             ) {
-                SpanText(
-                    text = getString(Strings.Variant),
-                    modifier = Modifier.gridColumn(1, 4)
-                )
-                SpanText(
-                    text = getString(Strings.Price),
-                    modifier = Modifier.gridColumn(4, 5)
-                )
-                SpanText(
-                    text = getString(Strings.Available),
-                    modifier = Modifier.gridColumn(5, 6)
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = gridContainerModifier
+                        .padding(topBottom = 1.5.em)
+                        .padding(left = 2.em, right = 1.em)
+                        .roleStyle(MaterialTheme.typography.bodyMedium)
+                ) {
+                    SpanText(
+                        text = getString(Strings.Variant),
+                        modifier = Modifier.gridColumn(1, 3)
+                    )
+                    SpanText(
+                        text = getString(Strings.Price),
+                        modifier = Modifier.gridColumn(3, 4)
+                    )
+                    SpanText(
+                        text = getString(Strings.Available),
+                        modifier = Modifier.gridColumn(4, 5)
+                    )
+                }
+                Box(modifier = Modifier.size(48.px).padding(right = 1.em))
             }
             state.localVariants.forEachIndexed { index, variant ->
                 LocalVariantItem(
                     variant = variant,
-                    onDeleteClick = { /* TODO: Implement */ },
+                    onDeleteClick = { vm.trySend(AdminProductEditContract.Inputs.OnDeleteVariantClicked(index)) },
+                    onPriceChanged = { vm.trySend(AdminProductEditContract.Inputs.OnVariantPriceChanged(index, it)) },
+                    onQuantityChanged = {
+                        vm.trySend(AdminProductEditContract.Inputs.OnVariantQuantityChanged(index, it))
+                    },
                     modifier = gridContainerModifier
-                        .padding(leftRight = 2.em)
+                        .padding(left = 2.em, right = 1.em)
                         .thenIf(index != state.localVariants.size - 1) {
                             Modifier.borderBottom(
                                 width = 1.px,
@@ -489,47 +509,58 @@ fun InspectVariations(vm: AdminProductEditViewModel, state: AdminProductEditCont
 private fun LocalVariantItem(
     modifier: Modifier,
     variant: AdminProductEditContract.LocalVariant,
+    onPriceChanged: (String) -> Unit,
+    onQuantityChanged: (String) -> Unit,
     onDeleteClick: () -> Unit,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        modifier = modifier.roleStyle(MaterialTheme.typography.bodyMedium)
+        modifier = Modifier.fillMaxWidth()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .gap(0.5.em)
-                .gridColumn(1, 4)
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = modifier.roleStyle(MaterialTheme.typography.bodyMedium)
         ) {
-            variant.attrs.forEachIndexed { index, attr ->
-                OptionAttrItem(attr)
-                if (index < variant.attrs.size - 1) {
-                    Box(
-                        modifier = Modifier
-                            .size(6.px)
-                            .borderRadius(50.percent)
-                            .color(MaterialTheme.colors.surface)
-                    )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .gap(0.5.em)
+                    .gridColumn(1, 3)
+            ) {
+                variant.attrs.forEachIndexed { index, attr ->
+                    OptionAttrItem(attr)
+                    if (index < variant.attrs.size - 1) {
+                        Box(
+                            modifier = Modifier
+                                .size(6.px)
+                                .borderRadius(50.percent)
+                                .color(MaterialTheme.colors.surface)
+                        )
+                    }
                 }
             }
+            AppOutlinedTextField(
+                value = variant.price,
+                onValueChange = onPriceChanged,
+                placeholder = "100.00",
+                prefixText = "£", // TODO: Localize
+                hasTrailingIcon = false,
+                rows = 1,
+                modifier = Modifier.gridColumn(3, 4)
+            )
+            AppOutlinedTextField(
+                value = variant.quantity,
+                onValueChange = onQuantityChanged,
+                placeholder = "0",
+                hasTrailingIcon = false,
+                rows = 1,
+                modifier = Modifier.gridColumn(4, 5)
+            )
         }
-        AppOutlinedTextField(
-            value = variant.price,
-            onValueChange = { },
-            placeholder = "100.00",
-            prefixText = "£", // TODO: Localize
-            hasTrailingIcon = false,
-            rows = 1,
-            modifier = Modifier.gridColumn(4, 5)
-        )
-        AppOutlinedTextField(
-            value = variant.quantity,
-            onValueChange = { },
-            placeholder = "0",
-            hasTrailingIcon = false,
-            rows = 1,
-            modifier = Modifier.gridColumn(5, 6)
+        DeleteButton(
+            modifier = Modifier.padding(right = 1.em),
+            onClick = { onDeleteClick() }
         )
     }
 }
@@ -625,9 +656,7 @@ private fun LocalOptionBuilder(
                         .tabIndex(0)
                 )
             }
-            DeleteButton {
-                vm.trySend(AdminProductEditContract.Inputs.OnDeleteOptionClicked(optionIndex))
-            }
+            DeleteButton { vm.trySend(AdminProductEditContract.Inputs.OnDeleteOptionClicked(optionIndex)) }
         }
 
         SpanText(
@@ -691,13 +720,14 @@ private fun LocalOptionBuilder(
 
 @Composable
 private fun DeleteButton(
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
     var hovered by remember { mutableStateOf(false) }
 
     MdiDelete(
         style = IconStyle.OUTLINED,
-        modifier = Modifier
+        modifier = modifier
             .onClick { onClick() }
             .cursor(Cursor.Pointer)
             .onMouseOver { hovered = true }

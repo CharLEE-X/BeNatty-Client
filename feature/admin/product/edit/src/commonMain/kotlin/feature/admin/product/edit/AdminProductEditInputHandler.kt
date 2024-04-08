@@ -115,7 +115,6 @@ internal class AdminProductEditInputHandler :
         is AdminProductEditContract.Inputs.SetShowAddOptions -> updateState { it.copy(showAddOptions = input.show) }
         is AdminProductEditContract.Inputs.SetShowAddAnotherOption -> updateState { it.copy(showAddAnotherOption = input.show) }
         is AdminProductEditContract.Inputs.SetLocalOptions -> handleSetLocalOptions(input)
-        is AdminProductEditContract.Inputs.SetTotalInventory -> updateState { it.copy(totalInventory = input.total) }
 
         is AdminProductEditContract.Inputs.OnOptionNameChanged ->
             handleOnOptionNameChanged(input.optionIndex, input.name)
@@ -128,6 +127,55 @@ internal class AdminProductEditInputHandler :
         is AdminProductEditContract.Inputs.OnDeleteOptionClicked -> handleOnDeleteOptionClicked(input.optionIndex)
         is AdminProductEditContract.Inputs.OnDeleteOptionAttrClicked ->
             handleOnDeleteOptionAttrClicked(input.optionIndex, input.attrIndex)
+
+        is AdminProductEditContract.Inputs.OnVariantPriceChanged ->
+            handleOnVariantPriceChanged(input.variantIndex, input.price)
+
+        is AdminProductEditContract.Inputs.OnVariantQuantityChanged ->
+            handleOnVariantQuantityChanged(input.variantIndex, input.quantity)
+
+        is AdminProductEditContract.Inputs.OnDeleteVariantClicked -> handleOnDeleteVariantClicked(input.variantIndex)
+
+        is AdminProductEditContract.Inputs.SetDeletedVariants ->
+            updateState { it.copy(deletedVariants = input.variants) }
+
+        is AdminProductEditContract.Inputs.OnUndoDeleteVariantClicked ->
+            handleOnUndoDeleteVariantClicked(input.deletedVariantIndex)
+    }
+
+    private suspend fun InputScope.handleOnUndoDeleteVariantClicked(variantIndex: Int) {
+        updateState {
+            val newVariants = it.deletedVariants.toMutableList()
+            val variant = newVariants.removeAt(variantIndex)
+            val newLocalVariants = it.localVariants.toMutableList().apply {
+                add(variant)
+            }
+            it.copy(deletedVariants = newVariants, localVariants = newLocalVariants).wasEdited()
+        }
+    }
+
+    private suspend fun InputScope.handleOnDeleteVariantClicked(variantIndex: Int) {
+        updateState {
+            val newVariants = it.localVariants.toMutableList()
+            newVariants.removeAt(variantIndex)
+            it.copy(localVariants = newVariants).wasEdited()
+        }
+    }
+
+    private suspend fun InputScope.handleOnVariantQuantityChanged(variantIndex: Int, quantity: String) {
+        updateState {
+            val newVariants = it.localVariants.toMutableList()
+            newVariants[variantIndex] = newVariants[variantIndex].copy(quantity = quantity)
+            it.copy(localVariants = newVariants).wasEdited()
+        }
+    }
+
+    private suspend fun InputScope.handleOnVariantPriceChanged(variantIndex: Int, price: String) {
+        updateState {
+            val newVariants = it.localVariants.toMutableList()
+            newVariants[variantIndex] = newVariants[variantIndex].copy(price = price)
+            it.copy(localVariants = newVariants).wasEdited()
+        }
     }
 
     private suspend fun InputScope.handleSetLocalOptions(input: AdminProductEditContract.Inputs.SetLocalOptions) {
@@ -135,20 +183,13 @@ internal class AdminProductEditInputHandler :
             val variants = handleGenerateLocalVariants(input.localOptions)
             val totalInventory = countTotalInventory(variants)
 
-            println(
-                """
-                    LocalOptions: ${input.localOptions}
-                    AllVariants:
-                        ${variants.map { "$it\n" }}
-                """.trimIndent()
-            )
-
             state.copy(
                 showAddOptions = input.localOptions.isEmpty(),
                 showAddAnotherOption = input.localOptions.size in 1..2,
                 localOptions = input.localOptions,
                 localVariants = variants,
                 totalInventory = totalInventory,
+                variantEditingEnabled = input.localOptions.none { it.isEditing },
             ).wasEdited()
         }
     }
