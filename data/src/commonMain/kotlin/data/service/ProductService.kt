@@ -26,6 +26,7 @@ import data.type.ProductCreateInput
 import data.type.ProductMediaDeleteInput
 import data.type.ProductMediaUploadInput
 import data.type.ProductUpdateInput
+import data.type.ProductUpdateVariantInput
 import data.type.ProductsSort
 import data.type.ShippingUpdateInput
 import data.type.SortDirection
@@ -56,7 +57,7 @@ interface ProductService {
 
     suspend fun getById(id: String): Either<RemoteError, AdminProductGetByIdQuery.Data>
     suspend fun delete(id: String): Either<RemoteError, AdminDeleteProductMutation.Data>
-    suspend fun update(
+    suspend fun updateProduct(
         id: String,
         name: String?,
         description: String?,
@@ -79,6 +80,7 @@ interface ProductService {
         isPhysicalProduct: Boolean?,
         weight: String?,
         width: String?,
+        variants: List<ProductUpdateVariantInput>?,
     ): Either<RemoteError, AdminProductUpdateMutation.Data>
 
     suspend fun uploadImage(
@@ -117,7 +119,7 @@ internal class ProductServiceImpl(
         return apolloClient.mutation(AdminProductUploadImageMutation(input)).handle()
     }
 
-    override suspend fun update(
+    override suspend fun updateProduct(
         id: String,
         name: String?,
         description: String?,
@@ -140,6 +142,7 @@ internal class ProductServiceImpl(
         isPhysicalProduct: Boolean?,
         weight: String?,
         width: String?,
+        variants: List<ProductUpdateVariantInput>?,
     ): Either<RemoteError, AdminProductUpdateMutation.Data> {
         val inventory = if (
             backorderStatus != null || lowStockThreshold != null || remainingStock != null || stockStatus != null ||
@@ -195,6 +198,7 @@ internal class ProductServiceImpl(
             inventory = inventory,
             pricing = productPrice,
             shipping = shipping,
+            variants = variants.skipIfNull(),
         )
 
         return apolloClient.mutation(AdminProductUpdateMutation(input))

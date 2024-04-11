@@ -481,6 +481,7 @@ fun InspectVariations(vm: AdminProductEditViewModel, state: AdminProductEditCont
             }
             state.localVariants.forEachIndexed { index, variant ->
                 LocalVariantItem(
+                    state = state,
                     variant = variant,
                     disabled = !state.variantEditingEnabled,
                     onPriceChanged = { vm.trySend(AdminProductEditContract.Inputs.OnVariantPriceChanged(index, it)) },
@@ -492,7 +493,7 @@ fun InspectVariations(vm: AdminProductEditViewModel, state: AdminProductEditCont
                         vm.trySend(AdminProductEditContract.Inputs.OnUndoDeleteVariantClicked(index))
                     },
                     modifier = gridContainerModifier
-                        .padding(left = 2.em, right = 1.em)
+                        .padding(left = 2.em, right = 1.em, bottom = 0.5.em)
                         .thenIf(index != state.localVariants.size - 1) {
                             Modifier.borderBottom(
                                 width = 1.px,
@@ -509,6 +510,7 @@ fun InspectVariations(vm: AdminProductEditViewModel, state: AdminProductEditCont
 @Composable
 private fun LocalVariantItem(
     modifier: Modifier,
+    state: AdminProductEditContract.State,
     variant: AdminProductEditContract.LocalVariant,
     disabled: Boolean,
     onPriceChanged: (String) -> Unit,
@@ -578,8 +580,10 @@ private fun LocalVariantItem(
                         .height(4.em)
                 ) {
                     Spacer()
+                    val text = if (variant.id in state.original.variants.map { it.id })
+                        Strings.ThisVariantWillBeDeleted else Strings.ThisVariantWontBeCreated
                     SpanText(
-                        text = getString(Strings.ThisVariantWontBeCreated),
+                        text = getString(text),
                         modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
                     )
                 }

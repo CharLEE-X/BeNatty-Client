@@ -297,4 +297,5 @@ enum class Strings {
     ThisVariantWontBeCreated,
     Undo,
     FinishAddingOptionToEnableEditing,
+    ThisVariantWillBeDeleted,
 }
