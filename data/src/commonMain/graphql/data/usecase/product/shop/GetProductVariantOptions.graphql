@@ -1,0 +1,20 @@
+query GetProductVariantOptions {
+  getProductVariantOptions {
+    categories {
+      id
+      name
+      imageUrl
+      enabled
+    }
+    colors {
+      color
+      hex
+      enabled
+    }
+    sizes {
+      size
+      enabled
+    }
+    highestPrice
+  }
+}

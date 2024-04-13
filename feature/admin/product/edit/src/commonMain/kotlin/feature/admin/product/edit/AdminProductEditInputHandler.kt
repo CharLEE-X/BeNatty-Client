@@ -770,7 +770,7 @@ internal class AdminProductEditInputHandler :
     private fun getTotalInventory(localVariants: List<AdminProductEditContract.LocalVariant>) =
         localVariants.sumOf { it.quantity.toInt() }
 
-    private fun getLocalOptions(variants: List<AdminProductGetByIdQuery.Variant>): MutableList<AdminProductEditContract.LocalOption> {
+    private fun getLocalOptions(variants: List<AdminProductGetByIdQuery.Variant>): List<AdminProductEditContract.LocalOption> {
         val localOptions = mutableListOf<AdminProductEditContract.LocalOption>()
 
         variants

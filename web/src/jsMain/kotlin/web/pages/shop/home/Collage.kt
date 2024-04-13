@@ -217,13 +217,14 @@ fun CollageItem(
                 .backgroundColor(MaterialTheme.colors.surfaceContainerHighest)
                 .onClick { onClick() }
         ) {
-            val imageModifier = Modifier
-                .fillMaxSize()
-                .borderRadius(borderRadius)
-                .objectFit(ObjectFit.Cover)
-                .thenIf(hovered) { Modifier.scale(1.04) }
-                .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
-            image(imageModifier)
+            image(
+                Modifier
+                    .fillMaxSize()
+                    .borderRadius(borderRadius)
+                    .objectFit(ObjectFit.Cover)
+                    .thenIf(hovered) { Modifier.scale(1.04) }
+                    .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
+            )
             Column(
                 horizontalAlignment = when (textPosition) {
                     TextPosition.Center -> Alignment.CenterHorizontally

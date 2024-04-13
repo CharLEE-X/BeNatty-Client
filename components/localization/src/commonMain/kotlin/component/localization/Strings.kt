@@ -298,4 +298,9 @@ enum class Strings {
     Undo,
     FinishAddingOptionToEnableEditing,
     ThisVariantWillBeDeleted,
+    ProductType,
+    Color,
+    SortBy,
+    TheHighestPriceIs,
+    Reset,
 }

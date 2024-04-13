@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 class CatalogViewModel(
     scope: CoroutineScope,
     catalogueRoutes: CatalogueRoutes,
-    variant: Variant,
+    catalogVariant: CatalogVariant,
 ) : BasicViewModel<
     CatalogContract.Inputs,
     CatalogContract.Events,
@@ -43,7 +43,7 @@ class CatalogViewModel(
     coroutineScope = scope,
 ) {
     init {
-        trySend(CatalogContract.Inputs.Init(variant))
+        trySend(CatalogContract.Inputs.Init(catalogVariant))
     }
 
     companion object {

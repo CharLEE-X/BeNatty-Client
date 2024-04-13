@@ -17,7 +17,7 @@ import com.copperleaf.ballast.navigation.routing.directions
 import com.copperleaf.ballast.navigation.routing.pathParameter
 import com.copperleaf.ballast.navigation.routing.renderCurrentDestination
 import com.copperleaf.ballast.navigation.routing.stringPath
-import feature.product.catalog.Variant
+import feature.product.catalog.CatalogVariant
 import feature.router.RouterViewModel
 import feature.router.Screen
 import feature.router.idPath
@@ -113,7 +113,10 @@ fun RouterContent(
             router.trySend(
                 GoToDestination(
                     Screen.Catalogue.directions()
-                        .pathParameter("variant", Json.encodeToString(Variant.serializer(), Variant.Catalog))
+                        .pathParameter(
+                            "variant",
+                            Json.encodeToString(CatalogVariant.serializer(), CatalogVariant.Catalog)
+                        )
                         .build()
                 )
             )
@@ -186,10 +189,10 @@ fun RouterContent(
 
                 Screen.Catalogue -> {
                     val variant: String by stringPath()
-                    val variantClass = Json.decodeFromString<Variant>(variant)
+                    val catalogVariantClass = Json.decodeFromString<CatalogVariant>(variant)
                     CataloguePage(
                         mainRoutes = mainRoutes,
-                        variant = variantClass
+                        catalogVariant = catalogVariantClass
                     )
                 }
 

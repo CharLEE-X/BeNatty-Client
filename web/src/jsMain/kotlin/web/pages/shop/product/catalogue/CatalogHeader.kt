@@ -42,6 +42,9 @@ import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiChevronLeft
 import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
+import component.localization.getString
+import data.type.ProductsSort
 import feature.product.catalog.CatalogContract
 import feature.product.catalog.CatalogViewModel
 import kotlinx.coroutines.Job
@@ -113,8 +116,8 @@ fun CatalogueHeader(vm: CatalogViewModel, state: CatalogContract.State) {
         ) {
             if (!state.isLoading) {
                 FiltersButton(
-                    sortByText = "Sort by",
-                    currentFilter = "Best selling",
+                    sortByText = getString(Strings.SortBy),
+                    currentFilter = state.sortBy.rawValue, // TODO: Localize
                     menuOpened = open,
                     onClick = { open = !open },
                     modifier = Modifier
@@ -129,18 +132,10 @@ fun CatalogueHeader(vm: CatalogViewModel, state: CatalogContract.State) {
             }
             AppMenu(
                 open = open || isFiltersButtonFocused || isMenuHovered || isMenuFocused,
-                items = listOf(
-                    "Featured",
-                    "Best selling",
-                    "Alphabetically, A-Z",
-                    "Alphabetically, Z-A",
-                    "Price, Low to High",
-                    "Price, High to Low",
-                    "Date, New to Old",
-                    "Date, Old to New",
-                ),
+                items = ProductsSort.knownEntries.map { it.rawValue },
                 onItemSelected = {
                     open = false
+                    vm.trySend(CatalogContract.Inputs.OnSortBySelected(it))
                 },
                 modifier = Modifier
                     .margin(top = 10.px)
@@ -192,7 +187,8 @@ private fun FiltersButton(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.gap(0.25.em)
+            modifier = Modifier
+                .gap(0.25.em)
                 .color(MaterialTheme.colors.onSurface)
         ) {
             Column(
@@ -206,7 +202,8 @@ private fun FiltersButton(
                 )
                 SpanText(
                     text = currentFilter,
-                    modifier = Modifier.fontWeight(FontWeight.Bold)
+                    modifier = Modifier
+                        .fontWeight(FontWeight.Bold)
                         .roleStyle(MaterialTheme.typography.bodyLarge)
                 )
             }

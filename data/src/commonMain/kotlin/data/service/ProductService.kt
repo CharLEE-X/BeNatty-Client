@@ -14,9 +14,11 @@ import data.AdminProductGetByIdQuery
 import data.AdminProductUpdateMutation
 import data.AdminProductUploadImageMutation
 import data.GetCatalogPageQuery
+import data.GetProductVariantOptionsQuery
 import data.type.BackorderStatus
 import data.type.BlobInput
 import data.type.CatalogPageInput
+import data.type.Color
 import data.type.InventoryUpdateInput
 import data.type.MediaType
 import data.type.PageInput
@@ -29,6 +31,7 @@ import data.type.ProductUpdateInput
 import data.type.ProductUpdateVariantInput
 import data.type.ProductsSort
 import data.type.ShippingUpdateInput
+import data.type.Size
 import data.type.SortDirection
 import data.type.StockStatus
 import data.utils.handle
@@ -48,14 +51,15 @@ interface ProductService {
         page: Int,
         query: String?,
         categories: List<String>?,
-        colors: List<String>?,
-        sizes: List<String>?,
+        colors: List<Color>?,
+        sizes: List<Size>?,
         priceFrom: Double?,
         priceTo: Double?,
         sortBy: ProductsSort?,
     ): Either<RemoteError, GetCatalogPageQuery.Data>
 
     suspend fun getById(id: String): Either<RemoteError, AdminProductGetByIdQuery.Data>
+    suspend fun getProductVariantOptions(): Either<RemoteError, GetProductVariantOptionsQuery.Data>
     suspend fun delete(id: String): Either<RemoteError, AdminDeleteProductMutation.Data>
     suspend fun updateProduct(
         id: String,
@@ -236,8 +240,8 @@ internal class ProductServiceImpl(
         page: Int,
         query: String?,
         categories: List<String>?,
-        colors: List<String>?,
-        sizes: List<String>?,
+        colors: List<Color>?,
+        sizes: List<Size>?,
         priceFrom: Double?,
         priceTo: Double?,
         sortBy: ProductsSort?,
@@ -260,6 +264,12 @@ internal class ProductServiceImpl(
 
     override suspend fun getById(id: String): Either<RemoteError, AdminProductGetByIdQuery.Data> {
         return apolloClient.query(AdminProductGetByIdQuery(id))
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .handle()
+    }
+
+    override suspend fun getProductVariantOptions(): Either<RemoteError, GetProductVariantOptionsQuery.Data> {
+        return apolloClient.query(GetProductVariantOptionsQuery())
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }

@@ -11,24 +11,29 @@ import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.graphics.Colors
-import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
+import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.flex
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.margin
+import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.thenIf
 import component.localization.Strings
 import component.localization.getString
 import feature.product.catalog.CatalogContract
+import feature.product.catalog.CatalogVariant
 import feature.product.catalog.CatalogViewModel
 import feature.product.catalog.CatalogueRoutes
-import feature.product.catalog.Variant
+import org.jetbrains.compose.web.css.DisplayStyle
+import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.ms
+import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
@@ -40,13 +45,13 @@ import web.util.glossy
 @Composable
 fun CataloguePage(
     mainRoutes: MainRoutes,
-    variant: Variant,
+    catalogVariant: CatalogVariant,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
         CatalogViewModel(
             scope = scope,
-            variant = variant,
+            catalogVariant = catalogVariant,
             catalogueRoutes = CatalogueRoutes(
                 onError = { message -> mainRoutes.onError(message) },
                 goToProduct = { productId -> mainRoutes.goToProduct(productId) }
@@ -72,19 +77,22 @@ fun CataloguePage(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .display(DisplayStyle.Flex)
                     .gap(1.em)
             ) {
                 CatalogueFilters(
                     vm = vm,
                     state = state,
                     modifier = Modifier
-                        .weight(1)
-                        .backgroundColor(Colors.LightCoral)
+                        .maxWidth(20.percent)
+                        .fillMaxWidth()
+                        .position(Position.Relative)
+                        .flex("0 0 auto")
                 )
                 CatalogueContent(
                     vm = vm,
                     state = state,
-                    modifier = Modifier.weight(4)
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
@@ -98,7 +106,7 @@ private fun CatalogueContent(
     state: CatalogContract.State,
 ) {
     Column(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
     ) {
         Row(
             modifier = gridModifier(3)

@@ -54,13 +54,11 @@ import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
-import com.varabyte.kobweb.compose.ui.modifiers.rotate
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translate
 import com.varabyte.kobweb.compose.ui.modifiers.translateX
-import com.varabyte.kobweb.compose.ui.modifiers.translateY
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.compose.ui.modifiers.visibility
 import com.varabyte.kobweb.compose.ui.modifiers.whiteSpace
@@ -69,7 +67,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.icons.mdi.IconStyle
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiChevronRight
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiLightMode
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiMenu
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiModeNight
@@ -88,7 +85,6 @@ import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.FlexWrap
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.Position
-import org.jetbrains.compose.web.css.deg
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
@@ -97,6 +93,7 @@ import org.jetbrains.compose.web.dom.Span
 import theme.MaterialTheme
 import web.components.layouts.oneLayoutMaxWidth
 import web.components.widgets.Logo
+import web.components.widgets.RotatableChevron
 import web.components.widgets.SearchBar
 import web.components.widgets.ShimmerHeader
 import web.compose.material3.component.IconButton
@@ -528,17 +525,11 @@ private fun ListMenuItem(
                     .whiteSpace(WhiteSpace.NoWrap)
             )
             if (hasDropdown) {
-                MdiChevronRight(
+                RotatableChevron(
+                    hovered = hovered,
+                    open = hovered,
+                    color = contentColor,
                     modifier = Modifier
-                        .size(12.px)
-                        .rotate(90.deg)
-                        .translateY((-6).px)
-                        .color(contentColor)
-                        .fontWeight(if (hovered) FontWeight.Bold else FontWeight.Normal)
-                        .transition(
-                            CSSTransition("font-weight", 0.3.s, TransitionTimingFunction.Ease),
-                            CSSTransition("rotate", 0.3.s, TransitionTimingFunction.Ease),
-                        )
                 )
             }
         }
