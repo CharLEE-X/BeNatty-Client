@@ -241,8 +241,8 @@ internal class AdminListInputHandler :
                                 ListItem(
                                     id = category.id,
                                     slot1 = millisToDate(category.createdAt.toLong()),
-                                    slot2 = category.name,
-                                    slot3 = category.description,
+                                    slot2 = category.mediaUrl,
+                                    slot3 = category.name,
                                     slot4 = category.display.toString(),
                                     slot5 = category.usedInProducts.toString(),
                                     slot6 = null,

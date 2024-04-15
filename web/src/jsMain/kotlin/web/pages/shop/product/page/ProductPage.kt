@@ -13,6 +13,8 @@ import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
+import component.localization.getString
 import feature.product.page.ProductPageViewModel
 import org.jetbrains.compose.web.css.px
 import web.components.layouts.MainRoutes
@@ -36,7 +38,7 @@ fun ProductPage(
     val state by vm.observeStates().collectAsState()
 
     ShopMainLayout(
-        title = state.strings.productPage,
+        title = getString(Strings.ProductPage),
         mainRoutes = mainRoutes,
     ) {
         Column(
@@ -48,7 +50,27 @@ fun ProductPage(
                 .padding(leftRight = 20.px, top = 100.px)
         ) {
             SpanText("Product Page")
-            SpanText("Product: $productId")
+            with(state.product) {
+                SpanText("id: $id")
+                SpanText("name: $name")
+                SpanText("description: $description")
+                SpanText("categoryId: $categoryId")
+                SpanText("tags: $tags")
+                SpanText("Variants: $variants")
+                Column(
+                    modifier = Modifier.padding(10.px)
+                ) {
+                    variants.forEach {
+                        SpanText("id: ${it.id}")
+                        SpanText("attrs: ${it.attrs}")
+                        SpanText("price: ${it.price}")
+                        SpanText("media: ${it.media}")
+                        SpanText("quantity: ${it.quantity}")
+                    }
+                }
+                SpanText("createdAt: $createdAt")
+                SpanText("updatedAt: $updatedAt")
+            }
         }
     }
 }

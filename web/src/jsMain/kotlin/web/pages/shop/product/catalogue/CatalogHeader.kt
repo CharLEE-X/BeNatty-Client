@@ -100,7 +100,7 @@ fun CatalogueHeader(vm: CatalogViewModel, state: CatalogContract.State) {
     ) {
         if (!state.isLoading) {
             SpanText(
-                text = "${state.pageInfo.count} products",
+                text = "${state.currentVariantOptions.total} products",
                 modifier = Modifier
                     .roleStyle(MaterialTheme.typography.bodyLarge)
                     .color(MaterialTheme.colors.onSurface)

@@ -303,4 +303,6 @@ enum class Strings {
     SortBy,
     TheHighestPriceIs,
     Reset,
+    CreateCustomer,
+    CreateOrder,
 }

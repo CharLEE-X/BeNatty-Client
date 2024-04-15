@@ -1,0 +1,7 @@
+mutation GenerateData($input: GenerateDataInput!) {
+  generateData(input: $input){
+    generatedUsers
+    generatedProducts
+    generatedOrders
+  }
+}

@@ -1,4 +1,4 @@
-package feature.admin.category.page
+package feature.admin.category.edit
 
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
@@ -9,6 +9,7 @@ import core.mapToUiMessage
 import core.util.millisToTime
 import data.GetCategoryByIdQuery
 import data.service.CategoryService
+import data.type.MediaType
 import kotlinx.coroutines.delay
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -40,22 +41,22 @@ internal class AdminUserPageInputHandler :
         AdminCategoryEditContract.Inputs.OnSaveEditClick -> handleOnSaveEditClick()
         AdminCategoryEditContract.Inputs.OnDeleteClick -> handleDelete()
         AdminCategoryEditContract.Inputs.OnCancelEditClick -> handleCancel()
-        AdminCategoryEditContract.Inputs.OnGoToParentClick -> handleGoToParent()
         AdminCategoryEditContract.Inputs.OnGoToUserCreatorClick -> handleGoToCreator()
-        is AdminCategoryEditContract.Inputs.OnParentCategoryClick -> handleOnClickParentPicker(input.categoryName)
-        AdminCategoryEditContract.Inputs.OnGoToCreateCategoryClick -> postEvent(AdminCategoryEditContract.Events.GoToCreateCategory)
+        AdminCategoryEditContract.Inputs.OnGoToCreateCategoryClick ->
+            postEvent(AdminCategoryEditContract.Events.GoToCreateCategory)
+
         AdminCategoryEditContract.Inputs.OnImproveDescriptionClick -> handleImproveDescription()
 
         is AdminCategoryEditContract.Inputs.SetLoading -> updateState { it.copy(isLoading = input.isLoading) }
         is AdminCategoryEditContract.Inputs.SetAllCategories -> updateState { it.copy(allCategories = input.categories) }
-        is AdminCategoryEditContract.Inputs.SetOriginalCategory ->
+        is AdminCategoryEditContract.Inputs.SetOriginal ->
             updateState { it.copy(original = input.category).wasEdited() }
 
-        is AdminCategoryEditContract.Inputs.SetCurrentCategory ->
+        is AdminCategoryEditContract.Inputs.SetCurrent ->
             updateState { it.copy(current = input.category).wasEdited() }
 
         is AdminCategoryEditContract.Inputs.SetId -> updateState { it.copy(current = it.current.copy(id = input.id)) }
-        is AdminCategoryEditContract.Inputs.SetName -> handleSetName(input.fullName)
+        is AdminCategoryEditContract.Inputs.SetName -> handleSetName(input.name)
         is AdminCategoryEditContract.Inputs.SetIsNameShake -> updateState { it.copy(shakeName = input.shake) }
 
         is AdminCategoryEditContract.Inputs.SetCreatedAt ->
@@ -67,19 +68,51 @@ internal class AdminUserPageInputHandler :
         is AdminCategoryEditContract.Inputs.SetUpdatedAt ->
             updateState { it.copy(current = it.current.copy(updatedAt = input.updatedAt)) }
 
-        is AdminCategoryEditContract.Inputs.SetDescription -> handleSetDescription(input.description)
         is AdminCategoryEditContract.Inputs.SetDisplay -> handleSetDisplay(input.display)
         is AdminCategoryEditContract.Inputs.SetIsDisplayShake -> updateState { it.copy(shakeDisplay = input.shake) }
-        is AdminCategoryEditContract.Inputs.SetParent -> handleSetParent(input.parent)
         is AdminCategoryEditContract.Inputs.SetHeight -> handleSetHeight(input.height)
         is AdminCategoryEditContract.Inputs.SetLength -> handleSetLength(input.length)
-        is AdminCategoryEditContract.Inputs.SetRequiresShipping -> handleSetRequiresShipping(input.requiresShipping)
+        is AdminCategoryEditContract.Inputs.SetRequiresShipping -> handleSetRequiresShipping(input.requires)
         is AdminCategoryEditContract.Inputs.SetWeight -> handleSetWeight(input.weight)
         is AdminCategoryEditContract.Inputs.SetWidth -> handleSetWidth(input.width)
         is AdminCategoryEditContract.Inputs.SetIsHeightShake -> updateState { it.copy(shakeHeight = input.shake) }
         is AdminCategoryEditContract.Inputs.SetIsLengthShake -> updateState { it.copy(shakeLength = input.shake) }
         is AdminCategoryEditContract.Inputs.SetIsWeightShake -> updateState { it.copy(shakeWeight = input.shake) }
         is AdminCategoryEditContract.Inputs.SetIsWidthShake -> updateState { it.copy(shakeWidth = input.shake) }
+        is AdminCategoryEditContract.Inputs.AddMedia -> handleAddMedia(input.mediaString)
+        is AdminCategoryEditContract.Inputs.SetImageDropError -> updateState { it.copy(imageDropError = input.error) }
+        is AdminCategoryEditContract.Inputs.UploadMedia -> handleUploadImage(input.mediaString)
+        is AdminCategoryEditContract.Inputs.SetImagesLoading -> updateState { it.copy(loading = input.isImagesLoading) }
+    }
+
+    private suspend fun InputScope.handleUploadImage(imageString: String) {
+        val current = getCurrentState().current
+        sideJob("handleSaveDetailsUploadImage") {
+            postInput(AdminCategoryEditContract.Inputs.SetImageDropError(error = null))
+            postInput(AdminCategoryEditContract.Inputs.SetImagesLoading(isImagesLoading = true))
+
+            categoryService.addCategoryImage(
+                categoryId = current.id,
+                blob = imageString,
+                type = MediaType.Image
+            ).fold(
+                { postEvent(AdminCategoryEditContract.Events.OnError(it.mapToUiMessage())) },
+                { data ->
+                    val updatedCategory = current.copy(
+                        mediaUrl = data.addMediaToCategory.mediaUrl,
+                    )
+                    postInput(AdminCategoryEditContract.Inputs.SetOriginal(updatedCategory))
+                    postInput(AdminCategoryEditContract.Inputs.SetCurrent(updatedCategory))
+                },
+            )
+            postInput(AdminCategoryEditContract.Inputs.SetImagesLoading(isImagesLoading = false))
+        }
+    }
+
+    private suspend fun InputScope.handleAddMedia(mediaString: String) {
+        sideJob("handleAddMedia") {
+            postInput(AdminCategoryEditContract.Inputs.UploadMedia(mediaString))
+        }
     }
 
     private suspend fun InputScope.handleShakeErrors(
@@ -116,8 +149,6 @@ internal class AdminUserPageInputHandler :
             categoryService.update(
                 id = current.id,
                 name = if (current.name != original.name) current.name else null,
-                description = if (current.description != original.description) current.description else null,
-                parentId = current.parent?.id,
                 display = if (current.display != original.display) current.display else null,
                 weight = if (current.shippingPreset?.weight != original.shippingPreset?.weight) current.shippingPreset?.weight else null,
                 length = if (current.shippingPreset?.length != original.shippingPreset?.length) current.shippingPreset?.length else null,
@@ -128,15 +159,9 @@ internal class AdminUserPageInputHandler :
                 { postEvent(AdminCategoryEditContract.Events.OnError(it.mapToUiMessage())) },
                 { data ->
                     postInput(
-                        AdminCategoryEditContract.Inputs.SetOriginalCategory(
+                        AdminCategoryEditContract.Inputs.SetOriginal(
                             category = original.copy(
                                 name = data.updateCategory.name,
-                                description = data.updateCategory.description,
-                                parent = GetCategoryByIdQuery.Parent(
-                                    id = data.updateCategory.parent?.id ?: "",
-                                    name = original.parent?.name ?: "",
-                                    imageUrl = original.parent?.imageUrl ?: "",
-                                ),
                                 display = data.updateCategory.display,
                                 updatedAt = data.updateCategory.updatedAt,
                                 shippingPreset = GetCategoryByIdQuery.ShippingPreset(
@@ -232,32 +257,9 @@ internal class AdminUserPageInputHandler :
         }
     }
 
-    private suspend fun InputScope.handleOnClickParentPicker(categoryName: String) {
-        getCurrentState().allCategories
-            .firstOrNull { it.name == categoryName }
-            ?.let { chosenCategory ->
-                val currentParent = getCurrentState().current.parent
-                if (currentParent == null || currentParent.id != chosenCategory.id) {
-                    val newParent = GetCategoryByIdQuery.Parent(
-                        id = chosenCategory.id,
-                        name = chosenCategory.name,
-                        imageUrl = chosenCategory.imageUrl ?: "",
-                    )
-                    postInput(AdminCategoryEditContract.Inputs.SetParent(newParent))
-                } else {
-                    postInput(AdminCategoryEditContract.Inputs.SetParent(null))
-                }
-            } ?: noOp()
-    }
-
     private suspend fun InputScope.handleGoToCreator() {
         val state = getCurrentState()
         postEvent(AdminCategoryEditContract.Events.GoToUser(state.current.creator.id))
-    }
-
-    private suspend fun InputScope.handleGoToParent() {
-        val state = getCurrentState()
-        state.current.parent?.let { postEvent(AdminCategoryEditContract.Events.GoToUser(it.id)) }
     }
 
     private suspend fun InputScope.handleGetAllCategories(currentCategoryId: String?) {
@@ -275,10 +277,6 @@ internal class AdminUserPageInputHandler :
                 },
             )
         }
-    }
-
-    private suspend fun InputScope.handleSetParent(parent: GetCategoryByIdQuery.Parent?) {
-        updateState { it.copy(current = it.current.copy(parent = parent)).wasEdited() }
     }
 
     private suspend fun InputScope.handleDelete() {
@@ -312,10 +310,6 @@ internal class AdminUserPageInputHandler :
         }
     }
 
-    private suspend fun InputScope.handleSetDescription(description: String) {
-        updateState { it.copy(current = it.current.copy(description = description)).wasEdited() }
-    }
-
     private suspend fun InputScope.handleOnSaveEditClick() {
         val state = getCurrentState()
 
@@ -345,12 +339,6 @@ internal class AdminUserPageInputHandler :
                     postInput(AdminCategoryEditContract.Inputs.SetName(state.current.name))
                     add(it)
                 }
-                state.current.description?.let { desc ->
-                    inputValidator.validateText(desc, 1)?.let {
-                        postInput(AdminCategoryEditContract.Inputs.SetDescription(it))
-                        add(it)
-                    }
-                }
             }
             if (errors.isNotEmpty()) return
         }
@@ -370,8 +358,8 @@ internal class AdminUserPageInputHandler :
                         updatedAt = updatedAt,
                     )
                     postInput(AdminCategoryEditContract.Inputs.SetDisplay(category.display))
-                    postInput(AdminCategoryEditContract.Inputs.SetOriginalCategory(category))
-                    postInput(AdminCategoryEditContract.Inputs.SetCurrentCategory(category))
+                    postInput(AdminCategoryEditContract.Inputs.SetOriginal(category))
+                    postInput(AdminCategoryEditContract.Inputs.SetCurrent(category))
                 },
             )
         }
@@ -379,9 +367,7 @@ internal class AdminUserPageInputHandler :
 
     private fun AdminCategoryEditContract.State.wasEdited(): AdminCategoryEditContract.State = copy(
         wasEdited = current.name != original.name ||
-            current.description != original.description ||
             current.display != original.display ||
-            current.parent != original.parent ||
             current.shippingPreset?.weight != original.shippingPreset?.weight ||
             current.shippingPreset?.length != original.shippingPreset?.length ||
             current.shippingPreset?.width != original.shippingPreset?.width ||

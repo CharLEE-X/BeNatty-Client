@@ -1,0 +1,7 @@
+mutation DeleteGeneratedData($input: DeleteGenerateDataInput!) {
+  deleteGeneratedData(input: $input) {
+    deletedUsers
+    deletedProducts
+    deletedOrders
+  }
+}

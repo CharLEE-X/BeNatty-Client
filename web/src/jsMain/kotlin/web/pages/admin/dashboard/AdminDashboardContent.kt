@@ -10,27 +10,45 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
+import com.varabyte.kobweb.compose.foundation.layout.Row
+import com.varabyte.kobweb.compose.foundation.layout.Spacer
+import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.graphics.Colors
+import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
-import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.onClick
+import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
+import com.varabyte.kobweb.compose.ui.modifiers.width
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
 import component.localization.Strings.Categories
 import component.localization.Strings.Customers
 import component.localization.Strings.Orders
 import component.localization.Strings.Products
-import component.localization.Strings.Stats
 import component.localization.Strings.Tags
 import component.localization.getString
+import feature.admin.dashboard.AdminDashboardContract
 import feature.admin.dashboard.AdminDashboardViewModel
 import feature.admin.dashboard.adminDashboardStrings
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.web.css.em
+import org.jetbrains.compose.web.css.px
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.OneLayout
-import web.components.widgets.CounterAnimation
-import web.util.glossy
+import web.components.widgets.AppFilledButton
+import web.components.widgets.AppOutlinedTextField
+import web.components.widgets.CardSection
+import web.components.widgets.CreateButton
+import web.components.widgets.SwitchSection
+import web.compose.material3.component.CircularProgress
+import web.compose.material3.component.TextFieldType
+import web.util.onEnterKeyDown
 
 @Composable
 fun AdminDashboardPage(
@@ -71,29 +89,134 @@ fun AdminDashboardPage(
             hasBackButton = false,
             actions = {},
         ) {
-            Column(
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .gap(1.em)
+            ) {
+                Stats(state)
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .gap(1.em)
+            ) {
+                DataGenerator(vm, state)
+                DataDeleter(vm, state)
+            }
+        }
+    }
+}
+
+@Composable
+private fun Stats(state: AdminDashboardContract.State) {
+    CardSection(title = "Stats") {
+        LoaderComponent(state.isStatsLoading) {
+            SpanText("${getString(Customers)}: ${state.stats.totalCustomers}")
+            SpanText("${getString(Products)}: ${state.stats.totalProducts}")
+            SpanText("${getString(Orders)}: ${state.stats.totalOrders}")
+            SpanText("${getString(Categories)}: ${state.stats.totalCategories}")
+            SpanText("${getString(Tags)}: ${state.stats.totalTags}")
+        }
+    }
+}
+
+@Composable
+private fun DataGenerator(vm: AdminDashboardViewModel, state: AdminDashboardContract.State) {
+    CardSection(title = "Generator") {
+        LoaderComponent(state.isGenerating) {
+            AppOutlinedTextField(
+                value = state.productsToGenerate.toString(),
+                onValueChange = { vm.trySend(AdminDashboardContract.Inputs.SetProductsToGenerate(it)) },
+                label = getString(Products),
+                type = TextFieldType.NUMBER,
+                modifier = Modifier.fillMaxWidth()
+            )
+            AppOutlinedTextField(
+                value = state.customersToGenerate.toString(),
+                onValueChange = { vm.trySend(AdminDashboardContract.Inputs.SetCustomersToGenerate(it)) },
+                label = getString(Customers),
+                type = TextFieldType.NUMBER,
+                modifier = Modifier.fillMaxWidth()
+            )
+            AppOutlinedTextField(
+                value = state.ordersToGenerate.toString(),
+                onValueChange = { vm.trySend(AdminDashboardContract.Inputs.SetOrdersToGenerate(it)) },
+                label = getString(Orders),
+                type = TextFieldType.NUMBER,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            CreateButton(
+                onClick = { vm.trySend(AdminDashboardContract.Inputs.OnGenerateClicked) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun DataDeleter(vm: AdminDashboardViewModel, state: AdminDashboardContract.State) {
+    CardSection(title = "Data deleter") {
+        LoaderComponent(state.isDeleting) {
+            SwitchSection(
+                title = getString(Products),
+                selected = state.deleteProducts,
+                onClick = { vm.trySend(AdminDashboardContract.Inputs.OnDeleteProductsClicked) },
+            )
+            SwitchSection(
+                title = getString(Customers),
+                selected = state.deleteCustomers,
+                onClick = { vm.trySend(AdminDashboardContract.Inputs.OnDeleteCustomersClicked) },
+            )
+            SwitchSection(
+                title = getString(Orders),
+                selected = state.deleteOrders,
+                onClick = { vm.trySend(AdminDashboardContract.Inputs.OnDeleteOrdersClicked) },
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Spacer()
+                AppFilledButton(
+                    onClick = { vm.trySend(AdminDashboardContract.Inputs.OnDeleteGeneratedClicked) },
+                    leadingIcon = { MdiDelete() },
+                    modifier = Modifier
+                        .width(150.px)
+                        .tabIndex(0)
+                        .onEnterKeyDown { vm.trySend(AdminDashboardContract.Inputs.OnDeleteGeneratedClicked) }
+                ) {
+                    SpanText(getString(Strings.Delete).uppercase())
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LoaderComponent(show: Boolean, content: @Composable ColumnScope.() -> Unit) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.gap(1.em)
+        ) {
+            content()
+        }
+        if (show) {
+            Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxSize()
-                    .gap(1.em)
+                    .onClick { it.preventDefault() }
             ) {
                 Box(
                     modifier = Modifier
-                        .glossy()
-                        .padding(2.em)
-                ) {
-                    Column(
-                        modifier = Modifier.gap(1.em)
-                    ) {
-                        SpanText(getString(Stats))
-                        SpanText("${getString(Customers)}: ${state.stats.totalCustomers}")
-                        SpanText("${getString(Products)}: ${state.stats.totalProducts}")
-                        SpanText("${getString(Orders)}: ${state.stats.totalOrders}")
-                        SpanText("${getString(Categories)}: ${state.stats.totalCategories}")
-                        SpanText("${getString(Tags)}: ${state.stats.totalTags}")
-
-                        CounterAnimation(count)
-                    }
-                }
+                        .fillMaxSize()
+                        .backgroundColor(Colors.LightGray.copy(alpha = 50))
+                )
+                CircularProgress(intermediate = true, fourColor = true)
             }
         }
     }

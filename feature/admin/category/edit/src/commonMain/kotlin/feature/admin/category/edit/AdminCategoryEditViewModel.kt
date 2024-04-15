@@ -1,4 +1,4 @@
-package feature.admin.category.page
+package feature.admin.category.edit
 
 import com.copperleaf.ballast.BallastViewModelConfiguration
 import com.copperleaf.ballast.build

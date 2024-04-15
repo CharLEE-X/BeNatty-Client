@@ -1,0 +1,14 @@
+query GetAllCatalogFilterOptions {
+  getAllCatalogFilterOptions {
+    categories {
+      id
+      name
+      mediaUrl
+    }
+    colors {
+      color
+      hex
+    }
+    sizes
+  }
+}

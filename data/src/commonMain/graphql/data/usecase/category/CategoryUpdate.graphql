@@ -1,20 +1,9 @@
 mutation UpdateCategory($input: CategoryUpdateInput!) {
   updateCategory(input: $input) {
-    createdAt
-    creator {
-      id
-      name
-    }
-    description
-    display
     id
     name
-    parent {
-      id
-      name
-      imageUrl
-    }
-    updatedAt
+    display
+    mediaUrl
     shippingPreset {
       isPhysicalProduct
       weight
@@ -23,5 +12,11 @@ mutation UpdateCategory($input: CategoryUpdateInput!) {
       height
       isPhysicalProduct
     }
+    creator {
+      id
+      name
+    }
+    updatedAt
+    createdAt
   }
 }

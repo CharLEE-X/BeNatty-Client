@@ -1,0 +1,9 @@
+query GetCurrentCatalogFilterOptions($input: CurrentCatalogFilterInput!) {
+  getCurrentCatalogFilterOptions(input: $input) {
+    total
+    categories
+    colors
+    sizes
+    highestPrice
+  }
+}

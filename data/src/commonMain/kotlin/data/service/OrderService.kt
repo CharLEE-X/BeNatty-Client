@@ -36,9 +36,6 @@ interface OrderService {
     suspend fun update(
         id: String,
         name: String?,
-        description: String?,
-        parentId: String?,
-        display: Boolean?,
     ): Either<RemoteError, UpdateCategoryMutation.Data>
 }
 
@@ -85,16 +82,10 @@ internal class OrderServiceImpl(private val apolloClient: ApolloClient) : OrderS
     override suspend fun update(
         id: String,
         name: String?,
-        description: String?,
-        parentId: String?,
-        display: Boolean?,
     ): Either<RemoteError, UpdateCategoryMutation.Data> {
         val input = CategoryUpdateInput(
             id = id,
             name = name.skipIfNull(),
-            description = description.skipIfNull(),
-            parentId = parentId.skipIfNull(),
-            display = display.skipIfNull(),
         )
         return apolloClient.mutation(UpdateCategoryMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)

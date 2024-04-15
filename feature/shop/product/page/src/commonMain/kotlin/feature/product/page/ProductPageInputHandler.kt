@@ -16,9 +16,25 @@ internal class ProductPageInputHandler :
 
     override suspend fun InputScope.handleInput(input: ProductPageContract.Inputs) = when (input) {
         is ProductPageContract.Inputs.Init -> handleInit(input.productId)
+        is ProductPageContract.Inputs.FetchProduct -> handleFetchProduct(input.productId)
+        is ProductPageContract.Inputs.SetLoading -> updateState { it.copy(isLoading = input.loading) }
+        is ProductPageContract.Inputs.SetProduct -> updateState { it.copy(product = input.product) }
     }
 
-    private suspend fun InputScope.handleInit(productId: String?) {
-        noOp()
+    private suspend fun InputScope.handleFetchProduct(productId: String) {
+        sideJob("handleFetchProduct") {
+            productService.getProductById(productId).fold(
+                { postEvent(ProductPageContract.Events.OnError(it.toString())) },
+                { postInput(ProductPageContract.Inputs.SetProduct(it.getProductById)) }
+            )
+        }
+    }
+
+    private suspend fun InputScope.handleInit(productId: String) {
+        sideJob("handleInit") {
+            postInput(ProductPageContract.Inputs.SetLoading(true))
+            postInput(ProductPageContract.Inputs.FetchProduct(productId))
+            postInput(ProductPageContract.Inputs.SetLoading(false))
+        }
     }
 }

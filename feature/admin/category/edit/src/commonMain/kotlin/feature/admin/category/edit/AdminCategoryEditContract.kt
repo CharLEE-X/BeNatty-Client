@@ -1,4 +1,4 @@
-package feature.admin.category.page
+package feature.admin.category.edit
 
 import data.GetAllCategoriesAsMinimalQuery
 import data.GetCategoryByIdQuery
@@ -6,6 +6,7 @@ import data.GetCategoryByIdQuery
 object AdminCategoryEditContract {
     data class State(
         val isLoading: Boolean = false,
+        val loading: Boolean = false,
         val wasEdited: Boolean = false,
 
         val allCategories: List<GetAllCategoriesAsMinimalQuery.GetAllCategoriesAsMinimal> = emptyList(),
@@ -22,13 +23,13 @@ object AdminCategoryEditContract {
         val shakeWidth: Boolean = false,
         val heightError: String? = null,
         val shakeHeight: Boolean = false,
+        val imageDropError: String? = null,
 
         val original: GetCategoryByIdQuery.GetCategoryById = GetCategoryByIdQuery.GetCategoryById(
             id = "",
             name = "",
-            description = "",
-            parent = null,
             display = false,
+            mediaUrl = "",
             shippingPreset = GetCategoryByIdQuery.ShippingPreset(
                 weight = "",
                 length = "",
@@ -50,6 +51,9 @@ object AdminCategoryEditContract {
     sealed interface Inputs {
         data class Init(val id: String) : Inputs
 
+        data class AddMedia(val mediaString: String) : Inputs
+        data class UploadMedia(val mediaString: String) : Inputs
+
         data class GetCategoryById(val id: String) : Inputs
         data class GetAllCategories(val currentCategoryId: String?) : Inputs
         data object SaveEdit : Inputs
@@ -65,23 +69,20 @@ object AdminCategoryEditContract {
         data object OnDeleteClick : Inputs
         data object OnSaveEditClick : Inputs
         data object OnCancelEditClick : Inputs
-        data object OnGoToParentClick : Inputs
         data object OnGoToUserCreatorClick : Inputs
-        data class OnParentCategoryClick(val categoryName: String) : Inputs
         data object OnGoToCreateCategoryClick : Inputs
         data object OnImproveDescriptionClick : Inputs
 
         data class SetLoading(val isLoading: Boolean) : Inputs
+        data class SetImagesLoading(val isImagesLoading: Boolean) : Inputs
         data class SetAllCategories(val categories: List<GetAllCategoriesAsMinimalQuery.GetAllCategoriesAsMinimal>) :
             Inputs
 
-        data class SetOriginalCategory(val category: GetCategoryByIdQuery.GetCategoryById) : Inputs
-        data class SetCurrentCategory(val category: GetCategoryByIdQuery.GetCategoryById) : Inputs
+        data class SetOriginal(val category: GetCategoryByIdQuery.GetCategoryById) : Inputs
+        data class SetCurrent(val category: GetCategoryByIdQuery.GetCategoryById) : Inputs
         data class SetId(val id: String) : Inputs
-        data class SetName(val fullName: String) : Inputs
+        data class SetName(val name: String) : Inputs
         data class SetIsNameShake(val shake: Boolean) : Inputs
-        data class SetDescription(val description: String) : Inputs
-        data class SetParent(val parent: GetCategoryByIdQuery.Parent?) : Inputs
         data class SetDisplay(val display: Boolean) : Inputs
         data class SetIsDisplayShake(val shake: Boolean) : Inputs
         data class SetCreator(val creator: GetCategoryByIdQuery.Creator) : Inputs
@@ -95,7 +96,8 @@ object AdminCategoryEditContract {
         data class SetIsWidthShake(val shake: Boolean) : Inputs
         data class SetHeight(val height: String) : Inputs
         data class SetIsHeightShake(val shake: Boolean) : Inputs
-        data class SetRequiresShipping(val requiresShipping: Boolean) : Inputs
+        data class SetRequiresShipping(val requires: Boolean) : Inputs
+        data class SetImageDropError(val error: String?) : Inputs
     }
 
     sealed interface Events {

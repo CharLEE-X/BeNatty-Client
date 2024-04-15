@@ -40,7 +40,7 @@ class AdminDashboardViewModel(
     coroutineScope = scope,
 ) {
     init {
-        trySend(AdminDashboardContract.Inputs.GetStats)
+        trySend(AdminDashboardContract.Inputs.Init)
     }
 
     companion object {

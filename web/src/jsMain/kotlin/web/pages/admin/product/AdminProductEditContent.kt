@@ -154,7 +154,6 @@ fun AdminProductEditContent(
         isLoading = state.isLoading,
         showEditedButtons = state.wasEdited,
         isSaveEnabled = state.wasEdited,
-        unsavedChangesText = getString(Strings.UnsavedChanges),
         saveText = getString(Strings.Save),
         discardText = getString(Strings.Discard),
         onCancel = { if (state.wasEdited) vm.trySend(AdminProductEditContract.Inputs.OnDiscardClick) },
@@ -974,8 +973,6 @@ private fun Media(
                     } ?: vm.trySend(AdminProductEditContract.Inputs.SetImageDropError(error = "Not a PNG?"))
                 }
             },
-            onImageClick = {},
-            onDeleteClick = {},
             modifier = Modifier.size(200.px)
         )
     }

@@ -1,7 +1,7 @@
 mutation AddCategoryImage($input: AddMediaToCategoryInput!) {
   addMediaToCategory(input: $input) {
     id
-    imageUrl
+    mediaUrl
     name
   }
 }

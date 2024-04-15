@@ -7,6 +7,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiCreate
 import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
+import component.localization.getString
 import feature.admin.list.AdminListContract
 import feature.admin.list.AdminListViewModel
 import feature.admin.list.adminListStrings
@@ -56,7 +58,7 @@ fun AdminProductListPage(
                     leadingIcon = { MdiCreate() },
                     containerColor = MaterialTheme.colors.tertiary,
                 ) {
-                    SpanText(text = adminListStrings(state.dataType).create)
+                    SpanText(text = getString(Strings.Create))
                 }
             },
             content = {

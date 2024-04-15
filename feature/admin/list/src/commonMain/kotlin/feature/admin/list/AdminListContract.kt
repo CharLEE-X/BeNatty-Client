@@ -118,12 +118,12 @@ object AdminListContract {
     }
 
     enum class CategorySlot {
-        CreatedAt, Name, Description, Display, InProducts;
+        CreatedAt, Image, Name, Display, InProducts;
 
         fun asString() = when (this) {
             CreatedAt -> getString(Strings.CreatedAt)
+            Image -> getString(Strings.Image)
             Name -> getString(Strings.Name)
-            Description -> getString(Strings.Description)
             Display -> getString(Strings.Display)
             InProducts -> getString(Strings.InProducts)
         }
@@ -220,12 +220,4 @@ data class AdminListStrings(
     val slot3Text: String,
     val slot4Text: String,
     val slot5Text: String,
-    val press: String = getString(Strings.Press),
-    val create: String = getString(Strings.Create),
-    val toStart: String = getString(Strings.ToStart),
-    val previous: String = getString(Strings.Previous),
-    val next: String = getString(Strings.Next),
-    val search: String = getString(Strings.Search),
-    val show: String = getString(Strings.Show),
-    val filter: String = getString(Strings.Filter),
 )

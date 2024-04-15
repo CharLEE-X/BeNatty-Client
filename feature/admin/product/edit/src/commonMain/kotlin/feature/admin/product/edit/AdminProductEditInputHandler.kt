@@ -59,6 +59,32 @@ internal class AdminProductEditInputHandler :
 
         AdminProductEditContract.Inputs.OnCreateVariantClick -> updateState { it.copy(showAddAnotherOption = true) }
 
+        is AdminProductEditContract.Inputs.OnOptionNameChanged ->
+            handleOnOptionNameChanged(input.optionIndex, input.name)
+
+        is AdminProductEditContract.Inputs.OnOptionAttrValueChanged ->
+            handleOnOptionAttrValueChanged(input.optionIndex, input.attrIndex, input.value)
+
+        is AdminProductEditContract.Inputs.OnOptionDoneClicked -> handleOnOptionDoneClicked(input.optionIndex)
+        is AdminProductEditContract.Inputs.OnEditOptionClicked -> handleOnEditOptionClicked(input.optionIndex)
+        is AdminProductEditContract.Inputs.OnDeleteOptionClicked -> handleOnDeleteOptionClicked(input.optionIndex)
+        is AdminProductEditContract.Inputs.OnDeleteOptionAttrClicked ->
+            handleOnDeleteOptionAttrClicked(input.optionIndex, input.attrIndex)
+
+        is AdminProductEditContract.Inputs.OnVariantPriceChanged ->
+            handleOnVariantPriceChanged(input.variantIndex, input.price)
+
+        is AdminProductEditContract.Inputs.OnVariantQuantityChanged ->
+            handleOnVariantQuantityChanged(input.variantIndex, input.quantity)
+
+        is AdminProductEditContract.Inputs.OnDeleteVariantClicked -> handleOnDeleteVariantClicked(input.variantIndex)
+
+        is AdminProductEditContract.Inputs.OnUndoDeleteVariantClicked ->
+            handleOnUndoDeleteVariantClicked(input.deletedVariantIndex)
+
+        is AdminProductEditContract.Inputs.OnLocalVariantsChanged ->
+            handleOnLocalVariantsChanged(input.localVariants)
+
         is AdminProductEditContract.Inputs.SetAllCategories -> updateState { it.copy(allCategories = input.categories) }
         is AdminProductEditContract.Inputs.SetAllTags -> updateState { it.copy(allTags = input.tags) }
         is AdminProductEditContract.Inputs.SetLoading -> updateState { it.copy(isLoading = input.isLoading) }
@@ -118,10 +144,10 @@ internal class AdminProductEditInputHandler :
         // Variants
         AdminProductEditContract.Inputs.OnAddOptionsClick -> handleOnAddOptionsClick()
         AdminProductEditContract.Inputs.OnAddAnotherOptionClick -> handleOnAddAnotherOptionClick()
+        is AdminProductEditContract.Inputs.OnLocalOptionsChanged -> handleOnLocalOptionsChanged(input)
 
         is AdminProductEditContract.Inputs.SetShowAddOptions -> updateState { it.copy(showAddOptions = input.show) }
         is AdminProductEditContract.Inputs.SetShowAddAnotherOption -> updateState { it.copy(showAddAnotherOption = input.show) }
-        is AdminProductEditContract.Inputs.OnLocalOptionsChanged -> handleOnLocalOptionsChanged(input)
         is AdminProductEditContract.Inputs.SetLocalOptions -> updateState {
             it.copy(
                 showAddOptions = input.options.isEmpty(),
@@ -131,32 +157,6 @@ internal class AdminProductEditInputHandler :
                     .none { variant -> variant.isEditing },
             )
         }
-
-        is AdminProductEditContract.Inputs.OnOptionNameChanged ->
-            handleOnOptionNameChanged(input.optionIndex, input.name)
-
-        is AdminProductEditContract.Inputs.OnOptionAttrValueChanged ->
-            handleOnOptionAttrValueChanged(input.optionIndex, input.attrIndex, input.value)
-
-        is AdminProductEditContract.Inputs.OnOptionDoneClicked -> handleOnOptionDoneClicked(input.optionIndex)
-        is AdminProductEditContract.Inputs.OnEditOptionClicked -> handleOnEditOptionClicked(input.optionIndex)
-        is AdminProductEditContract.Inputs.OnDeleteOptionClicked -> handleOnDeleteOptionClicked(input.optionIndex)
-        is AdminProductEditContract.Inputs.OnDeleteOptionAttrClicked ->
-            handleOnDeleteOptionAttrClicked(input.optionIndex, input.attrIndex)
-
-        is AdminProductEditContract.Inputs.OnVariantPriceChanged ->
-            handleOnVariantPriceChanged(input.variantIndex, input.price)
-
-        is AdminProductEditContract.Inputs.OnVariantQuantityChanged ->
-            handleOnVariantQuantityChanged(input.variantIndex, input.quantity)
-
-        is AdminProductEditContract.Inputs.OnDeleteVariantClicked -> handleOnDeleteVariantClicked(input.variantIndex)
-
-        is AdminProductEditContract.Inputs.OnUndoDeleteVariantClicked ->
-            handleOnUndoDeleteVariantClicked(input.deletedVariantIndex)
-
-        is AdminProductEditContract.Inputs.OnLocalVariantsChanged ->
-            handleOnLocalVariantsChanged(input.localVariants)
 
         is AdminProductEditContract.Inputs.SetLocalVariants ->
             updateState { it.copy(localVariants = input.localVariants) }
@@ -694,7 +694,7 @@ internal class AdminProductEditInputHandler :
 
     private suspend fun InputScope.handleGetProductById(id: String) {
         sideJob("handleGetProduct") {
-            productService.getById(id).fold(
+            productService.getProductById(id).fold(
                 { postEvent(AdminProductEditContract.Events.OnError(it.mapToUiMessage())) },
                 {
                     println("getProductById: $it")

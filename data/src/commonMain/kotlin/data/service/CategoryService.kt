@@ -41,8 +41,6 @@ interface CategoryService {
     suspend fun update(
         id: String,
         name: String?,
-        description: String?,
-        parentId: String?,
         display: Boolean?,
         weight: String?,
         length: String?,
@@ -106,8 +104,6 @@ internal class CategoryServiceImpl(private val apolloClient: ApolloClient) : Cat
     override suspend fun update(
         id: String,
         name: String?,
-        description: String?,
-        parentId: String?,
         display: Boolean?,
         weight: String?,
         length: String?,
@@ -132,8 +128,6 @@ internal class CategoryServiceImpl(private val apolloClient: ApolloClient) : Cat
         val input = CategoryUpdateInput(
             id = id,
             name = name.skipIfNull(),
-            description = description.skipIfNull(),
-            parentId = parentId.skipIfNull(),
             display = display.skipIfNull(),
             shippingPreset = shippingPreset,
         )

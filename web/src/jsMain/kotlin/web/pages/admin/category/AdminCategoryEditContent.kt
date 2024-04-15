@@ -7,16 +7,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.Resize
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
-import com.varabyte.kobweb.compose.ui.modifiers.resize
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
-import feature.admin.category.page.AdminCategoryEditContract
-import feature.admin.category.page.AdminCategoryEditViewModel
+import feature.admin.category.edit.AdminCategoryEditContract
+import feature.admin.category.edit.AdminCategoryEditViewModel
+import kotlinx.browser.document
+import kotlinx.coroutines.launch
+import kotlinx.dom.clear
+import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.events.Event
+import org.w3c.files.get
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.layouts.AdminLayout
@@ -27,11 +32,12 @@ import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.AppTooltip
 import web.components.widgets.CardSection
 import web.components.widgets.CreatorSection
-import web.components.widgets.FilterChipSection
 import web.components.widgets.HasChangesWidget
+import web.components.widgets.MediaSlot
 import web.components.widgets.SwitchSection
 import web.components.widgets.TakeActionDialog
 import web.compose.material3.component.TextFieldType
+import web.util.convertImageToBase64
 
 @Composable
 fun AdminCategoryEditContent(
@@ -65,7 +71,6 @@ fun AdminCategoryEditContent(
         isLoading = state.isLoading,
         showEditedButtons = state.wasEdited,
         isSaveEnabled = state.wasEdited,
-        unsavedChangesText = getString(Strings.UnsavedChanges),
         onCancel = { vm.trySend(AdminCategoryEditContract.Inputs.OnCancelEditClick) },
         onSave = { vm.trySend(AdminCategoryEditContract.Inputs.OnSaveEditClick) },
         adminRoutes = adminRoutes,
@@ -114,11 +119,11 @@ fun AdminCategoryEditContent(
                 CardSection(title = null) {
                     Status(vm, state)
                 }
-                CardSection(title = getString(Strings.Insights)) {
-                    SpanText(text = getString(Strings.NoInsights))
-                }
-                CardSection(title = getString(Strings.CategoryOrganization)) {
-                    ParentCategory(vm, state)
+                CardSection(title = getString(Strings.Media)) {
+                    Media(
+                        vm = vm,
+                        state = state,
+                    )
                 }
                 CardSection(title = getString(Strings.Info)) {
                     Creator(vm, state)
@@ -128,6 +133,56 @@ fun AdminCategoryEditContent(
             }
         )
     }
+}
+
+@Composable
+private fun Media(
+    vm: AdminCategoryEditViewModel,
+    state: AdminCategoryEditContract.State,
+) {
+    val scope = rememberCoroutineScope()
+    MediaSlot(
+        url = state.current.mediaUrl,
+        alt = null,
+        isImagesLoading = state.loading,
+        errorText = state.imageDropError,
+        isImageClickable = false,
+        hasDeleteButton = false,
+        hasEditButton = true,
+        onFileDropped = { file ->
+            scope.launch {
+                convertImageToBase64(file)?.let { imageString ->
+                    vm.trySend(AdminCategoryEditContract.Inputs.AddMedia(imageString))
+                } ?: vm.trySend(AdminCategoryEditContract.Inputs.SetImageDropError(error = "Not a PNG?"))
+            }
+        },
+        onEditClick = {
+            val input = document.createElement("input") as HTMLInputElement
+            input.type = "file"
+            input.accept = "image/*"
+            input.style.display = "none"
+            input.addEventListener("change", { event: Event ->
+                val files = (event.target as HTMLInputElement).files
+                if (files != null && files.length > 0) {
+                    val file = files[0]
+                    scope.launch {
+                        file?.let { file ->
+                            convertImageToBase64(file)?.let { imageString ->
+                                vm.trySend(AdminCategoryEditContract.Inputs.AddMedia(imageString))
+                            } ?: vm.trySend(AdminCategoryEditContract.Inputs.SetImageDropError(error = "Not a PNG?"))
+                        }
+                    }
+                }
+                input.clear()
+            })
+            document.body?.appendChild(input)
+            input.click()
+            document.body?.removeChild(input)
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1f)
+    )
 }
 
 @Composable
@@ -141,23 +196,6 @@ private fun Name(vm: AdminCategoryEditViewModel, state: AdminCategoryEditContrac
         shake = state.shakeName,
         required = true,
         modifier = Modifier.fillMaxWidth()
-    )
-}
-
-@Composable
-fun Description(vm: AdminCategoryEditViewModel, state: AdminCategoryEditContract.State) {
-    AppOutlinedTextField(
-        value = state.current.description ?: "",
-        onValueChange = { vm.trySend(AdminCategoryEditContract.Inputs.SetDescription(it)) },
-        label = getString(Strings.Description),
-        errorText = null,
-        leadingIcon = null,
-        shake = false,
-        type = TextFieldType.TEXTAREA,
-        rows = 3,
-        modifier = Modifier
-            .fillMaxWidth()
-            .resize(Resize.Vertical)
     )
 }
 
@@ -260,21 +298,5 @@ private fun ShippingPreset(vm: AdminCategoryEditViewModel, state: AdminCategoryE
         type = TextFieldType.NUMBER,
         suffixText = getString(Strings.Cm),
         modifier = Modifier.fillMaxWidth(),
-    )
-}
-
-@Composable
-private fun ParentCategory(
-    vm: AdminCategoryEditViewModel,
-    state: AdminCategoryEditContract.State,
-) {
-    SpanText(text = getString(Strings.ParentCategory))
-    FilterChipSection(
-        chips = state.allCategories.map { it.name },
-        selectedChips = state.current.parent?.let { listOf(it.name) } ?: emptyList(),
-        onChipClick = { vm.trySend(AdminCategoryEditContract.Inputs.OnParentCategoryClick(it)) },
-        onCreateClick = { vm.trySend(AdminCategoryEditContract.Inputs.OnGoToCreateCategoryClick) },
-        noChipsText = getString(Strings.NoCategories),
-        createText = getString(Strings.CreateCategory),
     )
 }

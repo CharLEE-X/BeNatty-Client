@@ -12,7 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 class ProductPageViewModel(
-    productId: String?,
+    productId: String,
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
 ) : BasicViewModel<

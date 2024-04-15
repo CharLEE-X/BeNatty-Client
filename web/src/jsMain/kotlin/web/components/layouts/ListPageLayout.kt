@@ -8,7 +8,6 @@ import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.ObjectFit
-import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -34,11 +33,11 @@ import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
-import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.rotateZ
 import com.varabyte.kobweb.compose.ui.modifiers.scale
 import com.varabyte.kobweb.compose.ui.modifiers.size
+import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.compose.ui.thenIf
@@ -48,12 +47,13 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiBrokenImage
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibility
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibilityOff
 import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
+import component.localization.getString
 import data.type.SortDirection
 import feature.admin.list.AdminListContract
 import feature.admin.list.AdminListViewModel
 import feature.admin.list.ListItem
 import feature.admin.list.PageInfo
-import feature.admin.list.adminListStrings
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.deg
 import org.jetbrains.compose.web.css.em
@@ -61,20 +61,19 @@ import org.jetbrains.compose.web.css.fr
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import theme.MaterialTheme
+import web.components.widgets.AppFilledButton
 import web.components.widgets.AppOutlinedSegmentedButtonSet
 import web.components.widgets.AppSegmentedButton
-import web.components.widgets.NoItemsListAction
 import web.compose.material3.component.CircularProgress
 import web.compose.material3.component.Divider
 import web.util.glossy
+import web.util.onEnterKeyDown
 
 @Composable
 fun ListPageLayout(
     state: AdminListContract.State,
     vm: AdminListViewModel,
 ) {
-    val strings = adminListStrings(state.dataType)
-
     with(state) {
         Column(
             modifier = Modifier
@@ -109,8 +108,8 @@ fun ListPageLayout(
                     modifier = Modifier.margin(topBottom = 2.em),
                     info = info,
                     pagesNumbers = pagesNumbers,
-                    prevText = strings.previous,
-                    nextText = strings.next,
+                    prevText = getString(Strings.Previous),
+                    nextText = getString(Strings.Next),
                     showPrevious = showPrevious,
                     showNext = showNext,
                     onPageClick = { vm.trySend(AdminListContract.Inputs.Click.Page(it)) },
@@ -124,9 +123,9 @@ fun ListPageLayout(
             ) {
                 if (showNoItems) {
                     NoItemsListAction(
-                        pressText = strings.press,
-                        createText = strings.create,
-                        toStartText = strings.toStart,
+                        pressText = getString(Strings.Press),
+                        createText = getString(Strings.Create),
+                        toStartText = getString(Strings.ToStart),
                         onClick = { vm.trySend(AdminListContract.Inputs.Click.Create) },
                         modifier = Modifier.margin(4.em)
                     )
@@ -139,6 +138,32 @@ fun ListPageLayout(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun NoItemsListAction(
+    modifier: Modifier,
+    pressText: String,
+    createText: String,
+    toStartText: String,
+    onClick: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier.gap(0.5.em)
+    ) {
+        SpanText(text = pressText)
+        AppFilledButton(
+            onClick = { onClick() },
+            containerColor = MaterialTheme.colors.tertiary,
+            modifier = Modifier
+                .tabIndex(0)
+                .onEnterKeyDown(onClick)
+        ) {
+            SpanText(text = createText.lowercase())
+        }
+        SpanText(text = toStartText.lowercase())
     }
 }
 
@@ -276,7 +301,8 @@ fun Item(
 
             AdminListContract.DataType.CATEGORY -> {
                 SpanText(item.slot1)
-                SpanText(item.slot2 ?: "N/A")
+                val url = item.slot2
+                if (url.isNullOrEmpty()) MdiBrokenImage(Modifier.size(30.px)) else MiniImage(url)
                 SpanText(item.slot3 ?: "N/A")
                 if (item.slot4.toBoolean()) MdiVisibility() else MdiVisibilityOff()
                 SpanText(item.slot5 ?: "N/A")
@@ -293,25 +319,20 @@ fun Item(
 
 @Composable
 private fun MiniImage(url: String) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    var hovered by remember { mutableStateOf(false) }
+
+    Image(
+        src = url,
         modifier = Modifier
-            .gap(0.25.em)
-            .overflow(Overflow.Hidden)
-    ) {
-        var hovered by remember { mutableStateOf(false) }
-        Image(
-            src = url,
-            modifier = Modifier
-                .size(40.px)
-                .borderRadius(5.px)
-                .objectFit(ObjectFit.Cover)
-                .onMouseEnter { hovered = true }
-                .onMouseLeave { hovered = false }
-                .scale(if (hovered) 4 else 1.0)
-                .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
-        )
-    }
+            .size(40.px)
+            .borderRadius(5.px)
+            .objectFit(ObjectFit.Cover)
+            .onMouseEnter { hovered = true }
+            .onMouseLeave { hovered = false }
+//            .overflow(Overflow.Hidden)
+            .scale(if (hovered) 4 else 1.0)
+            .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
+    )
 }
 
 @Composable

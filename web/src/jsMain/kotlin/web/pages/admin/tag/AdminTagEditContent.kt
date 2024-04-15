@@ -58,7 +58,6 @@ fun AdminTagEditContent(
         isLoading = state.isLoading,
         showEditedButtons = state.wasEdited,
         isSaveEnabled = state.wasEdited,
-        unsavedChangesText = getString(Strings.UnsavedChanges),
         onCancel = { vm.trySend(AdminTagEditContract.Inputs.OnCancelEditClick) },
         onSave = { vm.trySend(AdminTagEditContract.Inputs.OnSaveEditClick) },
         adminRoutes = adminRoutes,

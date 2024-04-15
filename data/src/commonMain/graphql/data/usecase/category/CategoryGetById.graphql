@@ -2,13 +2,8 @@ query GetCategoryById($getCategoryByIdId: String!) {
   getCategoryById(id: $getCategoryByIdId) {
     id
     name
-    description
     display
-    parent {
-      id
-      name
-      imageUrl
-    }
+    mediaUrl
     creator {
       id
       name

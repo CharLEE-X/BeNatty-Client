@@ -22,8 +22,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.objectFit
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
-import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
-import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOut
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
@@ -36,6 +34,7 @@ import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiAddAPhoto
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiCloudUpload
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiEdit
 import com.varabyte.kobweb.silk.components.text.SpanText
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.web.css.LineStyle
@@ -55,25 +54,27 @@ fun MediaSlot(
     errorText: String?,
     cornerRadius: CSSLengthOrPercentageNumericValue = 14.px,
     isImagesLoading: Boolean = false,
+    isImageClickable: Boolean = true,
     hasDeleteButton: Boolean = true,
+    hasEditButton: Boolean = false,
     onFileDropped: (File) -> Unit,
-    onImageClick: (url: String?) -> Unit,
-    onDeleteClick: () -> Unit,
+    onImageClick: (url: String?) -> Unit = {},
+    onDeleteClick: () -> Unit = {},
+    onEditClick: () -> Unit = {},
 ) {
     var imageHovered by remember { mutableStateOf(false) }
     var addIconHovered by remember { mutableStateOf(false) }
-    var deleteIconHovered by remember { mutableStateOf(false) }
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .borderRadius(cornerRadius)
             .overflow(Overflow.Hidden)
-            .onClick { onImageClick(url) }
-            .onMouseOver { imageHovered = true }
-            .onMouseOut { imageHovered = false }
+            .onClick { if (isImageClickable) onImageClick(url) }
+            .onMouseOver { if (isImageClickable) imageHovered = true }
+            .onMouseOut { if (isImageClickable) imageHovered = false }
             .backgroundColor(
-                if (imageHovered || addIconHovered) {
+                if ((imageHovered && isImageClickable) || addIconHovered) {
                     MaterialTheme.colors.surfaceContainer
                 } else MaterialTheme.colors.surface
             )
@@ -85,8 +86,11 @@ fun MediaSlot(
                     style = LineStyle.Dashed,
                 )
             }
-            .tabIndex(0)
-            .onEnterKeyDown { onImageClick(url) }
+            .thenIf(
+                isImageClickable, Modifier
+                    .tabIndex(0)
+                    .onEnterKeyDown { onImageClick(url) }
+            )
     ) {
         url?.let {
             Image(
@@ -94,7 +98,7 @@ fun MediaSlot(
                 alt = alt ?: "",
                 modifier = Modifier
                     .fillMaxSize()
-                    .scale(if (imageHovered) 1.05 else 1.0)
+                    .scale(if (imageHovered && isImageClickable) 1.05 else 1.0)
                     .objectFit(ObjectFit.Cover)
                     .transition(CSSTransition("scale", 0.5.s, TransitionTimingFunction.Ease))
             )
@@ -107,24 +111,20 @@ fun MediaSlot(
                     .transition(CSSTransition("backgroundColor", 0.3.s, TransitionTimingFunction.Ease))
             ) {}
             if (hasDeleteButton) {
-                AppFilledTonalIconButton(
-                    onClick = { onDeleteClick() },
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .margin(1.em)
-                        .onMouseOver { deleteIconHovered = true }
-                        .onMouseOut { deleteIconHovered = false }
-                        .opacity(if (imageHovered || deleteIconHovered) 1.0 else 0.0)
-                        .scale(if (deleteIconHovered) 1.05 else 1.0)
-                        .transition(
-                            CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
-                            CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
-                        )
-                        .tabIndex(0)
-                        .onEnterKeyDown(onDeleteClick)
-                ) {
-                    MdiDelete()
-                }
+                ActionIcon(
+                    onClick = onDeleteClick,
+                    isParentHovered = imageHovered,
+                    icon = { MdiDelete() },
+                    modifier = Modifier.align(Alignment.TopEnd)
+                )
+            }
+            if (hasEditButton) {
+                ActionIcon(
+                    onClick = onEditClick,
+                    isParentHovered = imageHovered,
+                    icon = { MdiEdit() },
+                    modifier = Modifier.align(Alignment.TopEnd)
+                )
             }
         } ?: if (isImagesLoading) {
             var opacity by remember { mutableStateOf(1.0) }
@@ -148,18 +148,11 @@ fun MediaSlot(
                     .onMouseOver { imageHovered = true }
                     .onMouseOut { imageHovered = false }
             )
-            MdiAddAPhoto(
-                modifier = Modifier
-                    .onMouseEnter { addIconHovered = true }
-                    .onMouseLeave { addIconHovered = false }
-                    .opacity(if (imageHovered || addIconHovered) 1.0 else 0.5)
-                    .scale(if (imageHovered || addIconHovered) 1.05 else 1.0)
-                    .transition(
-                        CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
-                        CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
-                    )
-                    .tabIndex(0)
-                    .onEnterKeyDown { onImageClick(url) }
+            ActionIcon(
+                onClick = { onImageClick(url) },
+                isParentHovered = imageHovered,
+                icon = { MdiAddAPhoto() },
+                onHovered = { addIconHovered = it },
             )
             errorText?.let { errorText ->
                 SpanText(
@@ -172,5 +165,34 @@ fun MediaSlot(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun ActionIcon(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    isParentHovered: Boolean,
+    icon: @Composable () -> Unit,
+    onHovered: (Boolean) -> Unit = {},
+) {
+    var hovered by remember { mutableStateOf(false) }
+
+    AppFilledTonalIconButton(
+        onClick = onClick,
+        modifier = modifier
+            .margin(1.em)
+            .onMouseOver { hovered = true; onHovered(true) }
+            .onMouseOut { hovered = false; onHovered(false) }
+            .opacity(if (isParentHovered || hovered) 1.0 else 0.5)
+            .scale(if (hovered) 1.05 else 1.0)
+            .transition(
+                CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
+            )
+            .tabIndex(0)
+            .onEnterKeyDown(onClick)
+    ) {
+        icon()
     }
 }

@@ -13,12 +13,14 @@ import data.AdminGetAllProductsPageQuery
 import data.AdminProductGetByIdQuery
 import data.AdminProductUpdateMutation
 import data.AdminProductUploadImageMutation
+import data.GetAllCatalogFilterOptionsQuery
 import data.GetCatalogPageQuery
-import data.GetProductVariantOptionsQuery
+import data.GetCurrentCatalogFilterOptionsQuery
 import data.type.BackorderStatus
 import data.type.BlobInput
 import data.type.CatalogPageInput
 import data.type.Color
+import data.type.CurrentCatalogFilterInput
 import data.type.InventoryUpdateInput
 import data.type.MediaType
 import data.type.PageInput
@@ -58,8 +60,16 @@ interface ProductService {
         sortBy: ProductsSort?,
     ): Either<RemoteError, GetCatalogPageQuery.Data>
 
-    suspend fun getById(id: String): Either<RemoteError, AdminProductGetByIdQuery.Data>
-    suspend fun getProductVariantOptions(): Either<RemoteError, GetProductVariantOptionsQuery.Data>
+    suspend fun getProductById(id: String): Either<RemoteError, AdminProductGetByIdQuery.Data>
+    suspend fun getCurrentCatalogFilterOptions(
+        categories: List<String>?,
+        colors: List<Color>?,
+        priceFrom: Double?,
+        priceTo: Double?,
+        sizes: List<Size>?,
+    ): Either<RemoteError, GetCurrentCatalogFilterOptionsQuery.Data>
+
+    suspend fun getAllCatalogFilterOptions(): Either<RemoteError, GetAllCatalogFilterOptionsQuery.Data>
     suspend fun delete(id: String): Either<RemoteError, AdminDeleteProductMutation.Data>
     suspend fun updateProduct(
         id: String,
@@ -105,10 +115,12 @@ internal class ProductServiceImpl(
     override suspend fun deleteImage(
         productId: String,
         imageId: String
-    ): Either<RemoteError, AdminDeleteProductMediaMutation.Data> {
-        val input = ProductMediaDeleteInput(mediaId = productId, productId = imageId)
-        return apolloClient.mutation(AdminDeleteProductMediaMutation(input)).handle()
-    }
+    ): Either<RemoteError, AdminDeleteProductMediaMutation.Data> =
+        apolloClient.mutation(
+            AdminDeleteProductMediaMutation(
+                ProductMediaDeleteInput(mediaId = productId, productId = imageId)
+            )
+        ).handle()
 
     override suspend fun uploadImage(
         productId: String,
@@ -210,12 +222,10 @@ internal class ProductServiceImpl(
             .handle()
     }
 
-    override suspend fun create(name: String): Either<RemoteError, AdminCreateProductMutation.Data> {
-        val input = ProductCreateInput(name)
-        return apolloClient.mutation(AdminCreateProductMutation(input))
+    override suspend fun create(name: String): Either<RemoteError, AdminCreateProductMutation.Data> =
+        apolloClient.mutation(AdminCreateProductMutation(ProductCreateInput(name)))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
-    }
 
     override suspend fun getAdminProductsAsPage(
         page: Int,
@@ -250,11 +260,13 @@ internal class ProductServiceImpl(
             page = page,
             size = Optional.absent(),
             query = query.skipIfNull(),
-            categories = categories.skipIfNull(),
-            colors = colors.skipIfNull(),
-            sizes = sizes.skipIfNull(),
-            priceFrom = priceFrom.skipIfNull(),
-            priceTo = priceTo.skipIfNull(),
+            filters = CurrentCatalogFilterInput(
+                categories = categories.skipIfNull(),
+                colors = colors.skipIfNull(),
+                sizes = sizes.skipIfNull(),
+                priceFrom = priceFrom.skipIfNull(),
+                priceTo = priceTo.skipIfNull(),
+            ),
             sortBy = sortBy.skipIfNull(),
         )
         return apolloClient.query(GetCatalogPageQuery(pageInput))
@@ -262,21 +274,37 @@ internal class ProductServiceImpl(
             .handle()
     }
 
-    override suspend fun getById(id: String): Either<RemoteError, AdminProductGetByIdQuery.Data> {
-        return apolloClient.query(AdminProductGetByIdQuery(id))
+    override suspend fun getProductById(id: String): Either<RemoteError, AdminProductGetByIdQuery.Data> =
+        apolloClient.query(AdminProductGetByIdQuery(id))
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .handle()
+
+    override suspend fun getCurrentCatalogFilterOptions(
+        categories: List<String>?,
+        colors: List<Color>?,
+        priceFrom: Double?,
+        priceTo: Double?,
+        sizes: List<Size>?,
+    ): Either<RemoteError, GetCurrentCatalogFilterOptionsQuery.Data> {
+        val input = CurrentCatalogFilterInput(
+            categories = categories.skipIfNull(),
+            colors = colors.skipIfNull(),
+            priceFrom = priceFrom.skipIfNull(),
+            priceTo = priceTo.skipIfNull(),
+            sizes = sizes.skipIfNull(),
+        )
+        return apolloClient.query(GetCurrentCatalogFilterOptionsQuery(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }
 
-    override suspend fun getProductVariantOptions(): Either<RemoteError, GetProductVariantOptionsQuery.Data> {
-        return apolloClient.query(GetProductVariantOptionsQuery())
+    override suspend fun getAllCatalogFilterOptions(): Either<RemoteError, GetAllCatalogFilterOptionsQuery.Data> =
+        apolloClient.query(GetAllCatalogFilterOptionsQuery())
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
-    }
 
-    override suspend fun delete(id: String): Either<RemoteError, AdminDeleteProductMutation.Data> {
-        return apolloClient.mutation(AdminDeleteProductMutation(id))
+    override suspend fun delete(id: String): Either<RemoteError, AdminDeleteProductMutation.Data> =
+        apolloClient.mutation(AdminDeleteProductMutation(id))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
-    }
 }

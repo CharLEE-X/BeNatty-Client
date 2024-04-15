@@ -3,8 +3,8 @@ query GetCategoriesAsPage($pageInput: PageInput!) {
     categories {
       id
       createdAt
-      description
       display
+      mediaUrl
       name
       usedInProducts
     }

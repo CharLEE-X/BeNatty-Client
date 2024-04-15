@@ -67,7 +67,6 @@ fun AdminCustomerEditContent(
         isLoading = state.isLoading,
         showEditedButtons = state.wasEdited,
         isSaveEnabled = state.wasEdited,
-        unsavedChangesText = getString(Strings.UnsavedChanges),
         onCancel = { vm.trySend(AdminCustomerEditContract.Inputs.OnDiscardClick) },
         onSave = { vm.trySend(AdminCustomerEditContract.Inputs.OnSaveClick) },
         adminRoutes = adminRoutes,

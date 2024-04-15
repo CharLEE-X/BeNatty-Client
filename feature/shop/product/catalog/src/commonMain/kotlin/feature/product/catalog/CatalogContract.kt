@@ -1,19 +1,13 @@
 package feature.product.catalog
 
+import data.GetAllCatalogFilterOptionsQuery
 import data.GetCatalogConfigQuery
 import data.GetCatalogPageQuery
-import data.GetProductVariantOptionsQuery.GetProductVariantOptions
+import data.GetCurrentCatalogFilterOptionsQuery
 import data.type.Color
 import data.type.ProductsSort
 import data.type.Size
 import kotlinx.serialization.Serializable
-
-private val defaultPageInfo = GetCatalogPageQuery.Info(
-    count = 0,
-    pages = 0,
-    prev = null,
-    next = null,
-)
 
 object CatalogContract {
     data class State(
@@ -29,16 +23,29 @@ object CatalogContract {
         val catalogConfig: GetCatalogConfigQuery.GetCatalogConfig? = null,
 
         val products: List<GetCatalogPageQuery.Product> = emptyList(),
-        val pageInfo: GetCatalogPageQuery.Info = defaultPageInfo,
-
-        val variantOptions: GetProductVariantOptions = GetProductVariantOptions(
-            categories = emptyList(),
-            colors = emptyList(),
-            sizes = emptyList(),
-            highestPrice = null,
+        val pageInfo: GetCatalogPageQuery.Info = GetCatalogPageQuery.Info(
+            count = 0, pages = 0, prev = null, next = null
         ),
 
         val sortBy: ProductsSort = ProductsSort.Featured,
+
+        // Filters
+
+        val allCatalogFilterOptions: GetAllCatalogFilterOptionsQuery.GetAllCatalogFilterOptions =
+            GetAllCatalogFilterOptionsQuery.GetAllCatalogFilterOptions(
+                categories = emptyList(),
+                colors = emptyList(),
+                sizes = emptyList(),
+            ),
+
+        val currentVariantOptions: GetCurrentCatalogFilterOptionsQuery.GetCurrentCatalogFilterOptions =
+            GetCurrentCatalogFilterOptionsQuery.GetCurrentCatalogFilterOptions(
+                total = 0,
+                categories = emptyList(),
+                colors = emptyList(),
+                sizes = emptyList(),
+                highestPrice = null,
+            ),
 
         val query: String = "",
 
@@ -58,8 +65,9 @@ object CatalogContract {
 
     sealed interface Inputs {
         data class Init(val catalogVariant: CatalogVariant) : Inputs
-        data object FetchCatalogueConfig : Inputs
-        data object FetchProductVariantOptions : Inputs
+        data object FetchCatalogConfig : Inputs
+        data object FetchAllCatalogFilterOptions : Inputs
+        data object FetchCurrentCatalogFilterOptions : Inputs
         data class FetchProducts(
             val page: Int,
             val query: String,
@@ -87,11 +95,17 @@ object CatalogContract {
         data class SetProducts(val products: List<GetCatalogPageQuery.Product>) : Inputs
         data class SetPageInfo(val pageInfo: GetCatalogPageQuery.Info) : Inputs
         data class SetCatalogueConfig(val catalogueConfig: GetCatalogConfigQuery.GetCatalogConfig) : Inputs
+        data class SetAllCatalogFilterOptions(val options: GetAllCatalogFilterOptionsQuery.GetAllCatalogFilterOptions) :
+            Inputs
+
         data class SetVariant(val catalogVariant: CatalogVariant) : Inputs
         data class SetShowBanner(val showBanner: Boolean) : Inputs
         data class SetShowSearch(val showSearch: Boolean) : Inputs
         data class SetBanner(val bannerTitle: String?, val bannerImageUrl: String?) : Inputs
-        data class SetVariantOptions(val variantOptions: GetProductVariantOptions) : Inputs
+        data class SetCurrentVariantOptions(
+            val variantOptions: GetCurrentCatalogFilterOptionsQuery.GetCurrentCatalogFilterOptions
+        ) : Inputs
+
         data class SetQuery(val query: String) : Inputs
         data class SetSelectedCategories(val categories: List<String>) : Inputs
         data class SetSelectedColors(val colors: List<Color>) : Inputs
