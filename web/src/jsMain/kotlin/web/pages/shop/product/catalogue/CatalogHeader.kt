@@ -98,7 +98,7 @@ fun CatalogueHeader(vm: CatalogViewModel, state: CatalogContract.State) {
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        if (!state.isLoading) {
+        if (!state.isCatalogConfigLoading) {
             SpanText(
                 text = "${state.currentVariantOptions.total} products",
                 modifier = Modifier
@@ -114,7 +114,7 @@ fun CatalogueHeader(vm: CatalogViewModel, state: CatalogContract.State) {
                 .position(Position.Relative)
                 .toAttrs()
         ) {
-            if (!state.isLoading) {
+            if (!state.isCatalogConfigLoading) {
                 FiltersButton(
                     sortByText = getString(Strings.SortBy),
                     currentFilter = state.sortBy.rawValue, // TODO: Localize

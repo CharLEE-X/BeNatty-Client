@@ -69,7 +69,8 @@ fun CatalogItem(
     price: Double?,
     media: List<GetCatalogPageQuery.Medium>,
     borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
-    imageHeight: CSSLengthOrPercentageNumericValue = 600.px
+    imageHeight: CSSLengthOrPercentageNumericValue? = 600.px,
+    miniaturesMinHeight: CSSLengthOrPercentageNumericValue = 100.px
 ) {
     var hovered by remember { mutableStateOf(false) }
     var currentMedia by remember { mutableStateOf(media.firstOrNull()) }
@@ -93,6 +94,7 @@ fun CatalogItem(
             media = media,
             onMiniatureHoveredChanged = { currentMedia = it ?: media.firstOrNull() },
             onClick = onClick,
+            minHeight = miniaturesMinHeight
         )
         Box(Modifier.size(0.5.em))
         ItemTitle(
@@ -112,7 +114,7 @@ private fun MainImage(
     hovered: Boolean,
     borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
     hoveredScale: Double = 1.02,
-    imageHeight: CSSLengthOrPercentageNumericValue
+    imageHeight: CSSLengthOrPercentageNumericValue?
 ) {
     var thisHovered by remember { mutableStateOf(false) }
     var focused by remember { mutableStateOf(false) }
@@ -136,7 +138,7 @@ private fun MainImage(
     ) {
         val imageModifier = Modifier
             .fillMaxWidth()
-            .height(imageHeight)
+            .thenIf(imageHeight != null) { Modifier.height(imageHeight!!) }
             .borderRadius(borderRadius)
             .objectFit(ObjectFit.Cover)
             .thenIf(hovered || focused) { Modifier.scale(hoveredScale) }
@@ -184,6 +186,7 @@ private fun Miniatures(
     media: List<GetCatalogPageQuery.Medium>,
     onMiniatureHoveredChanged: (GetCatalogPageQuery.Medium?) -> Unit,
     totalShow: Int = 4,
+    minHeight: CSSLengthOrPercentageNumericValue = 100.px,
     onClick: () -> Unit
 ) {
     val miniatures = media.take(totalShow)
@@ -193,7 +196,7 @@ private fun Miniatures(
     Row(
         modifier = gridModifier(
             columns = 5,
-            rowMinHeight = 100.px,
+            rowMinHeight = minHeight,
             gap = 6.px,
         )
     ) {

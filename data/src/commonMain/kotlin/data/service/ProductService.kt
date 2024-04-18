@@ -16,6 +16,7 @@ import data.AdminProductUploadImageMutation
 import data.GetAllCatalogFilterOptionsQuery
 import data.GetCatalogPageQuery
 import data.GetCurrentCatalogFilterOptionsQuery
+import data.GetTrendingNowProductsQuery
 import data.type.BackorderStatus
 import data.type.BlobInput
 import data.type.CatalogPageInput
@@ -107,6 +108,8 @@ interface ProductService {
         productId: String,
         imageId: String
     ): Either<RemoteError, AdminDeleteProductMediaMutation.Data>
+
+    suspend fun getTrendingNowProducts(): Either<RemoteError, GetTrendingNowProductsQuery.Data>
 }
 
 internal class ProductServiceImpl(
@@ -121,6 +124,12 @@ internal class ProductServiceImpl(
                 ProductMediaDeleteInput(mediaId = productId, productId = imageId)
             )
         ).handle()
+
+    override suspend fun getTrendingNowProducts(): Either<RemoteError, GetTrendingNowProductsQuery.Data> {
+        return apolloClient.query(GetTrendingNowProductsQuery())
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .handle()
+    }
 
     override suspend fun uploadImage(
         productId: String,

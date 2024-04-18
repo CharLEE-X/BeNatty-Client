@@ -4,6 +4,7 @@ import data.GetAllCatalogFilterOptionsQuery
 import data.GetCatalogConfigQuery
 import data.GetCatalogPageQuery
 import data.GetCurrentCatalogFilterOptionsQuery
+import data.GetTrendingNowProductsQuery
 import data.type.Color
 import data.type.ProductsSort
 import data.type.Size
@@ -13,19 +14,20 @@ object CatalogContract {
     data class State(
         internal val catalogVariant: CatalogVariant = CatalogVariant.Catalog,
 
-        val isLoading: Boolean = true,
+        val isCatalogConfigLoading: Boolean = true,
+
         val pageSize: Int = 10,
-        val showBanner: Boolean = catalogVariant !is CatalogVariant.Search,
         val showSearch: Boolean = catalogVariant is CatalogVariant.Search,
+        val showBanner: Boolean = catalogVariant !is CatalogVariant.Search,
         val bannerTitle: String? = null,
         val bannerImageUrl: String? = null,
 
         val catalogConfig: GetCatalogConfigQuery.GetCatalogConfig? = null,
-
         val products: List<GetCatalogPageQuery.Product> = emptyList(),
         val pageInfo: GetCatalogPageQuery.Info = GetCatalogPageQuery.Info(
             count = 0, pages = 0, prev = null, next = null
         ),
+        val trendingNowProducts: List<GetTrendingNowProductsQuery.Product> = emptyList(),
 
         val sortBy: ProductsSort = ProductsSort.Featured,
 
@@ -68,6 +70,7 @@ object CatalogContract {
         data object FetchCatalogConfig : Inputs
         data object FetchAllCatalogFilterOptions : Inputs
         data object FetchCurrentCatalogFilterOptions : Inputs
+        data object FetchTrendingProductsNow : Inputs
         data class FetchProducts(
             val page: Int,
             val query: String,
@@ -93,8 +96,9 @@ object CatalogContract {
         data class OnPriceFromChanged(val priceFrom: String) : Inputs
         data class OnPriceToChanged(val priceTo: String) : Inputs
 
-        data class SetIsLoading(val isLoading: Boolean) : Inputs
+        data class SetIsCatalogConfigLoading(val loading: Boolean) : Inputs
         data class SetProducts(val products: List<GetCatalogPageQuery.Product>) : Inputs
+        data class SetTrendingProducts(val products: List<GetTrendingNowProductsQuery.Product>) : Inputs
         data class SetPageInfo(val pageInfo: GetCatalogPageQuery.Info) : Inputs
         data class SetCatalogueConfig(val catalogueConfig: GetCatalogConfigQuery.GetCatalogConfig) : Inputs
         data class SetAllCatalogFilterOptions(val options: GetAllCatalogFilterOptionsQuery.GetAllCatalogFilterOptions) :

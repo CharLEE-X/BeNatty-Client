@@ -1,0 +1,15 @@
+query GetTrendingNowProducts {
+  getTrendingNowProducts {
+    products {
+      id
+      media {
+        keyName
+        url
+        alt
+        type
+      }
+      price
+      title
+    }
+  }
+}

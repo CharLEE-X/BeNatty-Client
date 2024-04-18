@@ -45,7 +45,7 @@ internal class CatalogInputHandler :
 
         is CatalogContract.Inputs.SetProducts -> updateState { it.copy(products = input.products) }
         is CatalogContract.Inputs.SetPageInfo -> updateState { it.copy(pageInfo = input.pageInfo) }
-        is CatalogContract.Inputs.SetIsLoading -> updateState { it.copy(isLoading = input.isLoading) }
+        is CatalogContract.Inputs.SetIsCatalogConfigLoading -> updateState { it.copy(isCatalogConfigLoading = input.loading) }
         is CatalogContract.Inputs.SetCatalogueConfig -> updateState { it.copy(catalogConfig = input.catalogueConfig) }
         is CatalogContract.Inputs.SetVariant -> updateState { it.copy(catalogVariant = input.catalogVariant) }
         is CatalogContract.Inputs.SetShowBanner -> updateState { it.copy(showBanner = input.showBanner) }
@@ -103,6 +103,18 @@ internal class CatalogInputHandler :
             updateState { it.copy(allCatalogFilterOptions = input.options) }
 
         CatalogContract.Inputs.LoadMoreProducts -> handleLoadMoreProducts()
+        CatalogContract.Inputs.FetchTrendingProductsNow -> handleFetchTrendingProductsNow()
+        is CatalogContract.Inputs.SetTrendingProducts ->
+            updateState { it.copy(trendingNowProducts = input.products) }
+    }
+
+    private suspend fun InputScope.handleFetchTrendingProductsNow() {
+        sideJob("fetchTrendingProductsNow") {
+            productService.getTrendingNowProducts().fold(
+                { postEvent(CatalogContract.Events.OnError(it.mapToUiMessage())) },
+                { postInput(CatalogContract.Inputs.SetTrendingProducts(it.getTrendingNowProducts.products)) },
+            )
+        }
     }
 
     private suspend fun InputScope.handleLoadMoreProducts() {
@@ -119,7 +131,11 @@ internal class CatalogInputHandler :
                     priceTo = state.priceTo,
                 )
             )
-        } ?: return noOp()
+        } ?: run {
+            if (state.trendingNowProducts.isEmpty()) {
+                postInput(CatalogContract.Inputs.FetchTrendingProductsNow)
+            } else noOp()
+        }
     }
 
     private suspend fun InputScope.handleFetchAllCatalogFilterOptions() {
@@ -373,6 +389,7 @@ internal class CatalogInputHandler :
     private suspend fun InputScope.handleFetchCatalogueConfig() {
         val state = getCurrentState()
         sideJob("fetchCatalogueConfig") {
+            postInput(CatalogContract.Inputs.SetIsCatalogConfigLoading(loading = true))
             configService.getCatalogConfig().fold(
                 { postEvent(CatalogContract.Events.OnError(it.mapToUiMessage())) },
                 {
@@ -403,6 +420,7 @@ internal class CatalogInputHandler :
                     postInput(CatalogContract.Inputs.SetCatalogueConfig(it.getCatalogConfig))
                 },
             )
+            postInput(CatalogContract.Inputs.SetIsCatalogConfigLoading(loading = false))
         }
     }
 
@@ -442,7 +460,6 @@ internal class CatalogInputHandler :
 
 private suspend fun InputScope.handleInit(catalogVariant: CatalogVariant) {
     sideJob("InitCatalogue") {
-        postInput(CatalogContract.Inputs.SetIsLoading(isLoading = true))
         postInput(CatalogContract.Inputs.SetVariant(catalogVariant))
         postInput(CatalogContract.Inputs.SetShowBanner(catalogVariant !is CatalogVariant.Search))
         postInput(CatalogContract.Inputs.SetShowSearch(catalogVariant is CatalogVariant.Search))
@@ -460,7 +477,7 @@ private suspend fun InputScope.handleInit(catalogVariant: CatalogVariant) {
                 priceTo = null,
             )
         )
-        postInput(CatalogContract.Inputs.SetIsLoading(isLoading = false))
+        postInput(CatalogContract.Inputs.SetIsCatalogConfigLoading(loading = false))
     }
 }
 

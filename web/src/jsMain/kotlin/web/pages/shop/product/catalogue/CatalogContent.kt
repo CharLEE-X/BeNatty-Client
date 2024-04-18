@@ -91,6 +91,7 @@ fun CatalogContent(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
+            TrendingNow(vm, state)
         }
     }
 }
@@ -109,10 +110,10 @@ private fun CatalogueContent(
         ) {
             val imageHeight: CSSLengthOrPercentageNumericValue = 600.px
 
-            if (!state.isLoading) {
+            if (!state.isCatalogConfigLoading) {
                 state.products.forEachIndexed { index, product ->
 
-                    if (index == state.products.size - 4 && state.pageInfo.next != null) {
+                    if (index == state.products.size - 4) {
                         ObserveViewportEntered(
                             sectionId = product.id,
                             distanceFromTop = 500.0,
