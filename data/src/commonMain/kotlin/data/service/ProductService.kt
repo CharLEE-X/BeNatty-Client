@@ -258,7 +258,7 @@ internal class ProductServiceImpl(
     ): Either<RemoteError, GetCatalogPageQuery.Data> {
         val pageInput = CatalogPageInput(
             page = page,
-            size = Optional.absent(),
+            size = Optional.present(16),
             query = query.skipIfNull(),
             filters = CurrentCatalogFilterInput(
                 categories = categories.skipIfNull(),

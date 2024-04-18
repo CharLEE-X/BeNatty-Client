@@ -78,6 +78,8 @@ object CatalogContract {
             val priceTo: String?,
         ) : Inputs
 
+        data object LoadMoreProducts : Inputs
+
         data class OnGoToProductClicked(val productId: String) : Inputs
         data class OnQueryChanged(val query: String) : Inputs
         data class OnCategoryClicked(val categoryId: String) : Inputs

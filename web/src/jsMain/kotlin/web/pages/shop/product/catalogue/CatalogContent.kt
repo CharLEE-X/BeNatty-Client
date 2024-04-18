@@ -13,13 +13,12 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
-import com.varabyte.kobweb.compose.ui.modifiers.flex
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.height
+import com.varabyte.kobweb.compose.ui.modifiers.id
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.padding
-import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.thenIf
@@ -30,20 +29,20 @@ import feature.product.catalog.CatalogVariant
 import feature.product.catalog.CatalogViewModel
 import feature.product.catalog.CatalogueRoutes
 import org.jetbrains.compose.web.css.DisplayStyle
-import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.ms
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
+import web.components.widgets.ObserveViewportEntered
 import web.components.widgets.Shimmer
 import web.components.widgets.ShimmerText
 import web.pages.shop.home.gridModifier
 import web.util.glossy
 
 @Composable
-fun CataloguePage(
+fun CatalogContent(
     mainRoutes: MainRoutes,
     catalogVariant: CatalogVariant,
 ) {
@@ -85,9 +84,6 @@ fun CataloguePage(
                     state = state,
                     modifier = Modifier
                         .maxWidth(20.percent)
-                        .fillMaxWidth()
-                        .position(Position.Relative)
-                        .flex("0 0 auto")
                 )
                 CatalogueContent(
                     vm = vm,
@@ -115,6 +111,15 @@ private fun CatalogueContent(
 
             if (!state.isLoading) {
                 state.products.forEachIndexed { index, product ->
+
+                    if (index == state.products.size - 4 && state.pageInfo.next != null) {
+                        ObserveViewportEntered(
+                            sectionId = product.id,
+                            distanceFromTop = 500.0,
+                            onViewportEntered = { vm.trySend(CatalogContract.Inputs.LoadMoreProducts) }
+                        )
+                    }
+
                     CatalogItem(
                         title = product.title,
                         price = product.price,
@@ -122,6 +127,7 @@ private fun CatalogueContent(
                         imageHeight = imageHeight,
                         onClick = { vm.trySend(CatalogContract.Inputs.OnGoToProductClicked(product.id)) },
                         modifier = Modifier
+                            .id(product.id)
                             .thenIf(index > 2) { Modifier.padding(top = 1.em) }
                     )
                 }

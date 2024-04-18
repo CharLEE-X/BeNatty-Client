@@ -2,6 +2,7 @@ package feature.product.catalog
 
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
+import com.copperleaf.ballast.postInput
 import core.mapToUiMessage
 import data.service.ConfigService
 import data.service.ProductService
@@ -54,6 +55,7 @@ internal class CatalogInputHandler :
 
         is CatalogContract.Inputs.SetCurrentVariantOptions ->
             updateState { it.copy(currentVariantOptions = input.variantOptions) }
+
         is CatalogContract.Inputs.SetQuery -> updateState { it.copy(query = input.query) }
         is CatalogContract.Inputs.SetSelectedCategories -> updateState {
             it.copy(
@@ -99,6 +101,25 @@ internal class CatalogInputHandler :
         is CatalogContract.Inputs.OnPriceToChanged -> handleOnPriceToChanged(input.priceTo)
         is CatalogContract.Inputs.SetAllCatalogFilterOptions ->
             updateState { it.copy(allCatalogFilterOptions = input.options) }
+
+        CatalogContract.Inputs.LoadMoreProducts -> handleLoadMoreProducts()
+    }
+
+    private suspend fun InputScope.handleLoadMoreProducts() {
+        val state = getCurrentState()
+        state.pageInfo.next?.let { next ->
+            postInput(
+                CatalogContract.Inputs.FetchProducts(
+                    page = next,
+                    query = state.query,
+                    categoryFilters = state.selectedCategoryIds,
+                    colorFilters = state.selectedColors,
+                    sizeFilters = state.selectedSizes,
+                    priceFrom = state.priceFrom,
+                    priceTo = state.priceTo,
+                )
+            )
+        } ?: return noOp()
     }
 
     private suspend fun InputScope.handleFetchAllCatalogFilterOptions() {
@@ -394,7 +415,7 @@ internal class CatalogInputHandler :
         priceFrom: String?,
         priceTo: String?,
     ) {
-        println("DEBUG fetching products for page $page with query $query and filters $categoryFilters, $colorFilters, $sizeFilters, $priceFrom, $priceTo")
+        println("fetchProducts fetching products for page $page with query $query and filters $categoryFilters, $colorFilters, $sizeFilters, $priceFrom, $priceTo")
         val state = getCurrentState()
         sideJob("fetchProducts") {
             productService.getCataloguePage(
@@ -409,8 +430,9 @@ internal class CatalogInputHandler :
             ).fold(
                 { postEvent(CatalogContract.Events.OnError(it.mapToUiMessage())) },
                 {
-                    println("DEBUG got ${it.getCatalogPage.products.size} products")
-                    postInput(CatalogContract.Inputs.SetProducts(it.getCatalogPage.products))
+                    val products = if (page == 0)
+                        it.getCatalogPage.products else state.products + it.getCatalogPage.products
+                    postInput(CatalogContract.Inputs.SetProducts(products))
                     postInput(CatalogContract.Inputs.SetPageInfo(it.getCatalogPage.info))
                 },
             )

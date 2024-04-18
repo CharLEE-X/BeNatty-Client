@@ -1,6 +1,7 @@
 package web.pages.shop.product.catalogue
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,22 +28,26 @@ import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.attrsModifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.backdropFilter
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
+import com.varabyte.kobweb.compose.ui.modifiers.bottom
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.flex
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.gridAutoRows
 import com.varabyte.kobweb.compose.ui.modifiers.gridTemplateColumns
 import com.varabyte.kobweb.compose.ui.modifiers.height
+import com.varabyte.kobweb.compose.ui.modifiers.maxHeight
 import com.varabyte.kobweb.compose.ui.modifiers.minHeight
 import com.varabyte.kobweb.compose.ui.modifiers.objectFit
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
@@ -51,10 +56,12 @@ import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
 import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.rotate
 import com.varabyte.kobweb.compose.ui.modifiers.scale
 import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.textDecorationLine
+import com.varabyte.kobweb.compose.ui.modifiers.top
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translateY
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
@@ -64,25 +71,30 @@ import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiBrokenImage
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
 import feature.product.catalog.CatalogContract
 import feature.product.catalog.CatalogViewModel
+import kotlinx.browser.window
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.LineStyle
+import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.deg
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.fr
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
+import org.w3c.dom.Element
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.ExpandableSection
+import web.components.widgets.themeScrollbarStyle
 import web.compose.material3.component.Divider
 import web.util.cornerRadius
 import web.util.onEnterKeyDown
@@ -93,9 +105,45 @@ fun CatalogueFilters(
     vm: CatalogViewModel,
     state: CatalogContract.State,
 ) {
+    var columnElement: Element? by remember { mutableStateOf(null) }
+    var windowHeight: Int by remember { mutableStateOf(window.innerHeight) }
+    var filtersHeight: Int by remember { mutableStateOf(0) }
+    var showScrollbar by remember { mutableStateOf(filtersHeight > windowHeight) }
+
+    LaunchedEffect(window.innerHeight, columnElement?.scrollHeight) {
+        windowHeight = window.innerHeight
+        columnElement?.scrollHeight?.let {
+            filtersHeight = it
+            showScrollbar = it > window.innerHeight
+        }
+    }
+
     Column(
-        modifier = modifier
-            .gap(2.em)
+        modifier = themeScrollbarStyle.toModifier().then(modifier)
+            .maxHeight(windowHeight.px)
+            .fillMaxWidth()
+            .position(Position.Sticky)
+            .top(0.px)
+            .bottom(0.px)
+            .overflow(Overflow.Auto)
+            .flex("0 0 auto")
+            .padding(
+                right = if (showScrollbar) 1.em else 0.em,
+                top = if (showScrollbar) 1.em else 0.em,
+                bottom = if (showScrollbar) 1.em else 0.em,
+            )
+            .attrsModifier {
+                ref {
+                    filtersHeight = it.scrollHeight
+                    columnElement = it
+                    onDispose { columnElement = null }
+                }
+            }
+            .gap(if (showScrollbar) 1.em else 1.5.em)
+            .transition(
+                CSSTransition("padding", 0.3.s, TransitionTimingFunction.Ease),
+                CSSTransition("gap", 0.3.s, TransitionTimingFunction.Ease)
+            )
     ) {
         Divider(modifier = Modifier.color(MaterialTheme.colors.outline))
         ExpandableSection(title = getString(Strings.ProductType), openInitially = true) {

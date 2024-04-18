@@ -66,7 +66,7 @@ import web.pages.shop.home.HomeContent
 import web.pages.shop.payment.PaymentPage
 import web.pages.shop.payment.cart.CartPage
 import web.pages.shop.payment.checkout.CheckoutPage
-import web.pages.shop.product.catalogue.CataloguePage
+import web.pages.shop.product.catalogue.CatalogContent
 import web.pages.shop.product.page.ProductPage
 import web.pages.shop.settings.SettingsPage
 
@@ -190,7 +190,7 @@ fun RouterContent(
                 Screen.Catalogue -> {
                     val variant: String by stringPath()
                     val catalogVariantClass = Json.decodeFromString<CatalogVariant>(variant)
-                    CataloguePage(
+                    CatalogContent(
                         mainRoutes = mainRoutes,
                         catalogVariant = catalogVariantClass
                     )
