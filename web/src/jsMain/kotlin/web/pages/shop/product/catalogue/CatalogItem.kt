@@ -11,6 +11,7 @@ import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
+import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.css.WhiteSpace
 import com.varabyte.kobweb.compose.css.functions.blur
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -44,6 +45,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translateY
+import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.compose.ui.modifiers.whiteSpace
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.compose.ui.thenIf
@@ -135,6 +137,7 @@ private fun MainImage(
             .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
             .tabIndex(0)
             .onEnterKeyDown(onClick)
+            .userSelect(UserSelect.None)
     ) {
         val imageModifier = Modifier
             .fillMaxWidth()
@@ -310,6 +313,7 @@ private fun MiniatureItem(
             .onFocusOut { onHovered(false) }
             .cursor(Cursor.Pointer)
             .borderRadius(12.px)
+            .userSelect(UserSelect.None)
             .transition(CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease))
     ) {
         Image(

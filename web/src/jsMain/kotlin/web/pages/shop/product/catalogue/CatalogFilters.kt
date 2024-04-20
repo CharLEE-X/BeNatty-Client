@@ -75,6 +75,7 @@ import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
+import data.type.Size
 import feature.product.catalog.CatalogContract
 import feature.product.catalog.CatalogViewModel
 import kotlinx.browser.window
@@ -569,52 +570,61 @@ private fun SizeFilters(vm: CatalogViewModel, state: CatalogContract.State) {
             .gap(0.5.em)
     ) {
         state.allCatalogFilterOptions.sizes.forEach { size ->
-            val enabled = size in state.currentVariantOptions.sizes
-
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .minHeight(50.px)
-                    .backgroundColor(
-                        if (size in state.selectedSizes)
-                            MaterialTheme.colors.onSurface else Colors.Transparent
-                    )
-                    .borderRadius(40.px)
-                    .border(
-                        width = 2.px,
-                        color = MaterialTheme.colors.outline,
-                        style = LineStyle.Solid
-                    )
-                    .padding(leftRight = 16.px, topBottom = 10.px)
-                    .onClick { vm.trySend(CatalogContract.Inputs.OnSizeClicked(size)) }
-                    .userSelect(UserSelect.None)
-                    .cursor(Cursor.Pointer)
-                    .tabIndex(0)
-                    .onEnterKeyDown { vm.trySend(CatalogContract.Inputs.OnSizeClicked(size)) }
-                    .transition(
-                        CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease),
-                        CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease)
-                    )
-            ) {
-                SpanText(
-                    text = size.name,
-                    modifier = Modifier
-                        .textDecorationLine(
-                            if (!enabled) TextDecorationLine.LineThrough else TextDecorationLine.None
-                        )
-                        .fontWeight(if (!enabled) FontWeight.Normal else FontWeight.SemiBold)
-                        .roleStyle(MaterialTheme.typography.bodyMedium)
-                        .color(
-                            if (size in state.selectedSizes)
-                                MaterialTheme.colors.surface else MaterialTheme.colors.onSurface
-                        )
-                        .transition(
-                            CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease),
-                            CSSTransition("font-weight", 0.3.s, TransitionTimingFunction.Ease),
-                        )
-                )
-            }
+            ProductSizeItem(
+                size = size,
+                selected = size in state.selectedSizes,
+                available = size in state.currentVariantOptions.sizes,
+                onClick = { vm.trySend(CatalogContract.Inputs.OnSizeClicked(size)) }
+            )
         }
+    }
+}
+
+@Composable
+fun ProductSizeItem(
+    size: Size,
+    selected: Boolean,
+    available: Boolean,
+    onClick: () -> Unit,
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .minHeight(50.px)
+            .backgroundColor(if (selected) MaterialTheme.colors.primary else Colors.Transparent)
+            .borderRadius(40.px)
+            .border(
+                width = 2.px,
+                color = when {
+                    selected && available -> Colors.Transparent
+                    selected && !available -> MaterialTheme.colors.error
+                    else -> MaterialTheme.colors.outline
+                },
+                style = LineStyle.Solid
+            )
+            .padding(leftRight = 16.px, topBottom = 10.px)
+            .onClick { if (available && !selected) onClick() }
+            .userSelect(UserSelect.None)
+            .cursor(if (available && !selected) Cursor.Pointer else Cursor.Auto)
+            .tabIndex(0)
+            .onEnterKeyDown { if (available && !selected) onClick() }
+            .transition(
+                CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease),
+                CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease),
+            )
+    ) {
+        SpanText(
+            text = size.name,
+            modifier = Modifier
+                .textDecorationLine(if (!available) TextDecorationLine.LineThrough else TextDecorationLine.None)
+                .fontWeight(if (!available) FontWeight.Normal else FontWeight.SemiBold)
+                .roleStyle(MaterialTheme.typography.bodyMedium)
+                .color(if (selected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface)
+                .transition(
+                    CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease),
+                    CSSTransition("font-weight", 0.3.s, TransitionTimingFunction.Ease),
+                )
+        )
     }
 }

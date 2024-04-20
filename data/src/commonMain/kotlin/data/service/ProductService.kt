@@ -16,6 +16,8 @@ import data.AdminProductUploadImageMutation
 import data.GetAllCatalogFilterOptionsQuery
 import data.GetCatalogPageQuery
 import data.GetCurrentCatalogFilterOptionsQuery
+import data.GetRecommendedProductsQuery
+import data.GetSimilarProductsQuery
 import data.GetTrendingNowProductsQuery
 import data.type.BackorderStatus
 import data.type.BlobInput
@@ -110,6 +112,8 @@ interface ProductService {
     ): Either<RemoteError, AdminDeleteProductMediaMutation.Data>
 
     suspend fun getTrendingNowProducts(): Either<RemoteError, GetTrendingNowProductsQuery.Data>
+    suspend fun getRecommendedProducts(): Either<RemoteError, GetRecommendedProductsQuery.Data>
+    suspend fun getSimilarProducts(): Either<RemoteError, GetSimilarProductsQuery.Data>
 }
 
 internal class ProductServiceImpl(
@@ -127,6 +131,18 @@ internal class ProductServiceImpl(
 
     override suspend fun getTrendingNowProducts(): Either<RemoteError, GetTrendingNowProductsQuery.Data> {
         return apolloClient.query(GetTrendingNowProductsQuery())
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .handle()
+    }
+
+    override suspend fun getRecommendedProducts(): Either<RemoteError, GetRecommendedProductsQuery.Data> {
+        return apolloClient.query(GetRecommendedProductsQuery())
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .handle()
+    }
+
+    override suspend fun getSimilarProducts(): Either<RemoteError, GetSimilarProductsQuery.Data> {
+        return apolloClient.query(GetSimilarProductsQuery())
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }

@@ -8763,6 +8763,40 @@
               "deprecationReason": null
             },
             {
+              "name": "getRecommendedProducts",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "RecommendedProducts",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "getSimilarProducts",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "SimilarProducts",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "getTrendingNowProducts",
               "description": null,
               "args": [],
@@ -9064,6 +9098,44 @@
                   "kind": "OBJECT",
                   "name": "LandingConfigProfile",
                   "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "RecommendedProducts",
+          "description": null,
+          "fields": [
+            {
+              "name": "products",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "ShopProductItem",
+                      "ofType": null
+                    }
+                  }
                 }
               },
               "isDeprecated": false,
@@ -9753,6 +9825,44 @@
               "deprecationReason": null
             }
           ],
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "SimilarProducts",
+          "description": null,
+          "fields": [
+            {
+              "name": "products",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "ShopProductItem",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
         },

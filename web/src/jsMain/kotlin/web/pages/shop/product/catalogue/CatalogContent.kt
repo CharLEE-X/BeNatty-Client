@@ -116,7 +116,7 @@ private fun CatalogueContent(
                     if (index == state.products.size - 4) {
                         ObserveViewportEntered(
                             sectionId = product.id,
-                            distanceFromTop = 500.0,
+                            distanceFromTop = 0.0,
                             onViewportEntered = { vm.trySend(CatalogContract.Inputs.LoadMoreProducts) }
                         )
                     }

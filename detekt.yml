@@ -131,7 +131,7 @@ complexity:
     threshold: 60
   LongParameterList:
     active: false
-    functionThreshold: 20
+    functionThreshold: 30
     constructorThreshold: 20
     ignoreDefaultParameters: true
     ignoreDataClasses: true
@@ -356,7 +356,7 @@ naming:
     active: true
   ObjectPropertyNaming:
     active: true
-    constantPattern: '[A-Za-z][_A-Za-z0-9]*'
+    constantPattern: '[A-Z][A-Za-z0-9]*'
     propertyPattern: '[A-Za-z][_A-Za-z0-9]*'
     privatePropertyPattern: '(_)?[A-Za-z][_A-Za-z0-9]*'
   PackageNaming:

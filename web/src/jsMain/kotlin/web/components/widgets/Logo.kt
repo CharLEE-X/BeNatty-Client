@@ -72,16 +72,15 @@ fun Logo(
         if (hasText) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.color(color)
             ) {
                 SpanText(
                     text = "BE",
                     modifier = HeadlineTextStyle.toModifier(HeadlineTextStyleBold)
-                        .color(color)
                 )
                 SpanText(
                     text = "NATTY",
                     modifier = HeadlineTextStyle.toModifier(HeadlineTextStyleLight)
-                        .color(color)
                 )
             }
         }

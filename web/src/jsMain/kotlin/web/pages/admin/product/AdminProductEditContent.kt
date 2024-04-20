@@ -64,6 +64,7 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.Strings.Edit
 import component.localization.getString
+import core.models.VariantType
 import data.AdminProductGetByIdQuery
 import data.type.BackorderStatus
 import data.type.MediaType
@@ -71,7 +72,6 @@ import data.type.PostStatus
 import data.type.StockStatus
 import feature.admin.product.edit.AdminProductEditContract
 import feature.admin.product.edit.AdminProductEditViewModel
-import feature.admin.product.edit.VariantType
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.attributes.AutoComplete
 import org.jetbrains.compose.web.css.DisplayStyle

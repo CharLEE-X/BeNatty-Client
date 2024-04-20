@@ -15,6 +15,7 @@ class ProductPageViewModel(
     productId: String,
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
+    goToProduct: suspend (String) -> Unit,
 ) : BasicViewModel<
     ProductPageContract.Inputs,
     ProductPageContract.Events,
@@ -39,6 +40,7 @@ class ProductPageViewModel(
         .build(),
     eventHandler = ProductPageEventHandler(
         onError = onError,
+        goToProduct = goToProduct,
     ),
     coroutineScope = scope,
 ) {

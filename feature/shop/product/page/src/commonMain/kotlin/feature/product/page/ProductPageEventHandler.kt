@@ -5,6 +5,7 @@ import com.copperleaf.ballast.EventHandlerScope
 
 internal class ProductPageEventHandler(
     private val onError: suspend (String) -> Unit,
+    private val goToProduct: suspend (String) -> Unit,
 ) : EventHandler<ProductPageContract.Inputs, ProductPageContract.Events, ProductPageContract.State> {
     override suspend fun EventHandlerScope<
         ProductPageContract.Inputs,
@@ -12,5 +13,6 @@ internal class ProductPageEventHandler(
         ProductPageContract.State
         >.handleEvent(event: ProductPageContract.Events) = when (event) {
         is ProductPageContract.Events.OnError -> onError(event.message)
+        is ProductPageContract.Events.GoToProduct -> goToProduct(event.productId)
     }
 }

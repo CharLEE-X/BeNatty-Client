@@ -10,6 +10,7 @@ import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
 import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Box
+import com.varabyte.kobweb.compose.foundation.layout.BoxScope
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -65,6 +66,7 @@ fun ShopMainLayout(
     title: String,
     mainRoutes: MainRoutes,
     spacing: CSSLengthOrPercentageNumericValue = sectionsGap,
+    overlay: @Composable BoxScope.() -> Unit = {},
     content: @Composable ColumnScope.() -> Unit,
 ) {
     var showCartSidebar by remember { mutableStateOf(false) }
@@ -141,5 +143,6 @@ fun ShopMainLayout(
                 footerRoutes = footerRoutes,
             )
         }
+        overlay()
     }
 }

@@ -209,10 +209,3 @@ object AdminProductEditContract {
         data class GoToProduct(val id: String) : Events
     }
 }
-
-enum class VariantType {
-    Size,
-    Color,
-    Style,
-    Material,
-}

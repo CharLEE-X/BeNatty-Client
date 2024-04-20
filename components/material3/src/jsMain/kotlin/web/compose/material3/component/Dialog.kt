@@ -33,12 +33,16 @@ fun Dialog(
             addEventListener("opening") { onOpening(it) }
             addEventListener("opened") {
                 onOpened(it)
-                document.body?.style?.overflowY = Overflow.Hidden.toString()
+                document.body?.style?.apply {
+                    overflowY = Overflow.Hidden.toString()
+                }
             }
             addEventListener("closing") { onClosing(it) }
             addEventListener("closed") {
                 onClosed(it)
-                document.body?.style?.overflowY = Overflow.Auto.toString()
+                document.body?.style?.apply {
+                    overflowY = Overflow.Auto.toString()
+                }
             }
             addEventListener("cancel") { onCancel(it) }
         },

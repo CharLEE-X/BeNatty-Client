@@ -202,6 +202,7 @@ fun RouterContent(
                         productId = id,
                         mainRoutes = mainRoutes,
                         onError = onError,
+                        goToProduct = { router.trySend(GoToDestination(Screen.Product.idPath(it))) },
                     )
                 }
 
