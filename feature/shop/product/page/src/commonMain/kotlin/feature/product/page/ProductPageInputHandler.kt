@@ -3,6 +3,7 @@ package feature.product.page
 import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import com.copperleaf.ballast.postInput
+import component.localization.InputValidator
 import component.localization.Strings
 import component.localization.getString
 import core.models.VariantType
@@ -19,6 +20,7 @@ internal class ProductPageInputHandler :
     InputHandler<ProductPageContract.Inputs, ProductPageContract.Events, ProductPageContract.State> {
 
     private val productService by inject<ProductService>()
+    private val inputValidator by inject<InputValidator>()
 
     override suspend fun InputScope.handleInput(input: ProductPageContract.Inputs) = when (input) {
         is ProductPageContract.Inputs.Init -> handleInit(input.productId)
@@ -32,10 +34,22 @@ internal class ProductPageInputHandler :
         is ProductPageContract.Inputs.OnGoToProductClicked ->
             postEvent(ProductPageContract.Events.GoToProduct(input.productId))
 
-        is ProductPageContract.Inputs.OnAskQuestionDataChanged -> updateState { it.copy(askQuestionData = input.data) }
         ProductPageContract.Inputs.OnAddToCartClicked -> handleOnAddToCartClicked()
         ProductPageContract.Inputs.OnAskQuestionClicked -> postEvent(ProductPageContract.Events.OpenAskQuestionDialog)
+        is ProductPageContract.Inputs.OnAskQuestionNameChanged -> updateState { it.copy(askQuestionName = input.name) }
+        is ProductPageContract.Inputs.OnAskQuestionEmailChanged -> updateState {
+            it.copy(askQuestionEmail = input.email, askQuestionEmailError = inputValidator.validateEmail(input.email))
+        }
+
+        is ProductPageContract.Inputs.OnAskQuestionQuestionChanged -> updateState {
+            it.copy(
+                askQuestionQuestion = input.question,
+                askQuestionQuestionError = inputValidator.validateText(input.question, minLength = 30)
+            )
+        }
+
         ProductPageContract.Inputs.OnSizeGuideClicked -> postEvent(ProductPageContract.Events.OpenSizeGuideDialog)
+        ProductPageContract.Inputs.OnSendQuestionClicked -> handleOnSendQuestionClicked()
 
         ProductPageContract.Inputs.FetchSimilarProducts -> handleFetchSimilarProducts()
         is ProductPageContract.Inputs.SetSimilarProducts ->
@@ -75,12 +89,29 @@ internal class ProductPageInputHandler :
         }
 
         is ProductPageContract.Inputs.SetIsAddToCartButtonEnabled -> updateState { it.copy(isAddToCartButtonEnabled = input.enabled) }
-        ProductPageContract.Inputs.OnSendQuestionClicked -> handleOnSendQuestionClicked()
     }
 
     private suspend fun InputScope.handleOnSendQuestionClicked() {
-        noOp()
-        // TODO: Send question to admin
+        updateState {
+            val emailError = inputValidator.validateEmail(it.askQuestionEmail)
+            val questionError = inputValidator.validateText(it.askQuestionQuestion, minLength = 30)
+
+            if (emailError != null || questionError != null) {
+                it.copy(
+                    askQuestionEmailError = emailError,
+                    askQuestionQuestionError = questionError
+                )
+            } else {
+                // TODO: Send question to admin, for now just clearing form
+                it.copy(
+                    askQuestionName = "",
+                    askQuestionEmail = "",
+                    askQuestionEmailError = null,
+                    askQuestionQuestion = "",
+                    askQuestionQuestionError = null
+                )
+            }
+        }
     }
 
     private suspend fun InputScope.handleOnAddToCartClicked() {

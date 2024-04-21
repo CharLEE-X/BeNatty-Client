@@ -96,6 +96,10 @@ fun ProductMedia(vm: ProductPageViewModel, state: ProductPageContract.State) {
         modifier = gridModifier(columns = 6, gap = 1.em)
             .position(Position.Sticky)
             .top(40.px)
+            .transition(
+                CSSTransition("top", 0.3.s, TransitionTimingFunction.Ease),
+                CSSTransition("position", 0.3.s, TransitionTimingFunction.Ease),
+            )
     ) {
         Column(
             modifier = themeScrollbarStyle.toModifier()

@@ -88,8 +88,11 @@ object ProductPageContract {
         ),
 
         // Ask question
-        val askQuestionData: AskQuestionData = AskQuestionData(),
-
+        val askQuestionName: String = "",
+        val askQuestionEmail: String = "",
+        val askQuestionEmailError: String? = null,
+        val askQuestionQuestion: String = "",
+        val askQuestionQuestionError: String? = null,
     )
 
     sealed interface Inputs {
@@ -106,8 +109,10 @@ object ProductPageContract {
         data object OnAddToCartClicked : Inputs
         data object OnSizeGuideClicked : Inputs
         data object OnAskQuestionClicked : Inputs
-        data class OnAskQuestionDataChanged(val data: AskQuestionData) : Inputs
         data object OnSendQuestionClicked : Inputs
+        data class OnAskQuestionNameChanged(val name: String) : Inputs
+        data class OnAskQuestionEmailChanged(val email: String) : Inputs
+        data class OnAskQuestionQuestionChanged(val question: String) : Inputs
 
         data class SetIsProductLoading(val loading: Boolean) : Inputs
         data class SetIsRecommendedProductsLoading(val loading: Boolean) : Inputs
@@ -137,13 +142,6 @@ object ProductPageContract {
     data class ColorItem(val value: String, val media: AdminProductGetByIdQuery.Medium1?)
 
     data class SizeGuide(val size: String, val uk: String)
-
-    data class AskQuestionData(
-        val name: String = "",
-        val email: String = "",
-        val phone: String = "",
-        val question: String = "",
-    )
 
     enum class Trait {
         Handmade,

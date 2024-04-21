@@ -4,11 +4,14 @@ import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
+import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.color
+import com.varabyte.kobweb.compose.ui.modifiers.draggable
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.rotate
 import com.varabyte.kobweb.compose.ui.modifiers.transition
+import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiChevronLeft
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.deg
@@ -27,8 +30,11 @@ fun RotatableChevron(
             .rotate(if (open) 90.deg else 270.deg)
             .color(color)
             .fontWeight(if (hovered) FontWeight.Bold else FontWeight.Normal)
+            .userSelect(UserSelect.None)
+            .draggable(false)
             .transition(
                 CSSTransition("rotate", 0.3.s, TransitionTimingFunction.Ease),
+                CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease),
             )
     )
 }

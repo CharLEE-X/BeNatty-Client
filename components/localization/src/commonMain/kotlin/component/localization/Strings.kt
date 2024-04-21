@@ -385,4 +385,6 @@ enum class Strings {
     Comment,
     Cancel,
     Send,
+    Materials,
+    Care,
 }
