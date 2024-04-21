@@ -65,6 +65,13 @@ fun ProductPage(
     onError: suspend (String) -> Unit,
     goToProduct: suspend (String) -> Unit,
 ) {
+
+    var sizeGuideDialogOpen by remember { mutableStateOf(false) }
+    var sizeGuideDialogClosing by remember { mutableStateOf(false) }
+
+    var askQuestionDialogOpen by remember { mutableStateOf(false) }
+    var askQuestionDialogClosing by remember { mutableStateOf(false) }
+
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
         ProductPageViewModel(
@@ -72,15 +79,11 @@ fun ProductPage(
             scope = scope,
             onError = onError,
             goToProduct = goToProduct,
+            openAskQuestionDialog = { askQuestionDialogOpen = true },
+            openSizeGuideDialog = { sizeGuideDialogOpen = true },
         )
     }
     val state by vm.observeStates().collectAsState()
-
-    var sizeGuideDialogOpen by remember { mutableStateOf(false) }
-    var sizeGuideDialogClosing by remember { mutableStateOf(false) }
-
-    var askQuestionDialogOpen by remember { mutableStateOf(false) }
-    var askQuestionDialogClosing by remember { mutableStateOf(false) }
 
     ShopMainLayout(
         title = getString(Strings.ProductPage),
@@ -102,6 +105,8 @@ fun ProductPage(
                 title = "${getString(Strings.HaveAQuestion)}?".uppercase(),
                 onOpen = { askQuestionDialogOpen = it },
                 onClosing = { askQuestionDialogClosing = it },
+                onSend = { vm.trySend(ProductPageContract.Inputs.OnSendQuestionClicked) },
+                onCancel = { askQuestionDialogOpen = false },
             )
         }
     ) {
@@ -129,14 +134,12 @@ fun ProductPage(
                     ProductInfo(
                         vm = vm,
                         state = state,
-                        onOpenSizeGuideClicked = { sizeGuideDialogOpen = true },
                     )
                     AddToCartButton(vm, state)
                     Box(Modifier.size(1.em))
                     AskQuestionButton(
                         vm = vm,
                         state = state,
-                        onAskQuestionClicked = { askQuestionDialogOpen = true }
                     )
                     Box(Modifier.size(1.em))
                     SimilarProducts(
@@ -155,7 +158,6 @@ fun ProductPage(
 fun AskQuestionButton(
     vm: ProductPageViewModel,
     state: ProductPageContract.State,
-    onAskQuestionClicked: () -> Unit
 ) {
     var hovered by remember { mutableStateOf(false) }
 
@@ -169,8 +171,8 @@ fun AskQuestionButton(
             .onFocusIn { hovered = true }
             .onFocusOut { hovered = false }
             .tabIndex(0)
-            .onClick { onAskQuestionClicked() }
-            .onEnterKeyDown(onAskQuestionClicked)
+            .onClick { vm.trySend(ProductPageContract.Inputs.OnAskQuestionClicked) }
+            .onEnterKeyDown { vm.trySend(ProductPageContract.Inputs.OnAskQuestionClicked) }
             .cursor(Cursor.Pointer)
     ) {
         MdiContactSupport(

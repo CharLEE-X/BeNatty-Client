@@ -83,7 +83,6 @@ import web.util.onEnterKeyDown
 fun ProductInfo(
     vm: ProductPageViewModel,
     state: ProductPageContract.State,
-    onOpenSizeGuideClicked: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -99,7 +98,7 @@ fun ProductInfo(
         Traits(state)
         Box(Modifier.size(0.5.em))
         ColorsSection(vm, state)
-        SizesSection(vm, state, onOpenSizeGuideClicked)
+        SizesSection(vm, state)
     }
 }
 
@@ -107,7 +106,6 @@ fun ProductInfo(
 fun SizesSection(
     vm: ProductPageViewModel,
     state: ProductPageContract.State,
-    onOpenSizeGuideClicked: () -> Unit,
 ) {
     if (state.sizes.isNotEmpty()) {
         Column(
@@ -129,8 +127,8 @@ fun SizesSection(
                 MdiInfo(
                     style = IconStyle.OUTLINED,
                     modifier = Modifier
-                        .onClick { onOpenSizeGuideClicked() }
-                        .onEnterKeyDown(onOpenSizeGuideClicked)
+                        .onClick { vm.trySend(ProductPageContract.Inputs.OnSizeGuideClicked) }
+                        .onEnterKeyDown { vm.trySend(ProductPageContract.Inputs.OnSizeGuideClicked) }
                         .fontSize(16.px)
                         .onMouseOver { hovered = true }
                         .onMouseLeave { hovered = false }

@@ -32,6 +32,11 @@ internal class ProductPageInputHandler :
         is ProductPageContract.Inputs.OnGoToProductClicked ->
             postEvent(ProductPageContract.Events.GoToProduct(input.productId))
 
+        is ProductPageContract.Inputs.OnAskQuestionDataChanged -> updateState { it.copy(askQuestionData = input.data) }
+        ProductPageContract.Inputs.OnAddToCartClicked -> handleOnAddToCartClicked()
+        ProductPageContract.Inputs.OnAskQuestionClicked -> postEvent(ProductPageContract.Events.OpenAskQuestionDialog)
+        ProductPageContract.Inputs.OnSizeGuideClicked -> postEvent(ProductPageContract.Events.OpenSizeGuideDialog)
+
         ProductPageContract.Inputs.FetchSimilarProducts -> handleFetchSimilarProducts()
         is ProductPageContract.Inputs.SetSimilarProducts ->
             updateState { it.copy(similarProducts = input.products) }
@@ -70,7 +75,12 @@ internal class ProductPageInputHandler :
         }
 
         is ProductPageContract.Inputs.SetIsAddToCartButtonEnabled -> updateState { it.copy(isAddToCartButtonEnabled = input.enabled) }
-        ProductPageContract.Inputs.OnAddToCartClicked -> handleOnAddToCartClicked()
+        ProductPageContract.Inputs.OnSendQuestionClicked -> handleOnSendQuestionClicked()
+    }
+
+    private suspend fun InputScope.handleOnSendQuestionClicked() {
+        noOp()
+        // TODO: Send question to admin
     }
 
     private suspend fun InputScope.handleOnAddToCartClicked() {

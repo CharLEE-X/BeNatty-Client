@@ -16,6 +16,8 @@ class ProductPageViewModel(
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
     goToProduct: suspend (String) -> Unit,
+    openAskQuestionDialog: suspend () -> Unit,
+    openSizeGuideDialog: suspend () -> Unit,
 ) : BasicViewModel<
     ProductPageContract.Inputs,
     ProductPageContract.Events,
@@ -41,6 +43,8 @@ class ProductPageViewModel(
     eventHandler = ProductPageEventHandler(
         onError = onError,
         goToProduct = goToProduct,
+        openAskQuestionDialog = openAskQuestionDialog,
+        openSizeGuideDialog = openSizeGuideDialog,
     ),
     coroutineScope = scope,
 ) {

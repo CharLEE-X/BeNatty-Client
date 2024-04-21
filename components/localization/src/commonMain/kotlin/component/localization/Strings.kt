@@ -382,4 +382,7 @@ enum class Strings {
     SizeGuide,
     HaveAQuestion,
     AskQuestion,
+    Comment,
+    Cancel,
+    Send,
 }

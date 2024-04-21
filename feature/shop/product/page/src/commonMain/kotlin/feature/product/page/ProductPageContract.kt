@@ -85,7 +85,11 @@ object ProductPageContract {
             SizeGuide("M", "10"),
             SizeGuide("L", "12"),
             SizeGuide("XL", "14"),
-        )
+        ),
+
+        // Ask question
+        val askQuestionData: AskQuestionData = AskQuestionData(),
+
     )
 
     sealed interface Inputs {
@@ -100,6 +104,10 @@ object ProductPageContract {
         data class OnColorClicked(val color: String) : Inputs
         data class OnSizeClicked(val size: String) : Inputs
         data object OnAddToCartClicked : Inputs
+        data object OnSizeGuideClicked : Inputs
+        data object OnAskQuestionClicked : Inputs
+        data class OnAskQuestionDataChanged(val data: AskQuestionData) : Inputs
+        data object OnSendQuestionClicked : Inputs
 
         data class SetIsProductLoading(val loading: Boolean) : Inputs
         data class SetIsRecommendedProductsLoading(val loading: Boolean) : Inputs
@@ -120,15 +128,21 @@ object ProductPageContract {
     sealed interface Events {
         data class OnError(val message: String) : Events
         data class GoToProduct(val productId: String) : Events
+        data object OpenSizeGuideDialog : Events
+        data object OpenAskQuestionDialog : Events
     }
 
     data class Currency(val symbol: String, val code: String)
 
     data class ColorItem(val value: String, val media: AdminProductGetByIdQuery.Medium1?)
 
-    data class SizeGuide(
-        val size: String,
-        val uk: String,
+    data class SizeGuide(val size: String, val uk: String)
+
+    data class AskQuestionData(
+        val name: String = "",
+        val email: String = "",
+        val phone: String = "",
+        val question: String = "",
     )
 
     enum class Trait {
