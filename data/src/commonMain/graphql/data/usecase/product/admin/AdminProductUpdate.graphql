@@ -16,7 +16,7 @@ mutation AdminProductUpdate($input: ProductUpdateInput!) {
     isFeatured
     allowReviews
     pricing {
-      price
+      salePrice
       regularPrice
       chargeTax
     }
@@ -42,7 +42,6 @@ mutation AdminProductUpdate($input: ProductUpdateInput!) {
         key
         value
       }
-      price
       quantity
       media {
         keyName

@@ -8,8 +8,9 @@ query GetSimilarProducts {
         alt
         type
       }
-      price
-      title
+      regularPrice
+      salePrice
+      name
     }
   }
 }

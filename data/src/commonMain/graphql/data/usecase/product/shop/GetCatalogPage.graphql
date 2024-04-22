@@ -14,8 +14,9 @@ query GetCatalogPage($input: CatalogPageInput!) {
         alt
         type
       }
-      price
-      title
+      regularPrice
+      salePrice
+      name
     }
   }
 }

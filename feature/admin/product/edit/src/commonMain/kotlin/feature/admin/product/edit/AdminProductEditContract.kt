@@ -20,7 +20,7 @@ object AdminProductEditContract {
         val descriptionError: String? = null,
         val lowStockThresholdError: String? = null,
         val remainingStockError: String? = null,
-        val priceError: String? = null,
+        val salePriceError: String? = null,
         val regularPriceError: String? = null,
         val weightError: String? = null,
         val heightError: String? = null,
@@ -49,8 +49,8 @@ object AdminProductEditContract {
             createdAt = "",
             updatedAt = "",
             pricing = AdminProductGetByIdQuery.Pricing(
-                price = null,
-                regularPrice = null,
+                salePrice = 500.0,
+                regularPrice = 500.0,
                 chargeTax = true,
             ),
             inventory = AdminProductGetByIdQuery.Inventory(
@@ -102,7 +102,6 @@ object AdminProductEditContract {
     data class LocalVariant(
         val id: String? = null,
         val attrs: List<String> = emptyList(),
-        val price: String = "500.00",
         val quantity: String = "0",
         val enabled: Boolean = true,
         val priceError: String? = null,
@@ -178,7 +177,7 @@ object AdminProductEditContract {
         data class SetUpdatedAt(val updatedAt: String) : Inputs
 
         // Pricing
-        data class SetPrice(val price: String) : Inputs
+        data class SetSalePrice(val price: String) : Inputs
         data class SetRegularPrice(val regularPrice: String) : Inputs
         data class SetChargeTax(val chargeTax: Boolean) : Inputs
 

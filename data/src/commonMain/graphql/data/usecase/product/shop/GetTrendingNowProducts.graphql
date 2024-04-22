@@ -8,8 +8,9 @@ query GetTrendingNowProducts {
         alt
         type
       }
-      price
-      title
+      regularPrice
+      salePrice
+      name
     }
   }
 }

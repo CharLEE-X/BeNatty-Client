@@ -124,7 +124,7 @@ internal class AdminProductEditInputHandler :
         is AdminProductEditContract.Inputs.SetStatusOfBackorder -> handleSetStatusOfBackorder(input.backorderStatus)
         is AdminProductEditContract.Inputs.SetMedia -> handleSetMedia(input.media)
         is AdminProductEditContract.Inputs.SetLowStockThreshold -> handleSetLowStockThreshold(input.lowStockThreshold)
-        is AdminProductEditContract.Inputs.SetPrice -> handleSetPrice(input.price)
+        is AdminProductEditContract.Inputs.SetSalePrice -> handleSetSalePrice(input.price)
         is AdminProductEditContract.Inputs.SetRegularPrice -> handleSetRegularPrice(input.regularPrice)
         is AdminProductEditContract.Inputs.SetRemainingStock -> handleSetRemainingStock(input.remainingStock)
         is AdminProductEditContract.Inputs.SetIsPhysicalProduct -> handleSetIsPhysicalProduct(input.isPhysicalProduct)
@@ -171,7 +171,6 @@ internal class AdminProductEditInputHandler :
                 AdminProductEditContract.LocalVariant(
                     id = it.id,
                     attrs = it.attrs.map { attr -> attr.value },
-                    price = it.price.toString(),
                     quantity = it.quantity.toString(),
                     enabled = true
                 )
@@ -196,7 +195,6 @@ internal class AdminProductEditInputHandler :
             val variants = localVariants
                 .filter { variant ->
                     variant.attrs.isNotEmpty() &&
-                        variant.price.isNotBlank() &&
                         variant.quantity.isNotBlank() &&
                         variant.enabled
                 }
@@ -208,7 +206,6 @@ internal class AdminProductEditInputHandler :
                         },
                         media = emptyList(),
                         quantity = variant.quantity.toInt(),
-                        price = variant.price.toDouble(),
                     )
                 }
 
@@ -242,7 +239,6 @@ internal class AdminProductEditInputHandler :
     private suspend fun InputScope.handleOnVariantPriceChanged(variantIndex: Int, price: String) {
         val newVariants = getCurrentState().localVariants.toMutableList()
         newVariants[variantIndex] = newVariants[variantIndex].copy(
-            price = price,
             priceError = inputValidator.validateIsPriceDouble(price)
         )
         postInput(AdminProductEditContract.Inputs.OnLocalVariantsChanged(newVariants))
@@ -296,7 +292,6 @@ internal class AdminProductEditInputHandler :
                         AdminProductEditContract.LocalVariant(
                             id = existingVariant.id,
                             attrs = existingVariant.attrs.map { it.value },
-                            price = existingVariant.price.toString(),
                             quantity = existingVariant.quantity.toString(),
                             enabled = true
                         )
@@ -581,11 +576,11 @@ internal class AdminProductEditInputHandler :
         }
     }
 
-    private suspend fun InputScope.handleSetPrice(price: String) {
+    private suspend fun InputScope.handleSetSalePrice(price: String) {
         updateState {
             it.copy(
-                current = it.current.copy(pricing = it.current.pricing.copy(price = price.toDouble())),
-                priceError = if (it.wasEdited) inputValidator.validateNumberPositive(price.toInt()) else null
+                current = it.current.copy(pricing = it.current.pricing.copy(salePrice = price.toDouble())),
+                salePriceError = if (it.wasEdited) inputValidator.validateNumberPositive(price.toInt()) else null
             ).wasEdited()
         }
     }
@@ -717,19 +712,17 @@ internal class AdminProductEditInputHandler :
                             createdAt = createdAt,
                             updatedAt = updatedAt,
                             pricing = pricing.copy(
-                                price = pricing.price,
                                 regularPrice = pricing.regularPrice,
+                                salePrice = pricing.salePrice,
                                 chargeTax = pricing.chargeTax,
                             ),
                             variants = variants
                         )
 
                         val localVariants = variants.map {
-                            val price = priceWithDecimals(it.price)
                             AdminProductEditContract.LocalVariant(
                                 id = it.id,
                                 attrs = it.attrs.map { attr -> attr.value },
-                                price = price,
                                 quantity = it.quantity.toString(),
                                 enabled = true
                             )
@@ -885,7 +878,7 @@ internal class AdminProductEditInputHandler :
                 trackQuantity = if (current.inventory.trackQuantity != original.inventory.trackQuantity) {
                     current.inventory.trackQuantity
                 } else null,
-                price = if (current.pricing.price != original.pricing.price) current.pricing.price else null,
+                salePrice = if (current.pricing.salePrice != original.pricing.salePrice) current.pricing.salePrice else null,
                 regularPrice = if (current.pricing.regularPrice != original.pricing.regularPrice) {
                     current.pricing.regularPrice
                 } else null,
@@ -918,7 +911,6 @@ internal class AdminProductEditInputHandler :
                                     type = medium.type,
                                 )
                             },
-                            price = variant.price,
                             quantity = variant.quantity,
                         )
                     }
@@ -930,7 +922,6 @@ internal class AdminProductEditInputHandler :
                         AdminProductEditContract.LocalVariant(
                             id = it.id,
                             attrs = it.attrs.map { attr -> attr.value },
-                            price = priceWithDecimals(it.price),
                             quantity = it.quantity.toString(),
                             enabled = true
                         )
@@ -957,7 +948,6 @@ internal class AdminProductEditInputHandler :
                                     type = it.type,
                                 )
                             },
-                            price = it.price,
                             quantity = it.quantity,
                         )
                     }
@@ -978,7 +968,7 @@ internal class AdminProductEditInputHandler :
                                 isFeatured = data.updateProduct.isFeatured,
                                 allowReviews = data.updateProduct.allowReviews,
                                 pricing = AdminProductGetByIdQuery.Pricing(
-                                    price = data.updateProduct.pricing.price,
+                                    salePrice = data.updateProduct.pricing.salePrice,
                                     regularPrice = data.updateProduct.pricing.regularPrice,
                                     chargeTax = data.updateProduct.pricing.chargeTax,
                                 ),
@@ -1015,7 +1005,6 @@ internal class AdminProductEditInputHandler :
                                                 type = it.type,
                                             )
                                         },
-                                        price = it.price,
                                         quantity = it.quantity,
                                     )
                                 },
@@ -1057,7 +1046,7 @@ internal class AdminProductEditInputHandler :
             val isDescriptionsError = descriptionError != null
             val isLowStockThresholdError = lowStockThresholdError != null
             val isRemainingStockError = remainingStockError != null
-            val isPriceError = priceError != null
+            val isPriceError = salePriceError != null
             val isRegularPriceError = regularPriceError != null
             val isWeightError = weightError != null
             val isLengthError = lengthError != null

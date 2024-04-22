@@ -53,14 +53,17 @@ import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.IconStyle
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibility
 import com.varabyte.kobweb.silk.components.text.SpanText
+import core.models.Currency
 import data.GetCatalogPageQuery
 import org.jetbrains.compose.web.css.CSSColorValue
+import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import theme.MaterialTheme
 import web.pages.shop.home.gridModifier
+import web.pages.shop.product.page.ProductPrice
 import web.util.onEnterKeyDown
 
 @Composable
@@ -68,11 +71,13 @@ fun CatalogItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     title: String,
-    price: Double?,
+    regularPrice: Double,
+    salePrice: Double?,
+    currency: Currency,
     media: List<GetCatalogPageQuery.Medium>,
     borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
     imageHeight: CSSLengthOrPercentageNumericValue? = 600.px,
-    miniaturesMinHeight: CSSLengthOrPercentageNumericValue = 100.px
+    miniaturesMinHeight: CSSLengthOrPercentageNumericValue = 100.px,
 ) {
     var hovered by remember { mutableStateOf(false) }
     var currentMedia by remember { mutableStateOf(media.firstOrNull()) }
@@ -104,7 +109,11 @@ fun CatalogItem(
             hovered = hovered,
             onClick = { onClick() },
         )
-        ItemText(text = price?.let { "£$it".uppercase() } ?: "To be determined")
+        ProductPrice(
+            regularPrice = regularPrice.toString(),
+            salePrice = salePrice?.toString(),
+            currency = currency
+        )
     }
 }
 
@@ -138,6 +147,11 @@ private fun MainImage(
             .tabIndex(0)
             .onEnterKeyDown(onClick)
             .userSelect(UserSelect.None)
+            .border(
+                width = 1.px,
+                color = MaterialTheme.colors.surface,
+                style = LineStyle.Solid
+            )
     ) {
         val imageModifier = Modifier
             .fillMaxWidth()

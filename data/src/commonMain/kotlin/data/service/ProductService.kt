@@ -88,7 +88,7 @@ interface ProductService {
         remainingStock: Int?,
         stockStatus: StockStatus?,
         trackQuantity: Boolean?,
-        price: Double?,
+        salePrice: Double?,
         regularPrice: Double?,
         chargeTax: Boolean?,
         presetId: String?,
@@ -174,7 +174,7 @@ internal class ProductServiceImpl(
         remainingStock: Int?,
         stockStatus: StockStatus?,
         trackQuantity: Boolean?,
-        price: Double?,
+        salePrice: Double?,
         regularPrice: Double?,
         chargeTax: Boolean?,
         presetId: String?,
@@ -200,10 +200,10 @@ internal class ProductServiceImpl(
             )
         } else Optional.absent()
 
-        val productPrice = if (price != null || regularPrice != null || chargeTax != null) {
+        val productPrice = if (salePrice != null || regularPrice != null || chargeTax != null) {
             Optional.present(
                 PricingUpdateInput(
-                    price = price.skipIfNull(),
+                    salePrice = salePrice.skipIfNull(),
                     regularPrice = regularPrice.skipIfNull(),
                     chargeTax = chargeTax.skipIfNull(),
                 )

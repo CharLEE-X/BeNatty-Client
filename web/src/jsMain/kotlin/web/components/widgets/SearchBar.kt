@@ -40,7 +40,7 @@ fun SearchBar(
     trailingIcon: @Composable (() -> Unit)? = null,
     containerShape: CSSLengthOrPercentageNumericValue = 30.px,
     containerColor: CSSColorValue = MaterialTheme.colors.surfaceContainerHighest,
-    unFocusedOutlineColor: CSSColorValue = Colors.Transparent,
+    unFocusedOutlineColor: CSSColorValue = MaterialTheme.colors.surface,
     focusedOutlineColor: CSSColorValue = MaterialTheme.colors.inverseSurface,
     hoverOutlineColor: CSSColorValue = focusedOutlineColor,
 ) {
@@ -48,7 +48,6 @@ fun SearchBar(
     var hovered by remember { mutableStateOf(false) }
 
     val borderColor = when {
-
         hovered -> hoverOutlineColor
         else -> unFocusedOutlineColor
     }

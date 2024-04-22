@@ -173,7 +173,7 @@ internal class AdminListInputHandler :
                                         slot1 = millisToDate(product.createdAt.toLong()),
                                         slot2 = product.mediaUrl,
                                         slot3 = product.name,
-                                        slot4 = product.price?.toString(),
+                                        slot4 = product.regularPrice.toString(),
                                         slot5 = product.sold.toString(),
                                         slot6 = null,
                                     )

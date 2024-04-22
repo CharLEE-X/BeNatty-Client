@@ -49,15 +49,17 @@ fun YouMayAlsoLike(
         ) {
             state.recommendedProducts.forEach { product ->
                 CatalogItem(
-                    title = product.title,
-                    price = product.price,
+                    title = product.name,
+                    regularPrice = product.regularPrice,
+                    salePrice = product.salePrice,
                     media = product.media.map {
                         GetCatalogPageQuery.Medium(
                             url = it.url, keyName = it.keyName, alt = it.alt, type = it.type,
                         )
                     },
                     imageHeight = null,
-                    miniaturesMinHeight = 40.px,
+                    miniaturesMinHeight = 80.px,
+                    currency = state.currency,
                     onClick = { vm.trySend(ProductPageContract.Inputs.OnGoToProductClicked(product.id)) },
                     modifier = Modifier.aspectRatio(0.667)
                 )

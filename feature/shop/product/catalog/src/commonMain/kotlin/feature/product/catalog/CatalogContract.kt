@@ -1,5 +1,6 @@
 package feature.product.catalog
 
+import core.models.Currency
 import data.GetAllCatalogFilterOptionsQuery
 import data.GetCatalogConfigQuery
 import data.GetCatalogPageQuery
@@ -63,6 +64,8 @@ object CatalogContract {
         val priceFrom: String? = null,
         val priceTo: String? = null,
         val showPriceReset: Boolean = false,
+
+        val currency: Currency = Currency("£", "GBP"),
     )
 
     sealed interface Inputs {

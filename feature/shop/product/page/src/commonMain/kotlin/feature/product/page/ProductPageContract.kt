@@ -2,6 +2,7 @@ package feature.product.page
 
 import component.localization.Strings
 import component.localization.getString
+import core.models.Currency
 import data.AdminProductGetByIdQuery
 import data.GetRecommendedProductsQuery
 import data.GetSimilarProductsQuery
@@ -30,7 +31,7 @@ object ProductPageContract {
             isFeatured = false,
             allowReviews = false,
             creator = AdminProductGetByIdQuery.Creator(id = "", name = ""),
-            pricing = AdminProductGetByIdQuery.Pricing(price = null, regularPrice = null, chargeTax = false),
+            pricing = AdminProductGetByIdQuery.Pricing(salePrice = 500.0, regularPrice = 500.0, chargeTax = false),
             inventory = AdminProductGetByIdQuery.Inventory(
                 trackQuantity = false,
                 useGlobalTracking = false,
@@ -136,8 +137,6 @@ object ProductPageContract {
         data object OpenSizeGuideDialog : Events
         data object OpenAskQuestionDialog : Events
     }
-
-    data class Currency(val symbol: String, val code: String)
 
     data class ColorItem(val value: String, val media: AdminProductGetByIdQuery.Medium1?)
 

@@ -70,6 +70,7 @@ import web.components.layouts.oneLayoutMaxWidth
 import web.components.widgets.AppFilledButton
 import web.components.widgets.FlexSpacer
 import web.components.widgets.RotatableChevron
+import web.components.widgets.Spacer
 import web.compose.material3.component.Divider
 import web.pages.shop.home.gridModifier
 import web.pages.shop.product.page.dialogs.AskQuestionDialog
@@ -154,14 +155,12 @@ fun ProductPage(
                         vm = vm,
                         state = state,
                     )
+                    Spacer(2.em)
                     AddToCartButton(vm, state)
-                    Box(Modifier.size(1.em))
-                    AskQuestionButton(
-                        vm = vm,
-                        state = state,
-                    )
-                    Box(Modifier.size(1.em))
-                    DescriptionsSection(vm, state)
+                    Spacer()
+                    AskQuestionButton(vm)
+                    Spacer()
+                    DescriptionsSection(state)
                     SimilarProducts(
                         vm = vm,
                         state = state,
@@ -175,7 +174,7 @@ fun ProductPage(
 }
 
 @Composable
-private fun DescriptionsSection(vm: ProductPageViewModel, state: ProductPageContract.State) {
+private fun DescriptionsSection(state: ProductPageContract.State) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -319,10 +318,7 @@ private fun ExpandableSection(
 }
 
 @Composable
-private fun AskQuestionButton(
-    vm: ProductPageViewModel,
-    state: ProductPageContract.State,
-) {
+private fun AskQuestionButton(vm: ProductPageViewModel) {
     var hovered by remember { mutableStateOf(false) }
 
     Row(
@@ -348,7 +344,7 @@ private fun AskQuestionButton(
         Box {
             SpanText(
                 text = getString(Strings.AskQuestion).uppercase(),
-                modifier = Modifier
+                modifier = Modifier.roleStyle(MaterialTheme.typography.titleSmall)
             )
             Box(
                 modifier = Modifier

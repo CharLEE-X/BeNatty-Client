@@ -8,8 +8,9 @@ query GetRecommendedProducts {
         alt
         type
       }
-      price
-      title
+      regularPrice
+      salePrice
+      name
     }
   }
 }

@@ -122,10 +122,12 @@ private fun CatalogueContent(
                     }
 
                     CatalogItem(
-                        title = product.title,
-                        price = product.price,
+                        title = product.name,
+                        regularPrice = product.regularPrice,
+                        salePrice = product.salePrice,
                         media = product.media,
                         imageHeight = imageHeight,
+                        currency = state.currency,
                         onClick = { vm.trySend(CatalogContract.Inputs.OnGoToProductClicked(product.id)) },
                         modifier = Modifier
                             .id(product.id)

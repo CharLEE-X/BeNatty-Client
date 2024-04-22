@@ -48,13 +48,15 @@ fun TrendingNow(
         ) {
             state.trendingNowProducts.forEach { product ->
                 CatalogItem(
-                    title = product.title,
-                    price = product.price,
+                    title = product.name,
+                    regularPrice = product.regularPrice,
+                    salePrice = product.salePrice,
                     media = product.media.map {
                         GetCatalogPageQuery.Medium(
                             url = it.url, keyName = it.keyName, alt = it.alt, type = it.type,
                         )
                     },
+                    currency = state.currency,
                     imageHeight = null,
                     miniaturesMinHeight = 40.px,
                     onClick = { vm.trySend(CatalogContract.Inputs.OnGoToProductClicked(product.id)) },

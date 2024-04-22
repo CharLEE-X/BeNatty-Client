@@ -246,7 +246,7 @@ fun AdminProductEditContent(
                     )
                 }
                 CardSection(title = getString(Strings.Price)) {
-                    Price(vm, state)
+                    SalePrice(vm, state)
                     RegularPrice(vm, state)
                     ChargeTax(vm, state)
                 }
@@ -546,19 +546,6 @@ private fun LocalVariantItem(
             }
             if (variant.enabled) {
                 AppOutlinedTextField(
-                    value = variant.price,
-                    onValueChange = onPriceChanged,
-                    placeholder = "100.00",
-                    prefixText = "£", // TODO: Localize
-                    error = variant.priceError != null,
-                    errorText = variant.priceError,
-                    hasTrailingIcon = false,
-                    rows = 1,
-                    disabled = disabled,
-                    modifier = Modifier.gridColumn(3, 4)
-                )
-                if (disabled) AppTooltip(getString(Strings.FinishAddingOptionToEnableEditing))
-                AppOutlinedTextField(
                     value = variant.quantity,
                     onValueChange = onQuantityChanged,
                     error = variant.quantityError != null,
@@ -846,6 +833,7 @@ private fun Height(vm: AdminProductEditViewModel, state: AdminProductEditContrac
         onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetHeight(it)) },
         label = getString(Strings.Height),
         errorText = state.heightError,
+        error = state.heightError != null,
         type = TextFieldType.NUMBER,
         disabled = state.current.shipping.presetId != null,
         modifier = Modifier.fillMaxWidth(),
@@ -860,6 +848,7 @@ private fun Width(vm: AdminProductEditViewModel, state: AdminProductEditContract
         onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetWidth(it)) },
         label = getString(Strings.Width),
         errorText = state.widthError,
+        error = state.widthError != null,
         type = TextFieldType.NUMBER,
         disabled = state.current.shipping.presetId != null,
         modifier = Modifier.fillMaxWidth(),
@@ -874,6 +863,7 @@ private fun Length(vm: AdminProductEditViewModel, state: AdminProductEditContrac
         onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetLength(it)) },
         label = getString(Strings.Length),
         errorText = state.lengthError,
+        error = state.lengthError != null,
         type = TextFieldType.NUMBER,
         disabled = state.current.shipping.presetId != null,
         modifier = Modifier.fillMaxWidth(),
@@ -888,6 +878,7 @@ private fun Weight(vm: AdminProductEditViewModel, state: AdminProductEditContrac
         onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetWeight(it)) },
         label = getString(Strings.Weight),
         errorText = state.weightError,
+        error = state.weightError != null,
         type = TextFieldType.NUMBER,
         disabled = state.current.shipping.presetId != null,
         modifier = Modifier.fillMaxWidth(),
@@ -902,6 +893,7 @@ private fun RegularPrice(vm: AdminProductEditViewModel, state: AdminProductEditC
         onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetRegularPrice(it)) },
         label = getString(Strings.RegularPrice),
         errorText = state.regularPriceError,
+        error = state.regularPriceError != null,
         type = TextFieldType.NUMBER,
         modifier = Modifier.fillMaxWidth(),
     )
@@ -909,12 +901,13 @@ private fun RegularPrice(vm: AdminProductEditViewModel, state: AdminProductEditC
 }
 
 @Composable
-private fun Price(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
+private fun SalePrice(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     AppOutlinedTextField(
-        value = state.current.pricing.price.toString(),
-        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetPrice(it)) },
-        label = getString(Strings.Price),
-        errorText = state.priceError,
+        value = state.current.pricing.salePrice.toString(),
+        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetSalePrice(it)) },
+        label = getString(Strings.SalePrice),
+        errorText = state.salePriceError,
+        error = state.salePriceError != null,
         type = TextFieldType.NUMBER,
         modifier = Modifier.fillMaxWidth(),
     )

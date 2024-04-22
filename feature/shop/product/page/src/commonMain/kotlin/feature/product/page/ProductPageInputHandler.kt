@@ -6,6 +6,7 @@ import com.copperleaf.ballast.postInput
 import component.localization.InputValidator
 import component.localization.Strings
 import component.localization.getString
+import core.models.Currency
 import core.models.VariantType
 import data.AdminProductGetByIdQuery
 import data.service.ProductService
@@ -76,7 +77,6 @@ internal class ProductPageInputHandler :
         is ProductPageContract.Inputs.SetSelectedVariant -> updateState {
             it.copy(
                 selectedVariant = input.variant,
-                currentPrice = input.variant.price.toString(),
                 selectedMedia = input.variant.media.firstOrNull()?.let { media ->
                     AdminProductGetByIdQuery.Medium(
                         keyName = media.keyName,
@@ -156,7 +156,7 @@ internal class ProductPageInputHandler :
                     }
                     postInput(ProductPageContract.Inputs.SetStockStatusString(stockStatusString))
 
-                    val currency = ProductPageContract.Currency("£", "GBP")
+                    val currency = Currency("£", "GBP")
                     postInput(ProductPageContract.Inputs.SetCurrency(currency))
 
                     // TODO: Remove this when the product has spend more
@@ -215,7 +215,6 @@ internal class ProductPageInputHandler :
                 selectedSize = size ?: it.selectedSize,
                 selectedVariant = matchedVariant,
                 sizesForColor = sizesForColor,
-                currentPrice = matchedVariant.price.toString(),
                 selectedMedia = matchedVariant.media.firstOrNull()?.let { media ->
                     AdminProductGetByIdQuery.Medium(
                         keyName = media.keyName,
@@ -241,7 +240,6 @@ internal class ProductPageInputHandler :
             it.copy(
                 selectedSize = size,
                 selectedVariant = matchedVariant,
-                currentPrice = matchedVariant.price.toString(),
                 selectedMedia = matchedVariant.media.firstOrNull()?.let { media ->
                     AdminProductGetByIdQuery.Medium(
                         keyName = media.keyName,

@@ -141,7 +141,7 @@ fun SizesSection(
                 )
             }
             Row(
-                modifier = gridModifier(4, rowMinHeight = 80.px)
+                modifier = gridModifier(4, rowMinHeight = 30.px, gap = 0.5.em)
             ) {
                 state.sizes.forEach { size ->
                     ProductSizeItem(
@@ -396,15 +396,16 @@ private fun Vendor(state: ProductPageContract.State) {
 
 @Composable
 private fun Price(state: ProductPageContract.State) {
-    val price = state.selectedVariant?.price ?: state.product.pricing.price
-    val currencySymbol = state.currency.symbol
-    val currencyCode = state.currency.code
-
-    SpanText(
-        text = "$currencySymbol$price $currencyCode".uppercase(),
-        modifier = Modifier
-            .roleStyle(MaterialTheme.typography.headlineMedium)
-            .color(MaterialTheme.colors.onBackground)
+    ProductPrice(
+        regularPrice = state.product.pricing.regularPrice.toString(),
+        salePrice = state.product.pricing.salePrice?.toString(),
+        currency = state.currency,
+        regularModifier = Modifier
+            .roleStyle(MaterialTheme.typography.headlineMedium),
+        saleModifier = Modifier
+            .roleStyle(MaterialTheme.typography.headlineMedium),
+        containerModifier = Modifier
+            .padding(bottom = if (state.product.pricing.salePrice != null) 0.25.em else 0.em)
     )
 }
 

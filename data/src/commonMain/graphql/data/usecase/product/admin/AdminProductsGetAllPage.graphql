@@ -11,7 +11,8 @@ query AdminGetAllProductsPage($pageInput: PageInput!) {
       createdAt
       id
       mediaUrl
-      price
+      regularPrice
+      salePrice
       sold
       name
     }

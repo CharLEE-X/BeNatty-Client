@@ -387,4 +387,5 @@ enum class Strings {
     Send,
     Materials,
     Care,
+    SimilarProducts,
 }

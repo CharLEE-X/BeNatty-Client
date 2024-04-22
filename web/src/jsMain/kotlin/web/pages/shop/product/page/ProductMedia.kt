@@ -200,6 +200,11 @@ private fun MainImage(
             .overflow(Overflow.Hidden)
             .tabIndex(0)
             .onEnterKeyDown(onClick)
+            .border(
+                width = 1.px,
+                color = MaterialTheme.colors.surface,
+                style = LineStyle.Solid
+            )
     ) {
         val imageModifier = Modifier
             .fillMaxWidth()

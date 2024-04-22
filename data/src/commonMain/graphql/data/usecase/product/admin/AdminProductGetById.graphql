@@ -22,7 +22,7 @@ query AdminProductGetById($getProductByIdId: String!) {
     createdAt
     updatedAt
     pricing {
-      price
+      salePrice
       regularPrice
       chargeTax
     }
@@ -50,7 +50,6 @@ query AdminProductGetById($getProductByIdId: String!) {
         key
         value
       }
-      price
       quantity
       media {
         keyName
