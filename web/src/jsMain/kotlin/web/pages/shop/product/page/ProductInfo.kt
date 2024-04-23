@@ -395,7 +395,7 @@ private fun Vendor(state: ProductPageContract.State) {
             modifier = Modifier.fontWeight(FontWeight.Bold)
         )
         SpanText(
-            text = state.vendor.uppercase(),
+            text = state.product.vendor.uppercase(),
             modifier = Modifier
         )
     }

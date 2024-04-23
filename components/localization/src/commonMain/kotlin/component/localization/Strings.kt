@@ -389,4 +389,5 @@ enum class Strings {
     Care,
     SimilarProducts,
     Traits,
+    VendorDesc,
 }

@@ -224,18 +224,10 @@ fun AdminProductEditContent(
                 }
             },
             content = {
-                CardSection(
-                    title = getString(Strings.Variants),
-                    contentPadding = 0.em,
-                    gap = 0.em,
-                ) {
-                    ManageOptions(vm, state)
-                    InspectVariations(vm, state)
-                    TotalInventory(state)
-                }
                 CardSection(title = null) {
                     Name(state, vm)
                     Description(state, vm)
+                    Vendor(state, vm)
                     Traits(state, vm)
                 }
                 CardSection(title = getString(Strings.Media)) {
@@ -256,6 +248,15 @@ fun AdminProductEditContent(
                     SalePrice(vm, state)
                     RegularPrice(vm, state)
                     ChargeTax(vm, state)
+                }
+                CardSection(
+                    title = getString(Strings.Variants),
+                    contentPadding = 0.em,
+                    gap = 0.em,
+                ) {
+                    ManageOptions(vm, state)
+                    InspectVariations(vm, state)
+                    TotalInventory(state)
                 }
                 CardSection(title = getString(Strings.Inventory)) {
                     TrackQuantity(vm, state)
@@ -1149,6 +1150,7 @@ private fun Name(
         onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetName(it)) },
         label = getString(Strings.Name),
         errorText = state.titleError,
+        error = state.titleError != null,
         required = true,
         modifier = Modifier.fillMaxWidth()
     )
@@ -1164,6 +1166,7 @@ private fun Description(
         onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetDescription(it)) },
         label = getString(Strings.Description),
         errorText = state.descriptionError,
+        error = state.descriptionError != null,
         type = TextFieldType.TEXTAREA,
         rows = 5,
         modifier = Modifier
@@ -1171,6 +1174,22 @@ private fun Description(
             .resize(Resize.Vertical)
     )
     AppTooltip(getString(Strings.DescriptionDesc))
+}
+
+@Composable
+private fun Vendor(
+    state: AdminProductEditContract.State,
+    vm: AdminProductEditViewModel
+) {
+    AppOutlinedTextField(
+        value = state.current.vendor,
+        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetVendor(it)) },
+        label = getString(Strings.Vendor),
+        modifier = Modifier
+            .fillMaxWidth()
+            .resize(Resize.Vertical)
+    )
+    AppTooltip(getString(Strings.VendorDesc))
 }
 
 @Composable

@@ -164,6 +164,8 @@ internal class AdminProductEditInputHandler :
 
         is AdminProductEditContract.Inputs.SetTotalInventory -> updateState { it.copy(totalInventory = input.total) }
         is AdminProductEditContract.Inputs.OnTraitClick -> handleOnTraitClick(input.trait)
+        is AdminProductEditContract.Inputs.SetVendor ->
+            updateState { it.copy(current = it.current.copy(vendor = input.vendor)).wasEdited() }
     }
 
     private suspend fun InputScope.handleOnTraitClick(trait: Trait) {
@@ -981,6 +983,7 @@ internal class AdminProductEditInputHandler :
                                 tags = data.updateProduct.tags,
                                 isFeatured = data.updateProduct.isFeatured,
                                 allowReviews = data.updateProduct.allowReviews,
+                                vendor = data.updateProduct.vendor,
                                 traits = data.updateProduct.traits,
                                 pricing = AdminProductGetByIdQuery.Pricing(
                                     salePrice = data.updateProduct.pricing.salePrice,

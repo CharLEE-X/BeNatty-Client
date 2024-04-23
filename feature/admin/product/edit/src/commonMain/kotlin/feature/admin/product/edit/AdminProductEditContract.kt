@@ -49,6 +49,7 @@ object AdminProductEditContract {
             ),
             createdAt = "",
             updatedAt = "",
+            vendor = "BENATTY",
             traits = emptyList(),
             pricing = AdminProductGetByIdQuery.Pricing(
                 salePrice = 500.0,
@@ -178,6 +179,7 @@ object AdminProductEditContract {
         data class SetCreator(val creator: AdminProductGetByIdQuery.Creator) : Inputs
         data class SetCreatedAt(val createdAt: String) : Inputs
         data class SetUpdatedAt(val updatedAt: String) : Inputs
+        data class SetVendor(val vendor: String) : Inputs
 
         // Pricing
         data class SetSalePrice(val price: String) : Inputs

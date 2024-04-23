@@ -32,6 +32,7 @@ object ProductPageContract {
             isFeatured = false,
             allowReviews = false,
             creator = AdminProductGetByIdQuery.Creator(id = "", name = ""),
+            vendor = "BENATTY",
             traits = emptyList(),
             pricing = AdminProductGetByIdQuery.Pricing(salePrice = 500.0, regularPrice = 500.0, chargeTax = false),
             inventory = AdminProductGetByIdQuery.Inventory(
@@ -58,9 +59,8 @@ object ProductPageContract {
         val similarProducts: List<GetSimilarProductsQuery.Product> = emptyList(),
         val selectedMedia: AdminProductGetByIdQuery.Medium? = null,
         val selectedVariant: AdminProductGetByIdQuery.Variant? = null,
-        // TODO: Add currency to the product
+        // TODO: Add currency support
         val currency: Currency = Currency("£", "GBP"),
-        // TODO: Add vendor to the product
         val vendor: String = "BENATTY",
         val stockStatusString: String = getString(Strings.OutOfStock),
 
@@ -69,8 +69,7 @@ object ProductPageContract {
         val spendMoreKey: String = "",
         val spendMoreValue: String = "",
 
-        // TODO: Add traits to the product
-        val traits: List<Trait> = listOf(Trait.EcoFriendly, Trait.Handmade),
+        val traits: List<Trait> = listOf(),
 
         val colors: List<ColorItem> = emptyList(),
         val selectedColor: String? = null,
