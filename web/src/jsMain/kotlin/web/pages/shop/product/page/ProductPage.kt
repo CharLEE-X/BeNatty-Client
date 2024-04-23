@@ -324,7 +324,7 @@ private fun AskQuestionButton(vm: ProductPageViewModel) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .gap(0.5.em)
+            .gap(2.px)
             .color(MaterialTheme.colors.onBackground)
             .onMouseOver { hovered = true }
             .onMouseLeave { hovered = false }
@@ -334,12 +334,15 @@ private fun AskQuestionButton(vm: ProductPageViewModel) {
             .onClick { vm.trySend(ProductPageContract.Inputs.OnAskQuestionClicked) }
             .onEnterKeyDown { vm.trySend(ProductPageContract.Inputs.OnAskQuestionClicked) }
             .cursor(Cursor.Pointer)
+            .opacity(if (hovered) 1f else 0.85f)
+            .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
     ) {
         MdiContactSupport(
             style = IconStyle.OUTLINED,
             modifier = Modifier
                 .size(24.px)
                 .opacity(if (hovered) 1f else 0.5f)
+                .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
         )
         Box {
             SpanText(
@@ -348,7 +351,7 @@ private fun AskQuestionButton(vm: ProductPageViewModel) {
             )
             Box(
                 modifier = Modifier
-                    .translateY((26).px)
+                    .translateY(22.px)
                     .height(2.px)
                     .fillMaxWidth(if (hovered) 100.percent else 0.percent)
                     .backgroundColor(MaterialTheme.colors.onSurface)

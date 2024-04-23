@@ -51,6 +51,8 @@ import com.varabyte.kobweb.compose.ui.modifiers.maxHeight
 import com.varabyte.kobweb.compose.ui.modifiers.minHeight
 import com.varabyte.kobweb.compose.ui.modifiers.objectFit
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
+import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
+import com.varabyte.kobweb.compose.ui.modifiers.onFocusOut
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOut
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
@@ -587,10 +589,16 @@ fun ProductSizeItem(
     available: Boolean,
     onClick: () -> Unit,
 ) {
+    var hovered by remember { mutableStateOf(false) }
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxWidth()
+            .onMouseOver { hovered = true }
+            .onMouseOut { hovered = false }
+            .onFocusIn { hovered = true }
+            .onFocusOut { hovered = false }
             .minHeight(50.px)
             .backgroundColor(if (selected) MaterialTheme.colors.primary else Colors.Transparent)
             .borderRadius(40.px)
@@ -609,7 +617,9 @@ fun ProductSizeItem(
             .cursor(if (available && !selected) Cursor.Pointer else Cursor.Auto)
             .tabIndex(0)
             .onEnterKeyDown { if (available && !selected) onClick() }
+            .scale(if (hovered && available) 1.02f else 1f)
             .transition(
+                CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
                 CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease),
                 CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease),
             )

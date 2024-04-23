@@ -9,6 +9,7 @@ import data.GetSimilarProductsQuery
 import data.type.BackorderStatus
 import data.type.PostStatus
 import data.type.StockStatus
+import data.type.Trait
 
 object ProductPageContract {
     data class State(
@@ -31,6 +32,7 @@ object ProductPageContract {
             isFeatured = false,
             allowReviews = false,
             creator = AdminProductGetByIdQuery.Creator(id = "", name = ""),
+            traits = emptyList(),
             pricing = AdminProductGetByIdQuery.Pricing(salePrice = 500.0, regularPrice = 500.0, chargeTax = false),
             inventory = AdminProductGetByIdQuery.Inventory(
                 trackQuantity = false,
@@ -141,41 +143,4 @@ object ProductPageContract {
     data class ColorItem(val value: String, val media: AdminProductGetByIdQuery.Medium1?)
 
     data class SizeGuide(val size: String, val uk: String)
-
-    enum class Trait {
-        Handmade,
-        Organic,
-        EcoFriendly,
-        Vegan,
-        Custom,
-        Unique,
-        Trending,
-        Popular,
-        Featured,
-        Recommended,
-        Special,
-        Exclusive,
-        Limited,
-        NewArrival,
-        Seasonal,
-        Vintage,
-        Luxury,
-        Casual,
-        Formal,
-        BusinessCasual,
-        Athletic,
-        Outdoor,
-        WaterResistant,
-        Insulated,
-        Breathable,
-        Stretch,
-        NonIron,
-        EasyCare,
-        MachineWashable,
-        DryCleanOnly,
-    }
 }
-
-fun ProductPageContract.Trait.titleString(): String = getString(Strings.valueOf(name))
-
-fun ProductPageContract.Trait.descriptionString(): String = getString(Strings.valueOf("${name}TraitDescription"))

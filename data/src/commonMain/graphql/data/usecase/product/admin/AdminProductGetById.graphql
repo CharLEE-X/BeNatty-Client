@@ -21,6 +21,7 @@ query AdminProductGetById($getProductByIdId: String!) {
     }
     createdAt
     updatedAt
+    traits
     pricing {
       salePrice
       regularPrice

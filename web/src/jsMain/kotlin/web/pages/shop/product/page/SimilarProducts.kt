@@ -21,7 +21,6 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
-import com.varabyte.kobweb.compose.ui.modifiers.border
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
@@ -60,7 +59,6 @@ import feature.product.page.ProductPageContract
 import feature.product.page.ProductPageViewModel
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.web.css.DisplayStyle
-import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.deg
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
@@ -143,14 +141,12 @@ private fun SimilarProductItem(
                 .onEnterKeyDown(onClick)
                 .overflow(Overflow.Hidden)
                 .userSelect(UserSelect.None)
-                .scale(if (hovered) 1.1f else 1f)
                 .draggable(false)
-                .border(
-                    width = 1.px,
-                    color = MaterialTheme.colors.surface,
-                    style = LineStyle.Solid
+                .scale(if (hovered) 1.02f else 1f)
+                .transition(
+                    CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
+                    CSSTransition("transform", 0.2.s, TransitionTimingFunction.Ease)
                 )
-                .transition(CSSTransition("transform", 0.2.s, TransitionTimingFunction.Ease))
         ) {
             Image(
                 src = media.url,

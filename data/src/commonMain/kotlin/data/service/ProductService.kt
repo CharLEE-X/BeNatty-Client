@@ -39,6 +39,7 @@ import data.type.ShippingUpdateInput
 import data.type.Size
 import data.type.SortDirection
 import data.type.StockStatus
+import data.type.Trait
 import data.utils.handle
 import data.utils.skipIfNull
 
@@ -88,6 +89,7 @@ interface ProductService {
         remainingStock: Int?,
         stockStatus: StockStatus?,
         trackQuantity: Boolean?,
+        traits: List<Trait>?,
         salePrice: Double?,
         regularPrice: Double?,
         chargeTax: Boolean?,
@@ -174,6 +176,7 @@ internal class ProductServiceImpl(
         remainingStock: Int?,
         stockStatus: StockStatus?,
         trackQuantity: Boolean?,
+        traits: List<Trait>?,
         salePrice: Double?,
         regularPrice: Double?,
         chargeTax: Boolean?,
@@ -237,6 +240,7 @@ internal class ProductServiceImpl(
             postStatus = postStatus.skipIfNull(),
             media = Optional.absent(),
             inventory = inventory,
+            traits = traits.skipIfNull(),
             pricing = productPrice,
             shipping = shipping,
             variants = variants.skipIfNull(),

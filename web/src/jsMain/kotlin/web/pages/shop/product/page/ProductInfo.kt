@@ -40,6 +40,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
 import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.scale
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.transition
@@ -61,10 +62,9 @@ import component.localization.Strings
 import component.localization.getString
 import data.AdminProductGetByIdQuery
 import data.type.Size
+import data.type.Trait
 import feature.product.page.ProductPageContract
 import feature.product.page.ProductPageViewModel
-import feature.product.page.descriptionString
-import feature.product.page.titleString
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
@@ -77,7 +77,9 @@ import web.components.widgets.AppTooltip
 import web.pages.shop.home.gridModifier
 import web.pages.shop.product.catalogue.ProductSizeItem
 import web.util.cornerRadius
+import web.util.descriptionString
 import web.util.onEnterKeyDown
+import web.util.titleString
 
 @Composable
 fun ProductInfo(
@@ -225,7 +227,11 @@ private fun ColorMiniatureItem(
                 color = if (selected) MaterialTheme.colors.primary else Colors.Transparent,
                 style = LineStyle.Solid
             )
-            .transition(CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease))
+            .scale(if (hovered) 1.02f else 1f)
+            .transition(
+                CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
+                CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease)
+            )
     ) {
         media?.let {
             Image(
@@ -282,37 +288,38 @@ fun Traits(state: ProductPageContract.State) {
 }
 
 @Composable
-fun ProductPageContract.Trait.icon(modifier: Modifier) = when (this) {
-    ProductPageContract.Trait.Handmade -> MdiWavingHand(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Organic -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.EcoFriendly -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Vegan -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Custom -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Unique -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Trending -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Popular -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Featured -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Recommended -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Special -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Exclusive -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Limited -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.NewArrival -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Seasonal -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Vintage -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Luxury -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Casual -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Formal -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.BusinessCasual -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Athletic -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Outdoor -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.WaterResistant -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Insulated -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Breathable -> MdiAir(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.Stretch -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.NonIron -> MdiIron(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.EasyCare -> MdiEco(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.MachineWashable -> MdiWash(modifier, IconStyle.OUTLINED)
-    ProductPageContract.Trait.DryCleanOnly -> MdiDryCleaning(modifier, IconStyle.OUTLINED)
+fun Trait.icon(modifier: Modifier) = when (this) {
+    Trait.Handmade -> MdiWavingHand(modifier, IconStyle.OUTLINED)
+    Trait.Organic -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.EcoFriendly -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Vegan -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Custom -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Unique -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Trending -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Popular -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Featured -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Recommended -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Special -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Exclusive -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Limited -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.NewArrival -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Seasonal -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Vintage -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Luxury -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Casual -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Formal -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.BusinessCasual -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Athletic -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Outdoor -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.WaterResistant -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Insulated -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.Breathable -> MdiAir(modifier, IconStyle.OUTLINED)
+    Trait.Stretch -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.NonIron -> MdiIron(modifier, IconStyle.OUTLINED)
+    Trait.EasyCare -> MdiEco(modifier, IconStyle.OUTLINED)
+    Trait.MachineWashable -> MdiWash(modifier, IconStyle.OUTLINED)
+    Trait.DryCleanOnly -> MdiDryCleaning(modifier, IconStyle.OUTLINED)
+    Trait.UNKNOWN__ -> MdiDryCleaning(modifier, IconStyle.OUTLINED)
 }
 
 @Composable

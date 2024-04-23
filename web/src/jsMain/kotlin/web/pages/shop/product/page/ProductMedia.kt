@@ -47,6 +47,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.scale
 import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.top
 import com.varabyte.kobweb.compose.ui.modifiers.transition
+import com.varabyte.kobweb.compose.ui.modifiers.translateX
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.IconStyle
@@ -108,7 +109,7 @@ fun ProductMedia(vm: ProductPageViewModel, state: ProductPageContract.State) {
                 .maxHeight(mainImageHeight.px)
                 .overflow(Overflow.Auto)
                 .flex("0 0 auto")
-                .gap(0.75.em)
+                .gap(0.5.em)
                 .padding(right = 10.px)
         ) {
             media.forEach { media ->
@@ -160,12 +161,18 @@ private fun ProductDetailMiniatureItem(
             .overflow(Overflow.Hidden)
             .userSelect(UserSelect.None)
             .draggable(false)
+            .scale(if (hovered) 1.05f else 1f)
+            .translateX(if (selected) 4.px else 0.px)
             .border(
                 width = 4.px,
                 color = if (selected) MaterialTheme.colors.primary else Colors.Transparent,
                 style = LineStyle.Solid
             )
-            .transition(CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease))
+            .transition(
+                CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease),
+                CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
+                CSSTransition("translate", 0.2.s, TransitionTimingFunction.Ease)
+            )
     ) {
         Image(
             src = media.url,

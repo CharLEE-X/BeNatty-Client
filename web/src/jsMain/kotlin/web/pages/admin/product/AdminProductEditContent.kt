@@ -32,6 +32,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.disabled
 import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.flexDirection
 import com.varabyte.kobweb.compose.ui.modifiers.flexWrap
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.gap
@@ -65,16 +66,19 @@ import component.localization.Strings
 import component.localization.Strings.Edit
 import component.localization.getString
 import core.models.VariantType
+import core.util.enumCapitalized
 import data.AdminProductGetByIdQuery
 import data.type.BackorderStatus
 import data.type.MediaType
 import data.type.PostStatus
 import data.type.StockStatus
+import data.type.Trait
 import feature.admin.product.edit.AdminProductEditContract
 import feature.admin.product.edit.AdminProductEditViewModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.attributes.AutoComplete
 import org.jetbrains.compose.web.css.DisplayStyle
+import org.jetbrains.compose.web.css.FlexDirection
 import org.jetbrains.compose.web.css.FlexWrap
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.Position
@@ -106,7 +110,9 @@ import web.components.widgets.MediaSlot
 import web.components.widgets.SwitchSection
 import web.components.widgets.TakeActionDialog
 import web.components.widgets.TrailingIconGoToNext
+import web.compose.material3.component.ChipSet
 import web.compose.material3.component.Divider
+import web.compose.material3.component.FilterChip
 import web.compose.material3.component.TextButton
 import web.compose.material3.component.TextFieldType
 import web.util.convertBase64ToFile
@@ -230,6 +236,7 @@ fun AdminProductEditContent(
                 CardSection(title = null) {
                     Name(state, vm)
                     Description(state, vm)
+                    Traits(state, vm)
                 }
                 CardSection(title = getString(Strings.Media)) {
                     Media(
@@ -289,6 +296,39 @@ fun AdminProductEditContent(
                 }
             }
         )
+    }
+}
+
+@Composable
+private fun Traits(state: AdminProductEditContract.State, vm: AdminProductEditViewModel) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(leftRight = 1.em, topBottom = 1.em)
+            .gap(1.em)
+    ) {
+        SpanText(
+            text = getString(Strings.Traits),
+            modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
+        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .gap(0.5.em)
+                .display(DisplayStyle.Flex)
+                .flexDirection(FlexDirection.Row)
+        ) {
+            ChipSet {
+                Trait.entries.toList().filter { it != Trait.UNKNOWN__ }.forEach { trait ->
+                    FilterChip(
+                        label = trait.name.enumCapitalized(),
+                        selected = trait in state.current.traits,
+                        onClick = { vm.trySend(AdminProductEditContract.Inputs.OnTraitClick(trait)) },
+                    )
+                }
+            }
+        }
     }
 }
 

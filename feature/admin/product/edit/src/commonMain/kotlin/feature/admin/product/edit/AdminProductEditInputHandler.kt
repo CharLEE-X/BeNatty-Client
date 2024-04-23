@@ -18,6 +18,7 @@ import data.type.MediaInput
 import data.type.MediaType
 import data.type.ProductUpdateVariantInput
 import data.type.StockStatus
+import data.type.Trait
 import data.type.VariantItemInput
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -162,6 +163,18 @@ internal class AdminProductEditInputHandler :
             updateState { it.copy(localVariants = input.localVariants) }
 
         is AdminProductEditContract.Inputs.SetTotalInventory -> updateState { it.copy(totalInventory = input.total) }
+        is AdminProductEditContract.Inputs.OnTraitClick -> handleOnTraitClick(input.trait)
+    }
+
+    private suspend fun InputScope.handleOnTraitClick(trait: Trait) {
+        updateState {
+            it.copy(
+                current = it.current.copy(
+                    traits = if (trait in it.current.traits) it.current.traits - trait
+                    else it.current.traits + trait
+                )
+            ).wasEdited()
+        }
     }
 
     private suspend fun InputScope.handleOnDiscardClick() {
@@ -878,6 +891,7 @@ internal class AdminProductEditInputHandler :
                 trackQuantity = if (current.inventory.trackQuantity != original.inventory.trackQuantity) {
                     current.inventory.trackQuantity
                 } else null,
+                traits = if (current.traits != original.traits) current.traits else null,
                 salePrice = if (current.pricing.salePrice != original.pricing.salePrice) current.pricing.salePrice else null,
                 regularPrice = if (current.pricing.regularPrice != original.pricing.regularPrice) {
                     current.pricing.regularPrice
@@ -967,6 +981,7 @@ internal class AdminProductEditInputHandler :
                                 tags = data.updateProduct.tags,
                                 isFeatured = data.updateProduct.isFeatured,
                                 allowReviews = data.updateProduct.allowReviews,
+                                traits = data.updateProduct.traits,
                                 pricing = AdminProductGetByIdQuery.Pricing(
                                     salePrice = data.updateProduct.pricing.salePrice,
                                     regularPrice = data.updateProduct.pricing.regularPrice,

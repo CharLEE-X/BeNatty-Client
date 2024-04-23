@@ -15,6 +15,7 @@ mutation AdminProductUpdate($input: ProductUpdateInput!) {
     tags
     isFeatured
     allowReviews
+    traits
     pricing {
       salePrice
       regularPrice

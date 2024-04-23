@@ -388,4 +388,5 @@ enum class Strings {
     Materials,
     Care,
     SimilarProducts,
+    Traits,
 }

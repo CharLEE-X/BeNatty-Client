@@ -7,6 +7,7 @@ import data.TagsGetAllMinimalQuery
 import data.type.BackorderStatus
 import data.type.PostStatus
 import data.type.StockStatus
+import data.type.Trait
 
 object AdminProductEditContract {
     data class State(
@@ -48,6 +49,7 @@ object AdminProductEditContract {
             ),
             createdAt = "",
             updatedAt = "",
+            traits = emptyList(),
             pricing = AdminProductGetByIdQuery.Pricing(
                 salePrice = 500.0,
                 regularPrice = 500.0,
@@ -151,6 +153,7 @@ object AdminProductEditContract {
         data class OnPresetSelected(val preset: String) : Inputs
         data class OnDeleteImageClick(val imageId: String) : Inputs
         data object OnCreateVariantClick : Inputs
+        data class OnTraitClick(val trait: Trait) : Inputs
 
         data class SetAllCategories(val categories: List<GetAllCategoriesAsMinimalQuery.GetAllCategoriesAsMinimal>) :
             Inputs
