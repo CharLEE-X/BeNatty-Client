@@ -251,7 +251,7 @@ fun Traits(state: ProductPageContract.State) {
     Column(
         modifier = Modifier.gap(0.5.em)
     ) {
-        state.traits.forEach { trait ->
+        state.product.traits.forEach { trait ->
             var hovered by remember { mutableStateOf(false) }
             println("trait: $trait hovered: $hovered")
 

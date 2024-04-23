@@ -9,7 +9,6 @@ import data.GetSimilarProductsQuery
 import data.type.BackorderStatus
 import data.type.PostStatus
 import data.type.StockStatus
-import data.type.Trait
 
 object ProductPageContract {
     data class State(
@@ -61,15 +60,12 @@ object ProductPageContract {
         val selectedVariant: AdminProductGetByIdQuery.Variant? = null,
         // TODO: Add currency support
         val currency: Currency = Currency("£", "GBP"),
-        val vendor: String = "BENATTY",
         val stockStatusString: String = getString(Strings.OutOfStock),
 
         // TODO: Make it like so it works like. Spend 50£ more to get 5% off, then spend 100£ more to get 10% off, etc.
         val showSpendMore: Boolean = false,
         val spendMoreKey: String = "",
         val spendMoreValue: String = "",
-
-        val traits: List<Trait> = listOf(),
 
         val colors: List<ColorItem> = emptyList(),
         val selectedColor: String? = null,

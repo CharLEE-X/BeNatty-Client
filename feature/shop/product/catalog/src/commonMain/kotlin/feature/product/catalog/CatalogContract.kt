@@ -9,6 +9,7 @@ import data.GetTrendingNowProductsQuery
 import data.type.Color
 import data.type.ProductsSort
 import data.type.Size
+import data.type.Trait
 import kotlinx.serialization.Serializable
 
 object CatalogContract {
@@ -65,6 +66,9 @@ object CatalogContract {
         val priceTo: String? = null,
         val showPriceReset: Boolean = false,
 
+        val selectedTraits: List<Trait> = emptyList(),
+        val showTraitsReset: Boolean = false,
+
         val currency: Currency = Currency("£", "GBP"),
     )
 
@@ -72,8 +76,15 @@ object CatalogContract {
         data class Init(val catalogVariant: CatalogVariant) : Inputs
         data object FetchCatalogConfig : Inputs
         data object FetchAllCatalogFilterOptions : Inputs
-        data object FetchCurrentCatalogFilterOptions : Inputs
         data object FetchTrendingProductsNow : Inputs
+        data class FetchCurrentCatalogFilterOptions(
+            val categories: List<String>,
+            val colors: List<Color>,
+            val sizes: List<Size>,
+            val priceFrom: String?,
+            val priceTo: String?,
+            val traits: List<Trait>,
+        ) : Inputs
         data class FetchProducts(
             val page: Int,
             val query: String,
@@ -82,6 +93,7 @@ object CatalogContract {
             val sizeFilters: List<Size>,
             val priceFrom: String?,
             val priceTo: String?,
+            val traits: List<Trait>,
         ) : Inputs
 
         data object LoadMoreProducts : Inputs
@@ -98,6 +110,7 @@ object CatalogContract {
         data class OnSortBySelected(val sortBy: String) : Inputs
         data class OnPriceFromChanged(val priceFrom: String) : Inputs
         data class OnPriceToChanged(val priceTo: String) : Inputs
+        data class OnTraitClicked(val trait: Trait) : Inputs
 
         data class SetIsCatalogConfigLoading(val loading: Boolean) : Inputs
         data class SetProducts(val products: List<GetCatalogPageQuery.Product>) : Inputs
@@ -122,6 +135,7 @@ object CatalogContract {
         data class SetPriceFrom(val priceFrom: String?) : Inputs
         data class SetPriceTo(val priceTo: String?) : Inputs
         data class SetSortBy(val sortBy: ProductsSort) : Inputs
+        data class SetTraits(val traits: List<Trait>) : Inputs
     }
 
     sealed interface Events {

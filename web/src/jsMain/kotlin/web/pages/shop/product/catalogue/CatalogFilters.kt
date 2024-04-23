@@ -53,6 +53,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.objectFit
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusOut
+import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOut
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
@@ -65,6 +66,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.textDecorationLine
 import com.varabyte.kobweb.compose.ui.modifiers.top
 import com.varabyte.kobweb.compose.ui.modifiers.transition
+import com.varabyte.kobweb.compose.ui.modifiers.translateX
 import com.varabyte.kobweb.compose.ui.modifiers.translateY
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.compose.ui.modifiers.whiteSpace
@@ -77,7 +79,9 @@ import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
+import core.util.enumCapitalized
 import data.type.Size
+import data.type.Trait
 import feature.product.catalog.CatalogContract
 import feature.product.catalog.CatalogViewModel
 import kotlinx.browser.window
@@ -98,7 +102,9 @@ import theme.roleStyle
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.ExpandableSection
 import web.components.widgets.themeScrollbarStyle
+import web.compose.material3.component.ChipSet
 import web.compose.material3.component.Divider
+import web.compose.material3.component.FilterChip
 import web.util.cornerRadius
 import web.util.onEnterKeyDown
 
@@ -128,10 +134,13 @@ fun CatalogueFilters(
             .position(Position.Sticky)
             .top(0.px)
             .bottom(0.px)
-            .overflow(Overflow.Auto)
+            .overflow {
+                x(Overflow.Hidden)
+                y(Overflow.Auto)
+            }
             .flex("0 0 auto")
             .padding(
-                right = if (showScrollbar) 1.em else 0.em,
+                right = 1.em,
                 top = if (showScrollbar) 1.em else 0.em,
                 bottom = if (showScrollbar) 1.em else 0.em,
             )
@@ -150,7 +159,7 @@ fun CatalogueFilters(
     ) {
         Divider(modifier = Modifier.color(MaterialTheme.colors.outline))
         ExpandableSection(title = getString(Strings.ProductType), openInitially = true) {
-            ProductTypeFilters(vm, state)
+            CategoryFilters(vm, state)
         }
         Divider(modifier = Modifier.color(MaterialTheme.colors.outline))
         ExpandableSection(title = getString(Strings.Color), openInitially = true) {
@@ -161,29 +170,19 @@ fun CatalogueFilters(
             SizeFilters(vm, state)
         }
         Divider(modifier = Modifier.color(MaterialTheme.colors.outline))
-        ExpandableSection(title = getString(Strings.Price), openInitially = true) {
-            PriceFilters(
-                highestPrice = state.currentVariantOptions.highestPrice,
-                priceFrom = state.priceFrom,
-                priceTo = state.priceTo,
-                onPriceFromChanged = { vm.trySend(CatalogContract.Inputs.OnPriceFromChanged(it)) },
-                onPriceToChanged = { vm.trySend(CatalogContract.Inputs.OnPriceToChanged(it)) },
-                onResetClicked = { vm.trySend(CatalogContract.Inputs.OnPriceResetClicked) }
-            )
+        ExpandableSection(title = getString(Strings.Price), openInitially = false) {
+            PriceFilters(vm, state)
+        }
+        Divider(modifier = Modifier.color(MaterialTheme.colors.outline))
+        ExpandableSection(title = getString(Strings.Attributes), openInitially = false) {
+            AttributeFilters(vm, state)
         }
         Divider(modifier = Modifier.color(MaterialTheme.colors.outline))
     }
 }
 
 @Composable
-private fun PriceFilters(
-    highestPrice: Double?,
-    priceFrom: String?,
-    priceTo: String?,
-    onPriceFromChanged: (String) -> Unit,
-    onPriceToChanged: (String) -> Unit,
-    onResetClicked: () -> Unit
-) {
+private fun PriceFilters(vm: CatalogViewModel, state: CatalogContract.State) {
     Column(
         modifier = Modifier.gap(0.5.em)
     ) {
@@ -192,7 +191,7 @@ private fun PriceFilters(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            highestPrice?.let {
+            state.currentVariantOptions.highestPrice?.let {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -206,7 +205,7 @@ private fun PriceFilters(
                             .roleStyle(MaterialTheme.typography.bodyMedium)
                     )
                     SpanText(
-                        text = "£$highestPrice", // TODO: Localize currency
+                        text = "£${it}", // TODO: Localize currency
                         modifier = Modifier
                             .color(MaterialTheme.colors.onSurface)
                             .roleStyle(MaterialTheme.typography.bodyMedium)
@@ -214,8 +213,8 @@ private fun PriceFilters(
                 }
             } ?: Box(Modifier.weight(1f))
             ResetButton(
-                show = priceFrom != null || priceTo != null,
-                onClick = onResetClicked,
+                show = state.priceFrom != null || state.priceTo != null,
+                onClick = { vm.trySend(CatalogContract.Inputs.OnPriceResetClicked) },
                 modifier = Modifier.translateY(2.px)
             )
         }
@@ -226,18 +225,40 @@ private fun PriceFilters(
         ) {
             AppOutlinedTextField(
                 placeholder = getString(Strings.From),
-                value = priceFrom ?: "",
-                onValueChange = onPriceFromChanged,
+                value = state.priceFrom ?: "",
+                onValueChange = { vm.trySend(CatalogContract.Inputs.OnPriceFromChanged(it)) },
                 prefixText = "£",
                 modifier = Modifier.weight(1f)
             )
             AppOutlinedTextField(
                 placeholder = getString(Strings.To),
-                value = priceTo ?: "",
-                onValueChange = onPriceToChanged,
+                value = state.priceTo ?: "",
+                onValueChange = { vm.trySend(CatalogContract.Inputs.OnPriceToChanged(it)) },
                 prefixText = "£",
                 modifier = Modifier.weight(1f)
             )
+        }
+    }
+}
+
+@Composable
+fun AttributeFilters(vm: CatalogViewModel, state: CatalogContract.State) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .gap(0.5.em)
+    ) {
+        ChipSet {
+            Trait.entries.toList().filter { it != Trait.UNKNOWN__ }.forEach { trait ->
+                FilterChip(
+                    label = trait.name.enumCapitalized(),
+                    selected = trait in state.selectedTraits,
+                    iconSize = 0.px.toString(),
+                    onClick = { vm.trySend(CatalogContract.Inputs.OnTraitClicked(trait)) },
+                )
+            }
         }
     }
 }
@@ -309,7 +330,7 @@ private fun Cross(
 }
 
 @Composable
-private fun ProductTypeFilters(vm: CatalogViewModel, state: CatalogContract.State) {
+private fun CategoryFilters(vm: CatalogViewModel, state: CatalogContract.State) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -331,12 +352,12 @@ private fun ProductTypeFilters(vm: CatalogViewModel, state: CatalogContract.Stat
                     .onClick { vm.trySend(CatalogContract.Inputs.OnCategoryClicked(category.id)) }
                     .userSelect(UserSelect.None)
                     .cursor(Cursor.Pointer)
-                    .onMouseOver { hovered = true }
-                    .onMouseOver { hovered = false }
+                    .onMouseOver { if (enabled) hovered = true }
+                    .onMouseLeave { hovered = false }
+                    .onFocusIn { if (enabled) hovered = true }
+                    .onFocusOut { hovered = false }
                     .thenIf(enabled, Modifier.tabIndex(0))
-                    .onEnterKeyDown {
-                        vm.trySend(CatalogContract.Inputs.OnCategoryClicked(category.id))
-                    }
+                    .onEnterKeyDown { vm.trySend(CatalogContract.Inputs.OnCategoryClicked(category.id)) }
             ) {
                 Box(
                     contentAlignment = Alignment.Center,
@@ -350,7 +371,6 @@ private fun ProductTypeFilters(vm: CatalogViewModel, state: CatalogContract.Stat
                                 MaterialTheme.colors.onSurface else Colors.Transparent
                         )
                         .backgroundColor(MaterialTheme.colors.surfaceContainerHighest)
-                        .scale(if (hovered) 1.05f else 1f)
                         .objectFit(ObjectFit.Fill)
                         .transition(
                             CSSTransition("transform", 0.3.s, TransitionTimingFunction.Ease),
@@ -368,6 +388,8 @@ private fun ProductTypeFilters(vm: CatalogViewModel, state: CatalogContract.Stat
                                     color = if (category.id in state.selectedCategoryIds)
                                         MaterialTheme.colors.onSurface else Colors.Transparent
                                 )
+                                .scale(if (hovered && enabled) 1.1f else 1f)
+                                .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
                         )
                     } ?: run {
                         MdiBrokenImage(
@@ -432,7 +454,7 @@ private fun ColorFilters(vm: CatalogViewModel, state: CatalogContract.State) {
             .gridAutoRows { minmax(40.px, 1.fr) }
             .gap(0.5.em)
     ) {
-        state.allCatalogFilterOptions.colors.forEach { colorOption ->
+        state.allCatalogFilterOptions.colors.forEachIndexed { index, colorOption ->
             val enabled = colorOption.color in state.currentVariantOptions.colors
             val selected = colorOption.color in state.selectedColors
             var hovered by remember { mutableStateOf(false) }
@@ -455,7 +477,9 @@ private fun ColorFilters(vm: CatalogViewModel, state: CatalogContract.State) {
                 .onMouseOver { hovered = true }
                 .onMouseOut { hovered = false }
                 .scale(if (hovered) 1.1f else 1f)
+                .translateX(if (hovered && (index % 5 == 0)) 4.px else 0.px)
                 .transition(
+                    CSSTransition("translate", 0.3.s, TransitionTimingFunction.Ease),
                     CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease),
                     CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
                 )
@@ -571,12 +595,13 @@ private fun SizeFilters(vm: CatalogViewModel, state: CatalogContract.State) {
             .gridAutoRows { minmax(40.px, 1.fr) }
             .gap(0.5.em)
     ) {
-        state.allCatalogFilterOptions.sizes.forEach { size ->
+        state.allCatalogFilterOptions.sizes.forEachIndexed { index, size ->
             ProductSizeItem(
                 size = size,
                 selected = size in state.selectedSizes,
                 available = size in state.currentVariantOptions.sizes,
-                onClick = { vm.trySend(CatalogContract.Inputs.OnSizeClicked(size)) }
+                isLeft = index % 2 == 0,
+                onClick = { vm.trySend(CatalogContract.Inputs.OnSizeClicked(size)) },
             )
         }
     }
@@ -587,6 +612,7 @@ fun ProductSizeItem(
     size: Size,
     selected: Boolean,
     available: Boolean,
+    isLeft: Boolean = false,
     onClick: () -> Unit,
 ) {
     var hovered by remember { mutableStateOf(false) }
@@ -595,9 +621,9 @@ fun ProductSizeItem(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxWidth()
-            .onMouseOver { hovered = true }
+            .onMouseOver { if (available) hovered = true }
             .onMouseOut { hovered = false }
-            .onFocusIn { hovered = true }
+            .onFocusIn { if (available) hovered = true }
             .onFocusOut { hovered = false }
             .minHeight(50.px)
             .backgroundColor(if (selected) MaterialTheme.colors.primary else Colors.Transparent)
@@ -618,7 +644,9 @@ fun ProductSizeItem(
             .tabIndex(0)
             .onEnterKeyDown { if (available && !selected) onClick() }
             .scale(if (hovered && available) 1.02f else 1f)
+            .translateX(if (hovered && isLeft && available) 4.px else 0.px)
             .transition(
+                CSSTransition("translate", 0.3.s, TransitionTimingFunction.Ease),
                 CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
                 CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease),
                 CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease),

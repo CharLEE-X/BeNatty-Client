@@ -9,6 +9,7 @@ import data.service.ProductService
 import data.type.Color
 import data.type.ProductsSort
 import data.type.Size
+import data.type.Trait
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -25,7 +26,15 @@ internal class CatalogInputHandler :
         is CatalogContract.Inputs.Init -> handleInit(input.catalogVariant)
         CatalogContract.Inputs.FetchCatalogConfig -> handleFetchCatalogueConfig()
         CatalogContract.Inputs.FetchAllCatalogFilterOptions -> handleFetchAllCatalogFilterOptions()
-        CatalogContract.Inputs.FetchCurrentCatalogFilterOptions -> handleFetchCurrentCatalogFilterOptions()
+        is CatalogContract.Inputs.FetchCurrentCatalogFilterOptions -> handleFetchCurrentCatalogFilterOptions(
+            categories = input.categories,
+            colors = input.colors,
+            sizes = input.sizes,
+            priceFrom = input.priceFrom,
+            priceTo = input.priceTo,
+            traits = input.traits,
+        )
+
         is CatalogContract.Inputs.FetchProducts -> handleFetchProducts(
             page = input.page,
             query = input.query,
@@ -34,6 +43,7 @@ internal class CatalogInputHandler :
             sizeFilters = input.sizeFilters,
             priceFrom = input.priceFrom,
             priceTo = input.priceTo,
+            traits = input.traits,
         )
 
         is CatalogContract.Inputs.OnGoToProductClicked -> handleGoToProductClicked(input.productId)
@@ -106,6 +116,43 @@ internal class CatalogInputHandler :
         CatalogContract.Inputs.FetchTrendingProductsNow -> handleFetchTrendingProductsNow()
         is CatalogContract.Inputs.SetTrendingProducts ->
             updateState { it.copy(trendingNowProducts = input.products) }
+
+        is CatalogContract.Inputs.OnTraitClicked -> handleOnTraitClicked(input.trait)
+        is CatalogContract.Inputs.SetTraits -> updateState { it.copy(selectedTraits = input.traits) }
+    }
+
+    private suspend fun InputScope.handleOnTraitClicked(trait: Trait) {
+        val state = getCurrentState()
+        val newTraits = if (trait in state.selectedTraits) {
+            state.selectedTraits - trait
+        } else {
+            state.selectedTraits + trait
+        }
+        sideJob("onTraitClicked") {
+            postInput(CatalogContract.Inputs.SetTraits(newTraits))
+            postInput(
+                CatalogContract.Inputs.FetchCurrentCatalogFilterOptions(
+                    categories = state.selectedCategoryIds,
+                    colors = state.selectedColors,
+                    sizes = state.selectedSizes,
+                    priceFrom = state.priceFrom,
+                    priceTo = state.priceTo,
+                    traits = newTraits,
+                )
+            )
+            postInput(
+                CatalogContract.Inputs.FetchProducts(
+                    page = 0,
+                    query = state.query,
+                    categoryFilters = state.selectedCategoryIds,
+                    colorFilters = state.selectedColors,
+                    sizeFilters = state.selectedSizes,
+                    priceFrom = state.priceFrom,
+                    priceTo = state.priceTo,
+                    traits = newTraits,
+                )
+            )
+        }
     }
 
     private suspend fun InputScope.handleFetchTrendingProductsNow() {
@@ -129,6 +176,7 @@ internal class CatalogInputHandler :
                     sizeFilters = state.selectedSizes,
                     priceFrom = state.priceFrom,
                     priceTo = state.priceTo,
+                    traits = state.selectedTraits,
                 )
             )
         } ?: run {
@@ -151,7 +199,16 @@ internal class CatalogInputHandler :
         val state = getCurrentState()
         sideJob("onPriceToChanged") {
             postInput(CatalogContract.Inputs.SetPriceTo(priceTo))
-            postInput(CatalogContract.Inputs.FetchCurrentCatalogFilterOptions)
+            postInput(
+                CatalogContract.Inputs.FetchCurrentCatalogFilterOptions(
+                    categories = state.selectedCategoryIds,
+                    colors = state.selectedColors,
+                    sizes = state.selectedSizes,
+                    priceFrom = state.priceFrom,
+                    priceTo = priceTo,
+                    traits = state.selectedTraits,
+                )
+            )
             postInput(
                 CatalogContract.Inputs.FetchProducts(
                     page = 0,
@@ -161,6 +218,7 @@ internal class CatalogInputHandler :
                     sizeFilters = state.selectedSizes,
                     priceFrom = state.priceFrom,
                     priceTo = priceTo.ifBlank { null },
+                    traits = state.selectedTraits,
                 )
             )
         }
@@ -170,7 +228,16 @@ internal class CatalogInputHandler :
         val state = getCurrentState()
         sideJob("onPriceFromChanged") {
             postInput(CatalogContract.Inputs.SetPriceFrom(priceFrom))
-            postInput(CatalogContract.Inputs.FetchCurrentCatalogFilterOptions)
+            postInput(
+                CatalogContract.Inputs.FetchCurrentCatalogFilterOptions(
+                    categories = state.selectedCategoryIds,
+                    colors = state.selectedColors,
+                    sizes = state.selectedSizes,
+                    priceFrom = priceFrom,
+                    priceTo = state.priceTo,
+                    traits = state.selectedTraits,
+                )
+            )
             postInput(
                 CatalogContract.Inputs.FetchProducts(
                     page = 0,
@@ -180,6 +247,7 @@ internal class CatalogInputHandler :
                     sizeFilters = state.selectedSizes,
                     priceFrom = priceFrom.ifBlank { null },
                     priceTo = state.priceTo,
+                    traits = state.selectedTraits,
                 )
             )
         }
@@ -198,6 +266,7 @@ internal class CatalogInputHandler :
                     sizeFilters = state.selectedSizes,
                     priceFrom = state.priceFrom,
                     priceTo = state.priceTo,
+                    traits = state.selectedTraits,
                 )
             )
         }
@@ -216,25 +285,35 @@ internal class CatalogInputHandler :
                     sizeFilters = state.selectedSizes,
                     priceFrom = state.priceFrom,
                     priceTo = state.priceTo,
+                    traits = state.selectedTraits,
                 )
             )
         }
     }
 
     private suspend fun InputScope.handleOnSizeResetClicked() {
-        val state = getCurrentState()
         sideJob("onSizeResetClicked") {
             postInput(CatalogContract.Inputs.SetSelectedSizes(emptyList()))
-            postInput(CatalogContract.Inputs.FetchCurrentCatalogFilterOptions)
+            postInput(
+                CatalogContract.Inputs.FetchCurrentCatalogFilterOptions(
+                    categories = emptyList(),
+                    colors = emptyList(),
+                    sizes = emptyList(),
+                    priceFrom = null,
+                    priceTo = null,
+                    traits = emptyList(),
+                )
+            )
             postInput(
                 CatalogContract.Inputs.FetchProducts(
                     page = 0,
-                    query = state.query,
-                    categoryFilters = state.selectedCategoryIds,
-                    colorFilters = state.selectedColors,
+                    query = "",
+                    categoryFilters = emptyList(),
+                    colorFilters = emptyList(),
                     sizeFilters = emptyList(),
-                    priceFrom = state.priceFrom,
-                    priceTo = state.priceTo,
+                    priceFrom = null,
+                    priceTo = null,
+                    traits = emptyList(),
                 )
             )
         }
@@ -244,35 +323,54 @@ internal class CatalogInputHandler :
         val state = getCurrentState()
         sideJob("onColorReset") {
             postInput(CatalogContract.Inputs.SetSelectedColors(emptyList()))
-            postInput(CatalogContract.Inputs.FetchCurrentCatalogFilterOptions)
+            postInput(
+                CatalogContract.Inputs.FetchCurrentCatalogFilterOptions(
+                    categories = state.selectedCategoryIds,
+                    colors = emptyList(),
+                    sizes = state.selectedSizes,
+                    priceFrom = state.priceFrom,
+                    priceTo = state.priceTo,
+                    traits = state.selectedTraits,
+                )
+            )
             postInput(
                 CatalogContract.Inputs.FetchProducts(
                     page = 0,
-                    query = state.query,
-                    categoryFilters = state.selectedCategoryIds,
+                    query = "",
+                    categoryFilters = emptyList(),
                     colorFilters = emptyList(),
-                    sizeFilters = state.selectedSizes,
-                    priceFrom = state.priceFrom,
-                    priceTo = state.priceTo,
+                    sizeFilters = emptyList(),
+                    priceFrom = null,
+                    priceTo = null,
+                    traits = emptyList(),
                 )
             )
         }
     }
 
     private suspend fun InputScope.handleOnCategoryResetClicked() {
-        val state = getCurrentState()
         sideJob("onCategoryResetClicked") {
             postInput(CatalogContract.Inputs.SetSelectedCategories(emptyList()))
-            postInput(CatalogContract.Inputs.FetchCurrentCatalogFilterOptions)
+            postInput(
+                CatalogContract.Inputs.FetchCurrentCatalogFilterOptions(
+                    categories = emptyList(),
+                    colors = emptyList(),
+                    sizes = emptyList(),
+                    priceFrom = null,
+                    priceTo = null,
+                    traits = emptyList(),
+                )
+            )
             postInput(
                 CatalogContract.Inputs.FetchProducts(
                     page = 0,
-                    query = state.query,
+                    query = "",
                     categoryFilters = emptyList(),
-                    colorFilters = state.selectedColors,
-                    sizeFilters = state.selectedSizes,
-                    priceFrom = state.priceFrom,
-                    priceTo = state.priceTo,
+                    colorFilters = emptyList(),
+                    sizeFilters = emptyList(),
+                    priceFrom = null,
+                    priceTo = null,
+                    traits = emptyList(),
                 )
             )
         }
@@ -287,7 +385,16 @@ internal class CatalogInputHandler :
                 state.selectedSizes + size
             }
             postInput(CatalogContract.Inputs.SetSelectedSizes(newSizes))
-            postInput(CatalogContract.Inputs.FetchCurrentCatalogFilterOptions)
+            postInput(
+                CatalogContract.Inputs.FetchCurrentCatalogFilterOptions(
+                    categories = state.selectedCategoryIds,
+                    colors = state.selectedColors,
+                    sizes = newSizes,
+                    priceFrom = state.priceFrom,
+                    priceTo = state.priceTo,
+                    traits = state.selectedTraits,
+                )
+            )
             postInput(
                 CatalogContract.Inputs.FetchProducts(
                     page = 0,
@@ -297,6 +404,7 @@ internal class CatalogInputHandler :
                     sizeFilters = newSizes,
                     priceFrom = state.priceFrom,
                     priceTo = state.priceTo,
+                    traits = state.selectedTraits,
                 )
             )
         }
@@ -307,16 +415,26 @@ internal class CatalogInputHandler :
         sideJob("handleOnResetClicked") {
             postInput(CatalogContract.Inputs.SetPriceFrom(null))
             postInput(CatalogContract.Inputs.SetPriceTo(null))
-            postInput(CatalogContract.Inputs.FetchCurrentCatalogFilterOptions)
+            postInput(
+                CatalogContract.Inputs.FetchCurrentCatalogFilterOptions(
+                    categories = state.selectedCategoryIds,
+                    colors = state.selectedColors,
+                    sizes = state.selectedSizes,
+                    priceFrom = null,
+                    priceTo = null,
+                    traits = state.selectedTraits,
+                )
+            )
             postInput(
                 CatalogContract.Inputs.FetchProducts(
                     page = 0,
-                    query = state.query,
-                    categoryFilters = state.selectedCategoryIds,
-                    colorFilters = state.selectedColors,
-                    sizeFilters = state.selectedSizes,
+                    query = "",
+                    categoryFilters = emptyList(),
+                    colorFilters = emptyList(),
+                    sizeFilters = emptyList(),
                     priceFrom = null,
                     priceTo = null,
+                    traits = emptyList(),
                 )
             )
         }
@@ -331,7 +449,16 @@ internal class CatalogInputHandler :
         }
         sideJob("onColorClicked") {
             postInput(CatalogContract.Inputs.SetSelectedColors(newColors))
-            postInput(CatalogContract.Inputs.FetchCurrentCatalogFilterOptions)
+            postInput(
+                CatalogContract.Inputs.FetchCurrentCatalogFilterOptions(
+                    categories = state.selectedCategoryIds,
+                    colors = newColors,
+                    sizes = state.selectedSizes,
+                    priceFrom = state.priceFrom,
+                    priceTo = state.priceTo,
+                    traits = state.selectedTraits,
+                )
+            )
             postInput(
                 CatalogContract.Inputs.FetchProducts(
                     page = 0,
@@ -341,20 +468,28 @@ internal class CatalogInputHandler :
                     sizeFilters = state.selectedSizes,
                     priceFrom = state.priceFrom,
                     priceTo = state.priceTo,
+                    traits = state.selectedTraits,
                 )
             )
         }
     }
 
-    private suspend fun InputScope.handleFetchCurrentCatalogFilterOptions() {
-        val state = getCurrentState()
+    private suspend fun InputScope.handleFetchCurrentCatalogFilterOptions(
+        categories: List<String>,
+        colors: List<Color>,
+        sizes: List<Size>,
+        priceFrom: String?,
+        priceTo: String?,
+        traits: List<Trait>,
+    ) {
         sideJob("handleFetchCurrentCatalogFilterOptions") {
             productService.getCurrentCatalogFilterOptions(
-                categories = state.selectedCategoryIds.ifEmpty { null },
-                colors = state.selectedColors.ifEmpty { null },
-                sizes = state.selectedSizes.ifEmpty { null },
-                priceFrom = state.priceFrom?.toDouble(),
-                priceTo = state.priceTo?.toDouble(),
+                categories = categories.ifEmpty { null },
+                colors = colors.ifEmpty { null },
+                sizes = sizes.ifEmpty { null },
+                priceFrom = priceFrom?.toDouble(),
+                priceTo = priceTo?.toDouble(),
+                traits = traits.ifEmpty { null },
             ).fold(
                 { postEvent(CatalogContract.Events.OnError(it.mapToUiMessage())) },
                 { postInput(CatalogContract.Inputs.SetCurrentVariantOptions(it.getCurrentCatalogFilterOptions)) },
@@ -371,7 +506,16 @@ internal class CatalogInputHandler :
                 state.selectedCategoryIds + categoryId
             }
             postInput(CatalogContract.Inputs.SetSelectedCategories(newCategories))
-            postInput(CatalogContract.Inputs.FetchCurrentCatalogFilterOptions)
+            postInput(
+                CatalogContract.Inputs.FetchCurrentCatalogFilterOptions(
+                    categories = newCategories,
+                    colors = state.selectedColors,
+                    sizes = state.selectedSizes,
+                    priceFrom = state.priceFrom,
+                    priceTo = state.priceTo,
+                    traits = state.selectedTraits,
+                )
+            )
             postInput(
                 CatalogContract.Inputs.FetchProducts(
                     page = 0,
@@ -381,6 +525,7 @@ internal class CatalogInputHandler :
                     sizeFilters = state.selectedSizes,
                     priceFrom = state.priceFrom,
                     priceTo = state.priceTo,
+                    traits = state.selectedTraits,
                 )
             )
         }
@@ -432,6 +577,7 @@ internal class CatalogInputHandler :
         sizeFilters: List<Size>,
         priceFrom: String?,
         priceTo: String?,
+        traits: List<Trait>
     ) {
         println("fetchProducts fetching products for page $page with query $query and filters $categoryFilters, $colorFilters, $sizeFilters, $priceFrom, $priceTo")
         val state = getCurrentState()
@@ -445,6 +591,7 @@ internal class CatalogInputHandler :
                 priceFrom = priceFrom?.toDouble(),
                 priceTo = priceTo?.toDouble(),
                 sortBy = state.sortBy,
+                traits = traits.ifEmpty { null },
             ).fold(
                 { postEvent(CatalogContract.Events.OnError(it.mapToUiMessage())) },
                 {
@@ -465,7 +612,16 @@ private suspend fun InputScope.handleInit(catalogVariant: CatalogVariant) {
         postInput(CatalogContract.Inputs.SetShowSearch(catalogVariant is CatalogVariant.Search))
         postInput(CatalogContract.Inputs.FetchCatalogConfig)
         postInput(CatalogContract.Inputs.FetchAllCatalogFilterOptions)
-        postInput(CatalogContract.Inputs.FetchCurrentCatalogFilterOptions)
+        postInput(
+            CatalogContract.Inputs.FetchCurrentCatalogFilterOptions(
+                categories = emptyList(),
+                colors = emptyList(),
+                sizes = emptyList(),
+                priceFrom = null,
+                priceTo = null,
+                traits = emptyList(),
+            )
+        )
         postInput(
             CatalogContract.Inputs.FetchProducts(
                 page = 0,
@@ -475,6 +631,7 @@ private suspend fun InputScope.handleInit(catalogVariant: CatalogVariant) {
                 sizeFilters = emptyList(),
                 priceFrom = null,
                 priceTo = null,
+                traits = emptyList(),
             )
         )
         postInput(CatalogContract.Inputs.SetIsCatalogConfigLoading(loading = false))

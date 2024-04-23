@@ -62,6 +62,7 @@ interface ProductService {
         priceFrom: Double?,
         priceTo: Double?,
         sortBy: ProductsSort?,
+        traits: List<Trait>?
     ): Either<RemoteError, GetCatalogPageQuery.Data>
 
     suspend fun getProductById(id: String): Either<RemoteError, AdminProductGetByIdQuery.Data>
@@ -71,6 +72,7 @@ interface ProductService {
         priceFrom: Double?,
         priceTo: Double?,
         sizes: List<Size>?,
+        traits: List<Trait>?,
     ): Either<RemoteError, GetCurrentCatalogFilterOptionsQuery.Data>
 
     suspend fun getAllCatalogFilterOptions(): Either<RemoteError, GetAllCatalogFilterOptionsQuery.Data>
@@ -284,6 +286,7 @@ internal class ProductServiceImpl(
         priceFrom: Double?,
         priceTo: Double?,
         sortBy: ProductsSort?,
+        traits: List<Trait>?
     ): Either<RemoteError, GetCatalogPageQuery.Data> {
         val pageInput = CatalogPageInput(
             page = page,
@@ -295,6 +298,7 @@ internal class ProductServiceImpl(
                 sizes = sizes.skipIfNull(),
                 priceFrom = priceFrom.skipIfNull(),
                 priceTo = priceTo.skipIfNull(),
+                traits = traits.skipIfNull(),
             ),
             sortBy = sortBy.skipIfNull(),
         )
@@ -314,6 +318,7 @@ internal class ProductServiceImpl(
         priceFrom: Double?,
         priceTo: Double?,
         sizes: List<Size>?,
+        traits: List<Trait>?,
     ): Either<RemoteError, GetCurrentCatalogFilterOptionsQuery.Data> {
         val input = CurrentCatalogFilterInput(
             categories = categories.skipIfNull(),
@@ -321,6 +326,7 @@ internal class ProductServiceImpl(
             priceFrom = priceFrom.skipIfNull(),
             priceTo = priceTo.skipIfNull(),
             sizes = sizes.skipIfNull(),
+            traits = traits.skipIfNull(),
         )
         return apolloClient.query(GetCurrentCatalogFilterOptionsQuery(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
