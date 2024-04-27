@@ -173,7 +173,7 @@ private fun AdminSideBar(routes: AdminSideNavRoutes) {
             .width(sideBarWidth)
             .margin(top = topBarHeight)
             .position(Position.Fixed)
-            .glossy(borderRadius = 0.px)
+            .glossy(cornerRadius = 0.px)
             .padding(1.em)
             .zIndex(50)
     ) {
@@ -247,7 +247,7 @@ fun AdminTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(topBarHeight)
-            .glossy(borderRadius = 0.px)
+            .glossy(cornerRadius = 0.px)
             .position(Position.Fixed)
             .zIndex(3)
             .alignItems(AlignItems.Center)

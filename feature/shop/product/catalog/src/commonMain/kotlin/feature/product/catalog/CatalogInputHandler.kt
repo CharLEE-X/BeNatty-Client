@@ -159,7 +159,7 @@ internal class CatalogInputHandler :
         sideJob("fetchTrendingProductsNow") {
             productService.getTrendingNowProducts().fold(
                 { postEvent(CatalogContract.Events.OnError(it.mapToUiMessage())) },
-                { postInput(CatalogContract.Inputs.SetTrendingProducts(it.getTrendingNowProducts.products)) },
+                { postInput(CatalogContract.Inputs.SetTrendingProducts(it.getTrendingNowProducts)) },
             )
         }
     }

@@ -29,12 +29,11 @@ object CatalogContract {
         val pageInfo: GetCatalogPageQuery.Info = GetCatalogPageQuery.Info(
             count = 0, pages = 0, prev = null, next = null
         ),
-        val trendingNowProducts: List<GetTrendingNowProductsQuery.Product> = emptyList(),
+        val trendingNowProducts: List<GetTrendingNowProductsQuery.GetTrendingNowProduct> = emptyList(),
 
         val sortBy: ProductsSort = ProductsSort.Featured,
 
         // Filters
-
         val allCatalogFilterOptions: GetAllCatalogFilterOptionsQuery.GetAllCatalogFilterOptions =
             GetAllCatalogFilterOptionsQuery.GetAllCatalogFilterOptions(
                 categories = emptyList(),
@@ -114,7 +113,7 @@ object CatalogContract {
 
         data class SetIsCatalogConfigLoading(val loading: Boolean) : Inputs
         data class SetProducts(val products: List<GetCatalogPageQuery.Product>) : Inputs
-        data class SetTrendingProducts(val products: List<GetTrendingNowProductsQuery.Product>) : Inputs
+        data class SetTrendingProducts(val products: List<GetTrendingNowProductsQuery.GetTrendingNowProduct>) : Inputs
         data class SetPageInfo(val pageInfo: GetCatalogPageQuery.Info) : Inputs
         data class SetCatalogueConfig(val catalogueConfig: GetCatalogConfigQuery.GetCatalogConfig) : Inputs
         data class SetAllCatalogFilterOptions(val options: GetAllCatalogFilterOptionsQuery.GetAllCatalogFilterOptions) :

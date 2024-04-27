@@ -5,12 +5,18 @@ import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.cache.normalized.FetchPolicy
 import com.apollographql.apollo3.cache.normalized.fetchPolicy
+import com.russhwolf.settings.Settings
+import com.russhwolf.settings.nullableString
 import core.RemoteError
+import data.AddToCartMutation
 import data.CreateCustomerMutation
 import data.DeleteCustomerByIdMutation
 import data.GetAllCustomersAsPageQuery
 import data.GetCustomerByIdQuery
+import data.GetUserCartQuery
+import data.RemoveItemFromUserCartMutation
 import data.UpdateCustomerMutation
+import data.type.AddToCartInput
 import data.type.PageInput
 import data.type.SortDirection
 import data.type.UserCreateInput
@@ -57,9 +63,26 @@ interface UserService {
         marketingSms: Boolean?,
         password: String?,
     ): Either<RemoteError, UpdateCustomerMutation.Data>
+
+    suspend fun addProductToCart(
+        productId: String,
+        variantId: String,
+        quantity: Int,
+    ): Either<RemoteError, AddToCartMutation.Data>
+
+    suspend fun getCart(): Either<RemoteError, GetUserCartQuery.Data>
+    suspend fun removeItemFromCart(
+        productId: String,
+        variantId: String
+    ): Either<RemoteError, RemoveItemFromUserCartMutation.Data>
 }
 
-internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserService {
+internal class UserServiceImpl(
+    private val apolloClient: ApolloClient,
+    settings: Settings,
+) : UserService {
+    private var guestCartId: String? by settings.nullableString()
+
     override suspend fun create(
         email: String,
         firstName: String,
@@ -149,6 +172,43 @@ internal class UserServiceImpl(private val apolloClient: ApolloClient) : UserSer
         )
 
         return apolloClient.mutation(UpdateCustomerMutation(input))
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .handle()
+    }
+
+    override suspend fun addProductToCart(
+        productId: String,
+        variantId: String,
+        quantity: Int
+    ): Either<RemoteError, AddToCartMutation.Data> {
+        val input = AddToCartInput(
+            productId = productId,
+            variantId = variantId,
+            quantity = quantity,
+        )
+        return apolloClient.mutation(AddToCartMutation(input))
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .handle()
+    }
+
+    override suspend fun getCart(): Either<RemoteError, GetUserCartQuery.Data> {
+        return apolloClient.query(GetUserCartQuery(Optional.present(guestCartId)))
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .handle()
+            .onRight { guestCartId = it.getUserCart.guestCartId }
+    }
+
+    override suspend fun removeItemFromCart(
+        productId: String,
+        variantId: String
+    ): Either<RemoteError, RemoveItemFromUserCartMutation.Data> {
+        return apolloClient.mutation(
+            RemoveItemFromUserCartMutation(
+                Optional.present(guestCartId),
+                productId,
+                variantId
+            )
+        )
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }

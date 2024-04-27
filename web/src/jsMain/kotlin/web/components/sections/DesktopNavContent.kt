@@ -1,4 +1,4 @@
-package web.components.sections.desktopNav
+package web.components.sections
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,10 +20,10 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.top
 import com.varabyte.kobweb.compose.ui.modifiers.transition
-import com.varabyte.kobweb.compose.ui.modifiers.zIndex
+import feature.shop.cart.CartContract
 import feature.shop.navbar.DesktopNavContract
 import feature.shop.navbar.DesktopNavRoutes
-import feature.shop.navbar.DesktopNavViewModel
+import feature.shop.navbar.NavbarViewModel
 import kotlinx.browser.window
 import org.jetbrains.compose.web.css.CSSSizeValue
 import org.jetbrains.compose.web.css.CSSUnit
@@ -31,6 +31,7 @@ import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
+import web.components.layouts.GlobalVMs
 import web.components.widgets.TickerSection
 import web.components.widgets.tickerHeight
 import web.shadow
@@ -40,19 +41,23 @@ enum class ScrollDirection { UP, DOWN }
 
 @Composable
 fun DesktopNavContent(
+    modifier: Modifier,
     onError: suspend (String) -> Unit,
     desktopNavRoutes: DesktopNavRoutes,
+    globalVMs: GlobalVMs,
     onTopSpacingChanged: (CSSSizeValue<CSSUnit.px>) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
-        DesktopNavViewModel(
+        NavbarViewModel(
             scope = scope,
             onError = onError,
             desktopNavRoutes = desktopNavRoutes,
+            showCartSidebar = { globalVMs.cartVm.trySend(CartContract.Inputs.ShowCart) },
         )
     }
-    val state by vm.observeStates().collectAsState()
+    val navbarState by vm.observeStates().collectAsState()
+    val cartState by globalVMs.cartVm.observeStates().collectAsState()
 
     var lastScrollPosition by remember { mutableStateOf(0.0) }
     var scrollDirection: ScrollDirection by remember { mutableStateOf(ScrollDirection.DOWN) }
@@ -80,13 +85,12 @@ fun DesktopNavContent(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
+        modifier = modifier
             .position(Position.Fixed)
             .display(DisplayStyle.Block)
             .glossy()
             .fillMaxWidth()
             .boxSizing(BoxSizing.BorderBox)
-            .zIndex(10)
             .top(topSpacing)
             .boxShadow(
                 offsetY = 0.px,
@@ -101,18 +105,18 @@ fun DesktopNavContent(
             )
     ) {
         TickerSection(
-            isLoading = state.isLoading,
-            tickerText = state.strings.ticker,
+            isLoading = navbarState.isLoading,
+            tickerText = navbarState.strings.ticker,
             onClick = { vm.trySend(DesktopNavContract.Inputs.OnTickerClick) },
         )
         NavBar(
-            isLoading = state.isLoading,
-            storeText = state.strings.store,
-            aboutText = state.strings.about,
-            shippingReturnsText = state.strings.shippingReturns,
-            searchPlaceholder = state.strings.search,
-            basketCount = state.basketCount,
-            storeMenuItems = state.storeMenuItems,
+            isLoading = navbarState.isLoading,
+            storeText = navbarState.strings.store,
+            aboutText = navbarState.strings.about,
+            shippingReturnsText = navbarState.strings.shippingReturns,
+            searchPlaceholder = navbarState.strings.search,
+            basketCount = cartState.basketCount,
+            storeMenuItems = navbarState.storeMenuItems,
             onStoreClick = { vm.trySend(DesktopNavContract.Inputs.OnStoreClick) },
             onAboutClick = { vm.trySend(DesktopNavContract.Inputs.OnAboutClick) },
             onShippingReturnsClick = { vm.trySend(DesktopNavContract.Inputs.OnShippingAndReturnsClick) },

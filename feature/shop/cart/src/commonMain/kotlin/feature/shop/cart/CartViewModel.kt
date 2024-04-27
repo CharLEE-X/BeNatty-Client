@@ -1,4 +1,4 @@
-package feature.shop.navbar
+package feature.shop.cart
 
 import com.copperleaf.ballast.BallastViewModelConfiguration
 import com.copperleaf.ballast.build
@@ -9,14 +9,16 @@ import com.copperleaf.ballast.plusAssign
 import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
 
-class DesktopNavViewModel(
+class CartViewModel(
     scope: CoroutineScope,
     onError: suspend (String) -> Unit,
-    desktopNavRoutes: DesktopNavRoutes,
+    goToLogin: () -> Unit,
+    goToProduct: (String) -> Unit,
+    goToCheckout: () -> Unit,
 ) : BasicViewModel<
-    DesktopNavContract.Inputs,
-    DesktopNavContract.Events,
-    DesktopNavContract.State,
+    CartContract.Inputs,
+    CartContract.Events,
+    CartContract.State,
     >(
     config = BallastViewModelConfiguration.Builder()
         .apply {
@@ -24,21 +26,24 @@ class DesktopNavViewModel(
             logger = { PrintlnLogger() }
         }
         .withViewModel(
-            initialState = DesktopNavContract.State(),
-            inputHandler = NavbarInputHandler(),
+            initialState = CartContract.State(),
+            inputHandler = CartInputHandler(),
             name = TAG,
         )
         .build(),
-    eventHandler = NavbarEventHandler(
+    eventHandler = CartEventHandler(
         onError = onError,
-        desktopNavRoutes = desktopNavRoutes,
+        goToLogin = goToLogin,
+        goToProduct = goToProduct,
+        goToCheckout = goToCheckout,
     ),
     coroutineScope = scope,
 ) {
     init {
-        trySend(DesktopNavContract.Inputs.Init)
+        trySend(CartContract.Inputs.Init)
     }
+
     companion object {
-        private val TAG = DesktopNavViewModel::class.simpleName!!
+        private val TAG = this::class.simpleName!!
     }
 }

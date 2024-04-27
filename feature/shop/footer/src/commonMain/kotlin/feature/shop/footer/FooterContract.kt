@@ -1,5 +1,6 @@
 package feature.shop.footer
 
+import component.localization.Strings
 import component.localization.getString
 import core.util.currentYear
 import data.GetConfigQuery
@@ -9,13 +10,12 @@ import org.koin.core.component.KoinComponent
 
 object FooterContract : KoinComponent {
     data class State(
-        val strings: Strings = Strings(),
         val isLoading: Boolean = true,
         val isAdmin: Boolean = false,
         val year: Int = currentYear(),
 
-        val currentCountryText: String = strings.unitedKingdom,
-        val currentLanguageText: String = strings.english,
+        val currentCountryText: String = getString(Strings.UnitedKingdom),
+        val currentLanguageText: String = getString(Strings.English),
         val countryImageUrl: String = "https://m.media-amazon.com/images/I/61msrRHflnL._AC_SL1500_.jpg",
         val languageImageUrl: String = "https://m.media-amazon.com/images/I/61msrRHflnL._AC_SL1500_.jpg",
 
@@ -70,41 +70,6 @@ object FooterContract : KoinComponent {
         data object GoToAdminHome : Events
         data class GoToCompanyWebsite(val url: String) : Events
         data object GoToCatalogue : Events
-    }
-
-    data class Strings(
-        val companyName: String = getString(component.localization.Strings.CompanyName),
-        val company: String = getString(component.localization.Strings.Company),
-        val privacyPolicy: String = getString(component.localization.Strings.PrivacyPolicy),
-        val termsOfService: String = getString(component.localization.Strings.TermsOfService),
-        val accessibility: String = getString(component.localization.Strings.Accessibility),
-        val trackOrder: String = getString(component.localization.Strings.TrackOrder),
-        val shipping: String = getString(component.localization.Strings.Shipping),
-        val returns: String = getString(component.localization.Strings.Returns),
-        val faQs: String = getString(component.localization.Strings.FAQs),
-        val contactUs: String = getString(component.localization.Strings.ContactUs),
-        val aboutUsSmall: String = getString(component.localization.Strings.AboutUs),
-        val aboutUs: String = getString(component.localization.Strings.AboutUs),
-        val career: String = getString(component.localization.Strings.Career),
-        val cyberSecurity: String = getString(component.localization.Strings.CyberSecurity),
-        val press: String = getString(component.localization.Strings.Press),
-        val deliverTo: String = getString(component.localization.Strings.DeliverTo),
-        val language: String = getString(component.localization.Strings.Language),
-        val english: String = getString(component.localization.Strings.English),
-        val help: String = getString(component.localization.Strings.Help),
-        val currencyEnUs: String = getString(component.localization.Strings.CurrencyEnUs),
-        val unitedKingdom: String = getString(component.localization.Strings.UnitedKingdom),
-        val admin: String = getString(component.localization.Strings.Admin),
-        val followUs: String = getString(component.localization.Strings.FollowUs),
-        val canWeHelpYou: String = getString(component.localization.Strings.CanWeHelpYou),
-        val startChat: String = getString(component.localization.Strings.StartChat),
-        val from: String = getString(component.localization.Strings.From),
-        val to: String = getString(component.localization.Strings.To),
-        val tel: String = getString(component.localization.Strings.Tel),
-        val sendEmail: String = getString(component.localization.Strings.SendEmail),
-        val weWillReply: String = getString(component.localization.Strings.WeWillReply),
-        val ticker: String = getString(component.localization.Strings.Ticker),
-    ) {
     }
 }
 

@@ -18,6 +18,7 @@ import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
@@ -60,11 +61,13 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiWavingHand
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
+import core.models.Currency
 import data.AdminProductGetByIdQuery
 import data.type.Size
 import data.type.Trait
 import feature.product.page.ProductPageContract
 import feature.product.page.ProductPageViewModel
+import feature.shop.cart.CartContract
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
@@ -84,23 +87,29 @@ import web.util.titleString
 @Composable
 fun ProductInfo(
     vm: ProductPageViewModel,
-    state: ProductPageContract.State,
+    productPageState: ProductPageContract.State,
+    cartState: CartContract.State,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .gap(1.em)
     ) {
-        Vendor(state)
-        Name(state)
-        Price(state)
-        Stock(state)
-        SpendMore(state)
+        Vendor(productPageState)
+        Name(productPageState)
+        Price(productPageState, cartState)
+        Stock(productPageState)
+        SpendMore(
+            showSpendMore = cartState.showSpendMore,
+            currency = cartState.currency,
+            spendMoreValue = cartState.spendMoreValue,
+            spendMoreKey = cartState.spendMoreKey,
+        )
         Box(Modifier.size(0.5.em))
-        Traits(state)
+        Traits(productPageState)
         Box(Modifier.size(0.5.em))
-        ColorsSection(vm, state)
-        SizesSection(vm, state)
+        ColorsSection(vm, productPageState)
+        SizesSection(vm, productPageState)
     }
 }
 
@@ -323,8 +332,15 @@ fun Trait.icon(modifier: Modifier) = when (this) {
 }
 
 @Composable
-fun SpendMore(state: ProductPageContract.State) {
-    if (state.showSpendMore) {
+fun SpendMore(
+    showSpendMore: Boolean,
+    currency: Currency,
+    spendMoreValue: String,
+    spendMoreKey: String,
+    bgColor: Color = Colors.Transparent,
+    borderColor: Color = MaterialTheme.colors.secondaryContainer,
+) {
+    if (showSpendMore) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
@@ -333,9 +349,10 @@ fun SpendMore(state: ProductPageContract.State) {
                 .fillMaxWidth()
                 .border(
                     width = 2.px,
-                    color = MaterialTheme.colors.secondaryContainer,
+                    color = borderColor,
                     style = LineStyle.Solid
                 )
+                .backgroundColor(bgColor)
                 .borderRadius(cornerRadius)
                 .color(MaterialTheme.colors.onSurface)
                 .padding(0.5.em)
@@ -354,7 +371,7 @@ fun SpendMore(state: ProductPageContract.State) {
                     modifier = Modifier
                 )
                 SpanText(
-                    text = "${state.currency.symbol}${state.spendMoreValue}".uppercase(),
+                    text = "${currency.symbol}${spendMoreValue}".uppercase(),
                     modifier = Modifier.fontWeight(FontWeight.SemiBold)
                 )
                 SpanText(
@@ -362,7 +379,7 @@ fun SpendMore(state: ProductPageContract.State) {
                     modifier = Modifier
                 )
                 SpanText(
-                    text = state.spendMoreKey.uppercase(),
+                    text = spendMoreKey.uppercase(),
                     modifier = Modifier.fontWeight(FontWeight.SemiBold)
                 )
             }
@@ -402,17 +419,20 @@ private fun Vendor(state: ProductPageContract.State) {
 }
 
 @Composable
-private fun Price(state: ProductPageContract.State) {
+private fun Price(
+    productPageState: ProductPageContract.State,
+    cartState: CartContract.State,
+) {
     ProductPrice(
-        regularPrice = state.product.pricing.regularPrice.toString(),
-        salePrice = state.product.pricing.salePrice?.toString(),
-        currency = state.currency,
+        regularPrice = productPageState.product.pricing.regularPrice.toString(),
+        salePrice = productPageState.product.pricing.salePrice?.toString(),
+        currency = cartState.currency,
         regularModifier = Modifier
             .roleStyle(MaterialTheme.typography.headlineMedium),
         saleModifier = Modifier
             .roleStyle(MaterialTheme.typography.headlineMedium),
         containerModifier = Modifier
-            .padding(bottom = if (state.product.pricing.salePrice != null) 0.25.em else 0.em)
+            .padding(bottom = if (productPageState.product.pricing.salePrice != null) 0.25.em else 0.em)
     )
 }
 

@@ -59,7 +59,7 @@ import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.dom.Span
 import theme.MaterialTheme
 import theme.roleStyle
-import web.components.sections.desktopNav.AppMenu
+import web.components.sections.AppMenu
 import web.components.widgets.ShimmerButton
 import web.components.widgets.ShimmerText
 import web.util.glossy
@@ -171,7 +171,7 @@ private fun FiltersButton(
             .padding(left = 1.em, right = 0.5.em, top = 0.5.em, bottom = 0.5.em)
             .glossy(
                 color = MaterialTheme.colors.secondaryContainer,
-                borderRadius = 36.px
+                cornerRadius = 36.px
             )
             .border(
                 width = 1.px,

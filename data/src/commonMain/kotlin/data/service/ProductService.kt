@@ -18,6 +18,7 @@ import data.GetCatalogPageQuery
 import data.GetCurrentCatalogFilterOptionsQuery
 import data.GetRecommendedProductsQuery
 import data.GetSimilarProductsQuery
+import data.GetTopSellingProductsQuery
 import data.GetTrendingNowProductsQuery
 import data.type.BackorderStatus
 import data.type.BlobInput
@@ -118,11 +119,10 @@ interface ProductService {
     suspend fun getTrendingNowProducts(): Either<RemoteError, GetTrendingNowProductsQuery.Data>
     suspend fun getRecommendedProducts(): Either<RemoteError, GetRecommendedProductsQuery.Data>
     suspend fun getSimilarProducts(): Either<RemoteError, GetSimilarProductsQuery.Data>
+    suspend fun getTopSellingProducts(): Either<RemoteError, GetTopSellingProductsQuery.Data>
 }
 
-internal class ProductServiceImpl(
-    private val apolloClient: ApolloClient,
-) : ProductService {
+internal class ProductServiceImpl(private val apolloClient: ApolloClient) : ProductService {
     override suspend fun deleteImage(
         productId: String,
         imageId: String
@@ -147,6 +147,12 @@ internal class ProductServiceImpl(
 
     override suspend fun getSimilarProducts(): Either<RemoteError, GetSimilarProductsQuery.Data> {
         return apolloClient.query(GetSimilarProductsQuery())
+            .fetchPolicy(FetchPolicy.NetworkOnly)
+            .handle()
+    }
+
+    override suspend fun getTopSellingProducts(): Either<RemoteError, GetTopSellingProductsQuery.Data> {
+        return apolloClient.query(GetTopSellingProductsQuery())
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
     }

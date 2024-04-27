@@ -1,0 +1,20 @@
+mutation RemoveItemFromUserCart($guestCartId: String, $productId: String!, $variantId: String!) {
+  removeItemFromUserCart(guestCartId: $guestCartId, productId: $productId, variantId: $variantId) {
+    guestCartId
+    items {
+      attrs {
+        key
+        value
+      }
+      available
+      mediaUrl
+      name
+      productId
+      quantity
+      regularPrice
+      salePrice
+      variantId
+      vendor
+    }
+  }
+}

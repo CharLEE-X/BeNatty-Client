@@ -23,9 +23,9 @@ fun Modifier.glossy(
     color: Color = MaterialTheme.colors.surface,
     alpha: Int = 70,
     blur: CSSLengthNumericValue = 60.px,
-    borderRadius: CSSLengthNumericValue = 12.px
+    cornerRadius: CSSLengthNumericValue = 12.px
 ): Modifier = this
-    .borderRadius(borderRadius)
+    .borderRadius(cornerRadius)
     .backgroundColor(color.toRgb().copy(alpha = alpha))
     .backdropFilter(blur(blur))
     .border(

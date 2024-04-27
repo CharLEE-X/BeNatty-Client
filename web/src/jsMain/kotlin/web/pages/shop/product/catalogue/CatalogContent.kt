@@ -28,11 +28,14 @@ import feature.product.catalog.CatalogContract
 import feature.product.catalog.CatalogVariant
 import feature.product.catalog.CatalogViewModel
 import feature.product.catalog.CatalogueRoutes
+import feature.shop.footer.FooterRoutes
+import feature.shop.navbar.DesktopNavRoutes
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.ms
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
+import web.components.layouts.GlobalVMs
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
 import web.components.widgets.ObserveViewportEntered
@@ -43,7 +46,10 @@ import web.util.glossy
 
 @Composable
 fun CatalogContent(
+    globalVMs: GlobalVMs,
     mainRoutes: MainRoutes,
+    desktopNavRoutes: DesktopNavRoutes,
+    footerRoutes: FooterRoutes,
     catalogVariant: CatalogVariant,
 ) {
     val scope = rememberCoroutineScope()
@@ -62,7 +68,10 @@ fun CatalogContent(
     ShopMainLayout(
         title = getString(Strings.ProductPage),
         mainRoutes = mainRoutes,
-        spacing = 1.em
+        spacing = 1.em,
+        desktopNavRoutes = desktopNavRoutes,
+        footerRoutes = footerRoutes,
+        globalVMs = globalVMs,
     ) {
         Column(
             modifier = Modifier

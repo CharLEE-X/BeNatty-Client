@@ -61,7 +61,7 @@ fun AppFilledButton(
     containerColor: CSSColorValue? = null,
     labelTextColor: CSSColorValue? = null,
     disabledContainerColor: CSSColorValue? = null,
-    containerShape: CSSLengthOrPercentageNumericValue? = null,
+    cornerRadius: CSSLengthOrPercentageNumericValue? = null,
     labelTextFont: String? = null,
     content: @Composable RowScope.() -> Unit
 ) {
@@ -73,7 +73,7 @@ fun AppFilledButton(
         containerColor = containerColor,
         labelTextColor = labelTextColor,
         disabledContainerColor = disabledContainerColor,
-        containerShape = containerShape ?: 12.px,
+        containerShape = cornerRadius ?: 12.px,
         labelTextFont = labelTextFont,
         content = content,
         modifier = modifier

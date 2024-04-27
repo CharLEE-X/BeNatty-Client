@@ -54,6 +54,9 @@ import component.localization.Strings
 import component.localization.getString
 import feature.product.page.ProductPageContract
 import feature.product.page.ProductPageViewModel
+import feature.shop.cart.CartContract
+import feature.shop.footer.FooterRoutes
+import feature.shop.navbar.DesktopNavRoutes
 import kotlinx.browser.window
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.em
@@ -64,6 +67,7 @@ import org.jetbrains.compose.web.dom.Span
 import org.w3c.dom.Element
 import theme.MaterialTheme
 import theme.roleStyle
+import web.components.layouts.GlobalVMs
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
 import web.components.layouts.oneLayoutMaxWidth
@@ -81,10 +85,12 @@ import web.util.onEnterKeyDown
 @Composable
 fun ProductPage(
     productId: String,
+    globalVMs: GlobalVMs,
     mainRoutes: MainRoutes,
-    onError: suspend (String) -> Unit,
-    goToProduct: suspend (String) -> Unit,
+    desktopNavRoutes: DesktopNavRoutes,
+    footerRoutes: FooterRoutes,
 ) {
+    val scope = rememberCoroutineScope()
 
     var sizeGuideDialogOpen by remember { mutableStateOf(false) }
     var sizeGuideDialogClosing by remember { mutableStateOf(false) }
@@ -92,25 +98,31 @@ fun ProductPage(
     var askQuestionDialogOpen by remember { mutableStateOf(false) }
     var askQuestionDialogClosing by remember { mutableStateOf(false) }
 
-    val scope = rememberCoroutineScope()
     val vm = remember(scope) {
         ProductPageViewModel(
             productId = productId,
             scope = scope,
-            onError = onError,
-            goToProduct = goToProduct,
+            onError = mainRoutes.onError,
+            goToProduct = mainRoutes.goToProduct,
             openAskQuestionDialog = { askQuestionDialogOpen = true },
             openSizeGuideDialog = { sizeGuideDialogOpen = true },
+            addToCart = { productId, variantId ->
+                globalVMs.cartVm.trySend(CartContract.Inputs.OnAddToCartClicked(productId, variantId))
+            },
         )
     }
-    val state by vm.observeStates().collectAsState()
+    val productPageState by vm.observeStates().collectAsState()
+    val cartState by globalVMs.cartVm.observeStates().collectAsState()
 
     ShopMainLayout(
         title = getString(Strings.ProductPage),
         mainRoutes = mainRoutes,
+        globalVMs = globalVMs,
+        desktopNavRoutes = desktopNavRoutes,
+        footerRoutes = footerRoutes,
         overlay = {
             SizeGuideDialog(
-                state = state,
+                state = productPageState,
                 open = sizeGuideDialogOpen && !sizeGuideDialogClosing,
                 closing = sizeGuideDialogClosing,
                 title = getString(Strings.SizeGuide).uppercase(),
@@ -119,7 +131,7 @@ fun ProductPage(
             )
             AskQuestionDialog(
                 vm = vm,
-                state = state,
+                state = productPageState,
                 open = askQuestionDialogOpen && !askQuestionDialogClosing,
                 closing = askQuestionDialogClosing,
                 title = "${getString(Strings.HaveAQuestion)}?".uppercase(),
@@ -146,29 +158,31 @@ fun ProductPage(
                     gap = 2.em,
                 )
             ) {
-                ProductMedia(vm, state)
+                ProductMedia(vm, productPageState)
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
                     ProductInfo(
                         vm = vm,
-                        state = state,
+                        productPageState = productPageState,
+                        cartState = cartState,
                     )
                     Spacer(2.em)
-                    AddToCartButton(vm, state)
+                    AddToCartButton(vm, productPageState)
                     Spacer()
                     AskQuestionButton(vm)
                     Spacer()
-                    DescriptionsSection(state)
+                    DescriptionsSection(productPageState)
                     SimilarProducts(
                         vm = vm,
-                        state = state,
+                        productPageState = productPageState,
+                        cartState = cartState,
                         modifier = Modifier
                     )
                 }
             }
-            YouMayAlsoLike(vm, state)
+            YouMayAlsoLike(vm, productPageState, cartState)
         }
     }
 }
@@ -367,7 +381,7 @@ private fun AddToCartButton(vm: ProductPageViewModel, state: ProductPageContract
         disabled = !state.isAddToCartButtonEnabled,
         onClick = { vm.trySend(ProductPageContract.Inputs.OnAddToCartClicked) },
         leadingIcon = { MdiAddShoppingCart() },
-        containerShape = 32.px,
+        cornerRadius = 32.px,
         modifier = Modifier.fillMaxWidth()
     ) {
         SpanText(

@@ -1,4 +1,4 @@
-package web.components.sections.desktopNav
+package web.components.sections
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -59,6 +59,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translate
 import com.varabyte.kobweb.compose.ui.modifiers.translateX
+import com.varabyte.kobweb.compose.ui.modifiers.translateY
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.compose.ui.modifiers.visibility
 import com.varabyte.kobweb.compose.ui.modifiers.whiteSpace
@@ -91,6 +92,7 @@ import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.dom.Span
 import theme.MaterialTheme
+import theme.sp
 import web.components.layouts.oneLayoutMaxWidth
 import web.components.widgets.Logo
 import web.components.widgets.RotatableChevron
@@ -265,11 +267,36 @@ private fun RightSection(
                             .minHeight(30.px)
                             .fillMaxHeight()
                     )
-                    IconButton(
-                        onClick = { onBasketClick() },
-                        modifier = Modifier.onEnterKeyDown(onBasketClick)
+                    Box(
+                        contentAlignment = Alignment.Center
                     ) {
-                        MdiShoppingBasket(iconModifier, iconStyle)
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .size(24.px)
+                                .backgroundColor(MaterialTheme.colors.onSurface)
+                                .borderRadius(50.percent)
+                                .translateY(if (basketCount > 0) (-28).px else 0.px)
+                                .opacity(if (basketCount > 0) 1.0 else 0.0)
+                                .transition(
+                                    CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                                    CSSTransition("translate", 0.3.s, TransitionTimingFunction.Ease),
+                                )
+                        ) {
+                            SpanText(
+                                text = basketCount.toString(),
+                                modifier = Modifier
+                                    .fontSize(12.sp)
+                                    .fontWeight(FontWeight.SemiBold)
+                                    .color(MaterialTheme.colors.surface)
+                            )
+                        }
+                        IconButton(
+                            onClick = { onBasketClick() },
+                            modifier = Modifier.onEnterKeyDown(onBasketClick)
+                        ) {
+                            MdiShoppingBasket(iconModifier, iconStyle)
+                        }
                     }
                 }
             }
@@ -403,7 +430,7 @@ fun AppMenu(
     Box(
         modifier = modifier
             .position(Position.Absolute)
-            .zIndex(9)
+            .zIndex(5)
             .width(200.px)
             .opacity(if (open) 1.0 else 0.0)
             .visibility(if (open) Visibility.Visible else Visibility.Hidden)

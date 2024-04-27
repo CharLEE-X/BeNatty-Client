@@ -95,7 +95,7 @@ import theme.roleStyle
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.OneThirdLayout
-import web.components.sections.desktopNav.AppMenu
+import web.components.sections.AppMenu
 import web.components.widgets.AppFilledButton
 import web.components.widgets.AppFilledTonalButton
 import web.components.widgets.AppOutlinedButton

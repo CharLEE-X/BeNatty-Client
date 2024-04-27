@@ -39,7 +39,6 @@ internal class NavbarInputHandler :
         DesktopNavContract.Inputs.OnBasketClick -> postEvent(DesktopNavContract.Events.ShowCartSidebar(true))
 
         is DesktopNavContract.Inputs.SetIsLoading -> updateState { it.copy(isLoading = input.isLoading) }
-        is DesktopNavContract.Inputs.SetBasketCount -> updateState { it.copy(basketCount = input.count) }
     }
 
     private suspend fun InputScope.handleOnSearchEnterPress() {

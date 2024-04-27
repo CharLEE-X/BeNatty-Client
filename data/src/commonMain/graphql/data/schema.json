@@ -79,6 +79,87 @@
         {
           "__typename": "__Type",
           "kind": "INPUT_OBJECT",
+          "name": "AddToCartInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "__typename": "__InputValue",
+              "name": "guestCartId",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "productId",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "quantity",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "__typename": "__InputValue",
+              "name": "variantId",
+              "description": null,
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "INPUT_OBJECT",
           "name": "AddVariantToProductInput",
           "description": null,
           "fields": null,
@@ -1790,6 +1871,321 @@
           "fields": null,
           "inputFields": null,
           "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "CartItemDomain",
+          "description": null,
+          "fields": [
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "productId",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "quantity",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "variantId",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "CartItemProfile",
+          "description": null,
+          "fields": [
+            {
+              "name": "attrs",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "VariantItem",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "available",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "mediaUrl",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "productId",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "quantity",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "regularPrice",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Float",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "salePrice",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "variantId",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "vendor",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "CartProfile",
+          "description": null,
+          "fields": [
+            {
+              "name": "guestCartId",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "items",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "CartItemProfile",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null,
           "specifiedByURL": null
@@ -5447,6 +5843,91 @@
         },
         {
           "__typename": "__Type",
+          "kind": "OBJECT",
+          "name": "GuestCart",
+          "description": null,
+          "fields": [
+            {
+              "name": "cartItems",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "CartItemDomain",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ObjectId",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updatedAt",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "Identifiable",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "INTERFACE",
+              "name": "TimeTrackable",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null,
+          "specifiedByURL": null
+        },
+        {
+          "__typename": "__Type",
           "kind": "INTERFACE",
           "name": "Identifiable",
           "description": null,
@@ -5495,6 +5976,12 @@
               "__typename": "__Type",
               "kind": "OBJECT",
               "name": "Config",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
+              "name": "GuestCart",
               "ofType": null
             },
             {
@@ -6229,6 +6716,42 @@
           "description": null,
           "fields": [
             {
+              "name": "addToCart",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "AddToCartInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CartProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "createUser",
               "description": null,
               "args": [
@@ -6402,6 +6925,74 @@
                 "ofType": {
                   "kind": "OBJECT",
                   "name": "AuthResponse",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "removeItemFromUserCart",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "guestCartId",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "__typename": "__InputValue",
+                  "name": "productId",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "__typename": "__InputValue",
+                  "name": "variantId",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CartProfile",
                   "ofType": null
                 }
               },
@@ -8712,6 +9303,38 @@
               "deprecationReason": null
             },
             {
+              "name": "getUserCart",
+              "description": null,
+              "args": [
+                {
+                  "__typename": "__InputValue",
+                  "name": "guestCartId",
+                  "description": null,
+                  "type": {
+                    "__typename": "__Type",
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CartProfile",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "getStats",
               "description": null,
               "args": [],
@@ -8898,9 +9521,17 @@
                 "kind": "NON_NULL",
                 "name": null,
                 "ofType": {
-                  "kind": "OBJECT",
-                  "name": "RecommendedProducts",
-                  "ofType": null
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "ShopProductItem",
+                      "ofType": null
+                    }
+                  }
                 }
               },
               "isDeprecated": false,
@@ -8915,9 +9546,42 @@
                 "kind": "NON_NULL",
                 "name": null,
                 "ofType": {
-                  "kind": "OBJECT",
-                  "name": "SimilarProducts",
-                  "ofType": null
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "ShopProductItem",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "getTopSellingProducts",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "ShopProductItem",
+                      "ofType": null
+                    }
+                  }
                 }
               },
               "isDeprecated": false,
@@ -8932,9 +9596,17 @@
                 "kind": "NON_NULL",
                 "name": null,
                 "ofType": {
-                  "kind": "OBJECT",
-                  "name": "TrendingNowProducts",
-                  "ofType": null
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "ShopProductItem",
+                      "ofType": null
+                    }
+                  }
                 }
               },
               "isDeprecated": false,
@@ -9225,44 +9897,6 @@
                   "kind": "OBJECT",
                   "name": "LandingConfigProfile",
                   "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null,
-          "specifiedByURL": null
-        },
-        {
-          "__typename": "__Type",
-          "kind": "OBJECT",
-          "name": "RecommendedProducts",
-          "description": null,
-          "fields": [
-            {
-              "name": "products",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "OBJECT",
-                      "name": "ShopProductItem",
-                      "ofType": null
-                    }
-                  }
                 }
               },
               "isDeprecated": false,
@@ -9974,44 +10608,6 @@
         },
         {
           "__typename": "__Type",
-          "kind": "OBJECT",
-          "name": "SimilarProducts",
-          "description": null,
-          "fields": [
-            {
-              "name": "products",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "OBJECT",
-                      "name": "ShopProductItem",
-                      "ofType": null
-                    }
-                  }
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null,
-          "specifiedByURL": null
-        },
-        {
-          "__typename": "__Type",
           "kind": "ENUM",
           "name": "Size",
           "description": null,
@@ -10664,6 +11260,12 @@
             {
               "__typename": "__Type",
               "kind": "OBJECT",
+              "name": "GuestCart",
+              "ofType": null
+            },
+            {
+              "__typename": "__Type",
+              "kind": "OBJECT",
               "name": "Product",
               "ofType": null
             },
@@ -10884,44 +11486,6 @@
         {
           "__typename": "__Type",
           "kind": "OBJECT",
-          "name": "TrendingNowProducts",
-          "description": null,
-          "fields": [
-            {
-              "name": "products",
-              "description": null,
-              "args": [],
-              "type": {
-                "__typename": "__Type",
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "OBJECT",
-                      "name": "ShopProductItem",
-                      "ofType": null
-                    }
-                  }
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null,
-          "specifiedByURL": null
-        },
-        {
-          "__typename": "__Type",
-          "kind": "OBJECT",
           "name": "User",
           "description": null,
           "fields": [
@@ -10937,6 +11501,31 @@
                   "kind": "OBJECT",
                   "name": "Address",
                   "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "cartItems",
+              "description": null,
+              "args": [],
+              "type": {
+                "__typename": "__Type",
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "CartItemDomain",
+                      "ofType": null
+                    }
+                  }
                 }
               },
               "isDeprecated": false,

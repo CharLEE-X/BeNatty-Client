@@ -1,4 +1,4 @@
-package web.components.sections.footer
+package web.components.sections
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,6 +31,8 @@ import com.varabyte.kobweb.navigation.OpenLinkStrategy
 import com.varabyte.kobweb.navigation.open
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
+import component.localization.getString
 import feature.shop.footer.FooterContract
 import feature.shop.footer.FooterRoutes
 import feature.shop.footer.FooterViewModel
@@ -80,7 +82,7 @@ fun Footer(
     ) {
         TickerSection(
             isLoading = state.isLoading,
-            tickerText = state.strings.ticker,
+            tickerText = getString(Strings.Ticker),
             onClick = { vm.trySend(FooterContract.Inputs.OnTickerClick) },
         )
         Column(
@@ -133,7 +135,7 @@ private fun BottomSection(
                     )
                 } else {
                     SpanText(
-                        text = "© ${state.year} ${state.strings.companyName}",
+                        text = "© ${state.year} ${getString(Strings.CompanyName)}",
                         modifier = Modifier.color(contentColor)
                     )
                 }
@@ -165,7 +167,7 @@ private fun FollowUsSection(
 ) {
     FooterSection(
         isLoading = state.isLoading,
-        title = state.strings.followUs,
+        title = getString(Strings.FollowUs),
         contentColor = contentColor,
     ) {
         if (!state.isLoading) {
@@ -226,20 +228,20 @@ private fun HelpSection(
 ) {
     FooterSection(
         isLoading = state.isLoading,
-        title = state.strings.help,
+        title = getString(Strings.Help),
         contentColor = contentColor,
     ) {
         if ((!state.isLoading)) {
             FooterTextButton(
-                text = state.strings.trackOrder,
+                text = getString(Strings.TrackOrder),
                 onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
             )
             FooterTextButton(
-                text = state.strings.shipping,
+                text = getString(Strings.Shipping),
                 onClick = { vm.trySend(FooterContract.Inputs.OnShippingClick) },
             )
             FooterTextButton(
-                text = state.strings.returns,
+                text = getString(Strings.Returns),
                 onClick = { vm.trySend(FooterContract.Inputs.OnReturnsClick) },
             )
         } else {
@@ -256,37 +258,37 @@ private fun CompanySection(
 ) {
     FooterSection(
         isLoading = state.isLoading,
-        title = state.strings.company,
+        title = getString(Strings.Company),
         contentColor = contentColor,
     ) {
         if (!state.isLoading) {
             FooterTextButton(
-                text = state.strings.contactUs,
+                text = getString(Strings.ContactUs),
                 onClick = { vm.trySend(FooterContract.Inputs.OnPrivacyPolicyClicked) },
             )
             FooterTextButton(
-                text = state.strings.aboutUs,
+                text = getString(Strings.AboutUs),
                 onClick = { vm.trySend(FooterContract.Inputs.OnTermsOfServiceClicked) },
             )
             if (state.footerConfig?.showCareer == true) {
                 FooterTextButton(
-                    text = state.strings.career,
+                    text = getString(Strings.Career),
                     onClick = { vm.trySend(FooterContract.Inputs.OnCareerClick) },
                 )
             }
             if (state.footerConfig?.showPress == true) {
                 FooterTextButton(
-                    text = state.strings.press,
+                    text = getString(Strings.Press),
                     onClick = { vm.trySend(FooterContract.Inputs.OnPressClick) },
                 )
             }
             FooterTextButton(
-                text = state.strings.privacyPolicy,
+                text = getString(Strings.PrivacyPolicy),
                 onClick = { vm.trySend(FooterContract.Inputs.OnPrivacyPolicyClicked) },
             )
             if (state.isAdmin) {
                 FooterTextButton(
-                    text = state.strings.admin,
+                    text = getString(Strings.Admin),
                     onClick = { vm.trySend(FooterContract.Inputs.OnGoToAdminHome) },
                 )
             }
@@ -304,7 +306,7 @@ private fun CanWeHelpYouSection(
 ) {
     FooterSection(
         isLoading = state.isLoading,
-        title = state.strings.canWeHelpYou.uppercase() + "?",
+        title = getString(Strings.CanWeHelpYou).uppercase() + "?",
         contentColor = contentColor,
     ) {
         if (!state.isLoading) {
@@ -312,30 +314,30 @@ private fun CanWeHelpYouSection(
                 onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
                 modifier = Modifier.translateX((-12).px)
             ) {
-                SpanText(text = state.strings.startChat.uppercase())
+                SpanText(text = getString(Strings.StartChat).uppercase())
             }
             SpanText(
-                text = "${state.strings.from} ${state.companyInfo?.openingTimes?.dayFrom} ${state.strings.to} " +
-                    "${state.companyInfo?.openingTimes?.dayTo} \n${state.strings.from.lowercase()} " +
+                text = "${getString(Strings.From)} ${state.companyInfo?.openingTimes?.dayFrom} ${getString(Strings.To)} " +
+                    "${state.companyInfo?.openingTimes?.dayTo} \n${getString(Strings.From).lowercase()} " +
                     "${state.companyInfo?.openingTimes?.open}" +
-                    " ${state.strings.to} ${state.companyInfo?.openingTimes?.close}.",
+                    " ${getString(Strings.To)} ${state.companyInfo?.openingTimes?.close}.",
                 modifier = Modifier
                     .roleStyle(MaterialTheme.typography.bodyMedium)
                     .color(contentColor)
             )
             state.companyInfo?.contactInfo?.phone?.let { phone ->
                 SpanText(
-                    text = "${state.strings.tel}: $phone".uppercase(),
+                    text = "${getString(Strings.Tel)}: $phone".uppercase(),
                     modifier = Modifier
                         .padding(top = 1.em)
                         .roleStyle(MaterialTheme.typography.bodyMedium)
                         .color(contentColor)
                 )
                 SpanText(
-                    text = "${state.strings.from} ${state.companyInfo?.openingTimes?.dayFrom} ${state.strings.to} " +
-                        "${state.companyInfo?.openingTimes?.dayTo} ${state.strings.from.lowercase()} " +
+                    text = "${getString(Strings.From)} ${state.companyInfo?.openingTimes?.dayFrom} ${getString(Strings.To)} " +
+                        "${state.companyInfo?.openingTimes?.dayTo} ${getString(Strings.From).lowercase()} " +
                         "${state.companyInfo?.openingTimes?.open}" +
-                        " ${state.strings.to} ${state.companyInfo?.openingTimes?.close}.",
+                        " ${getString(Strings.To)} ${state.companyInfo?.openingTimes?.close}.",
                     modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
                         .color(contentColor)
                 )
@@ -344,10 +346,10 @@ private fun CanWeHelpYouSection(
                 onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
                 modifier = Modifier.translateX((-12).px)
             ) {
-                SpanText(text = state.strings.sendEmail.uppercase())
+                SpanText(text = getString(Strings.SendEmail).uppercase())
             }
             SpanText(
-                text = state.strings.weWillReply,
+                text = getString(Strings.WeWillReply),
                 modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
                     .color(contentColor)
             )
@@ -409,7 +411,6 @@ private fun FooterTextButton(
         SpanText(text = text)
     }
 }
-
 
 @Composable
 private fun PaymentMethodImage(

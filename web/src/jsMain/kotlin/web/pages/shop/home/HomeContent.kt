@@ -9,15 +9,21 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import component.localization.Strings
 import component.localization.getString
+import feature.shop.footer.FooterRoutes
 import feature.shop.home.HomeContract
 import feature.shop.home.HomeRoutes
 import feature.shop.home.HomeViewModel
+import feature.shop.navbar.DesktopNavRoutes
+import web.components.layouts.GlobalVMs
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
 
 @Composable
 fun HomeContent(
+    globalVMs: GlobalVMs,
     mainRoutes: MainRoutes,
+    desktopNavRoutes: DesktopNavRoutes,
+    footerRoutes: FooterRoutes,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -37,6 +43,9 @@ fun HomeContent(
     ShopMainLayout(
         title = getString(Strings.Home),
         mainRoutes = mainRoutes,
+        desktopNavRoutes = desktopNavRoutes,
+        footerRoutes = footerRoutes,
+        globalVMs = globalVMs,
     ) {
         state.landingConfig?.collageItems?.let {
             Collage(

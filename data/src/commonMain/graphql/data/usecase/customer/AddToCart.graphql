@@ -1,0 +1,20 @@
+mutation AddToCart($input: AddToCartInput!) {
+  addToCart(input: $input) {
+    guestCartId
+    items {
+      attrs {
+        key
+        value
+      }
+      available
+      mediaUrl
+      name
+      regularPrice
+      salePrice
+      productId
+      quantity
+      variantId
+      vendor
+    }
+  }
+}

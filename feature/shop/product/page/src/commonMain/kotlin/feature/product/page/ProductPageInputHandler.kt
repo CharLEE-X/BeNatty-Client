@@ -6,7 +6,6 @@ import com.copperleaf.ballast.postInput
 import component.localization.InputValidator
 import component.localization.Strings
 import component.localization.getString
-import core.models.Currency
 import core.models.VariantType
 import data.AdminProductGetByIdQuery
 import data.service.ProductService
@@ -66,10 +65,6 @@ internal class ProductPageInputHandler :
         is ProductPageContract.Inputs.OnGalleryMiniatureClicked -> handleGalleryMiniatureClicked(input.media)
         is ProductPageContract.Inputs.SetSelectedMedia -> updateState { it.copy(selectedMedia = input.media) }
         is ProductPageContract.Inputs.SetStockStatusString -> updateState { it.copy(stockStatusString = input.string) }
-        is ProductPageContract.Inputs.SetCurrency -> updateState { it.copy(currency = input.currency) }
-        is ProductPageContract.Inputs.SetSpendMore ->
-            updateState { it.copy(showSpendMore = input.show, spendMoreKey = input.key, spendMoreValue = input.value) }
-
         is ProductPageContract.Inputs.SetColors -> updateState { it.copy(colors = input.colors) }
         is ProductPageContract.Inputs.SetSizes -> updateState { it.copy(sizes = input.sizes) }
         is ProductPageContract.Inputs.OnColorClicked -> handleColorClicked(input.color)
@@ -115,8 +110,10 @@ internal class ProductPageInputHandler :
     }
 
     private suspend fun InputScope.handleOnAddToCartClicked() {
-        noOp()
-        // TODO: Add item to users cart
+        val state = getCurrentState()
+        state.selectedVariant?.id?.let { variantId ->
+            postEvent(ProductPageContract.Events.AddToCart(state.product.id, variantId))
+        } ?: noOp()
     }
 
     private suspend fun InputScope.handleFetchProduct(productId: String) {
@@ -155,15 +152,6 @@ internal class ProductPageInputHandler :
                         else -> getString(Strings.OutOfStock)
                     }
                     postInput(ProductPageContract.Inputs.SetStockStatusString(stockStatusString))
-
-                    val currency = Currency("£", "GBP")
-                    postInput(ProductPageContract.Inputs.SetCurrency(currency))
-
-                    // TODO: Remove this when the product has spend more
-                    val showSpendMore = true
-                    val spendMoreKey = getString(Strings.FreeShipping)
-                    val spendMoreValue = "100.00"
-                    postInput(ProductPageContract.Inputs.SetSpendMore(showSpendMore, spendMoreKey, spendMoreValue))
 
                     val allColors = it.getProductById.variants
                         .asSequence()
@@ -267,7 +255,7 @@ internal class ProductPageInputHandler :
             postInput(ProductPageContract.Inputs.SetIsSimilarProductsLoading(true))
             productService.getSimilarProducts().fold(
                 { postEvent(ProductPageContract.Events.OnError(it.toString())) },
-                { postInput(ProductPageContract.Inputs.SetSimilarProducts(it.getSimilarProducts.products)) }
+                { postInput(ProductPageContract.Inputs.SetSimilarProducts(it.getSimilarProducts)) }
             )
             postInput(ProductPageContract.Inputs.SetIsSimilarProductsLoading(false))
         }
@@ -278,7 +266,7 @@ internal class ProductPageInputHandler :
             postInput(ProductPageContract.Inputs.SetIsRecommendedProductsLoading(true))
             productService.getRecommendedProducts().fold(
                 { postEvent(ProductPageContract.Events.OnError(it.toString())) },
-                { postInput(ProductPageContract.Inputs.SetRecommendedProducts(it.getRecommendedProducts.products)) }
+                { postInput(ProductPageContract.Inputs.SetRecommendedProducts(it.getRecommendedProducts)) }
             )
             postInput(ProductPageContract.Inputs.SetIsRecommendedProductsLoading(false))
         }

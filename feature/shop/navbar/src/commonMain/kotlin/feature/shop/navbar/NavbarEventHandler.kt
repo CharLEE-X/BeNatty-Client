@@ -10,6 +10,7 @@ private typealias RootEventHandlerScope =
 internal class NavbarEventHandler(
     private val onError: suspend (String) -> Unit,
     private val desktopNavRoutes: DesktopNavRoutes,
+    private val showCartSidebar: (Boolean) -> Unit,
 ) : KoinComponent, EventHandler<DesktopNavContract.Inputs, DesktopNavContract.Events, DesktopNavContract.State> {
     override suspend fun RootEventHandlerScope.handleEvent(
         event: DesktopNavContract.Events,
@@ -25,6 +26,6 @@ internal class NavbarEventHandler(
         DesktopNavContract.Events.GoToCatalogue -> desktopNavRoutes.goToCatalogue()
         DesktopNavContract.Events.GoToAbout -> desktopNavRoutes.goToAbout()
         DesktopNavContract.Events.GoToShippingAndReturns -> desktopNavRoutes.goToShippingAndReturns()
-        is DesktopNavContract.Events.ShowCartSidebar -> desktopNavRoutes.showCartSidebar(event.showCartSidebar)
+        is DesktopNavContract.Events.ShowCartSidebar -> showCartSidebar(event.showCartSidebar)
     }
 }

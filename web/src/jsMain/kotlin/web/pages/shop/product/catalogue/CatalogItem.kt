@@ -10,6 +10,7 @@ import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
+import com.varabyte.kobweb.compose.css.TextOverflow
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.css.WhiteSpace
@@ -43,6 +44,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.scale
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
+import com.varabyte.kobweb.compose.ui.modifiers.textOverflow
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translateY
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
@@ -297,6 +299,8 @@ private fun ItemText(
             .color(contentColor)
             .fontWeight(450)
             .whiteSpace(WhiteSpace.NoWrap)
+            .textOverflow(TextOverflow.Ellipsis)
+            .overflow(Overflow.Hidden)
     )
 }
 

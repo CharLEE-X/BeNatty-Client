@@ -17,14 +17,24 @@ import com.copperleaf.ballast.navigation.routing.directions
 import com.copperleaf.ballast.navigation.routing.pathParameter
 import com.copperleaf.ballast.navigation.routing.renderCurrentDestination
 import com.copperleaf.ballast.navigation.routing.stringPath
+import com.varabyte.kobweb.navigation.OpenLinkStrategy
+import com.varabyte.kobweb.navigation.open
 import feature.product.catalog.CatalogVariant
 import feature.router.RouterViewModel
 import feature.router.Screen
 import feature.router.idPath
+import feature.shop.cart.CartContract
+import feature.shop.cart.CartViewModel
+import feature.shop.footer.FooterRoutes
+import feature.shop.footer.FooterViewModel
 import feature.shop.navbar.DesktopNavContract
+import feature.shop.navbar.DesktopNavRoutes
+import feature.shop.navbar.NavbarViewModel
+import kotlinx.browser.window
 import kotlinx.serialization.json.Json
 import web.components.layouts.AdminRoutes
 import web.components.layouts.AdminSideNavRoutes
+import web.components.layouts.GlobalVMs
 import web.components.layouts.MainRoutes
 import web.pages.admin.category.AdminCategoryCreateContent
 import web.pages.admin.category.AdminCategoryEditContent
@@ -135,6 +145,7 @@ fun RouterContent(
         goToAdminHome = { router.trySend(ReplaceTopDestination(Screen.AdminHome.route)) },
         goToProduct = { productId -> router.trySend(GoToDestination(Screen.Product.idPath(productId))) },
         onError = onError,
+        goToCheckout = { router.trySend(GoToDestination(Screen.Checkout.route)) },
     )
     val adminRoutes = AdminRoutes(
         goToAdminHome = goToAdminHome,
@@ -152,6 +163,61 @@ fun RouterContent(
         ),
         goBack = goBack,
     )
+    val desktopNavRoutes = DesktopNavRoutes(
+        goToHome = mainRoutes.goToHome,
+        goToLogin = mainRoutes.goToLogin,
+        goToOrders = mainRoutes.goToOrders,
+        goToProfile = mainRoutes.goToProfile,
+        goToReturns = mainRoutes.goToReturns,
+        goToWishlist = mainRoutes.goToWishlist,
+        goToHelpAndFaq = mainRoutes.goToHelpAndFaq,
+        goToCatalogue = mainRoutes.goToCatalogue,
+        goToAbout = mainRoutes.goToAboutUs,
+        goToShippingAndReturns = mainRoutes.goToShipping, // FIXME: Change to 'ShippingAndReturns'
+    )
+    val footerRoutes = FooterRoutes(
+        goToAboutUs = mainRoutes.goToAboutUs,
+        goToAccessibility = mainRoutes.goToAccessibility,
+        goToCareer = mainRoutes.goToCareer,
+        goToContactUs = mainRoutes.goToContactUs,
+        goToCyberSecurity = mainRoutes.goToCyberSecurity,
+        goToFAQs = mainRoutes.goToFAQs,
+        goToPress = mainRoutes.goToPress,
+        goToPrivacyPolicy = mainRoutes.goToPrivacyPolicy,
+        goToShipping = mainRoutes.goToShipping,
+        goToTermsOfService = mainRoutes.goToTermsOfService,
+        goToTrackOrder = mainRoutes.goToTrackOrder,
+        goToAdminHome = mainRoutes.goToAdminHome,
+        goToReturns = mainRoutes.goToReturns,
+        goToCatalogue = mainRoutes.goToCatalogue,
+    )
+
+    val cartVm = remember(scope) {
+        CartViewModel(
+            scope = scope,
+            onError = mainRoutes.onError,
+            goToLogin = mainRoutes.goToLogin,
+            goToProduct = mainRoutes.goToProduct,
+            goToCheckout = mainRoutes.goToCheckout,
+        )
+    }
+    val navbarVm = remember(scope) {
+        NavbarViewModel(
+            scope = scope,
+            onError = mainRoutes.onError,
+            desktopNavRoutes = desktopNavRoutes,
+            showCartSidebar = { cartVm.trySend(CartContract.Inputs.ShowCart) },
+        )
+    }
+    val footerVM = remember(scope) {
+        FooterViewModel(
+            scope = scope,
+            onError = mainRoutes.onError,
+            footerRoutes = footerRoutes,
+            goToCompanyWebsite = { window.open(it, OpenLinkStrategy.IN_NEW_TAB) }
+        )
+    }
+    val globalVMs = GlobalVMs(cartVm, navbarVm, footerVM)
 
     @Composable
     fun authenticatedRoute(block: @Composable () -> Unit) {
@@ -163,6 +229,9 @@ fun RouterContent(
             when (screen) {
                 Screen.Home -> HomeContent(
                     mainRoutes = mainRoutes,
+                    globalVMs = globalVMs,
+                    desktopNavRoutes = desktopNavRoutes,
+                    footerRoutes = footerRoutes,
                 )
 
                 Screen.Login -> LoginPage(
@@ -178,13 +247,21 @@ fun RouterContent(
                 Screen.ForgotPassword -> ForgotPasswordPage(
                     mainRoutes = mainRoutes,
                     goToLogin = goToLogin,
-                )
+                    globalVMs = globalVMs,
+                    desktopNavRoutes = desktopNavRoutes,
+                    footerRoutes = footerRoutes,
+
+                    )
 
                 Screen.UpdatePassword -> authenticatedRoute {
                     UpdatePasswordPage(
                         mainRoutes = mainRoutes,
                         goToLogin = goToLogin,
-                    )
+                        globalVMs = globalVMs,
+                        desktopNavRoutes = desktopNavRoutes,
+                        footerRoutes = footerRoutes,
+
+                        )
                 }
 
                 Screen.Catalogue -> {
@@ -192,7 +269,10 @@ fun RouterContent(
                     val catalogVariantClass = Json.decodeFromString<CatalogVariant>(variant)
                     CatalogContent(
                         mainRoutes = mainRoutes,
-                        catalogVariant = catalogVariantClass
+                        catalogVariant = catalogVariantClass,
+                        globalVMs = globalVMs,
+                        desktopNavRoutes = desktopNavRoutes,
+                        footerRoutes = footerRoutes,
                     )
                 }
 
@@ -201,8 +281,9 @@ fun RouterContent(
                     ProductPage(
                         productId = id,
                         mainRoutes = mainRoutes,
-                        onError = onError,
-                        goToProduct = { router.trySend(GoToDestination(Screen.Product.idPath(it))) },
+                        desktopNavRoutes = desktopNavRoutes,
+                        footerRoutes = footerRoutes,
+                        globalVMs = globalVMs,
                     )
                 }
 

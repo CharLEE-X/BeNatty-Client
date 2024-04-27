@@ -8,6 +8,7 @@ internal class ProductPageEventHandler(
     private val goToProduct: suspend (String) -> Unit,
     private val openAskQuestionDialog: suspend () -> Unit,
     private val openSizeGuideDialog: suspend () -> Unit,
+    private val addToCart: (productId: String, variantId: String) -> Unit,
 ) : EventHandler<ProductPageContract.Inputs, ProductPageContract.Events, ProductPageContract.State> {
     override suspend fun EventHandlerScope<
         ProductPageContract.Inputs,
@@ -18,5 +19,6 @@ internal class ProductPageEventHandler(
         is ProductPageContract.Events.GoToProduct -> goToProduct(event.productId)
         ProductPageContract.Events.OpenAskQuestionDialog -> openAskQuestionDialog()
         ProductPageContract.Events.OpenSizeGuideDialog -> openSizeGuideDialog()
+        is ProductPageContract.Events.AddToCart -> addToCart(event.productId, event.variantId)
     }
 }

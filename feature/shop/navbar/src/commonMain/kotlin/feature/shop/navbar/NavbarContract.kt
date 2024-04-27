@@ -10,7 +10,6 @@ object DesktopNavContract : KoinComponent {
         val isAuthenticated: Boolean = false,
         val storeMenuItems: List<String> = listOf(strings.woman, strings.man, strings.sale).map { it.uppercase() },
         val searchValue: String = "",
-        val basketCount: Int = 0,
     )
 
     sealed interface Inputs {
@@ -35,7 +34,6 @@ object DesktopNavContract : KoinComponent {
         data object OnBasketClick : Inputs
 
         data class SetIsLoading(val isLoading: Boolean) : Inputs
-        data class SetBasketCount(val count: Int) : Inputs
     }
 
     sealed interface Events {
@@ -69,8 +67,7 @@ object DesktopNavContract : KoinComponent {
         val shippingReturns: String = getString(component.localization.Strings.ShippingReturns),
         val about: String = getString(component.localization.Strings.About),
         val sale: String = getString(component.localization.Strings.Sale),
-    ) {
-    }
+    )
 
     enum class AccountMenuItem {
         ORDERS,
@@ -92,7 +89,6 @@ data class DesktopNavRoutes(
     val goToCatalogue: () -> Unit,
     val goToAbout: () -> Unit,
     val goToShippingAndReturns: () -> Unit,
-    val showCartSidebar: (Boolean) -> Unit,
 )
 
 fun DesktopNavContract.AccountMenuItem.label(): String {

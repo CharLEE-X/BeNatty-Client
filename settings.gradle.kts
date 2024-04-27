@@ -52,6 +52,7 @@ include(
     // Shop features
     ":feature:shop:navbar",
     ":feature:shop:footer",
+    ":feature:shop:cart",
     ":feature:shop:home",
     ":feature:shop:account:profile",
     ":feature:shop:account:orders",

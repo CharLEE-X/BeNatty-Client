@@ -18,6 +18,7 @@ import component.localization.getString
 import data.GetCatalogPageQuery
 import feature.product.page.ProductPageContract
 import feature.product.page.ProductPageViewModel
+import feature.shop.cart.CartContract
 import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
@@ -29,7 +30,8 @@ import web.pages.shop.product.catalogue.CatalogItem
 @Composable
 fun YouMayAlsoLike(
     vm: ProductPageViewModel,
-    state: ProductPageContract.State,
+    productPageState: ProductPageContract.State,
+    cartState: CartContract.State,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -47,7 +49,7 @@ fun YouMayAlsoLike(
         Row(
             modifier = gridModifier(6)
         ) {
-            state.recommendedProducts.forEach { product ->
+            productPageState.recommendedProducts.forEach { product ->
                 CatalogItem(
                     title = product.name,
                     regularPrice = product.regularPrice,
@@ -59,7 +61,7 @@ fun YouMayAlsoLike(
                     },
                     imageHeight = null,
                     miniaturesMinHeight = 80.px,
-                    currency = state.currency,
+                    currency = cartState.currency,
                     onClick = { vm.trySend(ProductPageContract.Inputs.OnGoToProductClicked(product.id)) },
                     modifier = Modifier.aspectRatio(0.667)
                 )

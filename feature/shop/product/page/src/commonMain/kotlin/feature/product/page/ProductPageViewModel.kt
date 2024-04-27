@@ -18,6 +18,7 @@ class ProductPageViewModel(
     goToProduct: suspend (String) -> Unit,
     openAskQuestionDialog: suspend () -> Unit,
     openSizeGuideDialog: suspend () -> Unit,
+    addToCart: (productId: String, variantId: String) -> Unit,
 ) : BasicViewModel<
     ProductPageContract.Inputs,
     ProductPageContract.Events,
@@ -45,6 +46,7 @@ class ProductPageViewModel(
         goToProduct = goToProduct,
         openAskQuestionDialog = openAskQuestionDialog,
         openSizeGuideDialog = openSizeGuideDialog,
+        addToCart = addToCart,
     ),
     coroutineScope = scope,
 ) {

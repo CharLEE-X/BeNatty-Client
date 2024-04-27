@@ -57,6 +57,7 @@ import core.models.Currency
 import data.GetSimilarProductsQuery
 import feature.product.page.ProductPageContract
 import feature.product.page.ProductPageViewModel
+import feature.shop.cart.CartContract
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.deg
@@ -70,8 +71,13 @@ import web.util.cornerRadius
 import web.util.onEnterKeyDown
 
 @Composable
-fun SimilarProducts(modifier: Modifier, vm: ProductPageViewModel, state: ProductPageContract.State) {
-    if (state.similarProducts.isNotEmpty()) {
+fun SimilarProducts(
+    modifier: Modifier,
+    vm: ProductPageViewModel,
+    productPageState: ProductPageContract.State,
+    cartState: CartContract.State,
+) {
+    if (productPageState.similarProducts.isNotEmpty()) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
@@ -93,10 +99,10 @@ fun SimilarProducts(modifier: Modifier, vm: ProductPageViewModel, state: Product
                     modifier = Modifier.roleStyle(MaterialTheme.typography.titleLarge)
                 )
             }
-            state.similarProducts.forEach { product ->
+            productPageState.similarProducts.forEach { product ->
                 SimilarProductItem(
                     name = product.name,
-                    currency = state.currency,
+                    currency = cartState.currency,
                     regularPrice = product.regularPrice.toString(),
                     salePrice = product.salePrice.toString(),
                     media = product.media.first(),
@@ -181,8 +187,9 @@ fun ProductPrice(
     containerModifier: Modifier = Modifier,
     regularModifier: Modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium),
     saleModifier: Modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium),
+    initialIsOnSale: Boolean = false,
 ) {
-    var isOnSale by remember { mutableStateOf(false) }
+    var isOnSale by remember { mutableStateOf(initialIsOnSale) }
 
     LaunchedEffect(Unit) {
         delay(1_000)

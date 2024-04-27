@@ -27,10 +27,13 @@ import component.localization.Strings
 import component.localization.getString
 import feature.forgotpassword.ForgotPasswordContract
 import feature.forgotpassword.ForgotPasswordViewModel
+import feature.shop.footer.FooterRoutes
+import feature.shop.navbar.DesktopNavRoutes
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import theme.MaterialTheme
 import theme.roleStyle
+import web.components.layouts.GlobalVMs
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
 import web.components.widgets.AppFilledButton
@@ -42,7 +45,10 @@ import web.compose.material3.component.TextFieldType
 
 @Composable
 fun ForgotPasswordPage(
+    globalVMs: GlobalVMs,
     mainRoutes: MainRoutes,
+    desktopNavRoutes: DesktopNavRoutes,
+    footerRoutes: FooterRoutes,
     goToLogin: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -57,6 +63,9 @@ fun ForgotPasswordPage(
     ShopMainLayout(
         title = getString(Strings.ForgotPassword),
         mainRoutes = mainRoutes,
+        desktopNavRoutes = desktopNavRoutes,
+        footerRoutes = footerRoutes,
+        globalVMs = globalVMs,
     ) {
         Box(
             contentAlignment = Alignment.Center,

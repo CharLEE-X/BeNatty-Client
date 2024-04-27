@@ -21,12 +21,15 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibilityOff
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
+import feature.shop.footer.FooterRoutes
+import feature.shop.navbar.DesktopNavRoutes
 import feature.updatepassword.UpdatePasswordContract
 import feature.updatepassword.UpdatePasswordViewModel
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import theme.MaterialTheme
 import theme.roleStyle
+import web.components.layouts.GlobalVMs
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
 import web.components.widgets.AppFilledButton
@@ -36,7 +39,10 @@ import web.compose.material3.component.TextFieldType
 
 @Composable
 fun UpdatePasswordPage(
+    globalVMs: GlobalVMs,
     mainRoutes: MainRoutes,
+    desktopNavRoutes: DesktopNavRoutes,
+    footerRoutes: FooterRoutes,
     goToLogin: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -52,6 +58,9 @@ fun UpdatePasswordPage(
     ShopMainLayout(
         title = "Update password",
         mainRoutes = mainRoutes,
+        desktopNavRoutes = desktopNavRoutes,
+        footerRoutes = footerRoutes,
+        globalVMs = globalVMs,
     ) {
         Box(
             contentAlignment = Alignment.Center,

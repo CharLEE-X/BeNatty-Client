@@ -31,7 +31,7 @@ import org.jetbrains.compose.web.css.plus
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import theme.MaterialTheme
-import web.components.sections.desktopNav.ScrollDirection
+import web.components.sections.ScrollDirection
 
 
 @Composable

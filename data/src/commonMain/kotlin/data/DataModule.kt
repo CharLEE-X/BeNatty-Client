@@ -69,6 +69,7 @@ val dataModule = module {
     single<UserService> {
         UserServiceImpl(
             apolloClient = get(),
+            settings = get(named(SettingsType.SETTINGS_ENCRYPTED.name)),
         )
     }
     single<ProductService> {

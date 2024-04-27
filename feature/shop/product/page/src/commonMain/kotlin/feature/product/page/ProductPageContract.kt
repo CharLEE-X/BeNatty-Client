@@ -2,7 +2,6 @@ package feature.product.page
 
 import component.localization.Strings
 import component.localization.getString
-import core.models.Currency
 import data.AdminProductGetByIdQuery
 import data.GetRecommendedProductsQuery
 import data.GetSimilarProductsQuery
@@ -54,18 +53,12 @@ object ProductPageContract {
             totalInWishlist = 0,
         ),
 
-        val recommendedProducts: List<GetRecommendedProductsQuery.Product> = emptyList(),
-        val similarProducts: List<GetSimilarProductsQuery.Product> = emptyList(),
+        val recommendedProducts: List<GetRecommendedProductsQuery.GetRecommendedProduct> = emptyList(),
+        val similarProducts: List<GetSimilarProductsQuery.GetSimilarProduct> = emptyList(),
         val selectedMedia: AdminProductGetByIdQuery.Medium? = null,
         val selectedVariant: AdminProductGetByIdQuery.Variant? = null,
         // TODO: Add currency support
-        val currency: Currency = Currency("£", "GBP"),
         val stockStatusString: String = getString(Strings.OutOfStock),
-
-        // TODO: Make it like so it works like. Spend 50£ more to get 5% off, then spend 100£ more to get 10% off, etc.
-        val showSpendMore: Boolean = false,
-        val spendMoreKey: String = "",
-        val spendMoreValue: String = "",
 
         val colors: List<ColorItem> = emptyList(),
         val selectedColor: String? = null,
@@ -116,13 +109,13 @@ object ProductPageContract {
         data class SetIsRecommendedProductsLoading(val loading: Boolean) : Inputs
         data class SetIsSimilarProductsLoading(val loading: Boolean) : Inputs
         data class SetProduct(val product: AdminProductGetByIdQuery.GetProductById) : Inputs
-        data class SetRecommendedProducts(val products: List<GetRecommendedProductsQuery.Product>) : Inputs
-        data class SetSimilarProducts(val products: List<GetSimilarProductsQuery.Product>) : Inputs
+        data class SetRecommendedProducts(val products: List<GetRecommendedProductsQuery.GetRecommendedProduct>) :
+            Inputs
+
+        data class SetSimilarProducts(val products: List<GetSimilarProductsQuery.GetSimilarProduct>) : Inputs
         data class SetSelectedMedia(val media: AdminProductGetByIdQuery.Medium) : Inputs
         data class SetSelectedVariant(val variant: AdminProductGetByIdQuery.Variant) : Inputs
         data class SetStockStatusString(val string: String) : Inputs
-        data class SetCurrency(val currency: Currency) : Inputs
-        data class SetSpendMore(val show: Boolean, val key: String, val value: String) : Inputs
         data class SetColors(val colors: List<ColorItem>) : Inputs
         data class SetSizes(val sizes: List<String>) : Inputs
         data class SetIsAddToCartButtonEnabled(val enabled: Boolean) : Inputs
@@ -133,6 +126,7 @@ object ProductPageContract {
         data class GoToProduct(val productId: String) : Events
         data object OpenSizeGuideDialog : Events
         data object OpenAskQuestionDialog : Events
+        data class AddToCart(val productId: String, val variantId: String) : Events
     }
 
     data class ColorItem(val value: String, val media: AdminProductGetByIdQuery.Medium1?)

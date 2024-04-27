@@ -1,0 +1,21 @@
+query GetUserCart($guestCartId: String) {
+  #  cart id is nullable
+  getUserCart(guestCartId: $guestCartId) {
+    guestCartId
+    items {
+      productId
+      variantId
+      vendor
+      name
+      attrs {
+        key
+        value
+      }
+      mediaUrl
+      regularPrice
+      salePrice
+      quantity
+      available
+    }
+  }
+}

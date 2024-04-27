@@ -1,16 +1,14 @@
 query GetSimilarProducts {
   getSimilarProducts {
-    products {
-      id
-      media {
-        keyName
-        url
-        alt
-        type
-      }
-      regularPrice
-      salePrice
-      name
+    id
+    media {
+      keyName
+      url
+      alt
+      type
     }
+    regularPrice
+    salePrice
+    name
   }
 }

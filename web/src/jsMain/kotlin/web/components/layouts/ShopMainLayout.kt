@@ -2,6 +2,7 @@ package web.components.layouts
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,8 +23,13 @@ import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.minHeight
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.transition
+import com.varabyte.kobweb.compose.ui.modifiers.zIndex
+import com.varabyte.kobweb.compose.ui.toAttrs
+import feature.shop.cart.CartViewModel
 import feature.shop.footer.FooterRoutes
+import feature.shop.footer.FooterViewModel
 import feature.shop.navbar.DesktopNavRoutes
+import feature.shop.navbar.NavbarViewModel
 import kotlinx.browser.document
 import org.jetbrains.compose.web.css.CSSSizeValue
 import org.jetbrains.compose.web.css.CSSUnit
@@ -31,8 +37,10 @@ import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.plus
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import web.components.sections.desktopNav.DesktopNavContent
-import web.components.sections.footer.Footer
+import org.jetbrains.compose.web.dom.Span
+import web.components.sections.CartPanel
+import web.components.sections.DesktopNavContent
+import web.components.sections.Footer
 import web.components.widgets.Background
 import web.util.sectionsGap
 
@@ -59,47 +67,27 @@ data class MainRoutes(
     val goToAdminHome: () -> Unit,
     val onError: suspend (String) -> Unit,
     val goToProduct: (String) -> Unit,
+    val goToCheckout: () -> Unit,
+)
+
+data class GlobalVMs(
+    val cartVm: CartViewModel,
+    val navbarVm: NavbarViewModel,
+    val footerVM: FooterViewModel,
 )
 
 @Composable
 fun ShopMainLayout(
     title: String,
+    globalVMs: GlobalVMs,
     mainRoutes: MainRoutes,
+    desktopNavRoutes: DesktopNavRoutes,
+    footerRoutes: FooterRoutes,
     spacing: CSSLengthOrPercentageNumericValue = sectionsGap,
     overlay: @Composable BoxScope.() -> Unit = {},
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    var showCartSidebar by remember { mutableStateOf(false) }
-
-    val desktopNavRoutes = DesktopNavRoutes(
-        goToHome = mainRoutes.goToHome,
-        goToLogin = mainRoutes.goToLogin,
-        goToOrders = mainRoutes.goToOrders,
-        goToProfile = mainRoutes.goToProfile,
-        goToReturns = mainRoutes.goToReturns,
-        goToWishlist = mainRoutes.goToWishlist,
-        goToHelpAndFaq = mainRoutes.goToHelpAndFaq,
-        goToCatalogue = mainRoutes.goToCatalogue,
-        goToAbout = mainRoutes.goToAboutUs,
-        goToShippingAndReturns = mainRoutes.goToShipping, // FIXME: Change to 'ShippingAndReturns'
-        showCartSidebar = { showCartSidebar = true },
-    )
-    val footerRoutes = FooterRoutes(
-        goToAboutUs = mainRoutes.goToAboutUs,
-        goToAccessibility = mainRoutes.goToAccessibility,
-        goToCareer = mainRoutes.goToCareer,
-        goToContactUs = mainRoutes.goToContactUs,
-        goToCyberSecurity = mainRoutes.goToCyberSecurity,
-        goToFAQs = mainRoutes.goToFAQs,
-        goToPress = mainRoutes.goToPress,
-        goToPrivacyPolicy = mainRoutes.goToPrivacyPolicy,
-        goToShipping = mainRoutes.goToShipping,
-        goToTermsOfService = mainRoutes.goToTermsOfService,
-        goToTrackOrder = mainRoutes.goToTrackOrder,
-        goToAdminHome = mainRoutes.goToAdminHome,
-        goToReturns = mainRoutes.goToReturns,
-        goToCatalogue = mainRoutes.goToCatalogue,
-    )
+    val cartState by globalVMs.cartVm.observeStates().collectAsState()
 
     var topSpacing: CSSSizeValue<CSSUnit.px> by remember { mutableStateOf(0.px) }
 
@@ -122,8 +110,10 @@ fun ShopMainLayout(
         ) {
             DesktopNavContent(
                 desktopNavRoutes = desktopNavRoutes,
+                globalVMs = globalVMs,
                 onError = mainRoutes.onError,
-                onTopSpacingChanged = { topSpacing = it }
+                onTopSpacingChanged = { topSpacing = it },
+                modifier = Modifier.zIndex(10),
             )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -143,6 +133,13 @@ fun ShopMainLayout(
                 footerRoutes = footerRoutes,
             )
         }
-        overlay()
+        CartPanel(
+            vm = globalVMs.cartVm,
+            state = cartState,
+            zIndex = 100,
+        )
+        Span(Modifier.zIndex(2000).toAttrs()) {
+            overlay()
+        }
     }
 }

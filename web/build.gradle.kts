@@ -50,6 +50,7 @@ kotlin {
 
                 implementation(feature.shop.navbar)
                 implementation(feature.shop.footer)
+                implementation(feature.shop.cart)
                 implementation(feature.shop.home)
                 implementation(feature.shop.account.profile)
                 implementation(feature.shop.account.orders)
