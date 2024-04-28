@@ -1,0 +1,3 @@
+query GetPaymentMethods($platforms: [Platform!]!) {
+  getPaymentMethods(platforms: $platforms)
+}

@@ -17,5 +17,7 @@ query GetUserCart($guestCartId: String) {
       quantity
       available
     }
+    subtotal
+    saved
   }
 }

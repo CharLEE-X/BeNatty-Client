@@ -49,18 +49,6 @@ include(
     ":feature:auth:forgot-password",
     ":feature:auth:update-password",
 
-    // Shop features
-    ":feature:shop:navbar",
-    ":feature:shop:footer",
-    ":feature:shop:cart",
-    ":feature:shop:home",
-    ":feature:shop:account:profile",
-    ":feature:shop:account:orders",
-    ":feature:shop:account:returns",
-    ":feature:shop:account:wishlist",
-    ":feature:shop:product:catalog",
-    ":feature:shop:product:page",
-
     // Admin features
     ":feature:admin:dashboard",
     ":feature:admin:config",
@@ -75,4 +63,17 @@ include(
     ":feature:admin:order:page",
     ":feature:admin:tag:create",
     ":feature:admin:tag:edit",
+
+    // Shop features
+    ":feature:shop:navbar",
+    ":feature:shop:footer",
+    ":feature:shop:cart",
+    ":feature:shop:home",
+    ":feature:shop:account:profile",
+    ":feature:shop:account:orders",
+    ":feature:shop:account:returns",
+    ":feature:shop:account:wishlist",
+    ":feature:shop:product:catalog",
+    ":feature:shop:product:page",
+    ":feature:shop:checkout",
 )

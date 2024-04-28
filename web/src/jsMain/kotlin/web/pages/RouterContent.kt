@@ -74,7 +74,6 @@ import web.pages.shop.help.about.AboutPage
 import web.pages.shop.help.contact.ContactPage
 import web.pages.shop.home.HomeContent
 import web.pages.shop.payment.PaymentPage
-import web.pages.shop.payment.cart.CartPage
 import web.pages.shop.payment.checkout.CheckoutPage
 import web.pages.shop.product.catalogue.CatalogContent
 import web.pages.shop.product.page.ProductPage
@@ -287,14 +286,11 @@ fun RouterContent(
                     )
                 }
 
-                Screen.Cart -> CartPage(
-                    router = router,
-                    onError = onError,
-                )
-
                 Screen.Checkout -> CheckoutPage(
-                    router = router,
-                    onError = onError,
+                    globalVMs = globalVMs,
+                    mainRoutes = mainRoutes,
+                    desktopNavRoutes = desktopNavRoutes,
+                    footerRoutes = footerRoutes,
                 )
 
                 Screen.Payment -> PaymentPage(

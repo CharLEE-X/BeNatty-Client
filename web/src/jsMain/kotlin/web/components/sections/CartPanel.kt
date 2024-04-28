@@ -157,7 +157,7 @@ fun BoxScope.CartPanel(vm: CartViewModel, state: CartContract.State, zIndex: Int
             CloseButton(
                 onCloseCLick = { vm.trySend(CartContract.Inputs.HideCart) }
             )
-            if (state.items.isEmpty()) {
+            if (state.cart.items.isEmpty()) {
                 EmptyBasketSection(
                     vm = vm,
                     state = state,
@@ -395,7 +395,7 @@ private fun BasketContent(
                     y(Overflow.Auto)
                 }
         ) {
-            state.items.forEach { item ->
+            state.cart.items.forEach { item ->
                 CartItem(
                     item = item,
                     currency = state.currency,

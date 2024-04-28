@@ -50,15 +50,10 @@ internal class CartInputHandler : KoinComponent,
             quantity = input.quantity
         )
 
-        is CartContract.Inputs.SetItems -> updateState { it.copy(items = input.items) }
+        is CartContract.Inputs.SetCart -> updateState { it.copy(cart = input.cart) }
         is CartContract.Inputs.SetCurrency -> updateState { it.copy(currency = input.currency) }
-        is CartContract.Inputs.SetSpendMore -> updateState {
-            it.copy(
-                showSpendMore = input.show,
-                spendMoreKey = input.key,
-                spendMoreValue = input.value
-            )
-        }
+        is CartContract.Inputs.SetSpendMore ->
+            updateState { it.copy(showSpendMore = input.show, spendMoreKey = input.key, spendMoreValue = input.value) }
 
         is CartContract.Inputs.OnDecrementClicked -> handleDecrementClicked(input.productId, input.variantId)
         is CartContract.Inputs.OnIncrementClicked -> handleIncrementClicked(input.productId, input.variantId)
@@ -69,12 +64,14 @@ internal class CartInputHandler : KoinComponent,
     }
 
     private suspend fun InputScope.handleOnGoToCheckoutClicked() {
-        postInput(CartContract.Inputs.HideCart)
-        postEvent(CartContract.Events.GoToCheckout)
+        sideJob("handleOnGoToCheckoutClicked") {
+            postInput(CartContract.Inputs.HideCart)
+            postEvent(CartContract.Events.GoToCheckout)
+        }
     }
 
     private suspend fun InputScope.handleOnAddToCartClicked(productId: String, variantId: String) {
-        getCurrentState().items
+        getCurrentState().cart.items
             .firstOrNull { it.productId == productId && it.variantId == variantId }
             ?.let { postInput(CartContract.Inputs.UpdateCart(productId, variantId, it.quantity + 1)) }
             ?: handleUpdateCart(productId, variantId, 1)
@@ -88,26 +85,34 @@ internal class CartInputHandler : KoinComponent,
             ).fold(
                 { postEvent(CartContract.Events.OnError(it.toString())) },
                 {
-                    postInput(CartContract.Inputs.SetItems(it.removeItemFromUserCart.items.map {
-                        GetUserCartQuery.Item(
-                            productId = it.productId,
-                            variantId = it.variantId,
-                            vendor = it.vendor,
-                            name = it.name,
-                            attrs = it.attrs.map {
-                                GetUserCartQuery.Attr(
-                                    key = it.key,
-                                    value = it.value
-                                )
-                            },
-                            mediaUrl = it.mediaUrl,
-                            regularPrice = it.regularPrice,
-                            salePrice = it.salePrice,
-                            quantity = it.quantity,
-                            available = it.available,
+                    postInput(
+                        CartContract.Inputs.SetCart(
+                            GetUserCartQuery.GetUserCart(
+                                guestCartId = it.removeItemFromUserCart.guestCartId,
+                                items = it.removeItemFromUserCart.items.map {
+                                    GetUserCartQuery.Item(
+                                        productId = it.productId,
+                                        variantId = it.variantId,
+                                        vendor = it.vendor,
+                                        name = it.name,
+                                        attrs = it.attrs.map {
+                                            GetUserCartQuery.Attr(
+                                                key = it.key,
+                                                value = it.value
+                                            )
+                                        },
+                                        mediaUrl = it.mediaUrl,
+                                        regularPrice = it.regularPrice,
+                                        salePrice = it.salePrice,
+                                        quantity = it.quantity,
+                                        available = it.available,
+                                    )
+                                },
+                                subtotal = it.removeItemFromUserCart.subtotal,
+                                saved = it.removeItemFromUserCart.saved
+                            )
                         )
-                    }
-                    ))
+                    )
 
                     val totals = countTotals(it.removeItemFromUserCart.items.map {
                         Prices(
@@ -124,7 +129,7 @@ internal class CartInputHandler : KoinComponent,
     }
 
     private suspend fun InputScope.handleDecrementClicked(productId: String, variantId: String) {
-        getCurrentState().items
+        getCurrentState().cart.items
             .firstOrNull { it.productId == productId && it.variantId == variantId }
             ?.let {
                 if (it.quantity == 1) {
@@ -136,7 +141,7 @@ internal class CartInputHandler : KoinComponent,
     }
 
     private suspend fun InputScope.handleIncrementClicked(productId: String, variantId: String) {
-        getCurrentState().items
+        getCurrentState().cart.items
             .firstOrNull { it.productId == productId && it.variantId == variantId }
             ?.let { postInput(CartContract.Inputs.UpdateCart(productId, variantId, it.quantity + 1)) }
             ?: noOp()
@@ -155,27 +160,34 @@ internal class CartInputHandler : KoinComponent,
             ).fold(
                 { postEvent(CartContract.Events.OnError(it.toString())) },
                 {
-                    postInput(CartContract.Inputs.SetItems(
-                        it.addToCart.items.map {
-                            GetUserCartQuery.Item(
-                                productId = it.productId,
-                                variantId = it.variantId,
-                                vendor = it.vendor,
-                                name = it.name,
-                                attrs = it.attrs.map {
-                                    GetUserCartQuery.Attr(
-                                        key = it.key,
-                                        value = it.value
+                    postInput(
+                        CartContract.Inputs.SetCart(
+                            GetUserCartQuery.GetUserCart(
+                                guestCartId = it.addToCart.guestCartId,
+                                items = it.addToCart.items.map {
+                                    GetUserCartQuery.Item(
+                                        productId = it.productId,
+                                        variantId = it.variantId,
+                                        vendor = it.vendor,
+                                        name = it.name,
+                                        attrs = it.attrs.map {
+                                            GetUserCartQuery.Attr(
+                                                key = it.key,
+                                                value = it.value
+                                            )
+                                        },
+                                        mediaUrl = it.mediaUrl,
+                                        regularPrice = it.regularPrice,
+                                        salePrice = it.salePrice,
+                                        quantity = it.quantity,
+                                        available = it.available,
                                     )
                                 },
-                                mediaUrl = it.mediaUrl,
-                                regularPrice = it.regularPrice,
-                                salePrice = it.salePrice,
-                                quantity = it.quantity,
-                                available = it.available,
+                                subtotal = it.addToCart.subtotal,
+                                saved = it.addToCart.saved
                             )
-                        }
-                    ))
+                        )
+                    )
 
                     val totals = countTotals(it.addToCart.items.map {
                         Prices(
@@ -217,7 +229,7 @@ internal class CartInputHandler : KoinComponent,
                         )
                     })
                     postInput(CartContract.Inputs.SetTotals(subtotal = totals.subtotal, saved = totals.saved))
-                    postInput(CartContract.Inputs.SetItems(it.getUserCart.items))
+                    postInput(CartContract.Inputs.SetCart(it.getUserCart))
                     postInput(CartContract.Inputs.SetBasketCount(it.getUserCart.items.size))
                 }
             )

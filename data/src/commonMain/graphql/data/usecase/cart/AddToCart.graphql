@@ -16,5 +16,7 @@ mutation AddToCart($input: AddToCartInput!) {
       variantId
       vendor
     }
+    subtotal
+    saved
   }
 }

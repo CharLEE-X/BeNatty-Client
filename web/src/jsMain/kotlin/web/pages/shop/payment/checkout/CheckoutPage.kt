@@ -1,46 +1,72 @@
 package web.pages.shop.payment.checkout
 
 import androidx.compose.runtime.Composable
-import com.copperleaf.ballast.navigation.routing.RouterContract
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import com.varabyte.kobweb.compose.foundation.layout.Box
-import com.varabyte.kobweb.compose.foundation.layout.Column
-import com.varabyte.kobweb.compose.ui.Alignment
+import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.background
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxHeight
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
-import com.varabyte.kobweb.silk.components.forms.Button
-import com.varabyte.kobweb.silk.components.text.SpanText
-import feature.router.RouterViewModel
-import feature.router.Screen
+import com.varabyte.kobweb.compose.ui.modifiers.margin
+import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.width
+import component.localization.Strings
+import component.localization.getString
+import feature.checkout.CheckoutViewModel
+import feature.shop.footer.FooterRoutes
+import feature.shop.navbar.DesktopNavRoutes
+import org.jetbrains.compose.web.css.px
+import theme.MaterialTheme
+import web.components.layouts.GlobalVMs
+import web.components.layouts.MainRoutes
+import web.components.layouts.ShopMainLayout
+import web.components.layouts.oneLayoutMaxWidth
+import web.util.glossy
 
-@Suppress("UNUSED_PARAMETER")
 @Composable
 fun CheckoutPage(
-    router: RouterViewModel,
-    onError: suspend (String) -> Unit,
+    globalVMs: GlobalVMs,
+    mainRoutes: MainRoutes,
+    desktopNavRoutes: DesktopNavRoutes,
+    footerRoutes: FooterRoutes,
 ) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .fillMaxSize()
+    val scope = rememberCoroutineScope()
+    val vm = remember(scope) {
+        CheckoutViewModel(
+            scope = scope,
+            onError = mainRoutes.onError,
+        )
+    }
+    val state by vm.observeStates().collectAsState()
+
+    ShopMainLayout(
+        title = getString(Strings.ProductPage),
+        mainRoutes = mainRoutes,
+        globalVMs = globalVMs,
+        isFullLayout = false,
+        desktopNavRoutes = desktopNavRoutes,
+        footerRoutes = footerRoutes,
+        overlay = {}
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+        Row(
+            modifier = Modifier
+                .maxWidth(oneLayoutMaxWidth)
+                .fillMaxSize()
+                .margin(0.px)
+                .glossy()
         ) {
-            SpanText("Checkout")
-            Button(
-                onClick = { router.trySend(RouterContract.Inputs.GoBack()) }
-            ) {
-                SpanText("Go Back")
-            }
-            Button(
-                onClick = {
-                    router.trySend(
-                        RouterContract.Inputs.GoToDestination(Screen.Payment.matcher.routeFormat)
-                    )
-                }
-            ) {
-                SpanText("Go net to payment")
-            }
+            LeftSide(vm, state)
+            Box(
+                modifier = Modifier
+                    .width(1.px)
+                    .fillMaxHeight()
+                    .background(MaterialTheme.colors.surface)
+            )
+            RightSide(vm, state)
         }
     }
 }

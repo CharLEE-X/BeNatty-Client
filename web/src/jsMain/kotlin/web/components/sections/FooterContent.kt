@@ -13,6 +13,7 @@ import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
+import com.varabyte.kobweb.compose.ui.modifiers.background
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
@@ -61,6 +62,7 @@ fun Footer(
     footerRoutes: FooterRoutes,
     onError: suspend (String) -> Unit,
     contentColor: CSSColorValue = MaterialTheme.colors.onSurface,
+    isFullLayout: Boolean,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -80,34 +82,36 @@ fun Footer(
             .glossy()
             .zIndex(2)
     ) {
-        TickerSection(
-            isLoading = state.isLoading,
-            tickerText = getString(Strings.Ticker),
-            onClick = { vm.trySend(FooterContract.Inputs.OnTickerClick) },
-        )
-        Column(
-            modifier = Modifier
-                .position(Position.Relative)
-                .fillMaxWidth()
-                .margin(topBottom = sectionsGap)
-                .maxWidth(oneLayoutMaxWidth)
-                .padding(topBottom = 4.em)
-        ) {
-            Row(
+        if (isFullLayout) {
+            TickerSection(
+                isLoading = state.isLoading,
+                tickerText = getString(Strings.Ticker),
+                onClick = { vm.trySend(FooterContract.Inputs.OnTickerClick) },
+            )
+            Column(
                 modifier = Modifier
+                    .position(Position.Relative)
                     .fillMaxWidth()
-                    .padding(leftRight = 3.cssRem)
-                    .display(DisplayStyle.Grid)
-                    .gridTemplateColumns { repeat(4) { size(1.fr) } }
-                    .gap(2.em)
+                    .margin(topBottom = sectionsGap)
+                    .maxWidth(oneLayoutMaxWidth)
+                    .padding(topBottom = 4.em)
             ) {
-                CanWeHelpYouSection(state, contentColor, vm)
-                CompanySection(state, contentColor, vm)
-                HelpSection(state, contentColor, vm)
-                FollowUsSection(state, contentColor)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(leftRight = 3.cssRem)
+                        .display(DisplayStyle.Grid)
+                        .gridTemplateColumns { repeat(4) { size(1.fr) } }
+                        .gap(2.em)
+                ) {
+                    CanWeHelpYouSection(state, contentColor, vm)
+                    CompanySection(state, contentColor, vm)
+                    HelpSection(state, contentColor, vm)
+                    FollowUsSection(state, contentColor)
+                }
             }
+            Divider(modifier = Modifier.background(MaterialTheme.colors.surface))
         }
-        Divider()
         BottomSection(state, vm, contentColor)
     }
 }

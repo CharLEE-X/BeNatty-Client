@@ -81,6 +81,7 @@ fun ShopMainLayout(
     title: String,
     globalVMs: GlobalVMs,
     mainRoutes: MainRoutes,
+    isFullLayout: Boolean = true,
     desktopNavRoutes: DesktopNavRoutes,
     footerRoutes: FooterRoutes,
     spacing: CSSLengthOrPercentageNumericValue = sectionsGap,
@@ -113,6 +114,7 @@ fun ShopMainLayout(
                 globalVMs = globalVMs,
                 onError = mainRoutes.onError,
                 onTopSpacingChanged = { topSpacing = it },
+                isFullLayout = isFullLayout,
                 modifier = Modifier.zIndex(10),
             )
             Column(
@@ -131,6 +133,7 @@ fun ShopMainLayout(
             Footer(
                 onError = mainRoutes.onError,
                 footerRoutes = footerRoutes,
+                isFullLayout = isFullLayout
             )
         }
         CartPanel(

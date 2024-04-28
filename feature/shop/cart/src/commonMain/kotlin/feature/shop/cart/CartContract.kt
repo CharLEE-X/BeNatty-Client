@@ -10,7 +10,12 @@ object CartContract {
         val topProductsLoading: Boolean = true,
         val showSidebar: Boolean = false,
 
-        val items: List<GetUserCartQuery.Item> = emptyList(),
+        val cart: GetUserCartQuery.GetUserCart = GetUserCartQuery.GetUserCart(
+            guestCartId = null,
+            items = emptyList(),
+            subtotal = 0.0,
+            saved = 0.0
+        ),
         val topSellingProducts: List<GetTopSellingProductsQuery.GetTopSellingProduct> = emptyList(),
 
         val currency: Currency = Currency("£", "GBP"),
@@ -42,7 +47,7 @@ object CartContract {
         data class SetShowSidebar(val show: Boolean) : Inputs
         data class SetTopProducts(val products: List<GetTopSellingProductsQuery.GetTopSellingProduct>) : Inputs
         data class SetTopProductsLoading(val loading: Boolean) : Inputs
-        data class SetItems(val items: List<GetUserCartQuery.Item>) : Inputs
+        data class SetCart(val cart: GetUserCartQuery.GetUserCart) : Inputs
         data class SetCurrency(val currency: Currency) : Inputs
         data class SetSpendMore(val show: Boolean, val key: String, val value: String) : Inputs
         data class SetBasketCount(val count: Int) : Inputs

@@ -45,6 +45,7 @@ fun DesktopNavContent(
     onError: suspend (String) -> Unit,
     desktopNavRoutes: DesktopNavRoutes,
     globalVMs: GlobalVMs,
+    isFullLayout: Boolean,
     onTopSpacingChanged: (CSSSizeValue<CSSUnit.px>) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
@@ -104,11 +105,13 @@ fun DesktopNavContent(
                 CSSTransition("position", 0.3.s, TransitionTimingFunction.Ease),
             )
     ) {
-        TickerSection(
-            isLoading = navbarState.isLoading,
-            tickerText = navbarState.strings.ticker,
-            onClick = { vm.trySend(DesktopNavContract.Inputs.OnTickerClick) },
-        )
+        if (isFullLayout) {
+            TickerSection(
+                isLoading = navbarState.isLoading,
+                tickerText = navbarState.strings.ticker,
+                onClick = { vm.trySend(DesktopNavContract.Inputs.OnTickerClick) },
+            )
+        }
         NavBar(
             isLoading = navbarState.isLoading,
             storeText = navbarState.strings.store,
@@ -117,6 +120,7 @@ fun DesktopNavContent(
             searchPlaceholder = navbarState.strings.search,
             basketCount = cartState.basketCount,
             storeMenuItems = navbarState.storeMenuItems,
+            isFullLayout = isFullLayout,
             onStoreClick = { vm.trySend(DesktopNavContract.Inputs.OnStoreClick) },
             onAboutClick = { vm.trySend(DesktopNavContract.Inputs.OnAboutClick) },
             onShippingReturnsClick = { vm.trySend(DesktopNavContract.Inputs.OnShippingAndReturnsClick) },

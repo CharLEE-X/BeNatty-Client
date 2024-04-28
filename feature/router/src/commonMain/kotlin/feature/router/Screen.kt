@@ -98,7 +98,6 @@ enum class Screen(routeFormat: String, override val annotations: Set<RouteAnnota
     Catalogue(CATALOGUE + VARIANT),
 
     // Purchase
-    Cart(CART),
     Checkout(CHECKOUT),
     Payment(PAYMENT),
 

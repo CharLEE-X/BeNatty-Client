@@ -16,5 +16,7 @@ mutation RemoveItemFromUserCart($guestCartId: String, $productId: String!, $vari
       variantId
       vendor
     }
+    subtotal
+    saved
   }
 }

@@ -106,6 +106,7 @@ import web.util.onEnterKeyDown
 fun NavBar(
     isLoading: Boolean,
     modifier: Modifier = Modifier,
+    isFullLayout: Boolean,
     storeText: String,
     aboutText: String,
     searchPlaceholder: String,
@@ -140,6 +141,7 @@ fun NavBar(
                 .styleModifier { property("grid-template-columns", "1fr auto 1fr") }
         ) {
             ListMenu(
+                isFullLayout = isFullLayout,
                 storeText = storeText,
                 aboutText = aboutText,
                 shippingReturnsText = shippingReturnsText,
@@ -154,6 +156,7 @@ fun NavBar(
                 modifier = Modifier.margin(leftRight = 1.em)
             )
             RightSection(
+                isFullLayout = isFullLayout,
                 isLoading = isLoading,
                 searchPlaceholder = searchPlaceholder,
                 searchValue = searchValue,
@@ -172,6 +175,7 @@ fun NavBar(
 
 @Composable
 private fun RightSection(
+    isFullLayout: Boolean,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
     searchValue: String,
@@ -219,15 +223,17 @@ private fun RightSection(
                 horizontalArrangement = Arrangement.End,
                 modifier = modifier.gap(1.em)
             ) {
-                SearchBar(
-                    value = searchValue,
-                    onValueChange = onSearchValueChanged,
-                    placeholder = searchPlaceholder,
-                    onEnterPress = onEnterPress,
-                    modifier = Modifier
-                        .height(50.px)
-                        .width(224.px)
-                )
+                if (isFullLayout) {
+                    SearchBar(
+                        value = searchValue,
+                        onValueChange = onSearchValueChanged,
+                        placeholder = searchPlaceholder,
+                        onEnterPress = onEnterPress,
+                        modifier = Modifier
+                            .height(50.px)
+                            .width(224.px)
+                    )
+                }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -237,18 +243,20 @@ private fun RightSection(
                     val iconStyle = IconStyle.OUTLINED
                     val iconModifier = Modifier.color(contentColor)
 
-                    if (!isLoading) {
-                        IconButton(
-                            onClick = { onProfileClick() },
-                            modifier = Modifier.onEnterKeyDown(onProfileClick)
-                        ) {
-                            MdiPerson2(
-                                style = IconStyle.OUTLINED,
-                                modifier = iconModifier
-                            )
+                    if (isFullLayout) {
+                        if (!isLoading) {
+                            IconButton(
+                                onClick = { onProfileClick() },
+                                modifier = Modifier.onEnterKeyDown(onProfileClick)
+                            ) {
+                                MdiPerson2(
+                                    style = IconStyle.OUTLINED,
+                                    modifier = iconModifier
+                                )
+                            }
+                        } else {
+                            ShimmerHeader(Modifier.aspectRatio(1))
                         }
-                    } else {
-                        ShimmerHeader(Modifier.aspectRatio(1))
                     }
 
                     var colorMode by ColorMode.currentState
@@ -260,42 +268,45 @@ private fun RightSection(
                         if (colorMode.isLight) MdiLightMode(iconModifier, iconStyle)
                         else MdiModeNight(iconModifier, iconStyle)
                     }
-                    Box(
-                        modifier = Modifier
-                            .backgroundColor(contentColor)
-                            .width(0.5.px)
-                            .minHeight(30.px)
-                            .fillMaxHeight()
-                    )
-                    Box(
-                        contentAlignment = Alignment.Center
-                    ) {
+
+                    if (isFullLayout) {
                         Box(
-                            contentAlignment = Alignment.Center,
                             modifier = Modifier
-                                .size(24.px)
-                                .backgroundColor(MaterialTheme.colors.onSurface)
-                                .borderRadius(50.percent)
-                                .translateY(if (basketCount > 0) (-28).px else 0.px)
-                                .opacity(if (basketCount > 0) 1.0 else 0.0)
-                                .transition(
-                                    CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
-                                    CSSTransition("translate", 0.3.s, TransitionTimingFunction.Ease),
-                                )
+                                .backgroundColor(contentColor)
+                                .width(0.5.px)
+                                .minHeight(30.px)
+                                .fillMaxHeight()
+                        )
+                        Box(
+                            contentAlignment = Alignment.Center
                         ) {
-                            SpanText(
-                                text = basketCount.toString(),
+                            Box(
+                                contentAlignment = Alignment.Center,
                                 modifier = Modifier
-                                    .fontSize(12.sp)
-                                    .fontWeight(FontWeight.SemiBold)
-                                    .color(MaterialTheme.colors.surface)
-                            )
-                        }
-                        IconButton(
-                            onClick = { onBasketClick() },
-                            modifier = Modifier.onEnterKeyDown(onBasketClick)
-                        ) {
-                            MdiShoppingBasket(iconModifier, iconStyle)
+                                    .size(24.px)
+                                    .backgroundColor(MaterialTheme.colors.onSurface)
+                                    .borderRadius(50.percent)
+                                    .translateY(if (basketCount > 0) (-28).px else 0.px)
+                                    .opacity(if (basketCount > 0) 1.0 else 0.0)
+                                    .transition(
+                                        CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                                        CSSTransition("translate", 0.3.s, TransitionTimingFunction.Ease),
+                                    )
+                            ) {
+                                SpanText(
+                                    text = basketCount.toString(),
+                                    modifier = Modifier
+                                        .fontSize(12.sp)
+                                        .fontWeight(FontWeight.SemiBold)
+                                        .color(MaterialTheme.colors.surface)
+                                )
+                            }
+                            IconButton(
+                                onClick = { onBasketClick() },
+                                modifier = Modifier.onEnterKeyDown(onBasketClick)
+                            ) {
+                                MdiShoppingBasket(iconModifier, iconStyle)
+                            }
                         }
                     }
                 }
@@ -307,6 +318,7 @@ private fun RightSection(
 @Composable
 private fun ListMenu(
     modifier: Modifier = Modifier,
+    isFullLayout: Boolean,
     storeText: String,
     aboutText: String,
     shippingReturnsText: String,
@@ -367,50 +379,52 @@ private fun ListMenu(
                     .onFocusIn { isListMenuItemFocused = true }
                     .onFocusOut { isListMenuItemFocused = false }
             ) {
-                Span(
-                    Modifier
-                        .position(Position.Relative)
-                        .toAttrs()
-                ) {
+                if (isFullLayout) {
+                    Span(
+                        Modifier
+                            .position(Position.Relative)
+                            .toAttrs()
+                    ) {
+                        ListMenuItem(
+                            text = storeText,
+                            hasDropdown = true,
+                            onClick = onStoreClick,
+                            hovered = isStoreButtonHovered || isMenuHovered,
+                            modifier = Modifier
+                                .onMouseEnter { isStoreButtonHovered = true }
+                                .onMouseLeave { isStoreButtonHovered = false }
+                        )
+                        AppMenu(
+                            open = open || isListMenuItemFocused,
+                            items = storeMenuItems,
+                            onItemSelected = onStoreMenuItemSelected,
+                            modifier = Modifier
+                                .translateX((-16).px)
+                                .margin(top = 10.px)
+                                .onMouseOver { isMenuHovered = true }
+                                .onMouseOut {
+                                    isMenuHovered = false
+                                    scheduleCloseMenu()
+                                }
+                        )
+                    }
                     ListMenuItem(
-                        text = storeText,
-                        hasDropdown = true,
-                        onClick = onStoreClick,
-                        hovered = isStoreButtonHovered || isMenuHovered,
+                        text = aboutText,
+                        hovered = isAboutButtonHovered,
+                        onClick = onAboutClick,
                         modifier = Modifier
-                            .onMouseEnter { isStoreButtonHovered = true }
-                            .onMouseLeave { isStoreButtonHovered = false }
+                            .onMouseEnter { isAboutButtonHovered = true }
+                            .onMouseLeave { isAboutButtonHovered = false }
                     )
-                    AppMenu(
-                        open = open || isListMenuItemFocused,
-                        items = storeMenuItems,
-                        onItemSelected = onStoreMenuItemSelected,
+                    ListMenuItem(
+                        text = shippingReturnsText,
+                        hovered = isShippingButtonHovered,
+                        onClick = onShippingReturnsClick,
                         modifier = Modifier
-                            .translateX((-16).px)
-                            .margin(top = 10.px)
-                            .onMouseOver { isMenuHovered = true }
-                            .onMouseOut {
-                                isMenuHovered = false
-                                scheduleCloseMenu()
-                            }
+                            .onMouseEnter { isShippingButtonHovered = true }
+                            .onMouseLeave { isShippingButtonHovered = false }
                     )
                 }
-                ListMenuItem(
-                    text = aboutText,
-                    hovered = isAboutButtonHovered,
-                    onClick = onAboutClick,
-                    modifier = Modifier
-                        .onMouseEnter { isAboutButtonHovered = true }
-                        .onMouseLeave { isAboutButtonHovered = false }
-                )
-                ListMenuItem(
-                    text = shippingReturnsText,
-                    hovered = isShippingButtonHovered,
-                    onClick = onShippingReturnsClick,
-                    modifier = Modifier
-                        .onMouseEnter { isShippingButtonHovered = true }
-                        .onMouseLeave { isShippingButtonHovered = false }
-                )
             }
         }
     }

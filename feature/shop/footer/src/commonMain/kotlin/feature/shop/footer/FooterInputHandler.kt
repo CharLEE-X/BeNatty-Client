@@ -77,7 +77,7 @@ internal class FooterInputHandler :
     }
 
     private suspend fun InputScope.handleInit() {
-        sideJob("handleInit") {
+        sideJob("InitFooter") {
             postInput(FooterContract.Inputs.SetIsLoading(isLoading = true))
             postInput(FooterContract.Inputs.CheckUserRole)
             postInput(FooterContract.Inputs.GetConfig)

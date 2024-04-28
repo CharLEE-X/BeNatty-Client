@@ -401,4 +401,7 @@ enum class Strings {
     TaxesAndShippingCalculatedAtCheckout,
     YourCart,
     Saved,
+    EnterShippingAddress,
+    Total,
+    ExpressCheckout,
 }

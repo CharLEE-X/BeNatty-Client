@@ -14,6 +14,8 @@ import data.service.DebugService
 import data.service.DebugServiceImpl
 import data.service.OrderService
 import data.service.OrderServiceImpl
+import data.service.PaymentService
+import data.service.PaymentServiceImpl
 import data.service.ProductService
 import data.service.ProductServiceImpl
 import data.service.TagService
@@ -99,6 +101,11 @@ val dataModule = module {
     }
     single<ConfigService> {
         ConfigServiceImpl(
+            apolloClient = get(),
+        )
+    }
+    single<PaymentService> {
+        PaymentServiceImpl(
             apolloClient = get(),
         )
     }

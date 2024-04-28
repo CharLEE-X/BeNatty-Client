@@ -54,7 +54,7 @@ internal class NavbarInputHandler :
     }
 
     private suspend fun InputScope.handleInit() {
-        sideJob("handleInit") {
+        sideJob("InitNavbar") {
             postInput(DesktopNavContract.Inputs.SetIsLoading(isLoading = true))
             postInput(DesktopNavContract.Inputs.CheckAuth)
             postInput(DesktopNavContract.Inputs.SetIsLoading(isLoading = false))
