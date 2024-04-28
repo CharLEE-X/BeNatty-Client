@@ -10,6 +10,8 @@ val surfaceContainerLight = Color(0xFFEFF9FF) // Close to the base, for default 
 val surfaceContainerHighLight = Color(0xFFE6F4FF) // Noticeably lighter than base, for containers that need distinction
 val surfaceContainerHighestLight = Color(0xFFDEEFFE) // The lightest, for the most prominent UI elements
 
+val md_theme_light_shadow = Color(0xFF000000) //Extra
+
 val surfaceDimDark = Color(0xFF23233F) // Slightly lighter than base
 val surfaceBrightDark = Color(0xFF252541) // A bit lighter than DimDark
 val surfaceContainerLowestDark = Color(0xFF272749) // Slightly lighter than BrightDark

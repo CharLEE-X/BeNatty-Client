@@ -41,7 +41,6 @@ import org.jetbrains.compose.web.dom.Span
 import web.components.sections.CartPanel
 import web.components.sections.DesktopNavContent
 import web.components.sections.Footer
-import web.components.widgets.Background
 import web.util.sectionsGap
 
 data class MainRoutes(
@@ -101,7 +100,6 @@ fun ShopMainLayout(
             .fillMaxWidth()
             .minHeight(100.percent),
     ) {
-        Background()
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier

@@ -70,7 +70,6 @@ import theme.MaterialTheme
 import web.components.widgets.AppFilledButton
 import web.components.widgets.AppFilledTonalButton
 import web.components.widgets.AppFilledTonalIconButton
-import web.components.widgets.Background
 import web.components.widgets.Logo
 import web.compose.material3.component.CircularProgress
 import web.util.glossy
@@ -111,7 +110,6 @@ fun AdminLayout(
     Box(
         modifier = modifier.fillMaxSize()
     ) {
-        Background()
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
