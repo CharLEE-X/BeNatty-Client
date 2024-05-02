@@ -11,7 +11,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
@@ -34,7 +33,6 @@ import component.localization.getString
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.dom.Text
 import theme.MaterialTheme
@@ -104,7 +102,6 @@ fun ImagePreviewDialog(
                     alt = alt ?: "",
                     modifier = Modifier
                         .fillMaxSize()
-                        .borderRadius(20.px)
                         .objectFit(ObjectFit.Cover)
                         .onClick { it.preventDefault() }
                 )

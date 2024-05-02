@@ -26,7 +26,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.background
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.bottom
 import com.varabyte.kobweb.compose.ui.modifiers.boxShadow
 import com.varabyte.kobweb.compose.ui.modifiers.color
@@ -99,8 +98,6 @@ import web.pages.shop.home.gridModifier
 import web.pages.shop.product.page.ProductPrice
 import web.pages.shop.product.page.SpendMore
 import web.shadow
-import web.util.cornerRadius
-import web.util.glossy
 import web.util.onEnterKeyDown
 
 @Composable
@@ -143,7 +140,6 @@ fun BoxScope.CartPanel(vm: CartViewModel, state: CartContract.State, zIndex: Int
                 .right(0.px)
                 .bottom(0.px)
                 .fillMaxHeight()
-                .glossy(cornerRadius = 0.px)
                 .width(sidebarWidth)
                 .boxShadow(
                     offsetX = 0.px,
@@ -306,7 +302,6 @@ private fun TopProductItem(
                 .onFocusIn { hovered = true }
                 .onFocusOut { hovered = false }
                 .cursor(Cursor.Pointer)
-                .borderRadius(cornerRadius)
                 .tabIndex(0)
                 .onClick { onClick() }
                 .onEnterKeyDown(onClick)
@@ -478,7 +473,6 @@ private fun CartItem(
         modifier = Modifier
             .fillMaxWidth()
             .gap(1.em)
-            .glossy()
             .padding(1.em)
     ) {
         Image(
@@ -488,7 +482,6 @@ private fun CartItem(
                 .aspectRatio(1f)
                 .maxHeight(100.px)
                 .objectFit(ObjectFit.Cover)
-                .borderRadius(cornerRadius)
         )
         Column(
             modifier = Modifier
@@ -561,12 +554,10 @@ private fun IncDecButton(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
-            .glossy()
             .padding(topBottom = 0.35.em, leftRight = 1.em)
             .gap(0.75.em)
             .backgroundColor(MaterialTheme.colors.surfaceContainerHighest)
             .color(MaterialTheme.colors.onSurface)
-            .borderRadius(24.px)
             .border(
                 width = 2.px,
                 color = borderColor,

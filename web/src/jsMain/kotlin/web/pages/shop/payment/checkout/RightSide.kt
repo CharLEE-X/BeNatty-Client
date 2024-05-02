@@ -11,7 +11,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.gap
@@ -34,7 +33,6 @@ import theme.MaterialTheme
 import theme.roleStyle
 import web.components.widgets.FlexSpacer
 import web.components.widgets.Spacer
-import web.util.cornerRadius
 
 @Composable
 fun RightSide(vm: CheckoutViewModel, state: CheckoutContract.State) {
@@ -128,7 +126,6 @@ private fun CartItem(
                 .aspectRatio(1f)
                 .maxHeight(100.px)
                 .objectFit(ObjectFit.Cover)
-                .borderRadius(cornerRadius)
                 .border(
                     width = 1.px,
                     color = MaterialTheme.colors.surface,

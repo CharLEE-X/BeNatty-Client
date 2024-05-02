@@ -42,7 +42,6 @@ import web.components.widgets.ObserveViewportEntered
 import web.components.widgets.Shimmer
 import web.components.widgets.ShimmerText
 import web.pages.shop.home.gridModifier
-import web.util.glossy
 
 @Composable
 fun CatalogContent(
@@ -77,7 +76,6 @@ fun CatalogContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(left = 24.px, right = 24.px, top = 24.px, bottom = 48.px)
-                .glossy()
                 .gap(2.em)
         ) {
             CatalogBanner(state = state)

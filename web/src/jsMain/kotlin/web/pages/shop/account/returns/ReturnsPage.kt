@@ -7,14 +7,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import feature.shop.account.returns.ReturnsContract
 import feature.shop.account.returns.ReturnsViewModel
-import feature.shop.navbar.DesktopNavContract
+import feature.shop.navbar.NavbarContract
 import web.components.layouts.AccountLayout
 import web.components.widgets.PageHeader
 
 @Composable
 fun ReturnsPage(
     onError: suspend (String) -> Unit,
-    onMenuItemClicked: (DesktopNavContract.AccountMenuItem) -> Unit,
+    onMenuItemClicked: (NavbarContract.AccountMenuItem) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -27,7 +27,7 @@ fun ReturnsPage(
     val state by vm.observeStates().collectAsState()
 
     AccountLayout(
-        item = DesktopNavContract.AccountMenuItem.WISHLIST,
+        item = NavbarContract.AccountMenuItem.WISHLIST,
         logoutText = state.strings.logout,
         onLogoutClicked = { vm.trySend(ReturnsContract.Inputs.OnLogoutClicked) },
         onMenuItemClicked = onMenuItemClicked,

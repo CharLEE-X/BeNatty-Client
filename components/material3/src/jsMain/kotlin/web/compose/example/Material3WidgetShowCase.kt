@@ -26,7 +26,6 @@ import org.jetbrains.compose.web.css.alignItems
 import org.jetbrains.compose.web.css.background
 import org.jetbrains.compose.web.css.backgroundColor
 import org.jetbrains.compose.web.css.border
-import org.jetbrains.compose.web.css.borderRadius
 import org.jetbrains.compose.web.css.boxSizing
 import org.jetbrains.compose.web.css.display
 import org.jetbrains.compose.web.css.em
@@ -151,7 +150,6 @@ fun Material3WidgetShowCase(
             Center({
                 style {
                     backgroundColor(currentColorScheme.sysColorSurface)
-                    borderRadius(25.px)
                 }
             }) {
                 ShowcaseContent()
@@ -601,7 +599,6 @@ fun ShowcaseContent() {
         }
     }
 }
-
 
 @Composable
 fun FileList(files: List<File>) {

@@ -21,7 +21,6 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.display
@@ -67,7 +66,6 @@ import org.jetbrains.compose.web.css.s
 import theme.MaterialTheme
 import theme.roleStyle
 import web.components.widgets.Spacer
-import web.util.cornerRadius
 import web.util.onEnterKeyDown
 
 @Composable
@@ -141,7 +139,6 @@ private fun SimilarProductItem(
                 .onFocusIn { hovered = true }
                 .onFocusOut { hovered = false }
                 .cursor(Cursor.Pointer)
-                .borderRadius(cornerRadius)
                 .tabIndex(0)
                 .onClick { onClick() }
                 .onEnterKeyDown(onClick)

@@ -27,7 +27,7 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 
-val oneLayoutMaxWidth = 1300.px
+val oneLayoutMaxWidth = 1600.px
 
 @Composable
 fun OneThirdLayout(

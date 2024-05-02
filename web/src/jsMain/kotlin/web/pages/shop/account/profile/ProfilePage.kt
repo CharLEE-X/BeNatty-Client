@@ -24,7 +24,7 @@ import component.localization.Strings
 import component.localization.getString
 import feature.shop.account.profile.ProfileContract
 import feature.shop.account.profile.ProfileViewModel
-import feature.shop.navbar.DesktopNavContract
+import feature.shop.navbar.NavbarContract
 import org.jetbrains.compose.web.attributes.AutoComplete
 import org.jetbrains.compose.web.css.em
 import web.components.layouts.AccountLayout
@@ -39,7 +39,7 @@ import web.compose.material3.component.TextFieldType
 @Composable
 fun ProfilePage(
     onError: suspend (String) -> Unit,
-    onMenuItemClicked: (DesktopNavContract.AccountMenuItem) -> Unit,
+    onMenuItemClicked: (NavbarContract.AccountMenuItem) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val vm = remember(scope) {
@@ -51,7 +51,7 @@ fun ProfilePage(
     val state by vm.observeStates().collectAsState()
 
     AccountLayout(
-        item = DesktopNavContract.AccountMenuItem.PROFILE,
+        item = NavbarContract.AccountMenuItem.PROFILE,
         logoutText = getString(Strings.Logout),
         onLogoutClicked = { vm.trySend(ProfileContract.Inputs.OnLogoutClicked) },
         onMenuItemClicked = onMenuItemClicked,

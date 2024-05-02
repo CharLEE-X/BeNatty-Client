@@ -14,10 +14,11 @@ class NavbarViewModel(
     onError: suspend (String) -> Unit,
     desktopNavRoutes: DesktopNavRoutes,
     showCartSidebar: (Boolean) -> Unit,
+    goToProductDetail: suspend (String) -> Unit,
 ) : BasicViewModel<
-    DesktopNavContract.Inputs,
-    DesktopNavContract.Events,
-    DesktopNavContract.State,
+    NavbarContract.Inputs,
+    NavbarContract.Events,
+    NavbarContract.State,
     >(
     config = BallastViewModelConfiguration.Builder()
         .apply {
@@ -25,7 +26,7 @@ class NavbarViewModel(
             logger = { PrintlnLogger() }
         }
         .withViewModel(
-            initialState = DesktopNavContract.State(),
+            initialState = NavbarContract.State(),
             inputHandler = NavbarInputHandler(),
             name = TAG,
         )
@@ -34,11 +35,12 @@ class NavbarViewModel(
         onError = onError,
         desktopNavRoutes = desktopNavRoutes,
         showCartSidebar = showCartSidebar,
+        goToProductDetail = goToProductDetail,
     ),
     coroutineScope = scope,
 ) {
     init {
-        trySend(DesktopNavContract.Inputs.Init)
+        trySend(NavbarContract.Inputs.Init)
     }
 
     companion object {

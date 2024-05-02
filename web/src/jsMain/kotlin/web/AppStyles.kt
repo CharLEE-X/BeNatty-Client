@@ -56,7 +56,7 @@ fun initSiteStyles(ctx: InitSilkContext) {
 
 val HeadlineTextStyle by ComponentStyle.base {
     Modifier
-        .fontSize(3.cssRem)
+        .fontSize(2.cssRem)
         .textAlign(TextAlign.Start)
         .color(CSSMaterialTheme.colors.onSurface.value())
         .lineHeight(1.2) //1.5x doesn't look as good on very large text
@@ -86,7 +86,6 @@ val CircleButtonVariant by ButtonStyle.addVariantBase {
 val UncoloredButtonVariant by ButtonStyle.addVariantBase {
     Modifier.setVariable(ButtonVars.BackgroundDefaultColor, Colors.Transparent)
 }
-
 
 val NavIconStyle by ComponentStyle {
     base {

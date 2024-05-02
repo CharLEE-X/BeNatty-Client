@@ -1,14 +1,11 @@
 package web.compose.extras.fileupload
 
 import androidx.compose.runtime.Composable
-import org.jetbrains.compose.web.css.CSSNumeric
-import org.jetbrains.compose.web.css.CSSStyleVariable
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.Style
 import org.jetbrains.compose.web.css.StyleSheet
 import org.jetbrains.compose.web.css.border
-import org.jetbrains.compose.web.css.borderRadius
 import org.jetbrains.compose.web.css.color
 import org.jetbrains.compose.web.css.maxHeight
 import org.jetbrains.compose.web.css.minHeight
@@ -31,7 +28,6 @@ object DragDropAreaStyleSheet : StyleSheet() {
                 color(CSSMaterialTheme.colors.outline.value(Color("#79747E")))
                 width(1.px)
             }
-            borderRadius(CSSStyleVariable<CSSNumeric>("md-outlined-button-container-shape").value(4.px))
         }
         className("dragdroparea") + hover style {
             border {
@@ -39,7 +35,6 @@ object DragDropAreaStyleSheet : StyleSheet() {
                 color(CSSMaterialTheme.colors.outline.value(Color("#79747E")))
                 width(1.px)
             }
-            borderRadius(CSSStyleVariable<CSSNumeric>("md-outlined-button-container-shape").value(4.px))
         }
     }
 }

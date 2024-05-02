@@ -62,7 +62,6 @@ import theme.roleStyle
 import web.components.sections.AppMenu
 import web.components.widgets.ShimmerButton
 import web.components.widgets.ShimmerText
-import web.util.glossy
 
 @Composable
 fun CatalogueHeader(vm: CatalogViewModel, state: CatalogContract.State) {
@@ -169,10 +168,6 @@ private fun FiltersButton(
     Box(
         modifier = modifier
             .padding(left = 1.em, right = 0.5.em, top = 0.5.em, bottom = 0.5.em)
-            .glossy(
-                color = MaterialTheme.colors.secondaryContainer,
-                cornerRadius = 36.px
-            )
             .border(
                 width = 1.px,
                 color = borderColor,

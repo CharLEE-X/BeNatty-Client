@@ -1,39 +1,72 @@
 package feature.shop.navbar
 
+import component.localization.Strings
 import component.localization.getString
+import core.models.Currency
+import data.GetRecommendedProductsQuery
 import org.koin.core.component.KoinComponent
 
-object DesktopNavContract : KoinComponent {
+object NavbarContract : KoinComponent {
     data class State(
-        val strings: Strings = Strings(),
-        val isLoading: Boolean = true,
+        val isCheckAuthLoading: Boolean = true,
+        val isRecommendedProductsLoading: Boolean = true,
+
         val isAuthenticated: Boolean = false,
-        val storeMenuItems: List<String> = listOf(strings.woman, strings.man, strings.sale).map { it.uppercase() },
+        val storeMenuItems: List<String> = listOf(
+            getString(Strings.Woman),
+            getString(Strings.Man),
+            getString(Strings.Sale)
+        ).map { it.uppercase() },
         val searchValue: String = "",
+
+        val recommendedProducts: List<GetRecommendedProductsQuery.GetRecommendedProduct> = emptyList(),
+        val currency: Currency = Currency("£", "GBP"),
     )
 
     sealed interface Inputs {
         data object Init : Inputs
         data object CheckAuth : Inputs
+        data object FetchRecommendedProducts : Inputs
 
+        data object OnPromoLeftClicked : Inputs
+        data object OnPromoMiddleClicked : Inputs
+        data object OnPromoRightClicked : Inputs
         data class OnSearchValueChanged(val value: String) : Inputs
         data class OnAccountMenuItemSelected(val item: AccountMenuItem) : Inputs
         data class OnStoreMenuItemSelected(val item: String) : Inputs
+        data object OnAllCollectionsClicked : Inputs
+        data object OnOurFavouritesClicked : Inputs
+        data object OnNewArrivalsClicked : Inputs
+        data object OnSummerDealsClicked : Inputs
+        data class OnRecommendedProductClicked(val id: String) : Inputs
+        data object OnCustomerServiceClicked : Inputs
 
         data object OnSearchEnterPress : Inputs
-        data object OnHelpAndFAQClick : Inputs
         data object OnLogoClick : Inputs
         data object OnLoginClick : Inputs
         data object OnWishlistClick : Inputs
         data object OnCartClick : Inputs
-        data object OnTickerClick : Inputs
-        data object OnStoreClick : Inputs
-        data object OnAboutClick : Inputs
-        data object OnShippingAndReturnsClick : Inputs
-        data object OnProfileClick : Inputs
-        data object OnBasketClick : Inputs
+        data object OnStoreClicked : Inputs
+        data object OnExploreClicked : Inputs
 
-        data class SetIsLoading(val isLoading: Boolean) : Inputs
+        data object OnShopTheLatestClicked : Inputs
+        data object OnWeLoveClicked : Inputs
+        data object OnCollectionsClicked : Inputs
+        data object OnTopsClicked : Inputs
+        data object OnBottomsClicked : Inputs
+        data object OnDressesClicked : Inputs
+        data object OnDeliveryClicked : Inputs
+        data object OnReturnsClicked : Inputs
+        data object OnContactClicked : Inputs
+        data object OnSearchClicked : Inputs
+        data object OnUserClicked : Inputs
+
+        data class SetCheckAuthLoading(val isLoading: Boolean) : Inputs
+        data class SetIsAuthenticated(val authenticated: Boolean) : Inputs
+        data class SetIsRecommendedProductsLoading(val isLoading: Boolean) : Inputs
+        data class SetRecommendedProducts(
+            val products: List<GetRecommendedProductsQuery.GetRecommendedProduct>
+        ) : Inputs
     }
 
     sealed interface Events {
@@ -49,25 +82,8 @@ object DesktopNavContract : KoinComponent {
         data object GoToAbout : Events
         data object GoToShippingAndReturns : Events
         data class ShowCartSidebar(val showCartSidebar: Boolean) : Events
+        data class GoToProductDetail(val productId: String) : Events
     }
-
-    data class Strings(
-        val ticker: String = getString(component.localization.Strings.Ticker),
-        val helpAndFaq: String = getString(component.localization.Strings.HelpAndFaq),
-        val search: String = getString(component.localization.Strings.Search),
-        val login: String = getString(component.localization.Strings.Login),
-        val orders: String = getString(component.localization.Strings.Orders),
-        val returns: String = getString(component.localization.Strings.Returns),
-        val wishlist: String = getString(component.localization.Strings.Wishlist),
-        val profile: String = getString(component.localization.Strings.Profile),
-        val logout: String = getString(component.localization.Strings.Logout),
-        val store: String = getString(component.localization.Strings.Store),
-        val woman: String = getString(component.localization.Strings.Woman),
-        val man: String = getString(component.localization.Strings.Man),
-        val shippingReturns: String = getString(component.localization.Strings.ShippingReturns),
-        val about: String = getString(component.localization.Strings.About),
-        val sale: String = getString(component.localization.Strings.Sale),
-    )
 
     enum class AccountMenuItem {
         ORDERS,
@@ -89,14 +105,15 @@ data class DesktopNavRoutes(
     val goToCatalogue: () -> Unit,
     val goToAbout: () -> Unit,
     val goToShippingAndReturns: () -> Unit,
+    val goToProductDetail: (String) -> Unit,
 )
 
-fun DesktopNavContract.AccountMenuItem.label(): String {
+fun NavbarContract.AccountMenuItem.label(): String {
     return when (this) {
-        DesktopNavContract.AccountMenuItem.ORDERS -> DesktopNavContract.State().strings.orders
-        DesktopNavContract.AccountMenuItem.RETURNS -> DesktopNavContract.State().strings.returns
-        DesktopNavContract.AccountMenuItem.WISHLIST -> DesktopNavContract.State().strings.wishlist
-        DesktopNavContract.AccountMenuItem.PROFILE -> DesktopNavContract.State().strings.profile
-        DesktopNavContract.AccountMenuItem.LOGOUT -> DesktopNavContract.State().strings.logout
+        NavbarContract.AccountMenuItem.ORDERS -> getString(Strings.Orders)
+        NavbarContract.AccountMenuItem.RETURNS -> getString(Strings.Returns)
+        NavbarContract.AccountMenuItem.WISHLIST -> getString(Strings.Wishlist)
+        NavbarContract.AccountMenuItem.PROFILE -> getString(Strings.Profile)
+        NavbarContract.AccountMenuItem.LOGOUT -> getString(Strings.Logout)
     }
 }

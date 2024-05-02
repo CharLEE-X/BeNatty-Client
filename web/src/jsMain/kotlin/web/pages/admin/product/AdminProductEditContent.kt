@@ -25,7 +25,6 @@ import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
 import com.varabyte.kobweb.compose.ui.modifiers.borderBottom
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.borderTop
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
@@ -84,7 +83,6 @@ import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.fr
-import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.dom.Span
@@ -117,7 +115,6 @@ import web.compose.material3.component.TextButton
 import web.compose.material3.component.TextFieldType
 import web.util.convertBase64ToFile
 import web.util.convertImageToBase64
-import web.util.cornerRadius
 import web.util.onEnterKeyDown
 
 @Composable
@@ -347,10 +344,6 @@ fun TotalInventory(state: AdminProductEditContract.State) {
                     color = MaterialTheme.colors.surface,
                     style = LineStyle.Solid
                 )
-                .borderRadius(
-                    bottomLeft = cornerRadius,
-                    bottomRight = cornerRadius
-                )
         ) {
             SpanText(
                 text = getString(Strings.TotalInventory) + ": ${state.totalInventory} " +
@@ -379,7 +372,6 @@ private fun ManageOptions(vm: AdminProductEditViewModel, state: AdminProductEdit
         Column(
             Modifier
                 .fillMaxWidth()
-                .borderRadius(cornerRadius)
                 .border(
                     width = 1.px,
                     color = if (state.localOptions.isNotEmpty()) MaterialTheme.colors.surfaceContainerHighest
@@ -454,7 +446,6 @@ private fun OptionAttrItem(attr: AdminProductEditContract.Attribute) {
                 topBottom = 0.5.em,
                 leftRight = 1.em,
             )
-            .borderRadius(cornerRadius)
             .border(
                 width = 1.px,
                 color = MaterialTheme.colors.surface,
@@ -579,7 +570,6 @@ private fun LocalVariantItem(
                         Box(
                             modifier = Modifier
                                 .size(6.px)
-                                .borderRadius(50.percent)
                                 .color(MaterialTheme.colors.surface)
                         )
                     }
@@ -705,9 +695,7 @@ private fun LocalOptionBuilder(
                         open = false
                         vm.trySend(AdminProductEditContract.Inputs.OnOptionNameChanged(optionIndex, it))
                     },
-                    fontSize = 18.px,
                     itemsGap = 0.5.em,
-                    bgAlpha = 255,
                     modifier = Modifier
                         .margin(top = 10.px)
                         .translateX((-8).px)

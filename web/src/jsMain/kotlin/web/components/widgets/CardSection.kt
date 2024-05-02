@@ -10,7 +10,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.gap
@@ -20,8 +19,6 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
 import theme.MaterialTheme
 import theme.roleStyle
-import web.util.cornerRadius
-import web.util.glossy
 
 @Composable
 fun CardSection(
@@ -34,7 +31,6 @@ fun CardSection(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .glossy()
     ) {
         Column(
             modifier = Modifier
@@ -48,7 +44,6 @@ fun CardSection(
                         .fillMaxWidth()
                         .padding(leftRight = 1.em, topBottom = 0.5.em)
                         .backgroundColor(MaterialTheme.colors.primaryContainer)
-                        .borderRadius(topLeft = cornerRadius, topRight = cornerRadius)
                 ) {
                     Column(
                         modifier = Modifier

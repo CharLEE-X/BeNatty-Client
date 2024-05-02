@@ -31,7 +31,6 @@ fun AppElevatedButton(
     modifier: Modifier = Modifier,
     containerColor: CSSColorValue? = null,
     labelTextColor: CSSColorValue? = null,
-    containerShape: CSSLengthOrPercentageNumericValue? = null,
     labelTextFont: String? = null,
     content: @Composable RowScope.() -> Unit
 ) {
@@ -42,7 +41,7 @@ fun AppElevatedButton(
         disabled = disabled,
         containerColor = containerColor,
         labelTextColor = labelTextColor,
-        containerShape = containerShape ?: 12.px,
+        containerShape = 0.px,
         labelTextFont = labelTextFont,
         content = content,
         modifier = modifier
@@ -61,7 +60,7 @@ fun AppFilledButton(
     containerColor: CSSColorValue? = null,
     labelTextColor: CSSColorValue? = null,
     disabledContainerColor: CSSColorValue? = null,
-    cornerRadius: CSSLengthOrPercentageNumericValue? = null,
+    cornerRadius: CSSLengthOrPercentageNumericValue? = 0.px,
     labelTextFont: String? = null,
     content: @Composable RowScope.() -> Unit
 ) {
@@ -73,7 +72,7 @@ fun AppFilledButton(
         containerColor = containerColor,
         labelTextColor = labelTextColor,
         disabledContainerColor = disabledContainerColor,
-        containerShape = cornerRadius ?: 12.px,
+        containerShape = cornerRadius,
         labelTextFont = labelTextFont,
         content = content,
         modifier = modifier
@@ -91,7 +90,6 @@ fun AppOutlinedButton(
     modifier: Modifier = Modifier,
     containerColor: CSSColorValue? = null,
     labelTextColor: CSSColorValue? = null,
-    containerShape: CSSLengthOrPercentageNumericValue? = null,
     labelTextFont: String? = null,
     content: @Composable RowScope.() -> Unit
 ) {
@@ -102,7 +100,7 @@ fun AppOutlinedButton(
         disabled = disabled,
         containerColor = containerColor,
         labelTextColor = labelTextColor,
-        containerShape = containerShape ?: 12.px,
+        containerShape = 0.px,
         labelTextFont = labelTextFont,
         content = content,
         modifier = modifier
@@ -120,7 +118,6 @@ fun AppFilledTonalButton(
     modifier: Modifier = Modifier,
     containerColor: CSSColorValue? = null,
     labelTextColor: CSSColorValue? = null,
-    containerShape: CSSLengthOrPercentageNumericValue? = null,
     labelTextFont: String? = null,
     content: @Composable RowScope.() -> Unit
 ) {
@@ -131,7 +128,7 @@ fun AppFilledTonalButton(
         disabled = disabled,
         containerColor = containerColor,
         labelTextColor = labelTextColor,
-        containerShape = containerShape ?: 12.px,
+        containerShape = 0.px,
         labelTextFont = labelTextFont,
         content = content,
         modifier = modifier

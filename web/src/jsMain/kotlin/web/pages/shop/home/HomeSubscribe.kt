@@ -15,7 +15,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
@@ -51,7 +50,6 @@ import theme.MaterialTheme
 import theme.roleStyle
 import web.components.widgets.AppTextButton
 import web.components.widgets.ShimmerText
-import web.util.glossy
 import web.util.onEnterKeyDown
 
 @Composable
@@ -76,7 +74,6 @@ fun HomeSubscribe(
             .position(Position.Relative)
             .fillMaxWidth()
             .padding(leftRight = 24.px, topBottom = 56.px)
-            .glossy()
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -181,7 +178,6 @@ private fun EmailTextField(
                 )
                 .backgroundColor(containerColor)
                 .color(MaterialTheme.colors.onSurface)
-                .borderRadius(30.px)
                 .border(
                     width = borderWidth,
                     color = borderColor,

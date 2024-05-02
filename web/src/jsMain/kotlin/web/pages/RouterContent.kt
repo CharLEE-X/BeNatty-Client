@@ -27,8 +27,8 @@ import feature.shop.cart.CartContract
 import feature.shop.cart.CartViewModel
 import feature.shop.footer.FooterRoutes
 import feature.shop.footer.FooterViewModel
-import feature.shop.navbar.DesktopNavContract
 import feature.shop.navbar.DesktopNavRoutes
+import feature.shop.navbar.NavbarContract
 import feature.shop.navbar.NavbarViewModel
 import kotlinx.browser.window
 import kotlinx.serialization.json.Json
@@ -173,6 +173,7 @@ fun RouterContent(
         goToCatalogue = mainRoutes.goToCatalogue,
         goToAbout = mainRoutes.goToAboutUs,
         goToShippingAndReturns = mainRoutes.goToShipping, // FIXME: Change to 'ShippingAndReturns'
+        goToProductDetail = mainRoutes.goToProduct,
     )
     val footerRoutes = FooterRoutes(
         goToAboutUs = mainRoutes.goToAboutUs,
@@ -206,6 +207,7 @@ fun RouterContent(
             onError = mainRoutes.onError,
             desktopNavRoutes = desktopNavRoutes,
             showCartSidebar = { cartVm.trySend(CartContract.Inputs.ShowCart) },
+            goToProductDetail = mainRoutes.goToProduct,
         )
     }
     val footerVM = remember(scope) {
@@ -520,21 +522,21 @@ fun RouterContent(
     )
 }
 
-private fun RouterViewModel.route(item: DesktopNavContract.AccountMenuItem) {
+private fun RouterViewModel.route(item: NavbarContract.AccountMenuItem) {
     when (item) {
-        DesktopNavContract.AccountMenuItem.PROFILE -> {
+        NavbarContract.AccountMenuItem.PROFILE -> {
             trySend(GoToDestination(Screen.Profile.matcher.routeFormat))
         }
 
-        DesktopNavContract.AccountMenuItem.ORDERS -> {
+        NavbarContract.AccountMenuItem.ORDERS -> {
             trySend(GoToDestination(Screen.Order.matcher.routeFormat))
         }
 
-        DesktopNavContract.AccountMenuItem.RETURNS -> {
+        NavbarContract.AccountMenuItem.RETURNS -> {
             trySend(GoToDestination(Screen.Returns.matcher.routeFormat))
         }
 
-        DesktopNavContract.AccountMenuItem.WISHLIST -> {
+        NavbarContract.AccountMenuItem.WISHLIST -> {
             trySend(GoToDestination(Screen.Wishlist.matcher.routeFormat))
         }
 

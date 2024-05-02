@@ -16,7 +16,6 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.margin
@@ -68,7 +67,6 @@ fun MediaSlot(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .borderRadius(cornerRadius)
             .overflow(Overflow.Hidden)
             .onClick { if (isImageClickable) onImageClick(url) }
             .onMouseOver { if (isImageClickable) imageHovered = true }
@@ -105,7 +103,6 @@ fun MediaSlot(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .borderRadius(cornerRadius)
                     .objectFit(ObjectFit.Cover)
                     .backgroundColor(MaterialTheme.colors.onSurface)
                     .transition(CSSTransition("backgroundColor", 0.3.s, TransitionTimingFunction.Ease))

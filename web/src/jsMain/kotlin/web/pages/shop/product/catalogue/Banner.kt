@@ -13,7 +13,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
@@ -87,7 +86,6 @@ private fun Banner(
     modifier: Modifier = Modifier,
     title: String,
     height: CSSLengthOrPercentageNumericValue = 350.px,
-    borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
     image: @Composable (imageModifier: Modifier) -> Unit,
 ) {
     AppElevatedCard(
@@ -97,7 +95,6 @@ private fun Banner(
             .maxHeight(height)
             .position(Position.Relative)
             .aspectRatio(1.0)
-            .borderRadius(borderRadius)
             .overflow(Overflow.Clip)
             .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
     ) {
@@ -109,7 +106,6 @@ private fun Banner(
         ) {
             val imageModifier = Modifier
                 .fillMaxSize()
-                .borderRadius(borderRadius)
                 .objectFit(ObjectFit.Cover)
                 .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
             image(imageModifier)

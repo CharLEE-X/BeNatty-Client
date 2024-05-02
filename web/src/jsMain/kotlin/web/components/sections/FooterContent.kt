@@ -52,9 +52,7 @@ import web.components.widgets.AppOutlinedIconButton
 import web.components.widgets.AppTextButton
 import web.components.widgets.ShimmerHeader
 import web.components.widgets.ShimmerText
-import web.components.widgets.TickerSection
 import web.compose.material3.component.Divider
-import web.util.glossy
 import web.util.sectionsGap
 
 @Composable
@@ -79,15 +77,9 @@ fun Footer(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
-            .glossy()
             .zIndex(2)
     ) {
         if (isFullLayout) {
-            TickerSection(
-                isLoading = state.isLoading,
-                tickerText = getString(Strings.Ticker),
-                onClick = { vm.trySend(FooterContract.Inputs.OnTickerClick) },
-            )
             Column(
                 modifier = Modifier
                     .position(Position.Relative)

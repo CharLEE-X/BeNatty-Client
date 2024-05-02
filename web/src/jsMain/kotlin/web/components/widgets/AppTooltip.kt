@@ -11,7 +11,6 @@ import com.varabyte.kobweb.silk.components.overlay.TooltipVars
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.px
 import theme.MaterialTheme
-import web.util.glossy
 
 @Composable
 fun AppTooltip(text: String) {
@@ -21,7 +20,6 @@ fun AppTooltip(text: String) {
         showDelayMs = 500,
         hasArrow = false,
         modifier = Modifier
-            .glossy()
             .border(
                 width = 1.px,
                 color = MaterialTheme.colors.onSurface,

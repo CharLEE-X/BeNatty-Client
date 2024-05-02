@@ -21,7 +21,6 @@ import com.varabyte.kobweb.compose.ui.attrsModifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.border
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.draggable
@@ -65,7 +64,6 @@ import org.w3c.dom.HTMLElement
 import theme.MaterialTheme
 import web.components.widgets.themeScrollbarStyle
 import web.pages.shop.home.gridModifier
-import web.util.cornerRadius
 import web.util.onEnterKeyDown
 
 @Composable
@@ -154,7 +152,6 @@ private fun ProductDetailMiniatureItem(
             .onFocusIn { hovered = true }
             .onFocusOut { hovered = false }
             .cursor(Cursor.Pointer)
-            .borderRadius(cornerRadius)
             .tabIndex(0)
             .onClick { onClick() }
             .onEnterKeyDown(onClick)
@@ -198,7 +195,6 @@ private fun MainImage(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .onClick { onClick() }
-            .borderRadius(cornerRadius)
             .onMouseOver { hovered = true }
             .onMouseLeave { hovered = false }
             .onFocusIn { focused = true }

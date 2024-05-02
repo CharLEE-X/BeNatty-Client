@@ -7,7 +7,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
 import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.ObjectFit
@@ -25,7 +24,6 @@ import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.alignContent
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
@@ -317,7 +315,6 @@ private fun AdminCollageItem(
     textPosition: TextPosition,
     contentColor: Color = Colors.White,
     shadowColor: Color = Color.rgb(30, 30, 59),
-    borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
     onTitleChanged: (String) -> Unit,
     onDescriptionChanged: (String) -> Unit,
     image: @Composable (imageModifier: Modifier) -> Unit,
@@ -334,7 +331,6 @@ private fun AdminCollageItem(
                 .fillMaxSize()
                 .position(Position.Relative)
                 .aspectRatio(1.0)
-                .borderRadius(borderRadius)
                 .onMouseEnter { hovered = true }
                 .onMouseLeave { hovered = false }
                 .cursor(Cursor.Pointer)
@@ -344,7 +340,6 @@ private fun AdminCollageItem(
         ) {
             val imageModifier = Modifier
                 .fillMaxSize()
-                .borderRadius(borderRadius)
                 .objectFit(ObjectFit.Cover)
                 .thenIf(hovered) { Modifier.scale(1.04) }
                 .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
@@ -411,7 +406,6 @@ private fun AdminCollageItem(
                 )
                 buttonText?.let {
                     AppElevatedButton(
-                        containerShape = 16.px,
                         onClick = {},
                         containerColor = MaterialTheme.colors.primary,
                         modifier = Modifier

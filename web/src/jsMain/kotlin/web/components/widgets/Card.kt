@@ -1,7 +1,6 @@
 package web.components.widgets
 
 import androidx.compose.runtime.Composable
-import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
 import com.varabyte.kobweb.compose.ui.Modifier
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.px
@@ -15,7 +14,6 @@ import web.compose.material3.component.labs.OutlinedCard
 fun AppElevatedCard(
     modifier: Modifier = Modifier,
     elevation: Int? = null,
-    containerShape: CSSLengthOrPercentageNumericValue? = null,
     shadowColor: CSSColorValue? = null,
     color: CSSColorValue? = null,
     content: ContentBuilder<MdElement>? = null
@@ -23,7 +21,7 @@ fun AppElevatedCard(
     ElevatedCard(
         modifier = modifier,
         elevation = elevation,
-        containerShape = containerShape ?: 12.px,
+        containerShape = 0.px,
         shadowColor = shadowColor,
         color = color,
         content = content
@@ -34,14 +32,13 @@ fun AppElevatedCard(
 fun AppOutlinedCard(
     modifier: Modifier = Modifier,
     elevation: Int? = null,
-    containerShape: CSSLengthOrPercentageNumericValue? = null,
     shadowColor: CSSColorValue? = null,
     content: ContentBuilder<MdElement>? = null
 ) {
     OutlinedCard(
         modifier = modifier,
         elevation = elevation,
-        containerShape = containerShape ?: 12.px,
+        containerShape = 0.px,
         shadowColor = shadowColor,
         content = content
     )
@@ -51,14 +48,13 @@ fun AppOutlinedCard(
 fun AppFilledCard(
     modifier: Modifier = Modifier,
     elevation: Int? = null,
-    containerShape: CSSLengthOrPercentageNumericValue? = null,
     shadowColor: CSSColorValue? = null,
     content: ContentBuilder<MdElement>? = null
 ) {
     FilledCard(
         modifier = modifier,
         elevation = elevation,
-        containerShape = containerShape ?: 12.px,
+        containerShape = 0.px,
         shadowColor = shadowColor,
         content = content
     )

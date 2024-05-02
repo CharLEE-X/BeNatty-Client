@@ -30,7 +30,7 @@ fun Avatar(
 ) {
     val borderRadius = when (shape) {
         Shape.Circle -> 50.percent
-        Shape.Square -> 20.px
+        Shape.Square -> 0.px
     }
 
     Image(

@@ -18,7 +18,6 @@ import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import web.components.widgets.ShimmerHeader
 import web.components.widgets.ShimmerText
-import web.util.glossy
 
 @Composable
 fun BannerSection(vm: HomeViewModel, state: HomeContract.State) {
@@ -27,7 +26,6 @@ fun BannerSection(vm: HomeViewModel, state: HomeContract.State) {
             .position(Position.Relative)
             .maxHeight(400.px)
             .padding(leftRight = 24.px, topBottom = 48.px)
-            .glossy()
     ) {
         if (!state.isLoading) {
             CollageItem(

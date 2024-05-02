@@ -24,7 +24,6 @@ import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.backdropFilter
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
@@ -77,7 +76,6 @@ fun CatalogItem(
     salePrice: Double?,
     currency: Currency,
     media: List<GetCatalogPageQuery.Medium>,
-    borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
     imageHeight: CSSLengthOrPercentageNumericValue? = 600.px,
     miniaturesMinHeight: CSSLengthOrPercentageNumericValue = 100.px,
 ) {
@@ -94,7 +92,6 @@ fun CatalogItem(
             onClick = onClick,
             media = currentMedia,
             hovered = hovered,
-            borderRadius = borderRadius,
             imageHeight = imageHeight,
             modifier = Modifier
         )
@@ -125,7 +122,6 @@ private fun MainImage(
     onClick: () -> Unit,
     media: GetCatalogPageQuery.Medium?,
     hovered: Boolean,
-    borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
     hoveredScale: Double = 1.02,
     imageHeight: CSSLengthOrPercentageNumericValue?
 ) {
@@ -137,7 +133,6 @@ private fun MainImage(
         modifier = modifier
             .backgroundColor(MaterialTheme.colors.surfaceContainerHighest)
             .onClick { onClick() }
-            .borderRadius(borderRadius)
             .onMouseEnter { thisHovered = true }
             .onMouseLeave { thisHovered = false }
             .onFocusIn { focused = true }
@@ -158,7 +153,6 @@ private fun MainImage(
         val imageModifier = Modifier
             .fillMaxWidth()
             .thenIf(imageHeight != null) { Modifier.height(imageHeight!!) }
-            .borderRadius(borderRadius)
             .objectFit(ObjectFit.Cover)
             .thenIf(hovered || focused) { Modifier.scale(hoveredScale) }
             .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
@@ -175,7 +169,6 @@ private fun MainImage(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .padding(if (visibilityHovered) 0.5.em else 0.25.em)
-                    .borderRadius(50.percent)
                     .backgroundColor(MaterialTheme.colors.onBackground)
                     .zIndex(3)
                     .onMouseEnter { visibilityHovered = true }
@@ -330,7 +323,6 @@ private fun MiniatureItem(
             .onFocusIn { onHovered(true) }
             .onFocusOut { onHovered(false) }
             .cursor(Cursor.Pointer)
-            .borderRadius(12.px)
             .userSelect(UserSelect.None)
             .transition(CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease))
     ) {
@@ -340,13 +332,11 @@ private fun MiniatureItem(
             modifier = Modifier
                 .fillMaxSize()
                 .objectFit(ObjectFit.Cover)
-                .borderRadius(12.px)
                 .transition(CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease))
         )
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .borderRadius(12.px)
                 .border(
                     width = 2.px,
                     color = outerBorderColor,
@@ -356,7 +346,6 @@ private fun MiniatureItem(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(2.px)
-                .borderRadius(12.px)
                 .border(
                     width = 2.px,
                     color = innerBorderColor,

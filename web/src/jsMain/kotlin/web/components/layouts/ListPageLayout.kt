@@ -18,7 +18,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.disabled
@@ -66,7 +65,6 @@ import web.components.widgets.AppOutlinedSegmentedButtonSet
 import web.components.widgets.AppSegmentedButton
 import web.compose.material3.component.CircularProgress
 import web.compose.material3.component.Divider
-import web.util.glossy
 import web.util.onEnterKeyDown
 
 @Composable
@@ -78,13 +76,11 @@ fun ListPageLayout(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .glossy()
                 .padding(24.px)
         ) {
             val gridContainerModifier = Modifier
                 .fillMaxWidth()
                 .padding(topBottom = 0.5.em, leftRight = 1.em)
-                .borderRadius(1.em)
                 .display(DisplayStyle.Grid)
                 .gap(10.px)
                 .gridTemplateColumns { repeat(autoFit) { minmax(120.px, 1.fr) } }
@@ -267,7 +263,6 @@ fun Item(
             .onMouseLeave { isHovered = false }
             .thenIf(isHovered) { Modifier.backgroundColor(MaterialTheme.colors.surfaceContainerHigh) }
             .thenIf(isHovered) { Modifier.color(MaterialTheme.colors.onSurfaceVariant) }
-            .borderRadius(12.px)
             .onClick { vm.trySend(AdminListContract.Inputs.Click.Item(item.id)) }
             .cursor(Cursor.Pointer)
             .transition(
@@ -325,7 +320,6 @@ private fun MiniImage(url: String) {
         src = url,
         modifier = Modifier
             .size(40.px)
-            .borderRadius(5.px)
             .objectFit(ObjectFit.Cover)
             .onMouseEnter { hovered = true }
             .onMouseLeave { hovered = false }

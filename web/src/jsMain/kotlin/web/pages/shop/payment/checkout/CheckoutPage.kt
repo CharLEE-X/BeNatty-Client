@@ -25,7 +25,6 @@ import web.components.layouts.GlobalVMs
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
 import web.components.layouts.oneLayoutMaxWidth
-import web.util.glossy
 
 @Composable
 fun CheckoutPage(
@@ -57,7 +56,6 @@ fun CheckoutPage(
                 .maxWidth(oneLayoutMaxWidth)
                 .fillMaxSize()
                 .margin(0.px)
-                .glossy()
         ) {
             LeftSide(vm, state)
             Box(

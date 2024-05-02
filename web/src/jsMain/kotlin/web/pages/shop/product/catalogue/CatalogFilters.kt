@@ -34,7 +34,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.backdropFilter
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.bottom
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
@@ -105,7 +104,6 @@ import web.components.widgets.themeScrollbarStyle
 import web.compose.material3.component.ChipSet
 import web.compose.material3.component.Divider
 import web.compose.material3.component.FilterChip
-import web.util.cornerRadius
 import web.util.onEnterKeyDown
 
 @Composable
@@ -364,7 +362,6 @@ private fun CategoryFilters(vm: CatalogViewModel, state: CatalogContract.State) 
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(1f)
-                        .borderRadius(cornerRadius)
                         .border(
                             width = 1.px,
                             color = if (category.id in state.selectedCategoryIds)
@@ -402,15 +399,13 @@ private fun CategoryFilters(vm: CatalogViewModel, state: CatalogContract.State) 
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .borderRadius(cornerRadius)
                                 .backdropFilter(saturate(0.2))
                         )
-                        Cross(Modifier.borderRadius(cornerRadius))
+                        Cross()
                     }
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .borderRadius(cornerRadius)
                             .border(
                                 width = 2.px,
                                 color = if (selected) MaterialTheme.colors.onSurface else Colors.Transparent,
@@ -422,7 +417,6 @@ private fun CategoryFilters(vm: CatalogViewModel, state: CatalogContract.State) 
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(4.px)
-                                .borderRadius(cornerRadius)
                                 .border(
                                     width = 2.px,
                                     color = if (selected) MaterialTheme.colors.background else Colors.Transparent,
@@ -462,7 +456,6 @@ private fun ColorFilters(vm: CatalogViewModel, state: CatalogContract.State) {
             val circleModifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)
-                .borderRadius(50.percent)
                 .border(
                     width = if (colorOption.color == data.type.Color.WHITE || colorOption.color == data.type.Color.YELLOW)
                         1.px else 0.px,
@@ -533,7 +526,6 @@ private fun ColorFilters(vm: CatalogViewModel, state: CatalogContract.State) {
                     if (!enabled) {
                         Cross(
                             color = MaterialTheme.colors.background,
-                            modifier = Modifier.borderRadius(50.percent)
                         )
                     }
                 }
@@ -552,13 +544,11 @@ private fun ColorFilters(vm: CatalogViewModel, state: CatalogContract.State) {
 
                                 else -> MaterialTheme.colors.onSurface
                             },
-                            modifier = Modifier.borderRadius(50.percent)
                         )
                     }
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .borderRadius(50.percent)
                             .border(
                                 width = 2.px,
                                 color = if (selected) MaterialTheme.colors.onSurface else Colors.Transparent,
@@ -570,7 +560,6 @@ private fun ColorFilters(vm: CatalogViewModel, state: CatalogContract.State) {
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(4.px)
-                                .borderRadius(50.percent)
                                 .border(
                                     width = 2.px,
                                     color = if (selected) MaterialTheme.colors.background else Colors.Transparent,
@@ -627,7 +616,6 @@ fun ProductSizeItem(
             .onFocusOut { hovered = false }
             .minHeight(50.px)
             .backgroundColor(if (selected) MaterialTheme.colors.primary else Colors.Transparent)
-            .borderRadius(40.px)
             .border(
                 width = 2.px,
                 color = when {

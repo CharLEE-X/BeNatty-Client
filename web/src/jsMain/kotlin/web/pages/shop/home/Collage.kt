@@ -20,7 +20,6 @@ import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.display
@@ -68,7 +67,6 @@ import web.components.widgets.Shimmer
 import web.components.widgets.ShimmerButton
 import web.components.widgets.ShimmerHeader
 import web.components.widgets.ShimmerText
-import web.util.glossy
 import web.util.onEnterKeyDown
 
 fun gridModifier(
@@ -99,7 +97,6 @@ fun Collage(
     Column(
         modifier = gridModifier(columns = 3).then(modifier)
             .padding(leftRight = 24.px, top = 24.px, bottom = 48.px)
-            .glossy()
     ) {
         if (!isLoading) {
             items.forEachIndexed { index, item ->
@@ -189,7 +186,6 @@ fun CollageItem(
     onClick: () -> Unit,
     contentColor: Color = Colors.White,
     shadowColor: Color = Color.rgb(30, 30, 59),
-    borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
     image: @Composable (imageModifier: Modifier) -> Unit,
 ) {
     var hovered by remember { mutableStateOf(false) }
@@ -200,7 +196,6 @@ fun CollageItem(
             .fillMaxSize()
             .position(Position.Relative)
             .aspectRatio(1.0)
-            .borderRadius(borderRadius)
             .onMouseEnter { hovered = true }
             .onMouseLeave { hovered = false }
             .cursor(Cursor.Pointer)
@@ -220,7 +215,6 @@ fun CollageItem(
             image(
                 Modifier
                     .fillMaxSize()
-                    .borderRadius(borderRadius)
                     .objectFit(ObjectFit.Cover)
                     .thenIf(hovered) { Modifier.scale(1.04) }
                     .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
@@ -265,7 +259,6 @@ fun CollageItem(
                             .height(2.px)
                             .fillMaxWidth(if (hovered) 100.percent else 0.percent)
                             .backgroundColor(contentColor)
-                            .borderRadius(2.px)
                             .transition(CSSTransition("width", 0.3.s, TransitionTimingFunction.Ease))
                     )
                 }
@@ -282,7 +275,6 @@ fun CollageItem(
                 )
                 buttonText?.let {
                     AppElevatedButton(
-                        containerShape = 16.px,
                         onClick = onClick,
                         containerColor = MaterialTheme.colors.primary,
                         modifier = Modifier

@@ -13,7 +13,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusOut
 import com.varabyte.kobweb.compose.ui.modifiers.onKeyDown
@@ -56,7 +55,6 @@ fun SearchBar(
     Box(
         modifier = Modifier
             .backgroundColor(containerColor)
-            .borderRadius(containerShape)
             .border(
                 width = borderWidth,
                 color = borderColor,

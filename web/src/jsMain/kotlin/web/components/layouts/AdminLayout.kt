@@ -21,7 +21,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.alignItems
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxHeight
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
@@ -72,7 +71,6 @@ import web.components.widgets.AppFilledTonalButton
 import web.components.widgets.AppFilledTonalIconButton
 import web.components.widgets.Logo
 import web.compose.material3.component.CircularProgress
-import web.util.glossy
 
 private val topBarHeight = 4.em
 private val sideBarWidth = 18.em
@@ -171,7 +169,6 @@ private fun AdminSideBar(routes: AdminSideNavRoutes) {
             .width(sideBarWidth)
             .margin(top = topBarHeight)
             .position(Position.Fixed)
-            .glossy(cornerRadius = 0.px)
             .padding(1.em)
             .zIndex(50)
     ) {
@@ -245,7 +242,6 @@ fun AdminTopBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(topBarHeight)
-            .glossy(cornerRadius = 0.px)
             .position(Position.Fixed)
             .zIndex(3)
             .alignItems(AlignItems.Center)
@@ -407,7 +403,6 @@ private fun SearchBar(
                     left = 3.em,
                     right = 1.em,
                 )
-                .borderRadius(0.5.em)
                 .onFocusIn { focused = true }
                 .onFocusOut { focused = false }
         )

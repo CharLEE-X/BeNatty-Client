@@ -46,7 +46,6 @@ import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import theme.MaterialTheme
-import web.util.glossy
 
 @Composable
 fun HasChangesWidget(
@@ -89,7 +88,6 @@ fun HasChangesWidget(
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .glossy()
                     .opacity(opacity)
                     .fillMaxWidth(80.percent)
                     .maxWidth(45.em)
@@ -133,7 +131,6 @@ fun HasChangesWidget(
                     AppFilledTonalButton(
                         onClick = { onSave() },
                         leadingIcon = { MdiSave() },
-                        containerShape = 12.px,
                     ) {
                         SpanText(saveText)
                     }

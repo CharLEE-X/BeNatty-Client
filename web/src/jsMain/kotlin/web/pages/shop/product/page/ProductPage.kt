@@ -79,7 +79,6 @@ import web.compose.material3.component.Divider
 import web.pages.shop.home.gridModifier
 import web.pages.shop.product.page.dialogs.AskQuestionDialog
 import web.pages.shop.product.page.dialogs.SizeGuideDialog
-import web.util.glossy
 import web.util.onEnterKeyDown
 
 @Composable
@@ -149,7 +148,6 @@ fun ProductPage(
                 .maxWidth(oneLayoutMaxWidth)
                 .margin(0.px)
                 .padding(20.px)
-                .glossy()
                 .gap(2.em)
         ) {
             Row(

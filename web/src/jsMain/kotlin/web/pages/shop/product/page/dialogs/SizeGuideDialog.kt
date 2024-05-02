@@ -7,7 +7,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gridTemplateColumns
@@ -22,7 +21,6 @@ import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.Text
 import theme.MaterialTheme
 import web.compose.material3.component.Dialog
-import web.util.cornerRadius
 
 @Composable
 fun SizeGuideDialog(
@@ -58,7 +56,6 @@ fun SizeGuideDialog(
                     .padding(1.em)
                 val bgRowModifier = standardRowModifier
                     .backgroundColor(MaterialTheme.colors.surfaceContainerHighest)
-                    .borderRadius(cornerRadius)
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

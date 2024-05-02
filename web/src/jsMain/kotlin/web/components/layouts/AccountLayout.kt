@@ -17,7 +17,6 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
@@ -34,7 +33,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.translateX
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEast
 import com.varabyte.kobweb.silk.components.text.SpanText
-import feature.shop.navbar.DesktopNavContract
+import feature.shop.navbar.NavbarContract
 import feature.shop.navbar.label
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
@@ -44,10 +43,10 @@ import web.util.onEnterKeyDown
 
 @Composable
 fun AccountLayout(
-    item: DesktopNavContract.AccountMenuItem,
+    item: NavbarContract.AccountMenuItem,
     logoutText: String,
     onLogoutClicked: () -> Unit,
-    onMenuItemClicked: (DesktopNavContract.AccountMenuItem) -> Unit,
+    onMenuItemClicked: (NavbarContract.AccountMenuItem) -> Unit,
     content: @Composable () -> Unit,
 ) {
     Box(
@@ -81,13 +80,13 @@ fun AccountLayout(
 @Composable
 private fun MenuItems(
     modifier: Modifier,
-    initialItem: DesktopNavContract.AccountMenuItem,
+    initialItem: NavbarContract.AccountMenuItem,
     logoutText: String,
-    onMenuItemClicked: (DesktopNavContract.AccountMenuItem) -> Unit,
+    onMenuItemClicked: (NavbarContract.AccountMenuItem) -> Unit,
     onLogoutClicked: () -> Unit,
 ) {
-    val items = DesktopNavContract.AccountMenuItem.entries
-        .filter { it != DesktopNavContract.AccountMenuItem.LOGOUT }
+    val items = NavbarContract.AccountMenuItem.entries
+        .filter { it != NavbarContract.AccountMenuItem.LOGOUT }
     var currentItem by remember { mutableStateOf(initialItem) }
 
     Column(
@@ -157,7 +156,6 @@ fun SideNavMainItem(
             .onClick { onMenuItemClicked() }
             .onMouseEnter { hovered = true }
             .onMouseLeave { hovered = false }
-            .borderRadius(0.5.em)
             .cursor(Cursor.Pointer)
             .fillMaxWidth()
             .padding(
@@ -211,7 +209,6 @@ fun SideNavSubItem(
             .onClick { onMenuItemClicked() }
             .onMouseEnter { hovered = true }
             .onMouseLeave { hovered = false }
-            .borderRadius(0.5.em)
             .transition(CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease))
             .cursor(Cursor.Pointer)
             .tabIndex(0)

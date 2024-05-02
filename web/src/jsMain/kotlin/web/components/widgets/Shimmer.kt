@@ -21,7 +21,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.animation
 import com.varabyte.kobweb.compose.ui.modifiers.background
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundPosition
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundSize
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
@@ -53,7 +52,6 @@ val ShimmerAnimation by Keyframes {
 fun Shimmer(
     modifier: Modifier = Modifier,
     textPosition: TextPosition = TextPosition.Center,
-    borderRadius: CSSLengthOrPercentageNumericValue = 12.px,
     lightColor: Color = MaterialTheme.colors.surfaceContainerLowest,
     darkColor: Color = MaterialTheme.colors.surfaceContainerHighest,
     delay: CSSTimeNumericValue = 0.s,
@@ -62,7 +60,6 @@ fun Shimmer(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .borderRadius(borderRadius)
             .background(
                 CSSBackground(
                     image = BackgroundImage.of(
@@ -113,10 +110,8 @@ fun Shimmer(
 @Composable
 fun ShimmerHeader(
     modifier: Modifier = Modifier,
-    borderRadius: CSSLengthOrPercentageNumericValue = 8.px
 ) {
     Shimmer(
-        borderRadius = borderRadius,
         modifier = modifier.height(40.sp)
     )
 }
@@ -127,7 +122,6 @@ fun ShimmerButton(
     borderRadius: CSSLengthOrPercentageNumericValue = 12.px
 ) {
     Shimmer(
-        borderRadius = borderRadius,
         modifier = modifier.height(72.px)
     )
 }
@@ -135,10 +129,8 @@ fun ShimmerButton(
 @Composable
 fun ShimmerText(
     modifier: Modifier = Modifier,
-    borderRadius: CSSLengthOrPercentageNumericValue = 6.px
 ) {
     Shimmer(
-        borderRadius = borderRadius,
         modifier = modifier.height(20.sp)
     )
 }

@@ -21,7 +21,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.top
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import feature.shop.cart.CartContract
-import feature.shop.navbar.DesktopNavContract
 import feature.shop.navbar.DesktopNavRoutes
 import feature.shop.navbar.NavbarViewModel
 import kotlinx.browser.window
@@ -32,10 +31,9 @@ import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import web.components.layouts.GlobalVMs
-import web.components.widgets.TickerSection
+import web.components.widgets.PromoSection
 import web.components.widgets.tickerHeight
 import web.shadow
-import web.util.glossy
 
 enum class ScrollDirection { UP, DOWN }
 
@@ -55,6 +53,7 @@ fun DesktopNavContent(
             onError = onError,
             desktopNavRoutes = desktopNavRoutes,
             showCartSidebar = { globalVMs.cartVm.trySend(CartContract.Inputs.ShowCart) },
+            goToProductDetail = desktopNavRoutes.goToProductDetail,
         )
     }
     val navbarState by vm.observeStates().collectAsState()
@@ -89,7 +88,6 @@ fun DesktopNavContent(
         modifier = modifier
             .position(Position.Fixed)
             .display(DisplayStyle.Block)
-            .glossy()
             .fillMaxWidth()
             .boxSizing(BoxSizing.BorderBox)
             .top(topSpacing)
@@ -106,30 +104,13 @@ fun DesktopNavContent(
             )
     ) {
         if (isFullLayout) {
-            TickerSection(
-                isLoading = navbarState.isLoading,
-                tickerText = navbarState.strings.ticker,
-                onClick = { vm.trySend(DesktopNavContract.Inputs.OnTickerClick) },
-            )
+            PromoSection(vm, navbarState)
         }
         NavBar(
-            isLoading = navbarState.isLoading,
-            storeText = navbarState.strings.store,
-            aboutText = navbarState.strings.about,
-            shippingReturnsText = navbarState.strings.shippingReturns,
-            searchPlaceholder = navbarState.strings.search,
+            vm = vm,
+            state = navbarState,
             basketCount = cartState.basketCount,
-            storeMenuItems = navbarState.storeMenuItems,
             isFullLayout = isFullLayout,
-            onStoreClick = { vm.trySend(DesktopNavContract.Inputs.OnStoreClick) },
-            onAboutClick = { vm.trySend(DesktopNavContract.Inputs.OnAboutClick) },
-            onShippingReturnsClick = { vm.trySend(DesktopNavContract.Inputs.OnShippingAndReturnsClick) },
-            onStoreMenuItemSelected = { vm.trySend(DesktopNavContract.Inputs.OnStoreMenuItemSelected(it)) },
-            onLogoClick = { vm.trySend(DesktopNavContract.Inputs.OnLogoClick) },
-            onSearchValueChanged = { vm.trySend(DesktopNavContract.Inputs.OnSearchValueChanged(it)) },
-            onEnterPress = { vm.trySend(DesktopNavContract.Inputs.OnSearchEnterPress) },
-            onProfileClick = { vm.trySend(DesktopNavContract.Inputs.OnProfileClick) },
-            onBasketClick = { vm.trySend(DesktopNavContract.Inputs.OnBasketClick) },
         )
     }
 }

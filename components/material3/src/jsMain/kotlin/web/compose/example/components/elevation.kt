@@ -7,7 +7,6 @@ import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.Style
 import org.jetbrains.compose.web.css.StyleSheet
 import org.jetbrains.compose.web.css.backgroundColor
-import org.jetbrains.compose.web.css.borderRadius
 import org.jetbrains.compose.web.css.borderWidth
 import org.jetbrains.compose.web.css.color
 import org.jetbrains.compose.web.css.display
@@ -28,7 +27,6 @@ private object ElevationStyleSheet : StyleSheet() {
         margin(8.px)
         backgroundColor(CSSMaterialTheme.colors.primaryContainer.value())
         borderWidth(0.px);
-        borderRadius(16.px);
         color(CSSMaterialTheme.colors.onPrimaryContainer.value())
         display(DisplayStyle.Flex)
         justifyContent(JustifyContent.Center)
