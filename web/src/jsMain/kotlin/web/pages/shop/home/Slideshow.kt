@@ -2,7 +2,6 @@ package web.pages.shop.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -127,41 +126,34 @@ fun Slideshow(
         ) {
             items.firstOrNull()?.let { _ ->
                 val scope = rememberCoroutineScope()
-                var job: Job?
-                var bottomIndex by remember { mutableStateOf(if (items.isNotEmpty()) 0 else null) }
+                var job: Job? = null
+                var bottomIndex by remember { mutableStateOf(0) }
                 var topIndex by remember { mutableStateOf(bottomIndex) }
                 var topVisible by remember { mutableStateOf(false) }
                 var topShow by remember { mutableStateOf(true) }
                 var showTitle by remember { mutableStateOf(false) }
 
-                LaunchedEffect(items) {
-                    if (bottomIndex == null && items.isNotEmpty()) {
-                        bottomIndex = 0
-                    }
-                }
-
                 DisposableEffect(bottomIndex) {
+                    job?.cancel()
                     job = scope.launch {
-                        bottomIndex?.let { index ->
-                            showTitle = true
-                            topVisible = false
-                            delay(1000)
-                            topShow = false
-                            topIndex = index
-                            delay(1000)
-                            topShow = true
-                            delay(1000)
-                            topVisible = true
+                        showTitle = true
+                        topVisible = false
+                        delay(1000)
+                        topShow = false
+                        topIndex = bottomIndex
+                        delay(1000)
+                        topShow = true
+                        delay(1000)
+                        topVisible = true
 
-                            delay(3000L)
-                            showTitle = false
-                            delay(500L)
+                        delay(3000L)
+                        showTitle = false
+                        delay(500L)
 
-                            items
-                                .getOrNull(index + 1)
-                                ?.let { bottomIndex = index + 1 }
-                                ?: run { bottomIndex = 0 }
-                        }
+                        items
+                            .getOrNull(bottomIndex + 1)
+                            ?.let { bottomIndex += 1 }
+                            ?: run { bottomIndex = 0 }
                     }
 
                     onDispose {
@@ -170,110 +162,100 @@ fun Slideshow(
                     }
                 }
 
-                bottomIndex?.let { index ->
-                    items.getOrNull(index)?.let { item ->
+                items.getOrNull(bottomIndex)?.let { item ->
+                    item.media?.url?.let {
+                        Image(
+                            src = it,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                }
+                if (topShow) {
+                    items.getOrNull(topIndex)?.let { item ->
                         item.media?.url?.let {
                             Image(
                                 src = it,
-                                modifier = Modifier.fillMaxSize()
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .opacity(if (topVisible) 1.0 else 0.0)
+                                    .transition(CSSTransition("opacity", 1.s, TransitionTimingFunction.Ease))
                             )
                         }
                     }
                 }
-                if (topShow) {
-                    topIndex?.let { index ->
-                        items.getOrNull(index)?.let { item ->
-                            item.media?.url?.let {
-                                Image(
-                                    src = it,
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .opacity(if (topVisible) 1.0 else 0.0)
-                                        .transition(CSSTransition("opacity", 1.s, TransitionTimingFunction.Ease))
+                if (bottomIndex % 2 != 0) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .zIndex(20)
+                            .align(Alignment.CenterStart)
+                            .translate(tx = 300.px, ty = 0.px)
+                            .padding(64.px)
+                            .gap(1.em)
+                            .opacity(if (showTitle) 1.0 else 0.0)
+                            .transition(CSSTransition("opacity", 1.s, TransitionTimingFunction.Ease))
+                    ) {
+                        items.getOrNull(bottomIndex)?.let { item ->
+                            item.title?.let {
+                                SpanText(
+                                    text = it,
+                                    modifier = Modifier.roleStyle(MaterialTheme.typography.headlineLarge)
                                 )
+                            }
+                            item.description?.let {
+                                SpanText(text = it)
+                            }
+                            AppFilledButton(
+                                onClick = { onCollageItemClick(item) },
+                            ) {
+                                SpanText(text = getString(Strings.ShopNew).uppercase())
                             }
                         }
                     }
-                }
-                bottomIndex?.let { index ->
-                    if (index % 2 != 0) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .zIndex(20)
-                                .align(Alignment.CenterStart)
-                                .translate(tx = 300.px, ty = 0.px)
-                                .padding(64.px)
-                                .gap(1.em)
-                                .opacity(if (showTitle) 1.0 else 0.0)
-                                .transition(CSSTransition("opacity", 1.s, TransitionTimingFunction.Ease))
-                        ) {
-                            items.getOrNull(index)?.let { item ->
-                                item.title?.let {
-                                    SpanText(
-                                        text = it,
-                                        modifier = Modifier.roleStyle(MaterialTheme.typography.headlineLarge)
-                                    )
-                                }
-                                item.description?.let {
-                                    SpanText(text = it)
-                                }
-                                AppFilledButton(
-                                    onClick = { onCollageItemClick(item) },
-                                ) {
-                                    SpanText(text = getString(Strings.ShopNew).uppercase())
-                                }
+                } else {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .zIndex(20)
+                            .align(Alignment.Center)
+                            .translate(tx = 0.px, ty = 100.px)
+                            .padding(64.px)
+                            .gap(1.em)
+                            .opacity(if (showTitle) 1.0 else 0.0)
+                            .transition(CSSTransition("opacity", 1.s, TransitionTimingFunction.Ease))
+                    ) {
+                        items.getOrNull(bottomIndex)?.let { item ->
+                            item.title?.let {
+                                SpanText(
+                                    text = it,
+                                    modifier = Modifier.roleStyle(MaterialTheme.typography.headlineLarge)
+                                )
                             }
-                        }
-                    } else {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .zIndex(20)
-                                .align(Alignment.Center)
-                                .translate(tx = 0.px, ty = 100.px)
-                                .padding(64.px)
-                                .gap(1.em)
-                                .opacity(if (showTitle) 1.0 else 0.0)
-                                .transition(CSSTransition("opacity", 1.s, TransitionTimingFunction.Ease))
-                        ) {
-                            items.getOrNull(index)?.let { item ->
-                                item.title?.let {
-                                    SpanText(
-                                        text = it,
-                                        modifier = Modifier.roleStyle(MaterialTheme.typography.headlineLarge)
-                                    )
-                                }
-                                item.description?.let {
-                                    SpanText(text = it)
-                                }
-                                AppFilledButton(
-                                    onClick = { onCollageItemClick(item) },
-                                ) {
-                                    SpanText(text = getString(Strings.ShopNew).uppercase())
-                                }
+                            item.description?.let {
+                                SpanText(text = it)
+                            }
+                            AppFilledButton(
+                                onClick = { onCollageItemClick(item) },
+                            ) {
+                                SpanText(text = getString(Strings.ShopNew).uppercase())
                             }
                         }
                     }
                 }
                 Navigator(
                     onClick = {
-                        bottomIndex?.let { index ->
-                            items.getOrNull(index - 1)?.let {
-                                bottomIndex = index - 1
-                            } ?: run { bottomIndex = items.size - 1 }
-                        }
+                        items.getOrNull(bottomIndex - 1)?.let {
+                            bottomIndex -= 1
+                        } ?: run { bottomIndex = items.size - 1 }
                     },
                     icon = { modifier -> MdiChevronLeft(modifier) },
                     modifier = Modifier.align(Alignment.CenterStart).zIndex(10)
                 )
                 Navigator(
                     onClick = {
-                        bottomIndex?.let { index ->
-                            items.getOrNull(index + 1)
-                                ?.let { bottomIndex = index + 1 }
-                                ?: run { bottomIndex = 0 }
-                        }
+                        items.getOrNull(bottomIndex + 1)
+                            ?.let { bottomIndex += 1 }
+                            ?: run { bottomIndex = 0 }
                     },
                     icon = { modifier -> MdiChevronRight(modifier) },
                     modifier = Modifier.align(Alignment.CenterEnd).zIndex(10)
