@@ -14,7 +14,6 @@ import data.UploadConfigCollageImageMutation
 import data.type.BannerItemInput
 import data.type.BannerSectionUpdateInput
 import data.type.BlobInput
-import data.type.CollageItemInput
 import data.type.CompanyInfoUpdateInput
 import data.type.ConfigBannerMediaUploadInput
 import data.type.ConfigCollageMediaUploadInput
@@ -27,6 +26,7 @@ import data.type.LandingConfigUpdateInput
 import data.type.MediaType
 import data.type.OpeningTimesUpdateInput
 import data.type.Side
+import data.type.SlideshowItemInput
 import data.utils.handle
 import data.utils.skipIfNull
 
@@ -46,7 +46,7 @@ interface ConfigService {
         dayTo: DayOfWeek?,
         open: String?,
         close: String?,
-        collageItems: List<CollageItemInput>?,
+        slideshowItems: List<SlideshowItemInput>?,
         showStartChat: Boolean?,
         showOpeningTimes: Boolean?,
         showCareer: Boolean?,
@@ -98,7 +98,7 @@ internal class ConfigServiceImpl(private val apolloClient: ApolloClient) : Confi
         dayTo: DayOfWeek?,
         open: String?,
         close: String?,
-        collageItems: List<CollageItemInput>?,
+        slideshowItems: List<SlideshowItemInput>?,
         showStartChat: Boolean?,
         showOpeningTimes: Boolean?,
         showCareer: Boolean?,
@@ -164,7 +164,7 @@ internal class ConfigServiceImpl(private val apolloClient: ApolloClient) : Confi
             )
         }
         val landingConfigInput = LandingConfigUpdateInput(
-            collageItems = collageItems.skipIfNull(),
+            slideshowItems = slideshowItems.skipIfNull(),
             bannerSectionInput = bannerSectionInput.skipIfNull(),
         )
         val input = ConfigUpdateInput(

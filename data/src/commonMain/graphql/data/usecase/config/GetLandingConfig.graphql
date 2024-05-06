@@ -1,6 +1,6 @@
 query GetLandingConfig($configId: String) {
   getLandingConfig(configId: $configId) {
-    collageItems {
+    slideshowItems {
       description
       id
       media {

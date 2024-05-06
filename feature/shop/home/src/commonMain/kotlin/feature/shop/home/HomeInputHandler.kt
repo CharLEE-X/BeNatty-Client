@@ -41,7 +41,7 @@ internal class HomeInputHandler :
         HomeContract.Inputs.OnBannerRightClick -> postEvent(HomeContract.Events.GoToCatalogue)
     }
 
-    private suspend fun InputScope.handleCollageItemClick(item: GetLandingConfigQuery.CollageItem) {
+    private suspend fun InputScope.handleCollageItemClick(item: GetLandingConfigQuery.SlideshowItem) {
         postEvent(HomeContract.Events.GoToCatalogue)
     }
 

@@ -8,7 +8,7 @@ data class ImagePreview(
     val alt: String,
 )
 
-fun GetConfigQuery.CollageItem.toPreviewImage() = ImagePreview(
+fun GetConfigQuery.SlideshowItem.toPreviewImage() = ImagePreview(
     id = id,
     url = media?.url ?: "",
     alt = media?.alt ?: "",

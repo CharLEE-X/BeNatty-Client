@@ -22,7 +22,7 @@ mutation CreateConfig($input: CreateConfigInput!) {
       showPress
     }
     landingConfig {
-      collageItems {
+      slideshowItems {
         description
         id
         media {

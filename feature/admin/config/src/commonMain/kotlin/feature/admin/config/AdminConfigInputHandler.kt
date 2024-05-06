@@ -10,11 +10,11 @@ import data.GetConfigQuery
 import data.service.ConfigService
 import data.type.BannerItemInput
 import data.type.BlobInput
-import data.type.CollageItemInput
 import data.type.DayOfWeek
 import data.type.MediaInput
 import data.type.MediaType
 import data.type.Side
+import data.type.SlideshowItemInput
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -171,11 +171,11 @@ internal class AdminConfigInputHandler :
 
     private suspend fun InputScope.handleOnCollageItemDescriptionChanged(imageId: String, description: String) {
         updateState { state ->
-            val newCollageItems = state.current.landingConfig.collageItems.toMutableList()
+            val newCollageItems = state.current.landingConfig.slideshowItems.toMutableList()
             val index = newCollageItems.indexOfFirst { it.id == imageId }
             val currentCollageItem = newCollageItems[index]
 
-            newCollageItems[index] = GetConfigQuery.CollageItem(
+            newCollageItems[index] = GetConfigQuery.SlideshowItem(
                 id = imageId,
                 title = currentCollageItem.title,
                 description = description,
@@ -185,7 +185,7 @@ internal class AdminConfigInputHandler :
             state.copy(
                 current = state.current.copy(
                     landingConfig = state.current.landingConfig.copy(
-                        collageItems = newCollageItems.toList()
+                        slideshowItems = newCollageItems.toList()
                     )
                 ),
             ).wasEdited()
@@ -194,11 +194,11 @@ internal class AdminConfigInputHandler :
 
     private suspend fun InputScope.handleOnCollageItemTitleChanged(imageId: String, title: String) {
         updateState {
-            val newCollageItems = it.current.landingConfig.collageItems.toMutableList()
+            val newCollageItems = it.current.landingConfig.slideshowItems.toMutableList()
             val index = newCollageItems.indexOfFirst { it.id == imageId }
             val currentCollageItem = newCollageItems[index]
 
-            newCollageItems[index] = GetConfigQuery.CollageItem(
+            newCollageItems[index] = GetConfigQuery.SlideshowItem(
                 id = imageId,
                 title = title,
                 description = currentCollageItem.description,
@@ -208,7 +208,7 @@ internal class AdminConfigInputHandler :
             it.copy(
                 current = it.current.copy(
                     landingConfig = it.current.landingConfig.copy(
-                        collageItems = newCollageItems.toList()
+                        slideshowItems = newCollageItems.toList()
                     )
                 ),
             ).wasEdited()
@@ -229,8 +229,8 @@ internal class AdminConfigInputHandler :
             ).fold(
                 { postEvent(AdminConfigContract.Events.OnError(it.mapToUiMessage())) },
                 { data ->
-                    val media = data.uploadConfigCollageImage.collageItems.map {
-                        GetConfigQuery.CollageItem(
+                    val media = data.uploadConfigCollageImage.slideshowItems.map {
+                        GetConfigQuery.SlideshowItem(
                             id = it.id.toString(),
                             media = GetConfigQuery.Media(
                                 keyName = it.media?.keyName ?: "",
@@ -243,7 +243,7 @@ internal class AdminConfigInputHandler :
                         )
                     }
                     val config = state.current.copy(
-                        landingConfig = state.current.landingConfig.copy(collageItems = media)
+                        landingConfig = state.current.landingConfig.copy(slideshowItems = media)
                     )
                     postInput(AdminConfigContract.Inputs.SetOriginalConfig(config))
                     postInput(AdminConfigContract.Inputs.SetCurrentConfig(config))
@@ -313,8 +313,8 @@ internal class AdminConfigInputHandler :
         updateState { state ->
             val imageId = state.deleteImageDialogImageId ?: return@updateState state
 
-            state.current.landingConfig.collageItems.let { collageItems ->
-                val newCollageItems = collageItems.toMutableList()
+            state.current.landingConfig.slideshowItems.let { slideshowItems ->
+                val newCollageItems = slideshowItems.toMutableList()
                 val index = newCollageItems.indexOfFirst { it.id == imageId }
                 newCollageItems.removeAt(index)
 
@@ -323,7 +323,7 @@ internal class AdminConfigInputHandler :
                     deleteImageDialogImageId = null,
                     current = state.current.copy(
                         landingConfig = state.current.landingConfig.copy(
-                            collageItems = newCollageItems.toList()
+                            slideshowItems = newCollageItems.toList()
                         )
                     ),
                 ).wasEdited()
@@ -460,9 +460,9 @@ internal class AdminConfigInputHandler :
                         current.companyInfo.openingTimes.open else null,
                     close = if (current.companyInfo.openingTimes.close != original.companyInfo.openingTimes.close)
                         current.companyInfo.openingTimes.close else null,
-                    collageItems = if (current.landingConfig.collageItems != original.landingConfig.collageItems)
-                        current.landingConfig.collageItems.map {
-                            CollageItemInput(
+                    slideshowItems = if (current.landingConfig.slideshowItems != original.landingConfig.slideshowItems)
+                        current.landingConfig.slideshowItems.map {
+                            SlideshowItemInput(
                                 id = it.id,
                                 title = Optional.present(it.title),
                                 description = Optional.present(it.description),
@@ -547,8 +547,8 @@ internal class AdminConfigInputHandler :
                                     showPress = footerConfig.showPress,
                                 ),
                                 landingConfig = GetConfigQuery.LandingConfig(
-                                    collageItems = landingConfig.collageItems.map {
-                                        GetConfigQuery.CollageItem(
+                                    slideshowItems = landingConfig.slideshowItems.map {
+                                        GetConfigQuery.SlideshowItem(
                                             id = it.id,
                                             title = it.title,
                                             description = it.description,

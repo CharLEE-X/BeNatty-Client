@@ -32,7 +32,8 @@ object AdminConfigContract {
                 showCyberSecurity = false,
                 showPress = false
             ), landingConfig = GetConfigQuery.LandingConfig(
-                collageItems = listOf(), bannerSection = GetConfigQuery.BannerSection(
+                slideshowItems = listOf(),
+                bannerSection = GetConfigQuery.BannerSection(
                     left = GetConfigQuery.Left(
                         media = null,
                         description = null,

@@ -24,7 +24,7 @@ mutation UpdateConfig($input: ConfigUpdateInput!) {
       showPress
     }
     landingConfig {
-      collageItems {
+      slideshowItems {
         description
         id
         media {

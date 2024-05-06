@@ -422,4 +422,5 @@ enum class Strings {
     Collections,
     WeLoved,
     ShopTheLatest,
+    ShopNew,
 }

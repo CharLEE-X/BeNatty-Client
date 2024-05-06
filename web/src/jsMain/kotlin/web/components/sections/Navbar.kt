@@ -204,7 +204,7 @@ fun NavBar(
                         onClick = { vm.trySend(NavbarContract.Inputs.OnStoreClicked) },
                         modifier = Modifier
                             .translateY((6).px)
-                            .padding(topBottom = 6.px)
+                            .padding(topBottom = 24.px)
                             .onMouseEnter {
                                 isShopHovered = true
                                 showShopBigMenu = true
@@ -440,7 +440,7 @@ fun ShopBigMenu(vm: NavbarViewModel, state: NavbarContract.State, modifier: Modi
                 .maxWidth(oneLayoutMaxWidth)
                 .gap(2.em)
                 .display(DisplayStyle.Flex)
-                .padding(4.em)
+                .padding(top = 2.em, bottom = 4.em, leftRight = 4.em)
         ) {
             Column(
                 modifier = Modifier
@@ -510,7 +510,7 @@ fun ExploreBigMenu(vm: NavbarViewModel, state: NavbarContract.State, modifier: M
         Row(
             modifier = gridModifier(4, gap = 2.em)
                 .maxWidth(oneLayoutMaxWidth)
-                .padding(4.em)
+                .padding(top = 2.em, bottom = 4.em, leftRight = 4.em)
         ) {
             Image(
                 src = "https://icon-shopify-theme.myshopify.com/cdn/shop/files/slidefour.jpg?v=1613676525&width=500",

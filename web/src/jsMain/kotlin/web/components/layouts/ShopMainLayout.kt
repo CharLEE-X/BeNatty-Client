@@ -85,6 +85,7 @@ fun ShopMainLayout(
     footerRoutes: FooterRoutes,
     spacing: CSSLengthOrPercentageNumericValue = sectionsGap,
     overlay: @Composable BoxScope.() -> Unit = {},
+    banner: @Composable ColumnScope.() -> Unit = {},
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val cartState by globalVMs.cartVm.observeStates().collectAsState()
@@ -115,6 +116,7 @@ fun ShopMainLayout(
                 isFullLayout = isFullLayout,
                 modifier = Modifier.zIndex(10),
             )
+            banner()
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier

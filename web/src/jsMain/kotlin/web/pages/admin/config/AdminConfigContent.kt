@@ -260,7 +260,7 @@ private fun CollageSettings(vm: AdminConfigViewModel, state: AdminConfigContract
     Column(
         modifier = gridModifier(columns = 3)
     ) {
-        state.current.landingConfig.collageItems.forEachIndexed { index, item ->
+        state.current.landingConfig.slideshowItems.forEachIndexed { index, item ->
             AdminCollageItem(
                 title = item.title ?: "",
                 description = item.description ?: "",

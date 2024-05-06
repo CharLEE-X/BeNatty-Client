@@ -1,6 +1,6 @@
 mutation UploadConfigCollageImage($input: ConfigCollageMediaUploadInput!) {
   uploadConfigCollageImage(input: $input) {
-    collageItems {
+    slideshowItems {
       description
       id
       media {

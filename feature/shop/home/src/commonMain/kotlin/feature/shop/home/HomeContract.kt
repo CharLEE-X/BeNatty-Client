@@ -11,6 +11,7 @@ object HomeContract {
 
         val email: String = "",
         val emailError: String? = null,
+        val currentMediaIndex: Int? = null,
     )
 
     sealed interface Inputs {
@@ -18,7 +19,7 @@ object HomeContract {
         data object FetchLandingConfig : Inputs
         data object FetchProducts : Inputs
 
-        data class OnCollageItemClick(val item: GetLandingConfigQuery.CollageItem) : Inputs
+        data class OnCollageItemClick(val item: GetLandingConfigQuery.SlideshowItem) : Inputs
         data object OnPrivacyPolicyClick : Inputs
         data object OnTermsOfServiceClick : Inputs
         data object OnBannerLeftClick : Inputs

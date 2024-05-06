@@ -24,7 +24,7 @@ query GetConfig($configId: String) {
       showPress
     }
     landingConfig {
-      collageItems {
+      slideshowItems {
         description
         id
         media {

@@ -46,16 +46,17 @@ fun HomeContent(
         desktopNavRoutes = desktopNavRoutes,
         footerRoutes = footerRoutes,
         globalVMs = globalVMs,
-    ) {
-        state.landingConfig?.collageItems?.let {
-            Collage(
-                modifier = Modifier.fillMaxWidth(),
-                isLoading = state.isLoading,
-                items = it,
-                shopNowText = getString(Strings.ShopNow),
-                onCollageItemClick = { vm.trySend(HomeContract.Inputs.OnCollageItemClick(it)) },
-            )
+        banner = {
+            state.landingConfig?.slideshowItems?.let {
+                Slideshow(
+                    modifier = Modifier.fillMaxWidth(),
+                    isLoading = state.isLoading,
+                    items = it,
+                    onCollageItemClick = { vm.trySend(HomeContract.Inputs.OnCollageItemClick(it)) },
+                )
+            }
         }
+    ) {
         BannerSection(vm, state)
         HomeSubscribe(
             isLoading = state.isLoading,
