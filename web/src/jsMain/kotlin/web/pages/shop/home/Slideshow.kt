@@ -126,39 +126,55 @@ fun Slideshow(
         ) {
             items.firstOrNull()?.let { _ ->
                 val scope = rememberCoroutineScope()
-                var job: Job? = null
+                var autoSlide: Job? by remember { mutableStateOf(null) }
+                var jobInProgress by remember { mutableStateOf(false) }
+
                 var bottomIndex by remember { mutableStateOf(0) }
                 var topIndex by remember { mutableStateOf(bottomIndex) }
                 var topVisible by remember { mutableStateOf(false) }
                 var topShow by remember { mutableStateOf(true) }
                 var showTitle by remember { mutableStateOf(false) }
 
+                println("Job in progress: $jobInProgress")
+
+                suspend fun nextSlide() {
+                    jobInProgress = true
+                    delay(500L)
+                    showTitle = false
+                    delay(500L)
+                    items.getOrNull(bottomIndex + 1)
+                        ?.let { bottomIndex += 1 }
+                        ?: run { bottomIndex = 0 }
+                    jobInProgress = false
+                }
+
+                fun prevSlide() {
+                    items.getOrNull(bottomIndex - 1)?.let {
+                        bottomIndex -= 1
+                    } ?: run { bottomIndex = items.size - 1 }
+                }
+
                 DisposableEffect(bottomIndex) {
-                    job?.cancel()
-                    job = scope.launch {
+                    autoSlide?.cancel()
+                    autoSlide = scope.launch {
                         showTitle = true
                         topVisible = false
                         delay(1000)
                         topShow = false
                         topIndex = bottomIndex
                         delay(1000)
+
+                        jobInProgress = true
                         topShow = true
-                        delay(1000)
                         topVisible = true
+                        delay(750)
 
-                        delay(3000L)
-                        showTitle = false
-                        delay(500L)
-
-                        items
-                            .getOrNull(bottomIndex + 1)
-                            ?.let { bottomIndex += 1 }
-                            ?: run { bottomIndex = 0 }
+                        nextSlide()
                     }
 
                     onDispose {
-                        job?.cancel()
-                        job = null
+                        autoSlide?.cancel()
+                        autoSlide = null
                     }
                 }
 
@@ -178,84 +194,50 @@ fun Slideshow(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .opacity(if (topVisible) 1.0 else 0.0)
-                                    .transition(CSSTransition("opacity", 1.s, TransitionTimingFunction.Ease))
+                                    .transition(CSSTransition("opacity", 0.75.s, TransitionTimingFunction.Ease))
                             )
                         }
                     }
                 }
-                if (bottomIndex % 2 != 0) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .zIndex(20)
-                            .align(Alignment.CenterStart)
-                            .translate(tx = 300.px, ty = 0.px)
-                            .padding(64.px)
-                            .gap(1.em)
-                            .opacity(if (showTitle) 1.0 else 0.0)
-                            .transition(CSSTransition("opacity", 1.s, TransitionTimingFunction.Ease))
-                    ) {
-                        items.getOrNull(bottomIndex)?.let { item ->
-                            item.title?.let {
-                                SpanText(
-                                    text = it,
-                                    modifier = Modifier.roleStyle(MaterialTheme.typography.headlineLarge)
-                                )
-                            }
-                            item.description?.let {
-                                SpanText(text = it)
-                            }
-                            AppFilledButton(
-                                onClick = { onCollageItemClick(item) },
-                            ) {
-                                SpanText(text = getString(Strings.ShopNew).uppercase())
-                            }
-                        }
-                    }
-                } else {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .zIndex(20)
-                            .align(Alignment.Center)
-                            .translate(tx = 0.px, ty = 100.px)
-                            .padding(64.px)
-                            .gap(1.em)
-                            .opacity(if (showTitle) 1.0 else 0.0)
-                            .transition(CSSTransition("opacity", 1.s, TransitionTimingFunction.Ease))
-                    ) {
-                        items.getOrNull(bottomIndex)?.let { item ->
-                            item.title?.let {
-                                SpanText(
-                                    text = it,
-                                    modifier = Modifier.roleStyle(MaterialTheme.typography.headlineLarge)
-                                )
-                            }
-                            item.description?.let {
-                                SpanText(text = it)
-                            }
-                            AppFilledButton(
-                                onClick = { onCollageItemClick(item) },
-                            ) {
-                                SpanText(text = getString(Strings.ShopNew).uppercase())
-                            }
-                        }
+                items.getOrNull(bottomIndex)?.let { item ->
+                    if (bottomIndex % 2 != 0) {
+                        ColumnInfo(
+                            item = item,
+                            onClick = { onCollageItemClick(item) },
+                            show = showTitle,
+                            modifier = Modifier
+                                .zIndex(20)
+                                .align(Alignment.CenterStart)
+                                .translate(tx = 300.px, ty = 0.px)
+                        )
+
+                    } else {
+                        ColumnInfo(
+                            item = item,
+                            onClick = { onCollageItemClick(item) },
+                            show = showTitle,
+                            modifier = Modifier
+                                .zIndex(20)
+                                .align(Alignment.Center)
+                                .translate(tx = 0.px, ty = 100.px)
+                        )
                     }
                 }
                 Navigator(
-                    onClick = {
-                        items.getOrNull(bottomIndex - 1)?.let {
-                            bottomIndex -= 1
-                        } ?: run { bottomIndex = items.size - 1 }
-                    },
+                    enabled = !jobInProgress,
+                    onClick = { prevSlide() },
                     icon = { modifier -> MdiChevronLeft(modifier) },
                     modifier = Modifier.align(Alignment.CenterStart).zIndex(10)
                 )
                 Navigator(
+                    enabled = !jobInProgress,
                     onClick = {
-                        items.getOrNull(bottomIndex + 1)
-                            ?.let { bottomIndex += 1 }
-                            ?: run { bottomIndex = 0 }
+                        if (!jobInProgress) {
+                            autoSlide?.cancel()
+                            scope.launch {
+                                nextSlide()
+                            }
+                        }
                     },
                     icon = { modifier -> MdiChevronRight(modifier) },
                     modifier = Modifier.align(Alignment.CenterEnd).zIndex(10)
@@ -266,8 +248,41 @@ fun Slideshow(
 }
 
 @Composable
+private fun ColumnInfo(
+    modifier: Modifier,
+    item: GetLandingConfigQuery.SlideshowItem,
+    onClick: () -> Unit,
+    show: Boolean,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .padding(64.px)
+            .gap(1.em)
+            .opacity(if (show) 1.0 else 0.0)
+            .transition(CSSTransition("opacity", 0.5.s, TransitionTimingFunction.Ease))
+    ) {
+        item.title?.let {
+            SpanText(
+                text = it,
+                modifier = Modifier.roleStyle(MaterialTheme.typography.headlineLarge)
+            )
+        }
+        item.description?.let {
+            SpanText(text = it)
+        }
+        AppFilledButton(
+            onClick = onClick,
+        ) {
+            SpanText(text = getString(Strings.ShopNew).uppercase())
+        }
+    }
+}
+
+@Composable
 fun Navigator(
     modifier: Modifier = Modifier,
+    enabled: Boolean,
     onClick: () -> Unit,
     icon: @Composable (Modifier) -> Unit,
 ) {
@@ -279,21 +294,19 @@ fun Navigator(
             .margin(16.px)
             .borderRadius(50.percent)
             .backgroundColor(
-                if (!hovered) MaterialTheme.colors.background else MaterialTheme.colors.background.toRgb()
-                    .copy(alpha = 50)
+                if (hovered) MaterialTheme.colors.background.toRgb().copy(alpha = 50)
+                else MaterialTheme.colors.background
             )
             .color(MaterialTheme.colors.onBackground)
-            .onMouseOver { hovered = true }
+            .onMouseOver { if (enabled) hovered = true }
             .onMouseLeave { hovered = false }
-            .onFocusIn { hovered = true }
+            .onFocusIn { if (enabled) hovered = true }
             .onFocusOut { hovered = false }
             .tabIndex(0)
             .cursor(Cursor.Pointer)
-            .onClick { onClick() }
-            .onEnterKeyDown { }
-            .transition(
-                CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease)
-            )
+            .onClick { if (enabled) onClick() }
+            .onEnterKeyDown { if (enabled) onClick() }
+            .transition(CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease))
     ) {
         icon(Modifier.fillMaxSize())
     }
