@@ -38,6 +38,7 @@ include(
     ":components:localization",
     ":components:theme",
     ":components:material3",
+    ":components:swiper",
 
     // Shared features
     ":feature:debug",

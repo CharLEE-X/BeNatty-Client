@@ -57,7 +57,7 @@ fun HomeContent(
             }
         }
     ) {
-        BannerSection(vm, state)
+        CategoriesSection(vm, state)
         HomeSubscribe(
             isLoading = state.isLoading,
             subscribeText = getString(Strings.SubscribeToOurNewsletter),

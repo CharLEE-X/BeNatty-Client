@@ -5,7 +5,6 @@ import com.copperleaf.ballast.InputHandlerScope
 import component.localization.InputValidator
 import core.mapToUiMessage
 import data.GetLandingConfigQuery
-import data.service.AuthService
 import data.service.ConfigService
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -17,7 +16,6 @@ internal class HomeInputHandler :
     InputHandler<HomeContract.Inputs, HomeContract.Events, HomeContract.State> {
 
     private val inputValidator by inject<InputValidator>()
-    private val authService: AuthService by inject()
     private val configService: ConfigService by inject()
 
     override suspend fun InputHandlerScope<HomeContract.Inputs, HomeContract.Events, HomeContract.State>.handleInput(

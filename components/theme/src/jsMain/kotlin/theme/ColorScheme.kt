@@ -3,6 +3,30 @@ package theme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
 
+object JsPalette {
+    object Light {
+        val background = Color.White.rgba()
+        val onBackground = Color(0x111111).rgba()
+        val surface = Color(0xC4C4C4).rgba()
+        val onSurface = Color(0x111111).rgba()
+        val primary = Color(0x9A7F6A).rgba()
+        val onPrimary = Color.White.rgba()
+        val accent = Color(0xCEDFDC).rgba()
+        val onAccent = Color(0x111111).rgba()
+    }
+
+    object Dark {
+        val background = Color(0x111111).rgba()
+        val onBackground = Color.White.rgba()
+        val surface = Color(0x262528).rgba()
+        val onSurface = Color.White.rgba()
+        val primary = Color(0x9A7F6AFF).rgba()
+        val onPrimary = Color.White.rgba()
+        val accent = Color(0x384946).rgba()
+        val onAccent = Color(0x111111).rgba()
+    }
+}
+
 val appLightColorScheme: SysColorScheme = lightScheme.colorScheme(
     sysColorSurfaceBright = surfaceBrightLight,
     sysColorSurfaceDim = surfaceDimLight,

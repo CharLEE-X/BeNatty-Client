@@ -423,4 +423,7 @@ enum class Strings {
     WeLoved,
     ShopTheLatest,
     ShopNew,
+    GetTops,
+    GetBottoms,
+    GetDresses,
 }

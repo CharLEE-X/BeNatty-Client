@@ -1,5 +1,7 @@
 package feature.shop.home
 
+import component.localization.Strings
+import component.localization.getString
 import data.GetLandingConfigQuery
 
 object HomeContract {
@@ -11,7 +13,21 @@ object HomeContract {
 
         val email: String = "",
         val emailError: String? = null,
-        val currentMediaIndex: Int? = null,
+
+        val categorySection: List<CategoryItem> = listOf(
+            CategoryItem(
+                url = "https://icon-shopify-theme.myshopify.com/cdn/shop/files/looks1.jpg?v=1614301039&width=600",
+                title = getString(Strings.GetTops)
+            ),
+            CategoryItem(
+                url = "https://icon-shopify-theme.myshopify.com/cdn/shop/files/looks2.jpg?v=1614301039&width=600",
+                title = getString(Strings.GetBottoms)
+            ),
+            CategoryItem(
+                url = "https://icon-shopify-theme.myshopify.com/cdn/shop/files/looks3.jpg?v=1614301039&width=600",
+                title = getString(Strings.GetDresses)
+            )
+        ),
     )
 
     sealed interface Inputs {
@@ -40,6 +56,8 @@ object HomeContract {
         data object GoToTermsOfService : Events
         data object GoToCatalogue : Events
     }
+
+    data class CategoryItem(val title: String, val url: String)
 }
 
 data class HomeRoutes(

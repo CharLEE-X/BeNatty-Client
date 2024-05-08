@@ -82,7 +82,7 @@ import theme.roleStyle
 import web.HeadlineTextStyle
 import web.components.widgets.AppElevatedButton
 import web.components.widgets.AppElevatedCard
-import web.components.widgets.AppFilledButton
+import web.components.widgets.MainButton
 import web.components.widgets.Shimmer
 import web.util.onEnterKeyDown
 
@@ -167,7 +167,7 @@ fun Slideshow(
                         jobInProgress = true
                         topShow = true
                         topVisible = true
-                        delay(750)
+                        delay(2000)
 
                         nextSlide()
                     }
@@ -264,18 +264,17 @@ private fun ColumnInfo(
     ) {
         item.title?.let {
             SpanText(
-                text = it,
+                text = it.uppercase(),
                 modifier = Modifier.roleStyle(MaterialTheme.typography.headlineLarge)
             )
         }
         item.description?.let {
             SpanText(text = it)
         }
-        AppFilledButton(
+        MainButton(
+            title = getString(Strings.ShopNow),
             onClick = onClick,
-        ) {
-            SpanText(text = getString(Strings.ShopNew).uppercase())
-        }
+        )
     }
 }
 
