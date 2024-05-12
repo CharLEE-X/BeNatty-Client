@@ -35,8 +35,7 @@ kotlin {
             with(projects) {
                 implementation(data)
                 implementation(core)
-                implementation(components.theme)
-                implementation(components.material3)
+//                implementation(components.theme)
                 implementation(components.localization)
 
                 implementation(feature.debug)

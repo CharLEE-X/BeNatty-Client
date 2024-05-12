@@ -10,10 +10,11 @@ import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.text.SpanText
 import core.util.enumCapitalized
 import org.jetbrains.compose.web.css.em
-import web.compose.material3.component.Radio
+import org.jetbrains.compose.web.dom.RadioInput
 
 @Composable
 fun RadioSection(
@@ -35,10 +36,9 @@ fun RadioSection(
                     .cursor(Cursor.Pointer)
                     .onClick { onClick(value) }
             ) {
-                Radio(
+                RadioInput(
                     checked = selected == value,
-                    name = "role",
-                    value = value,
+                    attrs = Modifier.toAttrs()
                 )
                 SpanText(text = value.enumCapitalized()) // TODO: Localize
             }

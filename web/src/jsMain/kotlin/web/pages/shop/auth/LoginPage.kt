@@ -27,6 +27,7 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiEmail
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiError
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPassword
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibilityOff
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
@@ -38,14 +39,12 @@ import feature.router.goHome
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
-import theme.MaterialTheme
-import theme.roleStyle
+import web.H3Variant
+import web.HeadlineStyle
 import web.components.widgets.AppElevatedCard
 import web.components.widgets.AppFilledButton
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.AppTextButton
-import web.compose.material3.component.CircularProgress
-import web.compose.material3.component.TextFieldType
 import web.pages.shop.auth.components.LogoSection
 import web.pages.shop.auth.components.SocialButtonsLoginSection
 
@@ -134,7 +133,6 @@ private fun FieldsSection(
             vm.trySend(LoginContract.Inputs.SetEmail(it))
         },
         label = getString(Strings.Email),
-        type = TextFieldType.TEXT,
         leadingIcon = { MdiEmail() },
         trailingIcon = { state.emailError?.let { MdiError() } },
         error = state.emailError != null,
@@ -150,7 +148,6 @@ private fun FieldsSection(
             vm.trySend(LoginContract.Inputs.SetPassword(it))
         },
         label = getString(Strings.Password),
-        type = if (state.isPasswordVisible) TextFieldType.TEXT else TextFieldType.PASSWORD,
         leadingIcon = { MdiPassword() },
         trailingIcon = {
             Row(
@@ -198,15 +195,14 @@ private fun DontHaveAccountSection(vm: LoginViewModel, state: LoginContract.Stat
     ) {
         SpanText(
             text = getString(Strings.DontHaveAccount),
-            modifier = Modifier.roleStyle(MaterialTheme.typography.headlineSmall)
+            modifier = HeadlineStyle.toModifier(H3Variant)
         )
         AppTextButton(
             onClick = { vm.trySend(LoginContract.Inputs.OnDontHaveAccountClick) },
         ) {
             SpanText(
                 text = getString(Strings.SignUp),
-                modifier = Modifier
-                    .roleStyle(MaterialTheme.typography.headlineSmall)
+                modifier = HeadlineStyle.toModifier(H3Variant)
                     .fontWeight(FontWeight.SemiBold)
             )
         }
@@ -222,19 +218,12 @@ private fun LoginButton(vm: LoginViewModel, state: LoginContract.State) {
             .margin(top = 1.em)
     ) {
         if (state.isLoading) {
-            CircularProgress(
-                value = 0f,
-                intermediate = true,
-                fourColor = true,
-                modifier = Modifier
-                    .margin(top = 1.em)
-            )
+            SpanText("Logging in...")
         } else {
             SpanText(
                 text = getString(Strings.Login),
-                modifier = Modifier
+                modifier = HeadlineStyle.toModifier(H3Variant)
                     .margin(top = 1.em)
-                    .roleStyle(MaterialTheme.typography.headlineSmall)
             )
         }
     }

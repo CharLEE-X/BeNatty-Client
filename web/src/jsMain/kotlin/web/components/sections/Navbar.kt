@@ -82,8 +82,15 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiModeNight
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson2
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiSearch
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiShoppingCart
+import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
+import com.varabyte.kobweb.silk.components.layout.VerticalDivider
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.background
+import com.varabyte.kobweb.silk.theme.colors.palette.border
+import com.varabyte.kobweb.silk.theme.colors.palette.color
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.getString
 import core.models.Currency
@@ -103,14 +110,15 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
-import theme.roleStyle
-import theme.sp
+import web.BodyStyle
+import web.H2Variant
+import web.H3Variant
+import web.HeadlineStyle
 import web.components.layouts.oneLayoutMaxWidth
+import web.components.widgets.AppIconButton
 import web.components.widgets.Logo
 import web.components.widgets.RotatableChevron
 import web.components.widgets.ShimmerHeader
-import web.compose.material3.component.IconButton
 import web.pages.shop.home.gridModifier
 import web.pages.shop.product.page.ProductPrice
 import web.util.onEnterKeyDown
@@ -174,7 +182,7 @@ fun NavBar(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
-            .backgroundColor(MaterialTheme.colors.background)
+            .backgroundColor(ColorMode.current.toPalette().background)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -290,15 +298,15 @@ private fun RightSection(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End,
-        modifier = modifier.color(MaterialTheme.colors.onBackground)
+        modifier = modifier.color(ColorMode.current.toPalette().color)
     ) {
         if (isFullLayout) {
-            NavIcon(
+            AppIconButton(
                 onClick = { vm.trySend(NavbarContract.Inputs.OnSearchClicked) },
                 icon = { MdiSearch(style = IconStyle.OUTLINED) }
             )
             if (!state.isCheckAuthLoading) {
-                NavIcon(
+                AppIconButton(
                     onClick = { vm.trySend(NavbarContract.Inputs.OnUserClicked) },
                     icon = { MdiPerson2(style = IconStyle.OUTLINED) }
                 )
@@ -306,7 +314,7 @@ private fun RightSection(
                 ShimmerHeader(Modifier.aspectRatio(1))
             }
             var colorMode by ColorMode.currentState
-            NavIcon(
+            AppIconButton(
                 onClick = { colorMode = colorMode.opposite },
                 icon = {
                     if (colorMode.isLight) MdiLightMode(style = IconStyle.OUTLINED)
@@ -321,13 +329,13 @@ private fun RightSection(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .size(24.px)
-                        .backgroundColor(MaterialTheme.colors.onSurface)
+                        .backgroundColor(ColorMode.current.toPalette().background)
                         .borderRadius(50.percent)
                         .translateY(if (basketCount > 0) (-24).px else 0.px)
                         .opacity(if (basketCount > 0) 1.0 else 0.0)
                         .border(
                             width = 1.px,
-                            color = MaterialTheme.colors.background,
+                            color = ColorMode.current.toPalette().background,
                             style = LineStyle.Solid
                         )
                         .transition(
@@ -338,40 +346,17 @@ private fun RightSection(
                     SpanText(
                         text = basketCount.toString(),
                         modifier = Modifier
-                            .fontSize(12.sp)
+                            .fontSize(12.px)
                             .fontWeight(FontWeight.SemiBold)
-                            .color(MaterialTheme.colors.surface)
+                            .color(ColorMode.current.toPalette().background)
                     )
                 }
-                NavIcon(
+                AppIconButton(
                     onClick = { vm.trySend(NavbarContract.Inputs.OnCartClick) },
                     icon = { MdiShoppingCart(style = IconStyle.OUTLINED) }
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun NavIcon(
-    icon: @Composable () -> Unit,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    var hovered by remember { mutableStateOf(false) }
-
-    IconButton(
-        onClick = { onClick() },
-        modifier = modifier
-            .onEnterKeyDown(onClick)
-            .onMouseOver { hovered = true }
-            .onMouseOut { hovered = false }
-            .onFocusIn { hovered = true }
-            .onFocusOut { hovered = false }
-            .scale(if (hovered) 1.1f else 1.0f)
-            .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
-    ) {
-        icon()
     }
 }
 
@@ -388,13 +373,13 @@ fun AppMenu(
             .position(Position.Absolute)
             .zIndex(5)
             .width(200.px)
-            .backgroundColor(MaterialTheme.colors.background)
+            .backgroundColor(ColorMode.current.toPalette().background)
             .opacity(if (open) 1.0 else 0.0)
             .visibility(if (open) Visibility.Visible else Visibility.Hidden)
             .userSelect(UserSelect.None)
             .border(
                 width = 1.px,
-                color = MaterialTheme.colors.surfaceContainerHighest,
+                color = ColorMode.current.toPalette().border,
                 style = LineStyle.Solid
             )
             .translate(
@@ -450,12 +435,12 @@ fun ShopBigMenu(vm: NavbarViewModel, state: NavbarContract.State, modifier: Modi
                 SpanText(
                     text = getString(Strings.Shop).uppercase(),
                     modifier = Modifier
-                        .roleStyle(MaterialTheme.typography.titleMedium)
+//                        .roleStyle(MaterialTheme.typography.titleMedium)
                         .fontWeight(FontWeight.SemiBold)
                 )
                 Column(
                     modifier = Modifier
-                        .roleStyle(MaterialTheme.typography.bodyMedium)
+//                        .roleStyle(MaterialTheme.typography.bodyMedium)
                         .gap(1.em)
                 ) {
                     TextLink(
@@ -524,12 +509,12 @@ fun ExploreBigMenu(vm: NavbarViewModel, state: NavbarContract.State, modifier: M
                 SpanText(
                     text = getString(Strings.Explore).uppercase(),
                     modifier = Modifier
-                        .roleStyle(MaterialTheme.typography.titleMedium)
+//                        .roleStyle(MaterialTheme.typography.titleMedium)
                         .fontWeight(FontWeight.SemiBold)
                 )
                 Column(
                     modifier = Modifier.gap(1.em)
-                        .roleStyle(MaterialTheme.typography.bodyMedium)
+//                        .roleStyle(MaterialTheme.typography.bodyMedium)
                 ) {
                     TextLink(
                         text = getString(Strings.NewArrivals),
@@ -554,13 +539,11 @@ fun ExploreBigMenu(vm: NavbarViewModel, state: NavbarContract.State, modifier: M
             ) {
                 SpanText(
                     text = getString(Strings.ShopByType).uppercase(),
-                    modifier = Modifier
-                        .roleStyle(MaterialTheme.typography.titleMedium)
+                    modifier = HeadlineStyle.toModifier(H3Variant)
                         .fontWeight(FontWeight.SemiBold)
                 )
                 Column(
-                    modifier = Modifier
-                        .roleStyle(MaterialTheme.typography.bodyMedium)
+                    modifier = BodyStyle.toModifier()
                         .gap(1.em)
                 ) {
                     TextLink(
@@ -582,13 +565,11 @@ fun ExploreBigMenu(vm: NavbarViewModel, state: NavbarContract.State, modifier: M
             ) {
                 SpanText(
                     text = getString(Strings.QuickLinks).uppercase(),
-                    modifier = Modifier
-                        .roleStyle(MaterialTheme.typography.titleMedium)
+                    modifier = HeadlineStyle.toModifier(H3Variant)
                         .fontWeight(FontWeight.SemiBold)
                 )
                 Column(
-                    modifier = Modifier
-                        .roleStyle(MaterialTheme.typography.bodyMedium)
+                    modifier = HeadlineStyle.toModifier(H3Variant)
                         .gap(1.em)
                 ) {
                     TextLink(
@@ -666,7 +647,7 @@ private fun RecommendedProductItem(
         }
         SpanText(
             text = name,
-            modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
+            modifier = BodyStyle.toModifier()
         )
         ProductPrice(
             regularPrice = regularPrice,
@@ -678,21 +659,12 @@ private fun RecommendedProductItem(
 
 @Composable
 private fun ContactSection(vm: NavbarViewModel, state: NavbarContract.State) {
-    val dividerColor = MaterialTheme.colors.onBackground.toRgb().copy(alpha = 50)
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .maxWidth(oneLayoutMaxWidth)
-                .height(1.px)
-                .backgroundColor(dividerColor)
-                .padding(leftRight = 4.em)
-        )
+        HorizontalDivider()
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -712,12 +684,7 @@ private fun ContactSection(vm: NavbarViewModel, state: NavbarContract.State) {
                 MdiFacebook()
                 MdiFacebook()
             }
-            Box(
-                modifier = Modifier
-                    .width(1.px)
-                    .height(20.px)
-                    .backgroundColor(dividerColor)
-            )
+            VerticalDivider()
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
@@ -728,16 +695,11 @@ private fun ContactSection(vm: NavbarViewModel, state: NavbarContract.State) {
                 TextLink(
                     text = getString(Strings.CustomerService),
                     onClick = { vm.trySend(NavbarContract.Inputs.OnCustomerServiceClicked) },
-                    textModifier = Modifier.roleStyle(MaterialTheme.typography.titleLarge)
+                    textModifier = HeadlineStyle.toModifier(H2Variant)
                 )
             }
         }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.px)
-                .backgroundColor(dividerColor)
-        )
+        HorizontalDivider()
     }
 }
 
@@ -769,8 +731,7 @@ private fun MenuItem(
         ) {
             SpanText(
                 text = item,
-                modifier = Modifier
-                    .roleStyle(MaterialTheme.typography.bodyMedium)
+                modifier = BodyStyle.toModifier()
                     .whiteSpace(WhiteSpace.NoWrap)
             )
             Box(
@@ -779,7 +740,7 @@ private fun MenuItem(
                     .onClick { onStoreMenuItemSelected(item) }
                     .height(2.px)
                     .fillMaxWidth(if (itemHovered) 100.percent else 0.percent)
-                    .backgroundColor(MaterialTheme.colors.onBackground)
+                    .backgroundColor(ColorMode.current.toPalette().color)
                     .transition(CSSTransition("width", 0.3.s, TransitionTimingFunction.Ease))
             )
         }
@@ -792,7 +753,7 @@ private fun ListMenuItem(
     text: String,
     hovered: Boolean,
     hasDropdown: Boolean = false,
-    contentColor: CSSColorValue = MaterialTheme.colors.onSurface,
+    contentColor: CSSColorValue = ColorMode.current.toPalette().color,
     onClick: () -> Unit,
 ) {
     Column(
@@ -841,7 +802,7 @@ fun TextLink(
     modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
     enabled: Boolean = true,
-    color: CSSColorValue = MaterialTheme.colors.onBackground,
+    color: CSSColorValue = ColorMode.current.toPalette().color,
 ) {
     var hovered by remember { mutableStateOf(false) }
 

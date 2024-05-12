@@ -1,8 +1,16 @@
 mutation UploadConfigBannerImage($input: ConfigBannerMediaUploadInput!) {
   uploadConfigBannerImage(input: $input) {
-    bannerSection {
+    topCategoriesSection {
       left {
-        description
+        media {
+          keyName
+          url
+          alt
+          type
+        }
+        title
+      }
+      middle {
         media {
           keyName
           url
@@ -12,7 +20,6 @@ mutation UploadConfigBannerImage($input: ConfigBannerMediaUploadInput!) {
         title
       }
       right {
-        description
         media {
           keyName
           url

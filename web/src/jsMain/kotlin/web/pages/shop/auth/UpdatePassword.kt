@@ -18,6 +18,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibilityOff
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
@@ -27,15 +28,15 @@ import feature.updatepassword.UpdatePasswordContract
 import feature.updatepassword.UpdatePasswordViewModel
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
-import theme.MaterialTheme
-import theme.roleStyle
+import web.H1Variant
+import web.H3Variant
+import web.HeadlineStyle
 import web.components.layouts.GlobalVMs
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
 import web.components.widgets.AppFilledButton
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.AppTextButton
-import web.compose.material3.component.TextFieldType
 
 @Composable
 fun UpdatePasswordPage(
@@ -91,14 +92,12 @@ fun UpdatingPassword(
 
     SpanText(
         text = getString(Strings.ChooseNewPassword),
-        modifier = Modifier
-            .roleStyle(MaterialTheme.typography.headlineLarge)
+        modifier = HeadlineStyle.toModifier(H1Variant)
     )
     SpanText(
         text = getString(Strings.ChooseNewPasswordDescription),
         modifier = Modifier
             .margin(top = 1.em)
-            .roleStyle(MaterialTheme.typography.labelLarge)
     )
 
     AppOutlinedTextField(
@@ -115,7 +114,6 @@ fun UpdatingPassword(
             if (state.showPassword) MdiVisibilityOff(modifier) else MdiVisibilityOff(modifier)
 
         },
-        type = if (state.showPassword) TextFieldType.TEXT else TextFieldType.PASSWORD,
         modifier = Modifier
             .fillMaxWidth()
             .margin(top = 0.5.em)
@@ -127,9 +125,8 @@ fun UpdatingPassword(
     ) {
         SpanText(
             text = getString(Strings.Login),
-            modifier = Modifier
+            modifier = HeadlineStyle.toModifier(H3Variant)
                 .margin(topBottom = 0.5.em)
-                .roleStyle(MaterialTheme.typography.headlineSmall)
         )
     }
 
@@ -141,14 +138,13 @@ fun UpdatingPassword(
             text = getString(Strings.BackTo),
             modifier = Modifier
                 .margin(top = 1.em)
-                .roleStyle(MaterialTheme.typography.labelLarge)
         )
         AppTextButton(
             onClick = { vm.trySend(UpdatePasswordContract.Inputs.OnLoginClick) },
         ) {
             SpanText(
                 text = getString(Strings.Login),
-                modifier = Modifier.roleStyle(MaterialTheme.typography.headlineSmall)
+                modifier = HeadlineStyle.toModifier(H3Variant)
             )
         }
     }
@@ -161,14 +157,12 @@ private fun PasswordUpdated(
 ) {
     SpanText(
         text = getString(Strings.YouHaveNewPassword),
-        modifier = Modifier
-            .roleStyle(MaterialTheme.typography.headlineLarge)
+        modifier = HeadlineStyle.toModifier(H1Variant)
     )
     SpanText(
         text = getString(Strings.YouHaveNewPasswordDescription),
         modifier = Modifier
             .margin(top = 1.em)
-            .roleStyle(MaterialTheme.typography.labelLarge)
     )
     AppFilledButton(
         onClick = { vm.trySend(UpdatePasswordContract.Inputs.OnLoginClick) },
@@ -176,9 +170,8 @@ private fun PasswordUpdated(
     ) {
         SpanText(
             text = getString(Strings.Login),
-            modifier = Modifier
+            modifier = HeadlineStyle.toModifier(H3Variant)
                 .margin(topBottom = 0.5.em)
-                .roleStyle(MaterialTheme.typography.headlineSmall)
         )
     }
 }

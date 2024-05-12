@@ -26,14 +26,16 @@ import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.border
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
-import web.HeadlineTextStyle
-import web.HeadlineTextStyleBold
-import web.HeadlineTextStyleLight
+import web.HeadlineBoldVariant
+import web.HeadlineLightVariant
+import web.HeadlineStyle
 import web.util.onEnterKeyDown
 
 @Composable
@@ -42,7 +44,7 @@ fun Logo(
     hasLogo: Boolean = false,
     hasText: Boolean = true,
     logoSize: CSSLengthOrPercentageNumericValue = 2.em,
-    color: CSSColorValue = MaterialTheme.colors.onSurface,
+    color: CSSColorValue = ColorMode.current.opposite.toPalette().border,
     onClick: () -> Unit,
 ) {
     var hovered by remember { mutableStateOf(false) }
@@ -76,11 +78,11 @@ fun Logo(
             ) {
                 SpanText(
                     text = "BE",
-                    modifier = HeadlineTextStyle.toModifier(HeadlineTextStyleBold)
+                    modifier = HeadlineStyle.toModifier(HeadlineBoldVariant)
                 )
                 SpanText(
                     text = "NATTY",
-                    modifier = HeadlineTextStyle.toModifier(HeadlineTextStyleLight)
+                    modifier = HeadlineStyle.toModifier(HeadlineLightVariant)
                 )
             }
         }

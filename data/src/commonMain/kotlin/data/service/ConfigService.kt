@@ -11,8 +11,6 @@ import data.GetLandingConfigQuery
 import data.UpdateConfigMutation
 import data.UploadConfigBannerImageMutation
 import data.UploadConfigCollageImageMutation
-import data.type.BannerItemInput
-import data.type.BannerSectionUpdateInput
 import data.type.BlobInput
 import data.type.CompanyInfoUpdateInput
 import data.type.ConfigBannerMediaUploadInput
@@ -27,6 +25,8 @@ import data.type.MediaType
 import data.type.OpeningTimesUpdateInput
 import data.type.Side
 import data.type.SlideshowItemInput
+import data.type.TopCategoriesSectionUpdateInput
+import data.type.TopCategoryItemInput
 import data.utils.handle
 import data.utils.skipIfNull
 
@@ -52,8 +52,9 @@ interface ConfigService {
         showCareer: Boolean?,
         showCyberSecurity: Boolean?,
         showPress: Boolean?,
-        bannerSectionLeft: BannerItemInput?,
-        bannerSectionRight: BannerItemInput?,
+        topCategoriesSectionLeft: TopCategoryItemInput?,
+        topCategoriesSectionMiddle: TopCategoryItemInput?,
+        topCategoriesRight: TopCategoryItemInput?,
     ): Either<RemoteError, UpdateConfigMutation.Data>
 
     suspend fun uploadCollageImage(
@@ -104,8 +105,9 @@ internal class ConfigServiceImpl(private val apolloClient: ApolloClient) : Confi
         showCareer: Boolean?,
         showCyberSecurity: Boolean?,
         showPress: Boolean?,
-        bannerSectionLeft: BannerItemInput?,
-        bannerSectionRight: BannerItemInput?,
+        topCategoriesSectionLeft: TopCategoryItemInput?,
+        topCategoriesSectionMiddle: TopCategoryItemInput?,
+        topCategoriesRight: TopCategoryItemInput?,
     ): Either<RemoteError, UpdateConfigMutation.Data> {
         val contactInfoUpdateInput = if (
             companyName == null &&
@@ -157,15 +159,15 @@ internal class ConfigServiceImpl(private val apolloClient: ApolloClient) : Confi
                 showPress = showPress.skipIfNull(),
             )
         }
-        val bannerSectionInput = if (bannerSectionLeft == null && bannerSectionRight == null) null else {
-            BannerSectionUpdateInput(
-                leftInput = bannerSectionLeft.skipIfNull(),
-                rightInput = bannerSectionRight.skipIfNull(),
+        val bannerSectionInput = if (topCategoriesSectionLeft == null && topCategoriesRight == null) null else {
+            TopCategoriesSectionUpdateInput(
+                leftInput = topCategoriesSectionLeft.skipIfNull(),
+                rightInput = topCategoriesRight.skipIfNull(),
             )
         }
         val landingConfigInput = LandingConfigUpdateInput(
             slideshowItems = slideshowItems.skipIfNull(),
-            bannerSectionInput = bannerSectionInput.skipIfNull(),
+            topCategoriesSectionInput = bannerSectionInput.skipIfNull(),
         )
         val input = ConfigUpdateInput(
             id = configId,

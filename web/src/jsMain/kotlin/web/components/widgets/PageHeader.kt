@@ -9,12 +9,12 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
+import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
-import theme.MaterialTheme
-import theme.TypeScaleTokens
-import theme.roleStyle
-import web.compose.material3.component.Divider
+import web.H1Variant
+import web.HeadlineStyle
 
 @Composable
 fun PageHeader(
@@ -23,16 +23,14 @@ fun PageHeader(
 ) {
     SectionHeader(
         text = title,
-        style = MaterialTheme.typography.displayMedium,
         content = content
     )
-    Divider(modifier = Modifier.margin(top = 1.em, bottom = 1.em))
+    HorizontalDivider(modifier = Modifier.margin(top = 1.em, bottom = 1.em))
 }
 
 @Composable
 fun SectionHeader(
     text: String,
-    style: TypeScaleTokens.Role = MaterialTheme.typography.headlineMedium,
     content: @Composable RowScope.() -> Unit = {}
 ) {
     Row(
@@ -43,8 +41,7 @@ fun SectionHeader(
     ) {
         SpanText(
             text = text,
-            modifier = Modifier
-                .roleStyle(style)
+            modifier = HeadlineStyle.toModifier(H1Variant)
         )
         Spacer()
         content()

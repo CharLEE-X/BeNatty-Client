@@ -11,10 +11,12 @@ import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.silk.components.graphics.Image
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
-import theme.MaterialTheme
-import theme.roleStyle
+import web.H1Variant
+import web.H2Variant
+import web.HeadlineStyle
 
 @Composable
 fun LogoSection(
@@ -35,14 +37,12 @@ fun LogoSection(
         Column {
             SpanText(
                 text = appName,
-                modifier = Modifier
-                    .roleStyle(MaterialTheme.typography.displayLarge)
+                modifier = HeadlineStyle.toModifier(H1Variant)
                     .fontWeight(FontWeight.SemiBold)
             )
             SpanText(
                 text = appMotto,
-                modifier = Modifier
-                    .roleStyle(MaterialTheme.typography.labelLarge)
+                modifier = HeadlineStyle.toModifier(H2Variant)
                     .fontWeight(FontWeight.SemiBold)
             )
         }

@@ -20,6 +20,12 @@ fun GetConfigQuery.Left.toPreviewImage() = ImagePreview(
     alt = media?.alt ?: "",
 )
 
+fun GetConfigQuery.Middle.toPreviewImage() = ImagePreview(
+    id = "",
+    url = media?.url ?: "",
+    alt = media?.alt ?: "",
+)
+
 fun GetConfigQuery.Right.toPreviewImage() = ImagePreview(
     id = "",
     url = media?.url ?: "",

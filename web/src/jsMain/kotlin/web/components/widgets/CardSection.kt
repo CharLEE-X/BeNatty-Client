@@ -2,23 +2,20 @@ package web.components.widgets
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
-import com.varabyte.kobweb.compose.css.FontWeight
-import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
-import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.padding
-import com.varabyte.kobweb.compose.ui.modifiers.userSelect
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
-import theme.MaterialTheme
-import theme.roleStyle
+import web.H1Variant
+import web.H3Variant
+import web.HeadlineStyle
 
 @Composable
 fun CardSection(
@@ -43,7 +40,6 @@ fun CardSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(leftRight = 1.em, topBottom = 0.5.em)
-                        .backgroundColor(MaterialTheme.colors.primaryContainer)
                 ) {
                     Column(
                         modifier = Modifier
@@ -52,15 +48,12 @@ fun CardSection(
                     ) {
                         SpanText(
                             text = title,
-                            modifier = Modifier
-                                .roleStyle(MaterialTheme.typography.headlineSmall)
-                                .fontWeight(FontWeight.Bold)
-                                .userSelect(UserSelect.None)
+                            modifier = HeadlineStyle.toModifier(H3Variant)
                         )
                         description?.let {
                             SpanText(
                                 text = it,
-                                modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
+                                modifier = HeadlineStyle.toModifier(H1Variant)
                             )
                         }
                     }

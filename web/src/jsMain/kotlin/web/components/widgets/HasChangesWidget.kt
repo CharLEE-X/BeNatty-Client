@@ -36,6 +36,9 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiCancel
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiSave
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiWarning
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.border
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.getString
 import kotlinx.coroutines.delay
@@ -45,7 +48,6 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
 
 @Composable
 fun HasChangesWidget(
@@ -96,7 +98,7 @@ fun HasChangesWidget(
                     .pointerEvents(PointerEvents.Auto)
                     .border(
                         width = 1.px,
-                        color = MaterialTheme.colors.tertiary,
+                        color = ColorMode.current.toPalette().border,
                         style = LineStyle.Solid,
                     )
                     .transition(
@@ -117,21 +119,19 @@ fun HasChangesWidget(
                         text = messageText,
                         modifier = Modifier
                             .fontWeight(FontWeight.SemiBold)
-                            .color(MaterialTheme.colors.onSurface)
                             .userSelect(UserSelect.None)
                     )
                     Spacer()
                     AppFilledButton(
                         onClick = { onCancel() },
-                        leadingIcon = { MdiCancel() },
-                        containerColor = MaterialTheme.colors.tertiary,
                     ) {
+                        MdiCancel()
                         SpanText(dismissText)
                     }
-                    AppFilledTonalButton(
+                    AppFilledButton(
                         onClick = { onSave() },
-                        leadingIcon = { MdiSave() },
                     ) {
+                        MdiSave()
                         SpanText(saveText)
                     }
                 }

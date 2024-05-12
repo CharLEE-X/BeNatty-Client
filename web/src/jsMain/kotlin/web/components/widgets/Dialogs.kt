@@ -24,20 +24,20 @@ import com.varabyte.kobweb.compose.ui.modifiers.scaleY
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.silk.components.graphics.Image
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiCancel
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiClose
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.color
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.getString
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.s
-import org.jetbrains.compose.web.dom.Text
-import theme.MaterialTheme
-import theme.roleStyle
-import web.compose.material3.component.Dialog
+import web.H1Variant
+import web.HeadlineStyle
 
 @Composable
 fun ImagePreviewDialog(
@@ -57,7 +57,7 @@ fun ImagePreviewDialog(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .backgroundColor(MaterialTheme.colors.onBackground)
+                .backgroundColor(ColorMode.current.toPalette().color)
                 .opacity(if (open) 0.7 else 0.0)
                 .onClick { onClose() }
                 .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease)),
@@ -85,13 +85,12 @@ fun ImagePreviewDialog(
                     alt?.let {
                         SpanText(
                             text = it,
-                            modifier = Modifier
+                            modifier = HeadlineStyle.toModifier(H1Variant)
                                 .padding(1.em)
-                                .roleStyle(MaterialTheme.typography.headlineLarge)
                         )
                     }
                     Spacer()
-                    AppFilledTonalIconButton(
+                    AppIconButton(
                         onClick = { onClose() },
                     ) {
                         MdiClose()
@@ -124,50 +123,50 @@ fun TakeActionDialog(
     onNo: () -> Unit,
 ) {
     if (open || closing) {
-        Dialog(
-            open = open && !closing,
-            onClosed = {
-                onOpen(false)
-                onClosing(false)
-            },
-            onClosing = { onClosing(true) },
-            headline = {
-                Text(title)
-            },
-            actions = {
-                AppFilledTonalButton(
-                    onClick = {
-                        onNo()
-                        onClosing(true)
-                    },
-                    leadingIcon = { MdiCancel() }
-                ) {
-                    Text(actionNoText)
-                }
-                AppFilledButton(
-                    onClick = {
-                        onYes()
-                        onClosing(true)
-                    },
-                    leadingIcon = { MdiDelete() },
-                    containerColor = MaterialTheme.colors.error
-                ) {
-                    Text(actionYesText)
-                }
-            },
+        SpanText("FIXME: Implement TakeActionDialog")
+//        Dialog(
+//            open = open && !closing,
+//            onClosed = {
+//                onOpen(false)
+//                onClosing(false)
+//            },
+//            onClosing = { onClosing(true) },
+//            headline = {
+//                Text(title)
+//            },
+//            actions = {
+//                AppFilledButton(
+//                    onClick = {
+//                        onNo()
+//                        onClosing(true)
+//                    },
+//                    leadingIcon = { MdiCancel() }
+//                ) {
+//                    Text(actionNoText)
+//                }
+//                AppFilledButton(
+//                    onClick = {
+//                        onYes()
+//                        onClosing(true)
+//                    },
+//                    leadingIcon = { MdiDelete() },
+//                    containerColor = Colors.Red
+//                ) {
+//                    Text(actionYesText)
+//                }
+//            },
+//            modifier = Modifier
+//                .zIndex(1000)
+//        ) {
+        Column(
             modifier = Modifier
-                .zIndex(1000)
+                .fillMaxWidth()
+                .margin(
+                    topBottom = 0.5.em,
+                    leftRight = 2.em
+                )
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .margin(
-                        topBottom = 0.5.em,
-                        leftRight = 2.em
-                    )
-            ) {
-                SpanText(contentText)
-            }
+            SpanText(contentText)
         }
     }
 }

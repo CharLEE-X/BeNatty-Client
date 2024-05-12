@@ -4,13 +4,13 @@ import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.browser.dom.ElementTarget
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.border
-import com.varabyte.kobweb.compose.ui.modifiers.setVariable
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.silk.components.overlay.AdvancedTooltip
-import com.varabyte.kobweb.silk.components.overlay.TooltipVars
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.border
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.px
-import theme.MaterialTheme
 
 @Composable
 fun AppTooltip(text: String) {
@@ -22,11 +22,11 @@ fun AppTooltip(text: String) {
         modifier = Modifier
             .border(
                 width = 1.px,
-                color = MaterialTheme.colors.onSurface,
+                color = ColorMode.current.toPalette().border,
                 style = LineStyle.Solid
             )
-            .setVariable(TooltipVars.BackgroundColor, MaterialTheme.colors.surfaceVariant)
-            .setVariable(TooltipVars.Color, MaterialTheme.colors.onSurface)
+//            .setVariable(TooltipVars.BackgroundColor, ColorMode.current.toPalette().background)
+//            .setVariable(TooltipVars.Color, ColorMode.current.toPalette().color)
             .zIndex(1000)
     )
 }

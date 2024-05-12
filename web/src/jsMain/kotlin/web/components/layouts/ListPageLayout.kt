@@ -17,10 +17,7 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
-import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
-import com.varabyte.kobweb.compose.ui.modifiers.disabled
 import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
@@ -45,6 +42,7 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiArrowUpward
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiBrokenImage
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibility
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibilityOff
+import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
@@ -59,12 +57,7 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.fr
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
 import web.components.widgets.AppFilledButton
-import web.components.widgets.AppOutlinedSegmentedButtonSet
-import web.components.widgets.AppSegmentedButton
-import web.compose.material3.component.CircularProgress
-import web.compose.material3.component.Divider
 import web.util.onEnterKeyDown
 
 @Composable
@@ -127,10 +120,7 @@ fun ListPageLayout(
                     )
                 }
                 if (isLoading) {
-                    CircularProgress(
-                        intermediate = true,
-                        fourColor = true,
-                    )
+                    SpanText("Loading...")
                 }
             }
         }
@@ -152,7 +142,6 @@ private fun NoItemsListAction(
         SpanText(text = pressText)
         AppFilledButton(
             onClick = { onClick() },
-            containerColor = MaterialTheme.colors.tertiary,
             modifier = Modifier
                 .tabIndex(0)
                 .onEnterKeyDown(onClick)
@@ -242,7 +231,7 @@ fun ListTopBar(
                 }
             }
         }
-        Divider()
+        HorizontalDivider()
     }
 }
 
@@ -261,8 +250,6 @@ fun Item(
         modifier = gridContainerModifier
             .onMouseEnter { isHovered = true }
             .onMouseLeave { isHovered = false }
-            .thenIf(isHovered) { Modifier.backgroundColor(MaterialTheme.colors.surfaceContainerHigh) }
-            .thenIf(isHovered) { Modifier.color(MaterialTheme.colors.onSurfaceVariant) }
             .onClick { vm.trySend(AdminListContract.Inputs.Click.Item(item.id)) }
             .cursor(Cursor.Pointer)
             .transition(
@@ -352,7 +339,6 @@ private fun TopBarItem(
                     .cursor(Cursor.Pointer)
                     .onMouseEnter { hovered = true }
                     .onMouseLeave { hovered = false }
-                    .thenIf(hovered) { Modifier.color(MaterialTheme.colors.secondary) }
                     .transition(CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease))
             }
     ) {
@@ -391,31 +377,32 @@ private fun PageNavigator(
             contentAlignment = Alignment.Center,
             modifier = modifier.fillMaxWidth()
         ) {
-            AppOutlinedSegmentedButtonSet(Modifier) {
-                if (showPrevious) {
-                    AppSegmentedButton(
-                        label = prevText,
-                        selected = false,
-                        onClick = { prev?.let { onPreviousPageClick(it) } },
-                    )
-                }
-                pagesNumbers.forEach { page ->
-                    AppSegmentedButton(
-                        label = page.toString(),
-                        selected = page == info.count,
-                        onClick = { onPageClick(page) },
-                        modifier = Modifier
-                            .disabled(page == info.count)
-                    )
-                }
-                if (showNext) {
-                    AppSegmentedButton(
-                        label = nextText,
-                        selected = false,
-                        onClick = { next?.let { onNextPageClick(it) } },
-                    )
-                }
-            }
+            SpanText("FIXME: Implement PageNavigator")
+//            AppOutlinedSegmentedButtonSet(Modifier) {
+//                if (showPrevious) {
+//                    AppSegmentedButton(
+//                        label = prevText,
+//                        selected = false,
+//                        onClick = { prev?.let { onPreviousPageClick(it) } },
+//                    )
+//                }
+//                pagesNumbers.forEach { page ->
+//                    AppSegmentedButton(
+//                        label = page.toString(),
+//                        selected = page == info.count,
+//                        onClick = { onPageClick(page) },
+//                        modifier = Modifier
+//                            .disabled(page == info.count)
+//                    )
+//                }
+//                if (showNext) {
+//                    AppSegmentedButton(
+//                        label = nextText,
+//                        selected = false,
+//                        onClick = { next?.let { onNextPageClick(it) } },
+//                    )
+//                }
+//            }
         }
     }
 }

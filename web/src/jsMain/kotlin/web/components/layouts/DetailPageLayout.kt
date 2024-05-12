@@ -29,17 +29,18 @@ import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiArrowBack
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
+import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
-import theme.roleStyle
-import web.components.widgets.AppFilledButton
-import web.components.widgets.AppOutlinedIconButton
-import web.compose.material3.component.Divider
+import web.H1Variant
+import web.HeadlineStyle
+import web.SubtitleStyle
+import web.components.widgets.AppIconButton
+import web.components.widgets.DeleteButton
 
 @Composable
 fun DetailPageLayout(
@@ -70,13 +71,7 @@ fun DetailPageLayout(
             hasBackButton = true,
             actions = {
                 if (showDelete) {
-                    AppFilledButton(
-                        onClick = { onDeleteClick() },
-                        leadingIcon = { MdiDelete() },
-                        containerColor = MaterialTheme.colors.error,
-                    ) {
-                        SpanText(text = deleteText)
-                    }
+                    DeleteButton { onDeleteClick() }
                 }
             },
         )
@@ -100,7 +95,7 @@ fun BottomSection(
     if (createdAtValue.isEmpty() && updatedAtValue.isEmpty()) {
         Box(Modifier.margin(top = 1.em))
     } else {
-        Divider(modifier = Modifier.margin(top = 1.em))
+        HorizontalDivider(modifier = Modifier.margin(top = 1.em))
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -110,17 +105,11 @@ fun BottomSection(
                 .margin(bottom = 1.em)
         ) {
             if (createdAtValue.isNotEmpty()) {
-                SpanText(
-                    text = "$createdAtText: $createdAtValue",
-                    modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
-                )
+                SpanText("$createdAtText: $createdAtValue")
             }
 
             if (updatedAtValue.isNotEmpty()) {
-                SpanText(
-                    text = "$updatedAtText: $updatedAtValue",
-                    modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
-                )
+                SpanText("$updatedAtText: $updatedAtValue")
             }
         }
     }
@@ -142,7 +131,7 @@ fun NavTopSection(
             .gap(1.em)
     ) {
         if (hasBackButton) {
-            AppOutlinedIconButton(
+            AppIconButton(
                 onClick = { onGoBack() },
                 modifier = Modifier.size(3.em)
             ) {
@@ -155,7 +144,7 @@ fun NavTopSection(
         ) {
             SpanText(
                 text = title,
-                modifier = Modifier.roleStyle(MaterialTheme.typography.headlineLarge)
+                modifier = HeadlineStyle.toModifier(H1Variant)
             )
             subtitle?.let {
                 var subHovered by remember { mutableStateOf(false) }
@@ -163,8 +152,7 @@ fun NavTopSection(
 
                 SpanText(
                     text = it,
-                    modifier = Modifier
-                        .roleStyle(MaterialTheme.typography.bodySmall)
+                    modifier = SubtitleStyle.toModifier()
                         .opacity(subOpacity)
                         .onMouseOver { subHovered = true }
                         .onMouseOut { subHovered = false }

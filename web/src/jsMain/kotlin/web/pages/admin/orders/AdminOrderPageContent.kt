@@ -9,12 +9,12 @@ import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.gap
+import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.admin.order.page.AdminOrderPageViewModel
 import org.jetbrains.compose.web.css.em
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
-import web.compose.material3.component.Divider
 
 @Composable
 fun AdminOrderPagePage(
@@ -47,7 +47,7 @@ fun AdminOrderPagePage(
                 .gap(1.em)
         ) {
             SpanText("AdminOrderPagePage")
-            Divider()
+            HorizontalDivider()
         }
     }
 }

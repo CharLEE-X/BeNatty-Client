@@ -35,7 +35,7 @@ query GetConfig($configId: String) {
         }
         title
       }
-      bannerSection {
+      topCategoriesSection {
         left {
           media {
             keyName
@@ -43,7 +43,15 @@ query GetConfig($configId: String) {
             alt
             type
           }
-          description
+          title
+        }
+        middle {
+          media {
+            keyName
+            url
+            alt
+            type
+          }
           title
         }
         right {
@@ -53,7 +61,6 @@ query GetConfig($configId: String) {
             alt
             type
           }
-          description
           title
         }
       }

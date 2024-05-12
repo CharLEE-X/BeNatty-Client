@@ -5,184 +5,129 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
 import com.varabyte.kobweb.compose.css.CSSTransition
+import com.varabyte.kobweb.compose.css.Cursor
+import com.varabyte.kobweb.compose.css.TextDecorationLine
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.RowScope
 import com.varabyte.kobweb.compose.foundation.layout.Spacer
+import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
+import com.varabyte.kobweb.compose.ui.modifiers.border
+import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
+import com.varabyte.kobweb.compose.ui.modifiers.color
+import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusOut
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
-import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
+import com.varabyte.kobweb.compose.ui.modifiers.textDecorationLine
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.thenIf
+import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.components.forms.Button
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiCreate
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiEdit
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.background
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.getString
-import org.jetbrains.compose.web.css.CSSColorValue
+import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
-import web.compose.material3.component.ElevatedButton
-import web.compose.material3.component.FilledButton
-import web.compose.material3.component.FilledTonalButton
-import web.compose.material3.component.OutlinedButton
-import web.compose.material3.component.TextButton
+import org.jetbrains.compose.web.dom.A
 import web.util.onEnterKeyDown
 
 @Composable
-fun AppElevatedButton(
-    onClick: () -> Unit,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    trailingIcon: @Composable (() -> Unit)? = null,
-    disabled: Boolean = false,
-    modifier: Modifier = Modifier,
-    containerColor: CSSColorValue? = null,
-    labelTextColor: CSSColorValue? = null,
-    labelTextFont: String? = null,
-    content: @Composable RowScope.() -> Unit
-) {
-    ElevatedButton(
-        onClick = { onClick() },
-        leadingIcon = leadingIcon,
-        trailingIcon = trailingIcon,
-        disabled = disabled,
-        containerColor = containerColor,
-        labelTextColor = labelTextColor,
-        containerShape = 0.px,
-        labelTextFont = labelTextFont,
-        content = content,
-        modifier = modifier
-            .tabIndex(0)
-            .onEnterKeyDown(onClick)
-    )
-}
-
-@Composable
 fun AppFilledButton(
-    onClick: () -> Unit,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    trailingIcon: @Composable (() -> Unit)? = null,
-    disabled: Boolean = false,
     modifier: Modifier = Modifier,
-    containerColor: CSSColorValue? = null,
-    labelTextColor: CSSColorValue? = null,
-    disabledContainerColor: CSSColorValue? = null,
-    cornerRadius: CSSLengthOrPercentageNumericValue? = 0.px,
-    labelTextFont: String? = null,
+    onClick: () -> Unit,
+    disabled: Boolean = false,
     content: @Composable RowScope.() -> Unit
 ) {
-    FilledButton(
+    Button(
         onClick = { onClick() },
-        leadingIcon = leadingIcon,
-        trailingIcon = trailingIcon,
-        disabled = disabled,
-        containerColor = containerColor,
-        labelTextColor = labelTextColor,
-        disabledContainerColor = disabledContainerColor,
-        containerShape = cornerRadius,
-        labelTextFont = labelTextFont,
-        content = content,
+        enabled = !disabled,
         modifier = modifier
+            .borderRadius(0.px)
             .tabIndex(0)
             .onEnterKeyDown(onClick)
-    )
+    ) {
+        content()
+    }
 }
 
 @Composable
 fun AppOutlinedButton(
-    onClick: () -> Unit,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    trailingIcon: @Composable (() -> Unit)? = null,
-    disabled: Boolean = false,
     modifier: Modifier = Modifier,
-    containerColor: CSSColorValue? = null,
-    labelTextColor: CSSColorValue? = null,
-    labelTextFont: String? = null,
+    onClick: () -> Unit,
+    disabled: Boolean = false,
     content: @Composable RowScope.() -> Unit
 ) {
-    OutlinedButton(
-        onClick = { onClick() },
-        leadingIcon = leadingIcon,
-        trailingIcon = trailingIcon,
+    AppFilledButton(
+        onClick = onClick,
         disabled = disabled,
-        containerColor = containerColor,
-        labelTextColor = labelTextColor,
-        containerShape = 0.px,
-        labelTextFont = labelTextFont,
-        content = content,
         modifier = modifier
-            .tabIndex(0)
-            .onEnterKeyDown(onClick)
-    )
-}
-
-@Composable
-fun AppFilledTonalButton(
-    onClick: () -> Unit,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    trailingIcon: @Composable (() -> Unit)? = null,
-    disabled: Boolean = false,
-    modifier: Modifier = Modifier,
-    containerColor: CSSColorValue? = null,
-    labelTextColor: CSSColorValue? = null,
-    labelTextFont: String? = null,
-    content: @Composable RowScope.() -> Unit
-) {
-    FilledTonalButton(
-        onClick = { onClick() },
-        leadingIcon = leadingIcon,
-        trailingIcon = trailingIcon,
-        disabled = disabled,
-        containerColor = containerColor,
-        labelTextColor = labelTextColor,
-        containerShape = 0.px,
-        labelTextFont = labelTextFont,
-        content = content,
-        modifier = modifier
-            .tabIndex(0)
-            .onEnterKeyDown(onClick)
-    )
+            .color(ColorMode.current.toPalette().background)
+            .border(
+                width = 1.px,
+//                color = CSSColorValue.current,
+            )
+    ) {
+        content()
+    }
 }
 
 @Composable
 fun AppTextButton(
     onClick: () -> Unit,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    trailingIcon: @Composable (() -> Unit)? = null,
-    disabled: Boolean = false,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier,
-    labelTextColor: CSSColorValue? = null,
-    labelTextFont: String? = null,
     content: @Composable RowScope.() -> Unit
 ) {
-    TextButton(
-        onClick = { onClick() },
-        leadingIcon = leadingIcon,
-        trailingIcon = trailingIcon,
-        disabled = disabled,
-        labelTextColor = labelTextColor,
-        labelTextFont = labelTextFont,
-        content = content,
-        modifier = modifier
-            .tabIndex(0)
-            .onEnterKeyDown(onClick)
-    )
+    var hovered by remember { mutableStateOf(false) }
+
+    A(
+        href = null,
+        attrs = modifier
+            .thenIf(enabled, Modifier
+                .onClick { onClick() }
+                .onEnterKeyDown(onClick)
+                .tabIndex(0)
+                .cursor(Cursor.Pointer)
+                .onMouseOver { hovered = true }
+                .onMouseLeave { hovered = false }
+                .onFocusIn { hovered = true }
+                .onFocusOut { hovered = false }
+                .textDecorationLine(if (hovered) TextDecorationLine.Underline else TextDecorationLine.None)
+                .transition(CSSTransition("text-decoration-line", 0.3.s, TransitionTimingFunction.Ease))
+            )
+            .toAttrs(),
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.gap(0.25.em)
+        ) {
+            content()
+        }
+    }
 }
 
 @Composable
 fun CreateButton(
-    onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -190,13 +135,58 @@ fun CreateButton(
         Spacer()
         AppFilledButton(
             onClick = onClick,
-            leadingIcon = { MdiCreate() },
             modifier = modifier
                 .width(150.px)
                 .tabIndex(0)
                 .onEnterKeyDown(onClick)
         ) {
+            MdiCreate()
             SpanText(getString(Strings.Create).uppercase())
+        }
+    }
+}
+
+@Composable
+fun DeleteButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Spacer()
+        AppFilledButton(
+            onClick = onClick,
+            modifier = modifier
+                .width(150.px)
+                .tabIndex(0)
+                .onEnterKeyDown(onClick)
+                .backgroundColor(Colors.Red)
+        ) {
+            MdiDelete()
+            SpanText(getString(Strings.Delete).uppercase())
+        }
+    }
+}
+
+@Composable
+fun EditButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Spacer()
+        AppFilledButton(
+            onClick = onClick,
+            modifier = modifier
+                .width(150.px)
+                .tabIndex(0)
+                .onEnterKeyDown(onClick)
+        ) {
+            MdiEdit()
+            SpanText(getString(Strings.Edit).uppercase())
         }
     }
 }
@@ -210,13 +200,10 @@ fun MainButton(
 ) {
     var hovered by remember { mutableStateOf(false) }
 
+
     SpanText(
         text = title,
         modifier = modifier
-            .padding(
-                leftRight = 16.px,
-                topBottom = 8.px
-            )
             .onMouseOver { if (enabled) hovered = true }
             .onMouseLeave { hovered = false }
             .onFocusIn { if (enabled) hovered = true }
@@ -224,7 +211,6 @@ fun MainButton(
             .onClick { onClick() }
             .thenIf(enabled, Modifier.tabIndex(0))
             .onEnterKeyDown { if (enabled) onClick() }
-            .backgroundColor(if (hovered) MaterialTheme.colors.primary else MaterialTheme.colors.primary)
             .transition(
                 CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease),
                 CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease),

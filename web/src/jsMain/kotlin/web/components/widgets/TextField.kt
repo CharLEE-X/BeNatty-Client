@@ -7,23 +7,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
-import com.varabyte.kobweb.compose.css.CSSTransition
-import com.varabyte.kobweb.compose.css.TransitionTimingFunction
-import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.RowScope
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.transition
-import com.varabyte.kobweb.compose.ui.modifiers.translateX
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiError
+import com.varabyte.kobweb.silk.components.forms.TextInput
 import feature.shop.account.profile.SHAKE_ANIM_DURATION
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.web.attributes.AutoComplete
+import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.s
-import web.compose.material3.component.OutlinedTextField
-import web.compose.material3.component.TextFieldType
 
 @Composable
 fun AppOutlinedTextField(
@@ -37,7 +30,7 @@ fun AppOutlinedTextField(
     hasTrailingIcon: Boolean = false,
     containerShape: CSSLengthOrPercentageNumericValue = 12.px,
     inputTextColor: CSSColorValue? = null,
-    type: TextFieldType = TextFieldType.TEXT,
+    type: InputType.InputTypeWithStringValue = InputType.Text,
     autoComplete: AutoComplete = AutoComplete.off,
     required: Boolean = false,
     disabled: Boolean = false,
@@ -77,52 +70,11 @@ fun AppOutlinedTextField(
         }
     }
 
-    OutlinedTextField(
-        value = value,
-        onInput = onValueChange,
-        label = label,
+    TextInput(
+        text = value,
+        onTextChanged = onValueChange,
         placeholder = placeholder,
-        leadingIcon = leadingIcon,
-        trailingIcon = {
-            Row(
-                modifier = Modifier.translateX((-.5).em)
-            ) {
-                errorText?.let { MdiError() }
-                trailingIcon?.invoke(this)
-            }
-        },
-        hasLeadingIcon = hasLeadingIcon,
-        hasTrailingIcon = hasTrailingIcon,
-        containerShape = containerShape,
-        outlineColor = unFocusedOutlineColor,
-        focusOutlineColor = focusedOutlineColor,
-        hoverOutlineColor = hoverOutlineColor,
-        inputTextColor = inputTextColor,
-        type = type,
-        autoComplete = autoComplete,
-        required = required,
-        disabled = disabled,
-        error = error,
-        errorText = errorText,
-        prefixText = prefixText,
-        suffixText = suffixText,
-        supportingText = supportingText,
-        textDirection = textDirection,
-        rows = rows,
-        cols = cols,
-        max = max,
-        maxLength = maxLength,
-        min = min,
-        minLength = minLength,
-        pattern = pattern,
-        readOnly = readOnly,
-        multiple = multiple,
-        step = step,
-        modifier = modifier
-            .translateX(translateX)
-            .transition(
-                CSSTransition("translate", SHAKE_ANIM_DURATION.inWholeSeconds.s),
-                CSSTransition("border-color", 0.3.s, TransitionTimingFunction.Ease),
-            )
+        spellCheck = false,
+        autoComplete = AutoComplete.off,
     )
 }

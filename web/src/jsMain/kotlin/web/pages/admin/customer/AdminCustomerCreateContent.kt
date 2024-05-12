@@ -115,9 +115,7 @@ fun AdminCustomerCreateContent(
                                 .onFocusOut { lastNameFocused = false }
                         )
                     }
-                    CreateButton(
-                        onClick = { vm.trySend(AdminCustomerCreateContract.Inputs.OnCreateClick) },
-                    )
+                    CreateButton { vm.trySend(AdminCustomerCreateContract.Inputs.OnCreateClick) }
                 }
             },
         )

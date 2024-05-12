@@ -6,7 +6,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
-import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontSize
 import com.varabyte.kobweb.compose.ui.modifiers.gap
@@ -22,8 +21,7 @@ import feature.shop.cart.CartContract
 import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
-import theme.MaterialTheme
-import web.HeadlineTextStyle
+import web.HeadlineStyle
 import web.pages.shop.home.gridModifier
 import web.pages.shop.product.catalogue.CatalogItem
 
@@ -42,9 +40,8 @@ fun YouMayAlsoLike(
     ) {
         SpanText(
             text = getString(Strings.YouMayAlsoLike).uppercase(),
-            modifier = HeadlineTextStyle.toModifier()
+            modifier = HeadlineStyle.toModifier()
                 .fontSize(2.5.cssRem)
-                .color(MaterialTheme.colors.onSurface)
         )
         Row(
             modifier = gridModifier(6)

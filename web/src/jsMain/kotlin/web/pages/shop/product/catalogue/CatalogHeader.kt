@@ -42,6 +42,10 @@ import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiChevronLeft
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.border
+import com.varabyte.kobweb.silk.theme.colors.palette.color
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.getString
 import data.type.ProductsSort
@@ -57,8 +61,6 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.dom.Span
-import theme.MaterialTheme
-import theme.roleStyle
 import web.components.sections.AppMenu
 import web.components.widgets.ShimmerButton
 import web.components.widgets.ShimmerText
@@ -100,9 +102,6 @@ fun CatalogueHeader(vm: CatalogViewModel, state: CatalogContract.State) {
         if (!state.isCatalogConfigLoading) {
             SpanText(
                 text = "${state.currentVariantOptions.total} products",
-                modifier = Modifier
-                    .roleStyle(MaterialTheme.typography.bodyLarge)
-                    .color(MaterialTheme.colors.onSurface)
             )
         } else {
             ShimmerText(Modifier.width(100.px))
@@ -160,17 +159,13 @@ private fun FiltersButton(
     onClick: () -> Unit,
 ) {
     var hovered by remember { mutableStateOf(false) }
-    val borderColor = when {
-        hovered || menuOpened -> MaterialTheme.colors.onSecondaryContainer
-        else -> MaterialTheme.colors.secondaryContainer
-    }
 
     Box(
         modifier = modifier
             .padding(left = 1.em, right = 0.5.em, top = 0.5.em, bottom = 0.5.em)
             .border(
                 width = 1.px,
-                color = borderColor,
+                color = ColorMode.current.toPalette().border,
                 style = LineStyle.Solid
             )
             .cursor(Cursor.Pointer)
@@ -184,7 +179,7 @@ private fun FiltersButton(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .gap(0.25.em)
-                .color(MaterialTheme.colors.onSurface)
+                .color(ColorMode.current.toPalette().color)
         ) {
             Column(
                 modifier = Modifier
@@ -192,14 +187,11 @@ private fun FiltersButton(
             ) {
                 SpanText(
                     text = "$sortByText:",
-                    modifier = Modifier
-                        .roleStyle(MaterialTheme.typography.bodySmall)
                 )
                 SpanText(
                     text = currentFilter,
                     modifier = Modifier
                         .fontWeight(FontWeight.Bold)
-                        .roleStyle(MaterialTheme.typography.bodyLarge)
                 )
             }
             MdiChevronLeft(

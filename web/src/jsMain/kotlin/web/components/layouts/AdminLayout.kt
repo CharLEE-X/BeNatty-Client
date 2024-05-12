@@ -20,7 +20,6 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.alignItems
-import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxHeight
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
@@ -54,9 +53,10 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiSearch
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiShoppingBasket
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiStyle
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiWarning
-import com.varabyte.kobweb.silk.components.style.common.PlaceholderColor
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.color
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.getString
 import feature.router.Screen
@@ -65,12 +65,9 @@ import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
 import web.components.widgets.AppFilledButton
-import web.components.widgets.AppFilledTonalButton
-import web.components.widgets.AppFilledTonalIconButton
+import web.components.widgets.AppIconButton
 import web.components.widgets.Logo
-import web.compose.material3.component.CircularProgress
 
 private val topBarHeight = 4.em
 private val sideBarWidth = 18.em
@@ -303,7 +300,7 @@ private fun BoxScope.SaveSection(
             )
             SpanText(
                 text = unsavedChangesText,
-                modifier = Modifier.color(MaterialTheme.colors.onSurface)
+                modifier = Modifier.color(ColorMode.current.toPalette().color)
             )
         }
         Row(
@@ -315,12 +312,11 @@ private fun BoxScope.SaveSection(
         ) {
             AppFilledButton(
                 onClick = { onCancelClick() },
-                containerColor = MaterialTheme.colors.tertiary,
                 modifier = Modifier.width(8.em)
             ) {
                 SpanText(cancelText)
             }
-            AppFilledTonalButton(
+            AppFilledButton(
                 onClick = { onSaveClick() },
                 disabled = !isSaveEnabled,
                 modifier = Modifier.width(8.em)
@@ -343,20 +339,19 @@ private fun TopBarRightSection(
             .gap(1.em)
     ) {
         var colorMode by ColorMode.currentState
-        AppFilledTonalIconButton(
+        AppIconButton(
             onClick = { colorMode = colorMode.opposite },
         ) {
             if (colorMode.isLight) MdiLightMode(style = IconStyle.OUTLINED)
             else MdiModeNight(style = IconStyle.OUTLINED)
         }
-        AppFilledTonalIconButton(
+        AppIconButton(
             onClick = onNotificationButtonClick,
         ) {
             MdiNotifications()
         }
-        AppFilledTonalButton(
+        AppFilledButton(
             onClick = onBeNattyButtonClick,
-            containerColor = MaterialTheme.colors.primary,
         ) {
             SpanText(getString(Strings.ShopName))
         }
@@ -380,10 +375,6 @@ private fun SearchBar(
         MdiSearch(
             modifier = Modifier
                 .align(Alignment.CenterStart)
-                .color(
-                    if (focused) MaterialTheme.colors.primary
-                    else MaterialTheme.colors.outline
-                )
                 .userSelect(UserSelect.None)
                 .margin(left = 0.5.em)
                 .transition(CSSTransition("color", 0.3.s, TransitionTimingFunction.EaseInOut))
@@ -393,8 +384,6 @@ private fun SearchBar(
             text = value,
             onTextChanged = onValueChanged,
             placeholder = placeholder,
-            focusBorderColor = MaterialTheme.colors.primary,
-            placeholderColor = PlaceholderColor(MaterialTheme.colors.outline),
             modifier = Modifier
                 .align(Alignment.Center)
                 .fillMaxSize()
@@ -412,7 +401,6 @@ private fun SearchBar(
                 .align(Alignment.CenterEnd)
                 .gap(0.25.em)
                 .fontSize(1.em)
-                .color(MaterialTheme.colors.outline)
                 .userSelect(UserSelect.None)
                 .margin(right = 0.75.em)
         ) {
@@ -436,14 +424,10 @@ private fun Loader(isLoading: Boolean) {
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxSize()
-                    .backgroundColor(MaterialTheme.colors.onSurface)
                     .opacity(0.3)
                     .onClick { it.preventDefault() }
             )
-            CircularProgress(
-                intermediate = true,
-                fourColor = true,
-            )
+            SpanText("Loading...")
         }
     }
 }

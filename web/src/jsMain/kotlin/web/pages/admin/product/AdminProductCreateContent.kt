@@ -78,9 +78,7 @@ fun AdminProductCreateContent(
                         .onFocusIn { nameFocused = true }
                         .onFocusOut { nameFocused = false }
                 )
-                CreateButton(
-                    onClick = { vm.trySend(AdminProductCreateContract.Inputs.OnCreateClick) },
-                )
+                CreateButton { vm.trySend(AdminProductCreateContract.Inputs.OnCreateClick) }
             }
         }
     }

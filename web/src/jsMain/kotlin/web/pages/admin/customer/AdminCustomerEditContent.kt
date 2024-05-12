@@ -13,24 +13,22 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
 import feature.admin.customer.edit.AdminCustomerEditContract
 import feature.admin.customer.edit.AdminCustomerEditViewModel
+import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.css.em
-import theme.MaterialTheme
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.OneLayout
-import web.components.widgets.AppFilledButton
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.CardSection
 import web.components.widgets.CheckboxSection
+import web.components.widgets.DeleteButton
 import web.components.widgets.HasChangesWidget
 import web.components.widgets.TakeActionDialog
-import web.compose.material3.component.TextFieldType
 
 @Composable
 fun AdminCustomerEditContent(
@@ -113,15 +111,7 @@ fun AdminCustomerEditContent(
             title = state.original.details.email,
             subtitle = state.original.id,
             onGoBack = { vm.trySend(AdminCustomerEditContract.Inputs.OnGoBackClick) },
-            actions = {
-                AppFilledButton(
-                    onClick = { deleteCustomerDialogOpen = !deleteCustomerDialogOpen },
-                    leadingIcon = { MdiDelete() },
-                    containerColor = MaterialTheme.colors.error,
-                ) {
-                    SpanText(text = getString(Strings.Delete))
-                }
-            },
+            actions = { DeleteButton { deleteCustomerDialogOpen = !deleteCustomerDialogOpen } },
             hasBackButton = true,
             content = {
                 CardSection(title = getString(Strings.NewCustomer)) {
@@ -179,13 +169,13 @@ private fun Marketing(vm: AdminCustomerEditViewModel, state: AdminCustomerEditCo
         title = getString(Strings.MarketingEmailsAgreed),
         selected = state.current.marketingEmails,
         disabled = true,
-        onClick = { vm.trySend(AdminCustomerEditContract.Inputs.SetMarketingEmail(!state.current.marketingEmails)) },
+        onClick = { vm.trySend(AdminCustomerEditContract.Inputs.SetMarketingEmail(it)) },
     )
     CheckboxSection(
         title = getString(Strings.MarketingSMSAgreed),
         selected = state.current.marketingSms,
         disabled = true,
-        onClick = { vm.trySend(AdminCustomerEditContract.Inputs.SetMarketingSMS(!state.current.marketingSms)) },
+        onClick = { vm.trySend(AdminCustomerEditContract.Inputs.SetMarketingSMS(it)) },
     )
     SpanText(text = getString(Strings.MarketingDesc))
 }
@@ -195,7 +185,7 @@ private fun CollectTax(vm: AdminCustomerEditViewModel, state: AdminCustomerEditC
     CheckboxSection(
         title = getString(Strings.CollectTax),
         selected = state.current.collectTax,
-        onClick = { vm.trySend(AdminCustomerEditContract.Inputs.SetCollectTax(!state.current.collectTax)) },
+        onClick = { vm.trySend(AdminCustomerEditContract.Inputs.SetCollectTax(it)) },
     )
 }
 
@@ -257,7 +247,7 @@ private fun Email(vm: AdminCustomerEditViewModel, state: AdminCustomerEditContra
         onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetEmail(it)) },
         label = getString(Strings.Email),
         errorText = state.emailError,
-        type = TextFieldType.EMAIL,
+        type = InputType.Email,
         required = true,
         shake = state.emailShake,
         modifier = Modifier.fillMaxWidth(),
@@ -270,7 +260,7 @@ private fun DetailPhone(vm: AdminCustomerEditViewModel, state: AdminCustomerEdit
         value = state.current.details.phone ?: "",
         onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetDetailPhone(it)) },
         label = getString(Strings.Phone),
-        type = TextFieldType.TEL,
+        type = InputType.Tel,
         modifier = Modifier.fillMaxWidth(),
     )
 }
@@ -281,7 +271,7 @@ private fun AddressPhone(vm: AdminCustomerEditViewModel, state: AdminCustomerEdi
         value = state.current.address.phone ?: "",
         onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetAddressPhone(it)) },
         label = getString(Strings.Phone),
-        type = TextFieldType.TEL,
+        type = InputType.Tel,
         modifier = Modifier.fillMaxWidth(),
     )
 }

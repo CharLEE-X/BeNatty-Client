@@ -12,7 +12,7 @@ fun ImproveWithButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    AppFilledIconButton(
+    AppIconButton(
         onClick = { onClick() },
         modifier = modifier
             .tabIndex(0)

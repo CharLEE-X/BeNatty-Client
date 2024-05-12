@@ -22,12 +22,12 @@ fun EditCancelButton(
     val onClick = if (isEditing) cancel else edit
     AppFilledButton(
         onClick = onClick,
-        leadingIcon = { if (isEditing) MdiCancel() else MdiEdit() },
         modifier = Modifier
             .width(width.px)
             .tabIndex(0)
             .onEnterKeyDown(onClick)
     ) {
+        if (isEditing) MdiCancel() else MdiEdit()
         SpanText(if (isEditing) cancelText else editText)
     }
 }

@@ -21,8 +21,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.attrsModifier
-import com.varabyte.kobweb.compose.ui.graphics.Colors
-import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
 import com.varabyte.kobweb.compose.ui.modifiers.borderBottom
 import com.varabyte.kobweb.compose.ui.modifiers.borderTop
@@ -60,18 +58,20 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiCheck
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEdit
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiUndo
+import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.border
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.Strings.Edit
 import component.localization.getString
 import core.models.VariantType
-import core.util.enumCapitalized
 import data.AdminProductGetByIdQuery
 import data.type.BackorderStatus
 import data.type.MediaType
 import data.type.PostStatus
 import data.type.StockStatus
-import data.type.Trait
 import feature.admin.product.edit.AdminProductEditContract
 import feature.admin.product.edit.AdminProductEditViewModel
 import kotlinx.coroutines.launch
@@ -88,16 +88,14 @@ import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.dom.Span
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.url.URL
-import theme.MaterialTheme
-import theme.roleStyle
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.OneThirdLayout
 import web.components.sections.AppMenu
 import web.components.widgets.AppFilledButton
-import web.components.widgets.AppFilledTonalButton
 import web.components.widgets.AppOutlinedButton
 import web.components.widgets.AppOutlinedTextField
+import web.components.widgets.AppTextButton
 import web.components.widgets.AppTooltip
 import web.components.widgets.CardSection
 import web.components.widgets.CreatorSection
@@ -108,11 +106,6 @@ import web.components.widgets.MediaSlot
 import web.components.widgets.SwitchSection
 import web.components.widgets.TakeActionDialog
 import web.components.widgets.TrailingIconGoToNext
-import web.compose.material3.component.ChipSet
-import web.compose.material3.component.Divider
-import web.compose.material3.component.FilterChip
-import web.compose.material3.component.TextButton
-import web.compose.material3.component.TextFieldType
 import web.util.convertBase64ToFile
 import web.util.convertImageToBase64
 import web.util.onEnterKeyDown
@@ -211,15 +204,7 @@ fun AdminProductEditContent(
             subtitle = state.original.id,
             onGoBack = adminRoutes.goBack,
             hasBackButton = true,
-            actions = {
-                AppFilledButton(
-                    onClick = { deleteProductDialogOpen = !deleteProductDialogOpen },
-                    leadingIcon = { MdiDelete() },
-                    containerColor = MaterialTheme.colors.error,
-                ) {
-                    SpanText(getString(Strings.Delete))
-                }
-            },
+            actions = { DeleteButton { deleteProductDialogOpen = !deleteProductDialogOpen } },
             content = {
                 CardSection(title = null) {
                     Name(state, vm)
@@ -284,7 +269,7 @@ fun AdminProductEditContent(
                 }
                 CardSection(title = getString(Strings.ProductOrganization)) {
                     CategoryId(vm, state)
-                    Divider()
+                    HorizontalDivider()
                     Tags(vm, state)
                 }
                 CardSection(title = getString(Strings.Info)) {
@@ -307,7 +292,6 @@ private fun Traits(state: AdminProductEditContract.State, vm: AdminProductEditVi
     ) {
         SpanText(
             text = getString(Strings.Traits),
-            modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -317,15 +301,16 @@ private fun Traits(state: AdminProductEditContract.State, vm: AdminProductEditVi
                 .display(DisplayStyle.Flex)
                 .flexDirection(FlexDirection.Row)
         ) {
-            ChipSet {
-                Trait.entries.toList().filter { it != Trait.UNKNOWN__ }.forEach { trait ->
-                    FilterChip(
-                        label = trait.name.enumCapitalized(),
-                        selected = trait in state.current.traits,
-                        onClick = { vm.trySend(AdminProductEditContract.Inputs.OnTraitClick(trait)) },
-                    )
-                }
-            }
+            SpanText("FIXME: Implement chipset")
+//            ChipSet {
+//                Trait.entries.toList().filter { it != Trait.UNKNOWN__ }.forEach { trait ->
+//                    FilterChip(
+//                        label = trait.name.enumCapitalized(),
+//                        selected = trait in state.current.traits,
+//                        onClick = { vm.trySend(AdminProductEditContract.Inputs.OnTraitClick(trait)) },
+//                    )
+//                }
+//            }
         }
     }
 }
@@ -337,18 +322,17 @@ fun TotalInventory(state: AdminProductEditContract.State) {
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .backgroundColor(MaterialTheme.colors.surfaceContainerHigh)
+//                .backgroundColor(MaterialTheme.colors.surfaceContainerHigh)
                 .padding(1.em)
                 .borderTop(
                     width = 1.px,
-                    color = MaterialTheme.colors.surface,
+                    color = ColorMode.current.toPalette().border,
                     style = LineStyle.Solid
                 )
         ) {
             SpanText(
                 text = getString(Strings.TotalInventory) + ": ${state.totalInventory} " +
                     getString(Strings.Available).lowercase(),
-                modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
             )
         }
     }
@@ -362,10 +346,10 @@ private fun ManageOptions(vm: AdminProductEditViewModel, state: AdminProductEdit
             .padding(leftRight = 1.em, topBottom = 1.em)
     ) {
         if (state.showAddOptions) {
-            TextButton(
-                leadingIcon = { MdiAdd() },
+            AppTextButton(
                 onClick = { vm.trySend(AdminProductEditContract.Inputs.OnAddOptionsClick) },
             ) {
+                MdiAdd()
                 SpanText(getString(Strings.AddOptionsLikeSizeOrColor))
             }
         }
@@ -374,8 +358,7 @@ private fun ManageOptions(vm: AdminProductEditViewModel, state: AdminProductEdit
                 .fillMaxWidth()
                 .border(
                     width = 1.px,
-                    color = if (state.localOptions.isNotEmpty()) MaterialTheme.colors.surfaceContainerHighest
-                    else Colors.Transparent,
+                    color = ColorMode.current.toPalette().border,
                     style = LineStyle.Solid
                 )
         ) {
@@ -411,24 +394,23 @@ private fun ManageOptions(vm: AdminProductEditViewModel, state: AdminProductEdit
                         }
                         AppOutlinedButton(
                             onClick = { vm.trySend(AdminProductEditContract.Inputs.OnEditOptionClicked(index)) },
-                            leadingIcon = { MdiEdit() },
                         ) {
+                            MdiEdit()
                             SpanText(getString(Edit))
                         }
                     }
                     if (state.localOptions.size > 1 && index < state.localOptions.size - 1) {
-                        Divider(modifier = Modifier.color(MaterialTheme.colors.surfaceContainerHighest))
+                        HorizontalDivider()
                     }
                 }
             }
             if (state.showAddAnotherOption) {
-                Divider(modifier = Modifier.color(MaterialTheme.colors.surfaceContainerHighest))
-                TextButton(
-                    leadingIcon = { MdiAdd() },
+                HorizontalDivider()
+                AppTextButton(
                     onClick = { vm.trySend(AdminProductEditContract.Inputs.OnAddAnotherOptionClick) },
-                    hoverContainerColor = MaterialTheme.colors.surfaceContainerHigh,
                     modifier = Modifier.margin(0.5.em)
                 ) {
+                    MdiAdd()
                     SpanText(getString(Strings.AddAnotherOption))
                 }
             }
@@ -441,17 +423,15 @@ private fun OptionAttrItem(attr: AdminProductEditContract.Attribute) {
     SpanText(
         text = attr.value, // TODO: Need to be localized
         modifier = Modifier
-            .roleStyle(MaterialTheme.typography.bodyMedium)
             .padding(
                 topBottom = 0.5.em,
                 leftRight = 1.em,
             )
             .border(
                 width = 1.px,
-                color = MaterialTheme.colors.surface,
+                color = ColorMode.current.toPalette().border,
                 style = LineStyle.Solid
             )
-            .backgroundColor(MaterialTheme.colors.surfaceContainerHigh)
     )
 }
 
@@ -475,15 +455,14 @@ fun InspectVariations(vm: AdminProductEditViewModel, state: AdminProductEditCont
                 modifier = Modifier
                     .fillMaxWidth()
                     .margin(bottom = 1.em)
-                    .backgroundColor(MaterialTheme.colors.surfaceContainerHigh)
                     .borderTop(
                         width = 1.px,
-                        color = MaterialTheme.colors.surface,
+                        color = ColorMode.current.toPalette().border,
                         style = LineStyle.Solid
                     )
                     .borderBottom(
                         width = 1.px,
-                        color = MaterialTheme.colors.surface,
+                        color = ColorMode.current.toPalette().border,
                         style = LineStyle.Solid
                     )
             ) {
@@ -493,7 +472,6 @@ fun InspectVariations(vm: AdminProductEditViewModel, state: AdminProductEditCont
                     modifier = gridContainerModifier
                         .padding(topBottom = 1.5.em)
                         .padding(left = 2.em, right = 1.em)
-                        .roleStyle(MaterialTheme.typography.bodyMedium)
                 ) {
                     SpanText(
                         text = getString(Strings.Variant),
@@ -528,7 +506,7 @@ fun InspectVariations(vm: AdminProductEditViewModel, state: AdminProductEditCont
                         .thenIf(index != state.localVariants.size - 1) {
                             Modifier.borderBottom(
                                 width = 1.px,
-                                color = MaterialTheme.colors.surface,
+                                color = ColorMode.current.toPalette().border,
                                 style = LineStyle.Solid
                             )
                         }
@@ -556,7 +534,6 @@ private fun LocalVariantItem(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = modifier.roleStyle(MaterialTheme.typography.bodyMedium)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -570,7 +547,7 @@ private fun LocalVariantItem(
                         Box(
                             modifier = Modifier
                                 .size(6.px)
-                                .color(MaterialTheme.colors.surface)
+                                .color(ColorMode.current.toPalette().border)
                         )
                     }
                 }
@@ -601,7 +578,6 @@ private fun LocalVariantItem(
                         Strings.ThisVariantWillBeDeleted else Strings.ThisVariantWontBeCreated
                     SpanText(
                         text = getString(text),
-                        modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
                     )
                 }
             }
@@ -645,7 +621,6 @@ private fun LocalOptionBuilder(
     ) {
         SpanText(
             text = getString(Strings.OptionName),
-            modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -717,7 +692,6 @@ private fun LocalOptionBuilder(
             text = getString(Strings.OptionValues),
             modifier = Modifier
                 .margin(top = 1.em)
-                .roleStyle(MaterialTheme.typography.bodyMedium)
         )
         variant.attrs.forEachIndexed { attrIndex, attr ->
             var isOptionFocused by remember { mutableStateOf(false) }
@@ -764,11 +738,11 @@ private fun LocalOptionBuilder(
             }
         }
         Spacer()
-        AppFilledTonalButton(
+        AppFilledButton(
             onClick = { vm.trySend(AdminProductEditContract.Inputs.OnOptionDoneClicked(optionIndex)) },
-            leadingIcon = { MdiCheck() },
             disabled = variant.isDoneDisabled
         ) {
+            MdiCheck()
             SpanText(text = getString(Strings.Done))
         }
     }
@@ -823,7 +797,6 @@ private fun UpdatedAt(state: AdminProductEditContract.State) {
     if (state.current.updatedAt.isNotEmpty()) {
         SpanText(
             text = "${getString(Strings.LastUpdatedAt)}: ${state.current.updatedAt}",
-            modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
         )
     }
 }
@@ -833,7 +806,6 @@ private fun CreatedAt(state: AdminProductEditContract.State) {
     if (state.current.createdAt.isNotEmpty()) {
         SpanText(
             text = "${getString(Strings.CreatedAt)}: ${state.current.createdAt}",
-            modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
         )
     }
 }
@@ -848,7 +820,6 @@ private fun ShippingPreset(vm: AdminProductEditViewModel, state: AdminProductEdi
         } ?: emptyList(),
         onChipClick = { vm.trySend(AdminProductEditContract.Inputs.OnPresetSelected(it)) },
         noChipsText = getString(Strings.NoCategories),
-        createText = getString(Strings.CreateCategory),
         onCreateClick = { vm.trySend(AdminProductEditContract.Inputs.OnCreateCategoryClick) },
         afterTitle = { AppTooltip(getString(Strings.ShippingPresetDesc)) },
     )
@@ -863,7 +834,7 @@ private fun Height(vm: AdminProductEditViewModel, state: AdminProductEditContrac
         label = getString(Strings.Height),
         errorText = state.heightError,
         error = state.heightError != null,
-        type = TextFieldType.NUMBER,
+//        type = TextFieldType.NUMBER,
         disabled = state.current.shipping.presetId != null,
         modifier = Modifier.fillMaxWidth(),
     )
@@ -878,7 +849,7 @@ private fun Width(vm: AdminProductEditViewModel, state: AdminProductEditContract
         label = getString(Strings.Width),
         errorText = state.widthError,
         error = state.widthError != null,
-        type = TextFieldType.NUMBER,
+//        type = TextFieldType.NUMBER,
         disabled = state.current.shipping.presetId != null,
         modifier = Modifier.fillMaxWidth(),
     )
@@ -893,7 +864,7 @@ private fun Length(vm: AdminProductEditViewModel, state: AdminProductEditContrac
         label = getString(Strings.Length),
         errorText = state.lengthError,
         error = state.lengthError != null,
-        type = TextFieldType.NUMBER,
+//        type = TextFieldType.NUMBER,
         disabled = state.current.shipping.presetId != null,
         modifier = Modifier.fillMaxWidth(),
     )
@@ -908,7 +879,7 @@ private fun Weight(vm: AdminProductEditViewModel, state: AdminProductEditContrac
         label = getString(Strings.Weight),
         errorText = state.weightError,
         error = state.weightError != null,
-        type = TextFieldType.NUMBER,
+//        type = TextFieldType.NUMBER,
         disabled = state.current.shipping.presetId != null,
         modifier = Modifier.fillMaxWidth(),
     )
@@ -923,7 +894,7 @@ private fun RegularPrice(vm: AdminProductEditViewModel, state: AdminProductEditC
         label = getString(Strings.RegularPrice),
         errorText = state.regularPriceError,
         error = state.regularPriceError != null,
-        type = TextFieldType.NUMBER,
+//        type = TextFieldType.NUMBER,
         modifier = Modifier.fillMaxWidth(),
     )
     AppTooltip(getString(Strings.RegularPriceDesc))
@@ -937,7 +908,7 @@ private fun SalePrice(vm: AdminProductEditViewModel, state: AdminProductEditCont
         label = getString(Strings.SalePrice),
         errorText = state.salePriceError,
         error = state.salePriceError != null,
-        type = TextFieldType.NUMBER,
+//        type = TextFieldType.NUMBER,
         modifier = Modifier.fillMaxWidth(),
     )
     AppTooltip(getString(Strings.PriceDesc))
@@ -1059,7 +1030,6 @@ private fun StatusOfStock(vm: AdminProductEditViewModel, state: AdminProductEdit
         onChipClick = { vm.trySend(AdminProductEditContract.Inputs.SetStatusOfStock(StockStatus.valueOf(it))) },
         canBeEmpty = false,
         noChipsText = "",
-        createText = "",
         onCreateClick = {},
         afterTitle = { AppTooltip(getString(Strings.StockStatusDesc)) },
     )
@@ -1078,7 +1048,7 @@ private fun LowStockThreshold(vm: AdminProductEditViewModel, state: AdminProduct
         },
         label = getString(Strings.LowStockThreshold),
         errorText = state.lowStockThresholdError,
-        type = TextFieldType.NUMBER,
+//        type = TextFieldType.NUMBER,
         modifier = Modifier.fillMaxWidth(),
     )
     AppTooltip(getString(Strings.LowStockThresholdDesc))
@@ -1097,7 +1067,7 @@ private fun RemainingStock(vm: AdminProductEditViewModel, state: AdminProductEdi
         },
         label = getString(Strings.RemainingStock),
         errorText = state.remainingStockError,
-        type = TextFieldType.NUMBER,
+//        type = TextFieldType.NUMBER,
         modifier = Modifier.fillMaxWidth(),
     )
     AppTooltip(getString(Strings.RemainingStockDesc))
@@ -1122,7 +1092,6 @@ private fun BackorderStatus(vm: AdminProductEditViewModel, state: AdminProductEd
         },
         canBeEmpty = false,
         noChipsText = "",
-        createText = "",
         onCreateClick = {},
         afterTitle = { AppTooltip(getString(Strings.BackorderStatusDesc)) },
     )
@@ -1155,7 +1124,7 @@ private fun Description(
         label = getString(Strings.Description),
         errorText = state.descriptionError,
         error = state.descriptionError != null,
-        type = TextFieldType.TEXTAREA,
+//        type = TextFieldType.TEXTAREA,
         rows = 5,
         modifier = Modifier
             .fillMaxWidth()
@@ -1215,7 +1184,6 @@ private fun CategoryId(vm: AdminProductEditViewModel, state: AdminProductEditCon
         } ?: emptyList(),
         onChipClick = { vm.trySend(AdminProductEditContract.Inputs.OnCategorySelected(it)) },
         noChipsText = getString(Strings.NoCategories),
-        createText = getString(Strings.CreateCategory),
         onCreateClick = { vm.trySend(AdminProductEditContract.Inputs.OnCreateCategoryClick) },
         afterTitle = { AppTooltip(getString(Strings.CategoriesDesc)) },
     )
@@ -1231,7 +1199,6 @@ private fun Tags(vm: AdminProductEditViewModel, state: AdminProductEditContract.
         onChipClick = { vm.trySend(AdminProductEditContract.Inputs.OnTagSelected(it)) },
         canBeEmpty = true,
         noChipsText = getString(Strings.NoTags),
-        createText = getString(Strings.CreateTag),
         onCreateClick = { vm.trySend(AdminProductEditContract.Inputs.OnCreateTagClick) },
         afterTitle = { AppTooltip(getString(Strings.TagsDesc)) },
         modifier = Modifier.fillMaxWidth()
@@ -1258,7 +1225,6 @@ private fun PostStatus(vm: AdminProductEditViewModel, state: AdminProductEditCon
         onChipClick = { vm.trySend(AdminProductEditContract.Inputs.SetStatusOfPost(PostStatus.valueOf(it))) },
         canBeEmpty = false,
         noChipsText = "",
-        createText = "",
         onCreateClick = {},
         afterTitle = { AppTooltip(getString(Strings.PostStatusDesc)) },
     )

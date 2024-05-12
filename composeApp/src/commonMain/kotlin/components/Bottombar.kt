@@ -120,7 +120,7 @@ private fun NotificationDot() {
     ) {
         Surface(
             shape = CircleShape,
-            color = MaterialTheme.colors.error,
+            color = Colors.Red,
             modifier = Modifier
                 .size(12.dp)
                 .padding(2.dp),

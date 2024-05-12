@@ -13,17 +13,19 @@ import com.varabyte.kobweb.compose.ui.modifiers.rotate
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiChevronLeft
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.color
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.deg
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
 
 @Composable
 fun RotatableChevron(
     modifier: Modifier = Modifier,
     hovered: Boolean = false,
     open: Boolean = false,
-    color: CSSColorValue = MaterialTheme.colors.onSurface,
+    color: CSSColorValue = ColorMode.current.toPalette().color,
 ) {
     MdiChevronLeft(
         modifier = modifier

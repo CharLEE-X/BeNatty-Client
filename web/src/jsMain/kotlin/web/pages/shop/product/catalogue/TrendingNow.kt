@@ -13,6 +13,9 @@ import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.color
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.getString
 import data.GetCatalogPageQuery
@@ -21,8 +24,7 @@ import feature.product.catalog.CatalogViewModel
 import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
-import theme.MaterialTheme
-import web.HeadlineTextStyle
+import web.HeadlineStyle
 import web.pages.shop.home.gridModifier
 
 @Composable
@@ -39,9 +41,9 @@ fun TrendingNow(
     ) {
         SpanText(
             text = getString(Strings.TrendingNow).uppercase(),
-            modifier = HeadlineTextStyle.toModifier()
+            modifier = HeadlineStyle.toModifier()
                 .fontSize(2.5.cssRem)
-                .color(MaterialTheme.colors.onSurface)
+                .color(ColorMode.current.toPalette().color)
         )
         Row(
             modifier = gridModifier(6)

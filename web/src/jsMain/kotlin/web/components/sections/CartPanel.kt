@@ -23,8 +23,6 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
-import com.varabyte.kobweb.compose.ui.modifiers.background
-import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
 import com.varabyte.kobweb.compose.ui.modifiers.bottom
 import com.varabyte.kobweb.compose.ui.modifiers.boxShadow
@@ -67,8 +65,12 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiClose
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiRemove
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiShoppingCart
+import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.border
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.getString
 import core.models.Currency
@@ -85,15 +87,17 @@ import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
-import theme.roleStyle
+import web.H1Variant
+import web.H2Variant
+import web.H3Variant
+import web.HeadlineStyle
+import web.SubtitleStyle
 import web.components.widgets.AppFilledButton
+import web.components.widgets.AppIconButton
 import web.components.widgets.AppTextButton
 import web.components.widgets.FlexSpacer
 import web.components.widgets.Spacer
 import web.components.widgets.themeScrollbarStyle
-import web.compose.material3.component.Divider
-import web.compose.material3.component.IconButton
 import web.pages.shop.home.gridModifier
 import web.pages.shop.product.page.ProductPrice
 import web.pages.shop.product.page.SpendMore
@@ -127,7 +131,6 @@ fun BoxScope.CartPanel(vm: CartViewModel, state: CartContract.State, zIndex: Int
                 .fillMaxSize()
                 .zIndex(zIndex)
                 .onClick { vm.trySend(CartContract.Inputs.HideCart) }
-                .backgroundColor(MaterialTheme.colors.primary.toRgb().copy(alpha = 40))
                 .opacity(if (opened) 1f else 0f)
                 .transition(CSSTransition("opacity", 0.6.s, TransitionTimingFunction.Ease))
         )
@@ -172,7 +175,7 @@ fun BoxScope.CartPanel(vm: CartViewModel, state: CartContract.State, zIndex: Int
 
 @Composable
 private fun BoxScope.CloseButton(onCloseCLick: () -> Unit) {
-    IconButton(
+    AppIconButton(
         onClick = { onCloseCLick() },
         modifier = Modifier
             .align(Alignment.TopEnd)
@@ -181,7 +184,6 @@ private fun BoxScope.CloseButton(onCloseCLick: () -> Unit) {
     ) {
         MdiClose(
             style = IconStyle.OUTLINED,
-            modifier = Modifier.color(MaterialTheme.colors.onSurface)
         )
     }
 }
@@ -202,14 +204,11 @@ private fun EmptyBasketSection(
             style = IconStyle.OUTLINED,
             modifier = Modifier
                 .fontSize(64.px)
-                .color(MaterialTheme.colors.onSurface.toRgb().copy(alpha = 150))
         )
         Spacer(0.5.em)
         SpanText(
             text = getString(Strings.YourCartIsEmpty),
-            modifier = Modifier
-                .roleStyle(MaterialTheme.typography.headlineLarge)
-                .color(MaterialTheme.colors.onSurface)
+            modifier = HeadlineStyle.toModifier(H1Variant)
         )
         Spacer(1.em)
         AppFilledButton(
@@ -220,9 +219,7 @@ private fun EmptyBasketSection(
         Spacer(2.em)
         SpanText(
             text = "${getString(Strings.AlreadyHaveAnAccount)}?",
-            modifier = Modifier
-                .roleStyle(MaterialTheme.typography.titleLarge)
-                .color(MaterialTheme.colors.onSurface)
+            modifier = HeadlineStyle.toModifier(H1Variant)
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -234,8 +231,7 @@ private fun EmptyBasketSection(
                 SpanText(text = getString(Strings.LogIn))
             }
             SpanText(
-                text = "${getString(Strings.ToCheckOutFaster)}.",
-                modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
+                text = "${getString(Strings.ToCheckOutFaster)}."
             )
         }
         FlexSpacer()
@@ -244,21 +240,18 @@ private fun EmptyBasketSection(
 }
 
 @Composable
-private fun BottomSection(vm: CartViewModel, state: CartContract.State) {
-    Divider(modifier = Modifier.color(MaterialTheme.colors.surface))
+fun BottomSection(vm: CartViewModel, state: CartContract.State) {
+    HorizontalDivider()
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(1.5.em)
             .margin(bottom = 1.5.em)
-            .backgroundColor(MaterialTheme.colors.surface.toRgb().copy(alpha = 50))
             .transition(CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease))
     ) {
         SpanText(
             text = getString(Strings.TopProductsOfThisWeek).uppercase(),
-            modifier = Modifier
-                .roleStyle(MaterialTheme.typography.titleMedium)
-                .color(MaterialTheme.colors.onSurface)
+            modifier = HeadlineStyle.toModifier(H2Variant)
         )
         Spacer()
         Row(
@@ -325,10 +318,7 @@ private fun TopProductItem(
         Spacer()
         SpanText(
             text = name,
-            modifier = Modifier
-                .roleStyle(MaterialTheme.typography.bodySmall)
-//                .whiteSpace(WhiteSpace.NoWrap)
-//                .textOverflow(TextOverflow.Ellipsis)
+            modifier = SubtitleStyle.toModifier()
                 .overflow(Overflow.Hidden)
         )
         Spacer(0.5.em)
@@ -352,7 +342,6 @@ private fun BasketContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .backgroundColor(MaterialTheme.colors.surface.toRgb().copy(alpha = 50))
                 .padding(
                     top = 2.em,
                     bottom = 1.5.em,
@@ -362,17 +351,13 @@ private fun BasketContent(
         ) {
             SpanText(
                 text = getString(Strings.YourCart).uppercase(),
-                modifier = Modifier
-                    .roleStyle(MaterialTheme.typography.headlineLarge)
-                    .fontWeight(FontWeight.SemiBold)
+                modifier = HeadlineStyle.toModifier(H1Variant)
             )
             SpendMore(
                 showSpendMore = state.showSpendMore,
                 currency = state.currency,
                 spendMoreValue = state.spendMoreValue,
                 spendMoreKey = state.spendMoreKey,
-                bgColor = MaterialTheme.colors.secondaryContainer,
-                borderColor = MaterialTheme.colors.secondary,
             )
         }
         Column(
@@ -400,7 +385,7 @@ private fun BasketContent(
                 )
             }
         }
-        Divider(modifier = Modifier.background(MaterialTheme.colors.surface))
+        HorizontalDivider()
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -409,13 +394,11 @@ private fun BasketContent(
                     bottom = 2.em,
                     leftRight = 1.5.em
                 )
-                .backgroundColor(MaterialTheme.colors.surface.toRgb().copy(alpha = 50))
         ) {
             Row(
-                modifier = Modifier
+                modifier = HeadlineStyle.toModifier(H1Variant)
                     .fillMaxWidth()
                     .gap(1.em)
-                    .roleStyle(MaterialTheme.typography.titleLarge)
             ) {
                 SpanText(
                     text = getString(Strings.Subtotal).uppercase(),
@@ -425,36 +408,33 @@ private fun BasketContent(
             }
             Row(
                 verticalAlignment = Alignment.Top,
-                modifier = Modifier
+                modifier = HeadlineStyle.toModifier(H1Variant)
                     .fillMaxWidth()
                     .gap(1.em)
-                    .roleStyle(MaterialTheme.typography.titleLarge)
             ) {
                 SpanText(
                     text = getString(Strings.TaxesAndShippingCalculatedAtCheckout),
-                    modifier = Modifier.roleStyle(MaterialTheme.typography.bodySmall)
+                    modifier = SubtitleStyle.toModifier()
                 )
                 FlexSpacer()
                 state.saved?.let {
                     SpanText(
                         text = "${getString(Strings.Saved)}: ${state.currency.symbol}${state.saved}",
-                        modifier = Modifier
-                            .roleStyle(MaterialTheme.typography.titleLarge)
-                            .color(MaterialTheme.colors.error)
+                        modifier = HeadlineStyle.toModifier(H1Variant)
+                            .color(Colors.Red)
                     )
                 }
             }
             Spacer()
             AppFilledButton(
                 onClick = { vm.trySend(CartContract.Inputs.OnGoToCheckoutClicked) },
-                cornerRadius = 24.px,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.px)
             ) {
                 SpanText(
                     text = getString(Strings.CheckOut).uppercase(),
-                    modifier = Modifier.roleStyle(MaterialTheme.typography.titleMedium)
+                    modifier = HeadlineStyle.toModifier(H3Variant)
                 )
             }
         }
@@ -490,18 +470,17 @@ private fun CartItem(
         ) {
             SpanText(
                 text = item.vendor,
-                modifier = Modifier.roleStyle(MaterialTheme.typography.bodySmall)
+                modifier = SubtitleStyle.toModifier()
             )
             SpanText(
                 text = item.name.uppercase(),
                 modifier = Modifier
-                    .roleStyle(MaterialTheme.typography.bodyMedium)
                     .fontWeight(FontWeight.SemiBold)
             )
             item.attrs.forEach { attr ->
                 SpanText(
                     text = "${attr.key}: ${attr.value}",
-                    modifier = Modifier.roleStyle(MaterialTheme.typography.bodySmall)
+                    modifier = SubtitleStyle.toModifier()
                 )
             }
             Row(
@@ -515,14 +494,13 @@ private fun CartItem(
                     onIncrementClick = onIncrementClick,
                     onDecrementClick = onDecrementClick,
                 )
-                IconButton(
+                AppIconButton(
                     onClick = { onRemoveClick() },
                     modifier = Modifier
                         .onEnterKeyDown(onRemoveClick)
                 ) {
                     MdiDelete(
                         style = IconStyle.OUTLINED,
-                        modifier = Modifier.color(MaterialTheme.colors.onSurface)
                     )
                 }
             }
@@ -532,8 +510,6 @@ private fun CartItem(
             salePrice = item.salePrice?.toString(),
             currency = currency,
             containerModifier = Modifier.whiteSpace(WhiteSpace.NoWrap),
-            regularModifier = Modifier.fontSize(1.em),
-            saleModifier = Modifier.fontSize(1.em),
             initialIsOnSale = item.salePrice != null
         )
     }
@@ -548,7 +524,6 @@ private fun IncDecButton(
     var containerHovered by remember { mutableStateOf(false) }
     var minusHovered = containerHovered
     var plusHovered = containerHovered
-    val borderColor = if (containerHovered) MaterialTheme.colors.onSurface else Colors.Transparent
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -556,11 +531,9 @@ private fun IncDecButton(
         modifier = Modifier
             .padding(topBottom = 0.35.em, leftRight = 1.em)
             .gap(0.75.em)
-            .backgroundColor(MaterialTheme.colors.surfaceContainerHighest)
-            .color(MaterialTheme.colors.onSurface)
             .border(
                 width = 2.px,
-                color = borderColor,
+                color = ColorMode.current.toPalette().border,
                 style = LineStyle.Solid
             )
             .onMouseOver { containerHovered = true }
@@ -586,8 +559,6 @@ private fun IncDecButton(
         )
         SpanText(
             text = quantity.toString(),
-            modifier = Modifier
-                .roleStyle(MaterialTheme.typography.bodyMedium)
         )
         MdiAdd(
             style = IconStyle.OUTLINED,

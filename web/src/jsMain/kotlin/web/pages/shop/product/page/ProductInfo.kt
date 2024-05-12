@@ -58,7 +58,12 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiIron
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiLocalShipping
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiWash
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiWavingHand
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.border
+import com.varabyte.kobweb.silk.theme.colors.palette.color
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.getString
 import core.models.Currency
@@ -73,13 +78,11 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
-import theme.roleStyle
-import theme.sp
+import web.H1Variant
+import web.HeadlineStyle
 import web.components.widgets.AppTooltip
 import web.pages.shop.home.gridModifier
 import web.pages.shop.product.catalogue.ProductSizeItem
-import web.util.cornerRadius
 import web.util.descriptionString
 import web.util.onEnterKeyDown
 import web.util.titleString
@@ -131,7 +134,7 @@ fun SizesSection(
                 SpanText(
                     text = getString(Strings.Size).uppercase(),
                     modifier = Modifier
-                        .color(MaterialTheme.colors.onBackground)
+                        .color(ColorMode.current.toPalette().color)
                         .fontWeight(FontWeight.SemiBold)
                 )
                 var hovered by remember { mutableStateOf(false) }
@@ -178,7 +181,7 @@ fun ColorsSection(vm: ProductPageViewModel, state: ProductPageContract.State) {
             SpanText(
                 text = getString(Strings.Color).uppercase(),
                 modifier = Modifier
-                    .color(MaterialTheme.colors.onBackground)
+                    .color(ColorMode.current.toPalette().color)
                     .fontWeight(FontWeight.SemiBold)
             )
             Row(
@@ -224,7 +227,6 @@ private fun ColorMiniatureItem(
             .onFocusIn { hovered = true }
             .onFocusOut { hovered = false }
             .cursor(if (!selected) Cursor.Pointer else Cursor.Auto)
-            .borderRadius(cornerRadius)
             .tabIndex(0)
             .onClick { if (!selected) onClick() }
             .onEnterKeyDown { if (!selected) onClick() }
@@ -233,7 +235,7 @@ private fun ColorMiniatureItem(
             .draggable(false)
             .border(
                 width = 4.px,
-                color = if (selected) MaterialTheme.colors.primary else Colors.Transparent,
+                color = ColorMode.current.toPalette().border,
                 style = LineStyle.Solid
             )
             .scale(if (hovered) 1.02f else 1f)
@@ -268,7 +270,7 @@ fun Traits(state: ProductPageContract.State) {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .gap(1.em)
-                    .color(MaterialTheme.colors.onSurface)
+                    .color(ColorMode.current.toPalette().color)
                     .onMouseOver { hovered = true }
                     .onMouseLeave { hovered = false }
                     .onFocusIn { hovered = true }
@@ -281,7 +283,7 @@ fun Traits(state: ProductPageContract.State) {
                 )
                 SpanText(
                     text = trait.titleString(),
-                    modifier = Modifier.fontSize(20.sp)
+                    modifier = Modifier.fontSize(20.px)
                 )
                 MdiInfo(
                     style = IconStyle.OUTLINED,
@@ -338,7 +340,6 @@ fun SpendMore(
     spendMoreValue: String,
     spendMoreKey: String,
     bgColor: Color = Colors.Transparent,
-    borderColor: Color = MaterialTheme.colors.secondaryContainer,
 ) {
     if (showSpendMore) {
         Row(
@@ -349,12 +350,11 @@ fun SpendMore(
                 .fillMaxWidth()
                 .border(
                     width = 2.px,
-                    color = borderColor,
+                    color = ColorMode.current.toPalette().border,
                     style = LineStyle.Solid
                 )
                 .backgroundColor(bgColor)
-                .borderRadius(cornerRadius)
-                .color(MaterialTheme.colors.onSurface)
+                .color(ColorMode.current.toPalette().color)
                 .padding(0.5.em)
         ) {
             MdiLocalShipping(
@@ -364,7 +364,7 @@ fun SpendMore(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .gap(0.25.em)
-                    .fontSize(16.sp)
+                    .fontSize(16.px)
             ) {
                 SpanText(
                     text = getString(Strings.Spend),
@@ -391,9 +391,8 @@ fun SpendMore(
 private fun Name(state: ProductPageContract.State) {
     SpanText(
         text = state.product.name.uppercase(),
-        modifier = Modifier
-            .roleStyle(MaterialTheme.typography.displayMedium)
-            .color(MaterialTheme.colors.onBackground)
+        modifier = HeadlineStyle.toModifier(H1Variant)
+            .color(ColorMode.current.toPalette().color)
             .fontWeight(FontWeight.Bold)
     )
 }
@@ -404,8 +403,7 @@ private fun Vendor(state: ProductPageContract.State) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .gap(0.25.em)
-            .roleStyle(MaterialTheme.typography.bodyLarge)
-            .color(MaterialTheme.colors.onBackground)
+            .color(ColorMode.current.toPalette().color)
     ) {
         SpanText(
             text = "${getString(Strings.Vendor).uppercase()}:",
@@ -427,10 +425,6 @@ private fun Price(
         regularPrice = productPageState.product.pricing.regularPrice.toString(),
         salePrice = productPageState.product.pricing.salePrice?.toString(),
         currency = cartState.currency,
-        regularModifier = Modifier
-            .roleStyle(MaterialTheme.typography.headlineMedium),
-        saleModifier = Modifier
-            .roleStyle(MaterialTheme.typography.headlineMedium),
         containerModifier = Modifier
             .padding(bottom = if (productPageState.product.pricing.salePrice != null) 0.25.em else 0.em)
     )
@@ -446,16 +440,12 @@ private fun Stock(state: ProductPageContract.State) {
         MdiCheck(
             modifier = Modifier
                 .padding(4.px)
-                .color(MaterialTheme.colors.onSecondaryContainer)
-                .backgroundColor(MaterialTheme.colors.secondaryContainer)
                 .borderRadius(50.percent)
                 .fontSize(16.px)
         )
         SpanText(
             text = "${state.stockStatusString}!",
             modifier = Modifier
-                .color(MaterialTheme.colors.primary)
-                .roleStyle(MaterialTheme.typography.bodyLarge)
                 .fontWeight(FontWeight.Bold)
         )
     }

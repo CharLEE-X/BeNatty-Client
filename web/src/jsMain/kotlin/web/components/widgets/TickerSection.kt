@@ -3,7 +3,6 @@ package web.components.widgets
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
-import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.WhiteSpace
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -13,7 +12,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontSize
-import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.padding
@@ -23,15 +21,19 @@ import com.varabyte.kobweb.compose.ui.modifiers.whiteSpace
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiChevronLeft
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiChevronRight
 import com.varabyte.kobweb.silk.components.style.common.SmoothColorTransitionDurationVar
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.background
+import com.varabyte.kobweb.silk.theme.colors.palette.color
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.getString
 import feature.shop.navbar.NavbarContract
 import feature.shop.navbar.NavbarViewModel
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
-import theme.MaterialTheme
-import theme.roleStyle
+import web.BodyStyle
 import web.util.onEnterKeyDown
 
 val tickerHeight = 40.px
@@ -45,17 +47,15 @@ fun PromoSection(
         modifier = Modifier
             .fillMaxWidth()
             .padding(topBottom = 0.5.em)
-            .backgroundColor(MaterialTheme.colors.onBackground)
-            .color(MaterialTheme.colors.background)
+            .backgroundColor(ColorMode.current.toPalette().background)
+            .color(ColorMode.current.opposite.toPalette().color)
             .transition(CSSTransition("background-color", SmoothColorTransitionDurationVar.value()))
     ) {
         Box(
-            modifier = Modifier
+            modifier = BodyStyle.toModifier()
                 .align(Alignment.Center)
                 .fillMaxWidth()
                 .maxWidth(500.px)
-                .roleStyle(MaterialTheme.typography.bodySmall)
-                .fontWeight(FontWeight.Light)
         ) {
             MdiChevronLeft(
                 modifier = Modifier

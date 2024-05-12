@@ -9,7 +9,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
-import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
@@ -19,7 +18,11 @@ import com.varabyte.kobweb.compose.ui.modifiers.objectFit
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.components.graphics.Image
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.border
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.getString
 import core.models.Currency
@@ -29,8 +32,8 @@ import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
-import theme.MaterialTheme
-import theme.roleStyle
+import web.H3Variant
+import web.HeadlineStyle
 import web.components.widgets.FlexSpacer
 import web.components.widgets.Spacer
 
@@ -39,7 +42,6 @@ fun RightSide(vm: CheckoutViewModel, state: CheckoutContract.State) {
     Column(
         modifier = Modifier
             .width(50.percent)
-            .backgroundColor(MaterialTheme.colors.surface.toRgb().copy(alpha = 50))
             .padding(2.em)
             .gap(0.5.em)
     ) {
@@ -60,7 +62,6 @@ fun RightSide(vm: CheckoutViewModel, state: CheckoutContract.State) {
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .roleStyle(MaterialTheme.typography.bodyMedium)
         ) {
             SpanText(text = getString(Strings.Subtotal))
             SpanText(
@@ -72,7 +73,6 @@ fun RightSide(vm: CheckoutViewModel, state: CheckoutContract.State) {
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .roleStyle(MaterialTheme.typography.bodyMedium)
         ) {
             SpanText(text = getString(Strings.Shipping))
             SpanText(
@@ -86,8 +86,7 @@ fun RightSide(vm: CheckoutViewModel, state: CheckoutContract.State) {
         ) {
             SpanText(
                 text = getString(Strings.Total),
-                modifier = Modifier
-                    .roleStyle(MaterialTheme.typography.headlineMedium)
+                modifier = HeadlineStyle.toModifier(H3Variant)
                     .fontWeight(FontWeight.SemiBold)
             )
             Row(
@@ -96,12 +95,10 @@ fun RightSide(vm: CheckoutViewModel, state: CheckoutContract.State) {
             ) {
                 SpanText(
                     text = state.currency.code,
-                    modifier = Modifier.roleStyle(MaterialTheme.typography.titleMedium)
                 )
                 SpanText(
                     text = "${state.currency.symbol}${state.totalPrice}",
-                    modifier = Modifier
-                        .roleStyle(MaterialTheme.typography.headlineMedium)
+                    modifier = HeadlineStyle.toModifier(H3Variant)
                         .fontWeight(FontWeight.SemiBold)
                 )
             }
@@ -128,7 +125,7 @@ private fun CartItem(
                 .objectFit(ObjectFit.Cover)
                 .border(
                     width = 1.px,
-                    color = MaterialTheme.colors.surface,
+                    color = ColorMode.current.toPalette().border,
                     style = LineStyle.Solid
                 )
         )
@@ -140,13 +137,11 @@ private fun CartItem(
             SpanText(
                 text = item.name.uppercase(),
                 modifier = Modifier
-                    .roleStyle(MaterialTheme.typography.bodyMedium)
                     .fontWeight(FontWeight.SemiBold)
             )
             item.attrs.forEach { attr ->
                 SpanText(
                     text = "${attr.key}: ${attr.value}",
-                    modifier = Modifier.roleStyle(MaterialTheme.typography.bodySmall)
                 )
             }
         }

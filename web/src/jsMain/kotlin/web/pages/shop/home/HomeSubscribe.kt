@@ -12,10 +12,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.graphics.Colors
-import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
-import com.varabyte.kobweb.compose.ui.modifiers.border
-import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
@@ -38,16 +34,15 @@ import com.varabyte.kobweb.silk.components.forms.InputVars
 import com.varabyte.kobweb.silk.components.icons.mdi.IconStyle
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEmail
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiSend
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.attributes.AutoComplete
 import org.jetbrains.compose.web.attributes.InputType
-import org.jetbrains.compose.web.css.CSSColorValue
-import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
-import theme.MaterialTheme
-import theme.roleStyle
+import web.H3Variant
+import web.HeadlineStyle
 import web.components.widgets.AppTextButton
 import web.components.widgets.ShimmerText
 import web.util.onEnterKeyDown
@@ -81,14 +76,12 @@ fun HomeSubscribe(
         ) {
             SpanText(
                 text = subscribeText.uppercase(),
-                modifier = Modifier
-                    .roleStyle(MaterialTheme.typography.headlineLarge)
+                modifier = HeadlineStyle.toModifier(H3Variant)
                     .fontWeight(FontWeight.Bold)
             )
             SpanText(
                 text = subscribeDescText,
                 modifier = Modifier
-                    .roleStyle(MaterialTheme.typography.titleMedium)
                     .margin(leftRight = 3.em)
             )
             EmailTextField(
@@ -106,7 +99,6 @@ fun HomeSubscribe(
             ) {
                 SpanText(
                     text = byAgreeingText,
-                    modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
                 )
                 if (!isLoading) {
                     AppTextButton(
@@ -145,19 +137,9 @@ private fun EmailTextField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     onEnterPress: () -> Unit,
-    containerColor: CSSColorValue = MaterialTheme.colors.surfaceContainerHighest,
-    unFocusedOutlineColor: CSSColorValue = Colors.Transparent,
-    focusedOutlineColor: CSSColorValue = MaterialTheme.colors.inverseSurface,
-    hoverOutlineColor: CSSColorValue = focusedOutlineColor,
 ) {
     var focused by remember { mutableStateOf(false) }
     var hovered by remember { mutableStateOf(false) }
-
-    val borderColor = when {
-        hovered -> hoverOutlineColor
-        else -> unFocusedOutlineColor
-    }
-    val borderWidth = if (focused || hovered) 2.px else 1.px
 
     Box(
         modifier = modifier
@@ -168,7 +150,6 @@ private fun EmailTextField(
             placeholder = placeholder,
             type = InputType.Email,
             autoComplete = AutoComplete.email,
-            focusBorderColor = hoverOutlineColor,
             modifier = Modifier
                 .fillMaxSize()
                 .align(Alignment.Center)
@@ -176,14 +157,6 @@ private fun EmailTextField(
                     topBottom = 1.5.em,
                     leftRight = 4.em,
                 )
-                .backgroundColor(containerColor)
-                .color(MaterialTheme.colors.onSurface)
-                .border(
-                    width = borderWidth,
-                    color = borderColor,
-                    style = LineStyle.Solid,
-                )
-//                .fontSize(InputVars.FontSize)
                 .onKeyDown { if (it.key == "Enter") onEnterPress() }
                 .onMouseEnter { hovered = true }
                 .onMouseLeave { hovered = false }
@@ -212,7 +185,6 @@ private fun EmailTextField(
                 .align(Alignment.CenterEnd)
                 .onMouseEnter { sendHovered = true }
                 .onMouseLeave { sendHovered = false }
-                .color(if (sendHovered) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface)
                 .transition(
                     CSSTransition.group(
                         listOf("color"),

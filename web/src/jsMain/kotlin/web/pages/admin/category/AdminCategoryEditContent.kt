@@ -10,7 +10,6 @@ import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
@@ -22,21 +21,18 @@ import kotlinx.dom.clear
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
 import org.w3c.files.get
-import theme.MaterialTheme
-import theme.roleStyle
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.OneThirdLayout
-import web.components.widgets.AppFilledButton
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.AppTooltip
 import web.components.widgets.CardSection
 import web.components.widgets.CreatorSection
+import web.components.widgets.DeleteButton
 import web.components.widgets.HasChangesWidget
 import web.components.widgets.MediaSlot
 import web.components.widgets.SwitchSection
 import web.components.widgets.TakeActionDialog
-import web.compose.material3.component.TextFieldType
 import web.util.convertImageToBase64
 
 @Composable
@@ -97,15 +93,7 @@ fun AdminCategoryEditContent(
             title = state.original.name,
             subtitle = state.original.id,
             hasBackButton = true,
-            actions = {
-                AppFilledButton(
-                    onClick = { deleteDialogOpen = !deleteDialogOpen },
-                    leadingIcon = { MdiDelete() },
-                    containerColor = MaterialTheme.colors.error,
-                ) {
-                    SpanText(text = getString(Strings.Delete))
-                }
-            },
+            actions = { DeleteButton { deleteDialogOpen = !deleteDialogOpen } },
             onGoBack = adminRoutes.goBack,
             content = {
                 CardSection(title = null) {
@@ -223,7 +211,6 @@ fun UpdatedAt(state: AdminCategoryEditContract.State) {
     if (state.current.updatedAt.isNotEmpty()) {
         SpanText(
             text = "${getString(Strings.LastUpdatedAt)}: ${state.current.updatedAt}",
-            modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
         )
     }
 }
@@ -233,7 +220,6 @@ fun CreatedAt(state: AdminCategoryEditContract.State) {
     if (state.current.createdAt.isNotEmpty()) {
         SpanText(
             text = "${getString(Strings.CreatedAt)}: ${state.current.createdAt}",
-            modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
         )
     }
 }
@@ -259,7 +245,7 @@ private fun ShippingPreset(vm: AdminCategoryEditViewModel, state: AdminCategoryE
         leadingIcon = null,
         shake = state.shakeWeight,
         required = state.current.shippingPreset?.isPhysicalProduct == true,
-        type = TextFieldType.NUMBER,
+//        type = InputType.Number,
         suffixText = getString(Strings.Kg),
         modifier = Modifier.fillMaxWidth(),
     )
@@ -271,7 +257,7 @@ private fun ShippingPreset(vm: AdminCategoryEditViewModel, state: AdminCategoryE
         leadingIcon = null,
         shake = state.shakeLength,
         required = state.current.shippingPreset?.isPhysicalProduct ?: false,
-        type = TextFieldType.NUMBER,
+//        type = TextFieldType.NUMBER,
         suffixText = getString(Strings.Cm),
         modifier = Modifier.fillMaxWidth(),
     )
@@ -283,7 +269,7 @@ private fun ShippingPreset(vm: AdminCategoryEditViewModel, state: AdminCategoryE
         leadingIcon = null,
         shake = state.shakeWidth,
         required = state.current.shippingPreset?.isPhysicalProduct ?: false,
-        type = TextFieldType.NUMBER,
+//        type = TextFieldType.NUMBER,
         suffixText = getString(Strings.Cm),
         modifier = Modifier.fillMaxWidth(),
     )
@@ -295,7 +281,7 @@ private fun ShippingPreset(vm: AdminCategoryEditViewModel, state: AdminCategoryE
         leadingIcon = null,
         shake = state.shakeHeight,
         required = state.current.shippingPreset?.isPhysicalProduct ?: false,
-        type = TextFieldType.NUMBER,
+//        type = TextFieldType.NUMBER,
         suffixText = getString(Strings.Cm),
         modifier = Modifier.fillMaxWidth(),
     )

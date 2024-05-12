@@ -18,7 +18,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.attrsModifier
-import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.border
 import com.varabyte.kobweb.compose.ui.modifiers.color
@@ -52,6 +51,10 @@ import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.IconStyle
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiZoomIn
 import com.varabyte.kobweb.silk.components.style.toModifier
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.border
+import com.varabyte.kobweb.silk.theme.colors.palette.color
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import data.AdminProductGetByIdQuery
 import feature.product.page.ProductPageContract
 import feature.product.page.ProductPageViewModel
@@ -61,7 +64,6 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import org.w3c.dom.HTMLElement
-import theme.MaterialTheme
 import web.components.widgets.themeScrollbarStyle
 import web.pages.shop.home.gridModifier
 import web.util.onEnterKeyDown
@@ -162,7 +164,7 @@ private fun ProductDetailMiniatureItem(
             .translateX(if (selected) 4.px else 0.px)
             .border(
                 width = 4.px,
-                color = if (selected) MaterialTheme.colors.primary else Colors.Transparent,
+                color = ColorMode.current.toPalette().border,
                 style = LineStyle.Solid
             )
             .transition(
@@ -203,11 +205,6 @@ private fun MainImage(
             .overflow(Overflow.Hidden)
             .tabIndex(0)
             .onEnterKeyDown(onClick)
-            .border(
-                width = 1.px,
-                color = MaterialTheme.colors.surface,
-                style = LineStyle.Solid
-            )
     ) {
         val imageModifier = Modifier
             .fillMaxWidth()
@@ -226,7 +223,7 @@ private fun MainImage(
                     .align(Alignment.TopEnd)
                     .padding(24.px)
                     .scale(1.5f)
-                    .color(MaterialTheme.colors.onSurface)
+                    .color(ColorMode.current.toPalette().color)
                     .opacity(if (hovered) 1f else 0.6f)
                     .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
             )

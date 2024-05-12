@@ -9,11 +9,12 @@ import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiArrowDropDown
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
-import theme.MaterialTheme
-import theme.roleStyle
+import web.H1Variant
+import web.HeadlineStyle
 
 @Composable
 fun CurrencyDropdown(
@@ -38,7 +39,7 @@ fun CurrencyDropdown(
         )
         SpanText(
             text = countryText,
-            modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
+            modifier = HeadlineStyle.toModifier(H1Variant)
         )
         MdiArrowDropDown()
     }
@@ -58,7 +59,7 @@ fun SimpleDropdown(
     ) {
         SpanText(
             text = text,
-            modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
+            modifier = HeadlineStyle.toModifier(H1Variant)
         )
         MdiArrowDropDown()
     }

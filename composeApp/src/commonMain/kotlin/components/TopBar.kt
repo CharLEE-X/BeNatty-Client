@@ -71,7 +71,7 @@ private fun HamburgerMenu(
     Icon(
         imageVector = Icons.Default.Menu,
         contentDescription = contentDescription,
-        tint = MaterialTheme.colors.onSurface,
+        tint = ColorMode.current.toPalette().color,
         modifier = modifier
             .size(32.dp)
             .clickable(

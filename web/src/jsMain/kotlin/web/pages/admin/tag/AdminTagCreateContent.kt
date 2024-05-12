@@ -80,9 +80,7 @@ fun AdminTagCreateContent(
                         .onFocusIn { nameFocused = true }
                         .onFocusOut { nameFocused = false }
                 )
-                CreateButton(
-                    onClick = { vm.trySend(AdminTagCreateContract.Inputs.OnCreateClick) },
-                )
+                CreateButton { vm.trySend(AdminTagCreateContract.Inputs.OnCreateClick) }
             }
         }
     }

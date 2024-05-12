@@ -1,140 +1,75 @@
 package web.components.widgets
 
 import androidx.compose.runtime.Composable
-import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
-import com.varabyte.kobweb.compose.css.CSSPercentageNumericValue
-import com.varabyte.kobweb.compose.css.Height
-import com.varabyte.kobweb.compose.css.Width
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.varabyte.kobweb.compose.css.CSSTransition
+import com.varabyte.kobweb.compose.css.Cursor
+import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.graphics.Color
+import com.varabyte.kobweb.compose.ui.modifiers.color
+import com.varabyte.kobweb.compose.ui.modifiers.cursor
+import com.varabyte.kobweb.compose.ui.modifiers.disabled
+import com.varabyte.kobweb.compose.ui.modifiers.fontSize
+import com.varabyte.kobweb.compose.ui.modifiers.margin
+import com.varabyte.kobweb.compose.ui.modifiers.onClick
+import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
+import com.varabyte.kobweb.compose.ui.modifiers.onFocusOut
+import com.varabyte.kobweb.compose.ui.modifiers.onMouseOut
+import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
+import com.varabyte.kobweb.compose.ui.modifiers.opacity
+import com.varabyte.kobweb.compose.ui.modifiers.scale
 import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
-import org.jetbrains.compose.web.css.CSSColorValue
-import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.dom.ContentBuilder
-import web.compose.material3.common.MdElement
-import web.compose.material3.component.FilledIconButton
-import web.compose.material3.component.FilledTonalIconButton
-import web.compose.material3.component.IconButton
-import web.compose.material3.component.OutlinedIconButton
+import com.varabyte.kobweb.compose.ui.modifiers.transition
+import com.varabyte.kobweb.compose.ui.thenIf
+import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.color
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
+import org.jetbrains.compose.web.css.em
+import org.jetbrains.compose.web.css.s
+import org.jetbrains.compose.web.dom.Span
 import web.util.onEnterKeyDown
 
 @Composable
 fun AppIconButton(
-    toggle: Boolean? = null,
-    selected: Boolean? = null,
-    disabled: Boolean? = null,
-    onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
-    iconColor: CSSColorValue? = null,
-    stateLayerShape: String? = null,
-    iconSize: CSSColorValue? = null,
-    content: ContentBuilder<MdElement>? = null
+    enabled: Boolean = true,
+    onClick: () -> Unit = {},
+    iconColor: Color = ColorMode.current.toPalette().color,
+    icon: @Composable () -> Unit,
 ) {
-    IconButton(
-        toggle = toggle,
-        selected = selected,
-        disabled = disabled,
-        onClick = { onClick() },
-        iconColor = iconColor,
-        stateLayerShape = stateLayerShape ?: "12px",
-        iconSize = iconSize,
-        content = content,
-        modifier = modifier
-            .tabIndex(0)
-            .onEnterKeyDown(onClick)
-    )
-}
+    var hovered by remember { mutableStateOf(false) }
 
-@Composable
-fun AppFilledIconButton(
-    toggle: Boolean? = null,
-    selected: Boolean? = null,
-    disabled: Boolean? = null,
-    onClick: () -> Unit = {},
-    modifier: Modifier = Modifier,
-    selectedContainerColor: CSSColorValue? = null,
-    buttonContainerShape: CSSLengthOrPercentageNumericValue? = null,
-    buttonContainerWidth: Width? = null,
-    buttonContainerHeight: Height? = null,
-    iconSize: CSSPercentageNumericValue? = null,
-    content: ContentBuilder<MdElement>? = null
-) {
-    FilledIconButton(
-        toggle = toggle,
-        selected = selected,
-        disabled = disabled,
-        onClick = { onClick() },
-        selectedContainerColor = selectedContainerColor,
-        buttonContainerShape = buttonContainerShape ?: 12.px,
-        buttonContainerWidth = buttonContainerWidth,
-        buttonContainerHeight = buttonContainerHeight,
-        iconSize = iconSize,
-        content = content,
-        modifier = modifier
-            .tabIndex(0)
-            .onEnterKeyDown(onClick)
-    )
-}
-
-@Composable
-fun AppOutlinedIconButton(
-    modifier: Modifier = Modifier,
-    toggle: Boolean? = null,
-    selected: Boolean? = null,
-    disabled: Boolean? = null,
-    onClick: () -> Unit = {},
-    outlineColor: CSSColorValue? = null,
-    outlineWidth: CSSLengthOrPercentageNumericValue? = null,
-    containerShape: CSSLengthOrPercentageNumericValue? = null,
-    containerWidth: Width? = null,
-    containerHeight: Height? = null,
-    iconSize: CSSLengthOrPercentageNumericValue? = null,
-    content: ContentBuilder<MdElement>? = null
-) {
-    OutlinedIconButton(
-        toggle = toggle,
-        selected = selected,
-        disabled = disabled,
-        onClick = { onClick() },
-        outlineColor = outlineColor,
-        outlineWidth = outlineWidth,
-        containerShape = containerShape ?: 12.px,
-        containerWidth = containerWidth,
-        containerHeight = containerHeight,
-        iconSize = iconSize,
-        content = content,
-        modifier = modifier
-            .tabIndex(0)
-            .onEnterKeyDown(onClick)
-    )
-}
-
-@Composable
-fun AppFilledTonalIconButton(
-    modifier: Modifier = Modifier,
-    toggle: Boolean? = null,
-    selected: Boolean? = null,
-    disabled: Boolean? = null,
-    onClick: () -> Unit = {},
-    containerColor: CSSColorValue? = null,
-    containerShape: CSSLengthOrPercentageNumericValue? = null,
-    containerWidth: Width? = null,
-    containerHeight: Height? = null,
-    iconSize: CSSLengthOrPercentageNumericValue? = null,
-    content: ContentBuilder<MdElement>? = null
-) {
-    FilledTonalIconButton(
-        toggle = toggle,
-        selected = selected,
-        disabled = disabled,
-        onClick = { onClick() },
-        containerColor = containerColor,
-        containerShape = containerShape ?: 12.px,
-        containerWidth = containerWidth,
-        containerHeight = containerHeight,
-        iconSize = iconSize,
-        content = content,
-        modifier = modifier
-            .tabIndex(0)
-            .onEnterKeyDown(onClick)
-    )
+    Span(
+        modifier
+            .color(iconColor)
+            .fontSize(1.5.em)
+            .margin(0.25.em)
+            .disabled(!enabled)
+            .thenIf(enabled, Modifier
+                .tabIndex(0)
+                .onClick { onClick() }
+                .onEnterKeyDown { onClick() }
+                .onMouseOver { hovered = true }
+                .onMouseOut { hovered = false }
+                .onFocusIn { hovered = true }
+                .onFocusOut { hovered = false }
+                .tabIndex(0)
+                .cursor(Cursor.Pointer)
+                .opacity(if (hovered) 1f else 0.6f)
+                .scale(if (hovered) 1.1f else 1f)
+                .transition(
+                    CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                    CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
+                )
+            )
+            .thenIf(!enabled, Modifier.opacity(0.6f))
+            .toAttrs()
+    ) {
+        icon()
+    }
 }

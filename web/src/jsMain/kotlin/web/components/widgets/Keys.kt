@@ -14,8 +14,6 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiKeyboardTab
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
-import theme.roleStyle
 
 @Composable
 fun TrailingIconGoToNextOrSubmit(show: Boolean) {
@@ -31,12 +29,10 @@ fun TrailingIconGoToNextOrSubmit(show: Boolean) {
         MdiKeyboardTab()
         SpanText(
             text = "next or",
-            modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
         )
         MdiKeyboardReturn()
         SpanText(
             text = "submit",
-            modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
         )
     }
 }

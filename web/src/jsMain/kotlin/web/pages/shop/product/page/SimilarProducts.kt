@@ -49,6 +49,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.IconStyle
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiSell
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
@@ -63,8 +64,8 @@ import org.jetbrains.compose.web.css.deg
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
-import theme.roleStyle
+import web.H1Variant
+import web.HeadlineStyle
 import web.components.widgets.Spacer
 import web.util.onEnterKeyDown
 
@@ -89,12 +90,11 @@ fun SimilarProducts(
                 MdiSell(
                     style = IconStyle.OUTLINED,
                     modifier = Modifier
-                        .color(MaterialTheme.colors.onSurface)
                         .rotateY(180.deg)
                 )
                 SpanText(
                     text = getString(Strings.SimilarProducts),
-                    modifier = Modifier.roleStyle(MaterialTheme.typography.titleLarge)
+                    modifier = HeadlineStyle.toModifier(H1Variant)
                 )
             }
             productPageState.similarProducts.forEach { product ->
@@ -164,7 +164,6 @@ private fun SimilarProductItem(
         ) {
             SpanText(
                 text = name,
-                modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
             )
             Spacer(0.5.em)
             ProductPrice(
@@ -182,8 +181,6 @@ fun ProductPrice(
     salePrice: String?,
     currency: Currency,
     containerModifier: Modifier = Modifier,
-    regularModifier: Modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium),
-    saleModifier: Modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium),
     initialIsOnSale: Boolean = false,
 ) {
     var isOnSale by remember { mutableStateOf(initialIsOnSale) }
@@ -199,7 +196,7 @@ fun ProductPrice(
     ) {
         SpanText(
             text = "${currency.symbol}$regularPrice ${currency.code}",
-            modifier = regularModifier
+            modifier = Modifier
                 .scale(if (isOnSale) 0.8f else 1f)
                 .textDecorationLine(if (isOnSale) TextDecorationLine.LineThrough else TextDecorationLine.None)
                 .translate(
@@ -215,8 +212,8 @@ fun ProductPrice(
         salePrice?.let { price ->
             SpanText(
                 text = " ${currency.symbol}$price ${currency.code}",
-                modifier = saleModifier
-                    .color(if (isOnSale) MaterialTheme.colors.error else Colors.Transparent)
+                modifier = Modifier
+                    .color(if (isOnSale) Colors.Red else Colors.Transparent)
                     .fontWeight(if (isOnSale) FontWeight.Normal else FontWeight.Bold)
                     .translate(
                         tx = if (isOnSale) (-0.5).em else 0.em,

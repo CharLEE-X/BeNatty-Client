@@ -22,8 +22,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.onMouseOut
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
-import theme.MaterialTheme
-import theme.roleStyle
 
 @Composable
 fun ExpandableSection(
@@ -53,7 +51,6 @@ fun ExpandableSection(
             SpanText(
                 text = title.uppercase(),
                 modifier = Modifier
-                    .roleStyle(MaterialTheme.typography.bodyLarge)
                     .fontWeight(if (headerHovered && enabled) FontWeight.SemiBold else FontWeight.Normal)
             )
             RotatableChevron(

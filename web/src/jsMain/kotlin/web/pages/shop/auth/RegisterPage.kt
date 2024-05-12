@@ -23,11 +23,13 @@ import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
+import com.varabyte.kobweb.silk.components.forms.Checkbox
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEmail
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiError
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPassword
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibilityOff
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
@@ -39,15 +41,13 @@ import feature.router.goHome
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
-import theme.MaterialTheme
-import theme.roleStyle
+import web.H1Variant
+import web.H3Variant
+import web.HeadlineStyle
 import web.components.widgets.AppElevatedCard
 import web.components.widgets.AppFilledButton
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.AppTextButton
-import web.compose.material3.component.Checkbox
-import web.compose.material3.component.CircularProgress
-import web.compose.material3.component.TextFieldType
 import web.pages.shop.auth.components.LogoSection
 import web.pages.shop.auth.components.SocialButtonsLoginSection
 
@@ -121,7 +121,6 @@ private fun FieldsSection(
             vm.trySend(RegisterContract.Inputs.SetName(it))
         },
         label = getString(Strings.Name),
-        type = TextFieldType.TEXT,
         leadingIcon = { MdiPerson() },
         trailingIcon = { state.nameError?.let { MdiError() } },
         error = state.nameError != null,
@@ -135,7 +134,6 @@ private fun FieldsSection(
             vm.trySend(RegisterContract.Inputs.SetEmail(it))
         },
         label = getString(Strings.Email),
-        type = TextFieldType.TEXT,
         leadingIcon = { MdiEmail() },
         trailingIcon = { state.emailError?.let { MdiError() } },
         error = state.emailError != null,
@@ -151,7 +149,6 @@ private fun FieldsSection(
             vm.trySend(RegisterContract.Inputs.SetPassword(it))
         },
         label = getString(Strings.Password),
-        type = if (state.isPasswordVisible) TextFieldType.TEXT else TextFieldType.PASSWORD,
         leadingIcon = { MdiPassword() },
         trailingIcon = {
             Row(
@@ -180,7 +177,6 @@ private fun FieldsSection(
             vm.trySend(RegisterContract.Inputs.SetRepeatPassword(it))
         },
         label = getString(Strings.RepeatPassword),
-        type = if (state.isPasswordVisible) TextFieldType.TEXT else TextFieldType.PASSWORD,
         leadingIcon = { MdiPassword() },
         trailingIcon = {
             Row(
@@ -215,17 +211,15 @@ private fun NewsletterSection(state: RegisterContract.State, vm: RegisterViewMod
         Row(
             modifier = Modifier
                 .gap(1.em)
-                .onClick { vm.trySend(RegisterContract.Inputs.ToggleNewsletterChecked) }
                 .cursor(Cursor.Pointer)
         ) {
             Checkbox(
                 checked = state.newsletterChecked,
-                onClick = { },
+                onCheckedChange = { vm.trySend(RegisterContract.Inputs.ToggleNewsletterChecked) },
             )
             SpanText(
                 text = getString(Strings.Newsletter),
-                modifier = Modifier
-                    .roleStyle(MaterialTheme.typography.labelLarge)
+                modifier = HeadlineStyle.toModifier(H1Variant)
             )
         }
         Spacer()
@@ -242,17 +236,12 @@ private fun RegisterButton(vm: RegisterViewModel, state: RegisterContract.State)
             .margin(top = 2.em)
     ) {
         if (state.isLoading) {
-            CircularProgress(
-                value = 0f,
-                intermediate = true,
-                fourColor = true,
-            )
+            SpanText("Loading...")
         } else {
             SpanText(
                 text = getString(Strings.SignUp),
-                modifier = Modifier
+                modifier = HeadlineStyle.toModifier(H3Variant)
                     .margin(top = 1.em)
-                    .roleStyle(MaterialTheme.typography.headlineSmall)
             )
         }
     }
@@ -267,15 +256,14 @@ private fun DontHaveAccountSection(vm: RegisterViewModel, state: RegisterContrac
     ) {
         SpanText(
             text = getString(Strings.AlreadyHaveAnAccount),
-            modifier = Modifier.roleStyle(MaterialTheme.typography.headlineSmall)
+            modifier = HeadlineStyle.toModifier(H3Variant)
         )
         AppTextButton(
             onClick = { vm.trySend(RegisterContract.Inputs.OnAlreadyHaveAccountClick) },
         ) {
             SpanText(
                 text = getString(Strings.Login),
-                modifier = Modifier
-                    .roleStyle(MaterialTheme.typography.headlineSmall)
+                modifier = HeadlineStyle.toModifier(H3Variant)
                     .fontWeight(FontWeight.SemiBold)
             )
         }
@@ -290,27 +278,22 @@ private fun AgreeToPrivacySection(vm: RegisterViewModel, state: RegisterContract
     ) {
         SpanText(
             text = getString(Strings.BySigningUpAgree),
-            modifier = Modifier
-                .roleStyle(MaterialTheme.typography.labelLarge)
         )
         AppTextButton(
             onClick = { vm.trySend(RegisterContract.Inputs.OnPrivacyPolicyClick) },
         ) {
             SpanText(
                 text = getString(Strings.PrivacyPolicy),
-                modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
             )
         }
         SpanText(
             text = getString(Strings.And),
-            modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
         )
         AppTextButton(
             onClick = { vm.trySend(RegisterContract.Inputs.OnTnCClick) },
         ) {
             SpanText(
                 text = getString(Strings.TermsOfService),
-                modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
             )
         }
     }

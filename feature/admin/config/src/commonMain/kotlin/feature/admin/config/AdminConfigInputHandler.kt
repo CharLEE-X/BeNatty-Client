@@ -8,13 +8,13 @@ import component.localization.InputValidator
 import core.mapToUiMessage
 import data.GetConfigQuery
 import data.service.ConfigService
-import data.type.BannerItemInput
 import data.type.BlobInput
 import data.type.DayOfWeek
 import data.type.MediaInput
 import data.type.MediaType
 import data.type.Side
 import data.type.SlideshowItemInput
+import data.type.TopCategoryItemInput
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -62,16 +62,14 @@ internal class AdminConfigInputHandler :
         is AdminConfigContract.Inputs.OnBannerLeftTitleChanged ->
             handleOnBannerLeftTitleChanged(input.title)
 
-        is AdminConfigContract.Inputs.OnBannerLeftDescriptionChanged ->
-            handleOnBannerLeftDescriptionChanged(input.description)
+        is AdminConfigContract.Inputs.OnBannerMiddleMediaDrop -> handleOnBannerMiddleMediaDrop(input.blob)
+
+        is AdminConfigContract.Inputs.OnBannerMiddleTitleChanged -> handleOnBannerMiddleTitleChanged(input.title)
 
         is AdminConfigContract.Inputs.OnBannerRightMediaDrop -> handleOnBannerRightMediaDrop(input.blob)
 
         is AdminConfigContract.Inputs.OnBannerRightTitleChanged ->
             handleOnBannerRightTitleChanged(input.title)
-
-        is AdminConfigContract.Inputs.OnBannerRightDescriptionChanged ->
-            handleOnBannerRightDescriptionChanged(input.description)
 
         is AdminConfigContract.Inputs.SetLoading -> updateState { it.copy(isLoading = input.isLoading) }
         is AdminConfigContract.Inputs.SetOriginalConfig -> updateState { it.copy(original = input.config).wasEdited() }
@@ -100,47 +98,46 @@ internal class AdminConfigInputHandler :
         is AdminConfigContract.Inputs.SetBannerLeftImagesLoading ->
             updateState { it.copy(isBannerLeftImagesLoading = input.isLoading) }
 
+        is AdminConfigContract.Inputs.SetBannerMiddleImageDropError ->
+            updateState { it.copy(bannerMiddleMediaDropError = input.error) }
+
+        is AdminConfigContract.Inputs.SetBannerMiddleImagesLoading ->
+            updateState { it.copy(isBannerMiddleImagesLoading = input.isLoading) }
+
         is AdminConfigContract.Inputs.SetBannerRightImageDropError ->
             updateState { it.copy(bannerRightMediaDropError = input.error) }
 
         is AdminConfigContract.Inputs.SetBannerRightImagesLoading ->
             updateState { it.copy(isBannerRightImagesLoading = input.isLoading) }
+
     }
 
-    private suspend fun InputScope.handleOnBannerRightDescriptionChanged(description: String) {
+    private suspend fun InputScope.handleOnBannerMiddleTitleChanged(title: String) {
         updateState {
-            val newRight = it.current.landingConfig.bannerSection.right.copy(description = description)
+            val newMiddle = it.current.landingConfig.topCategoriesSection.middle.copy(title = title)
             val newBannerSection =
-                it.current.landingConfig.bannerSection.copy(right = newRight)
+                it.current.landingConfig.topCategoriesSection.copy(middle = newMiddle)
             it.copy(
                 current = it.current.copy(
-                    landingConfig = it.current.landingConfig.copy(bannerSection = newBannerSection)
+                    landingConfig = it.current.landingConfig.copy(topCategoriesSection = newBannerSection)
                 ),
             ).wasEdited()
         }
+    }
+
+    private suspend fun InputScope.handleOnBannerMiddleMediaDrop(blob: String) {
+        postInput(AdminConfigContract.Inputs.SetBannerMiddleImagesLoading(true))
+        postInput(AdminConfigContract.Inputs.UploadBannerMedia(Side.MIDDLE, blob))
     }
 
     private suspend fun InputScope.handleOnBannerRightTitleChanged(title: String) {
         updateState {
-            val newRight = it.current.landingConfig.bannerSection.right.copy(title = title)
+            val newRight = it.current.landingConfig.topCategoriesSection.right.copy(title = title)
             val newBannerSection =
-                it.current.landingConfig.bannerSection.copy(right = newRight)
+                it.current.landingConfig.topCategoriesSection.copy(right = newRight)
             it.copy(
                 current = it.current.copy(
-                    landingConfig = it.current.landingConfig.copy(bannerSection = newBannerSection)
-                ),
-            ).wasEdited()
-        }
-    }
-
-    private suspend fun InputScope.handleOnBannerLeftDescriptionChanged(description: String) {
-        updateState {
-            val newLeft = it.current.landingConfig.bannerSection.left.copy(description = description)
-            val newBannerSection =
-                it.current.landingConfig.bannerSection.copy(left = newLeft)
-            it.copy(
-                current = it.current.copy(
-                    landingConfig = it.current.landingConfig.copy(bannerSection = newBannerSection)
+                    landingConfig = it.current.landingConfig.copy(topCategoriesSection = newBannerSection)
                 ),
             ).wasEdited()
         }
@@ -148,12 +145,12 @@ internal class AdminConfigInputHandler :
 
     private suspend fun InputScope.handleOnBannerLeftTitleChanged(title: String) {
         updateState {
-            val newLeft = it.current.landingConfig.bannerSection.left.copy(title = title)
+            val newLeft = it.current.landingConfig.topCategoriesSection.left.copy(title = title)
             val newBannerSection =
-                it.current.landingConfig.bannerSection.copy(left = newLeft)
+                it.current.landingConfig.topCategoriesSection.copy(left = newLeft)
             it.copy(
                 current = it.current.copy(
-                    landingConfig = it.current.landingConfig.copy(bannerSection = newBannerSection)
+                    landingConfig = it.current.landingConfig.copy(topCategoriesSection = newBannerSection)
                 ),
             ).wasEdited()
         }
@@ -267,12 +264,20 @@ internal class AdminConfigInputHandler :
             ).fold(
                 { postEvent(AdminConfigContract.Events.OnError(it.mapToUiMessage())) },
                 { data ->
-                    val bannerSection = with(data.uploadConfigBannerImage.bannerSection) {
-                        GetConfigQuery.BannerSection(
+                    val topCategoriesSection = with(data.uploadConfigBannerImage.topCategoriesSection) {
+                        GetConfigQuery.TopCategoriesSection(
                             left = GetConfigQuery.Left(
                                 title = left.title,
-                                description = left.description,
                                 media = GetConfigQuery.Media1(
+                                    keyName = left.media?.keyName ?: "",
+                                    url = left.media?.url ?: "",
+                                    alt = left.media?.alt ?: "",
+                                    type = left.media?.type ?: MediaType.Image,
+                                ),
+                            ),
+                            middle = GetConfigQuery.Middle(
+                                title = left.title,
+                                media = GetConfigQuery.Media2(
                                     keyName = left.media?.keyName ?: "",
                                     url = left.media?.url ?: "",
                                     alt = left.media?.alt ?: "",
@@ -281,8 +286,7 @@ internal class AdminConfigInputHandler :
                             ),
                             right = GetConfigQuery.Right(
                                 title = right.title,
-                                description = right.description,
-                                media = GetConfigQuery.Media2(
+                                media = GetConfigQuery.Media3(
                                     keyName = right.media?.keyName ?: "",
                                     url = right.media?.url ?: "",
                                     alt = right.media?.alt ?: "",
@@ -292,7 +296,7 @@ internal class AdminConfigInputHandler :
                         )
                     }
                     val config = state.current.copy(
-                        landingConfig = state.current.landingConfig.copy(bannerSection = bannerSection)
+                        landingConfig = state.current.landingConfig.copy(topCategoriesSection = topCategoriesSection)
                     )
                     postInput(AdminConfigContract.Inputs.SetOriginalConfig(config))
                     postInput(AdminConfigContract.Inputs.SetCurrentConfig(config))
@@ -488,11 +492,10 @@ internal class AdminConfigInputHandler :
                         current.footerConfig.showStartChat else null,
                     showOpeningTimes = if (current.footerConfig.showOpeningTimes != original.footerConfig.showOpeningTimes)
                         current.footerConfig.showOpeningTimes else null,
-                    bannerSectionLeft = if (current.landingConfig.bannerSection.left != original.landingConfig.bannerSection.left)
-                        BannerItemInput(
-                            title = Optional.present(current.landingConfig.bannerSection.left.title),
-                            description = Optional.present(current.landingConfig.bannerSection.left.description),
-                            media = current.landingConfig.bannerSection.left.media?.let {
+                    topCategoriesSectionLeft = if (current.landingConfig.topCategoriesSection.left != original.landingConfig.topCategoriesSection.left)
+                        TopCategoryItemInput(
+                            title = Optional.present(current.landingConfig.topCategoriesSection.left.title),
+                            media = current.landingConfig.topCategoriesSection.left.media?.let {
                                 Optional.present(
                                     MediaInput(
                                         keyName = it.keyName,
@@ -503,11 +506,24 @@ internal class AdminConfigInputHandler :
                                 )
                             } ?: Optional.absent(),
                         ) else null,
-                    bannerSectionRight = if (current.landingConfig.bannerSection.right != original.landingConfig.bannerSection.right)
-                        BannerItemInput(
-                            title = Optional.present(current.landingConfig.bannerSection.right.title),
-                            description = Optional.present(current.landingConfig.bannerSection.right.description),
-                            media = current.landingConfig.bannerSection.right.media?.let {
+                    topCategoriesSectionMiddle = if (current.landingConfig.topCategoriesSection.left != original.landingConfig.topCategoriesSection.left)
+                        TopCategoryItemInput(
+                            title = Optional.present(current.landingConfig.topCategoriesSection.left.title),
+                            media = current.landingConfig.topCategoriesSection.left.media?.let {
+                                Optional.present(
+                                    MediaInput(
+                                        keyName = it.keyName,
+                                        url = it.url,
+                                        alt = it.alt,
+                                        type = it.type
+                                    )
+                                )
+                            } ?: Optional.absent(),
+                        ) else null,
+                    topCategoriesRight = if (current.landingConfig.topCategoriesSection.right != original.landingConfig.topCategoriesSection.right)
+                        TopCategoryItemInput(
+                            title = Optional.present(current.landingConfig.topCategoriesSection.right.title),
+                            media = current.landingConfig.topCategoriesSection.right.media?.let {
                                 Optional.present(
                                     MediaInput(
                                         keyName = it.keyName,
@@ -560,11 +576,10 @@ internal class AdminConfigInputHandler :
                                             ),
                                         )
                                     },
-                                    bannerSection = GetConfigQuery.BannerSection(
-                                        left = with(landingConfig.bannerSection.left) {
+                                    topCategoriesSection = GetConfigQuery.TopCategoriesSection(
+                                        left = with(landingConfig.topCategoriesSection.left) {
                                             GetConfigQuery.Left(
                                                 title = title,
-                                                description = description,
                                                 media = GetConfigQuery.Media1(
                                                     keyName = media?.keyName ?: "",
                                                     url = media?.url ?: "",
@@ -573,11 +588,21 @@ internal class AdminConfigInputHandler :
                                                 )
                                             )
                                         },
-                                        right = with(landingConfig.bannerSection.right) {
+                                        middle = with(landingConfig.topCategoriesSection.left) {
+                                            GetConfigQuery.Middle(
+                                                title = title,
+                                                media = GetConfigQuery.Media2(
+                                                    keyName = media?.keyName ?: "",
+                                                    url = media?.url ?: "",
+                                                    alt = media?.alt ?: "",
+                                                    type = media?.type ?: MediaType.Image,
+                                                )
+                                            )
+                                        },
+                                        right = with(landingConfig.topCategoriesSection.right) {
                                             GetConfigQuery.Right(
                                                 title = title,
-                                                description = description,
-                                                media = GetConfigQuery.Media2(
+                                                media = GetConfigQuery.Media3(
                                                     keyName = media?.keyName ?: "",
                                                     url = media?.url ?: "",
                                                     alt = media?.alt ?: "",
@@ -593,18 +618,7 @@ internal class AdminConfigInputHandler :
                                             catalog = with(catalog) {
                                                 GetConfigQuery.Catalog(
                                                     title = title,
-                                                    media = GetConfigQuery.Media3(
-                                                        keyName = media?.keyName ?: "",
-                                                        url = media?.url ?: "",
-                                                        alt = media?.alt ?: "",
-                                                        type = media?.type ?: MediaType.Image,
-                                                    )
-                                                )
-                                            },
-                                            popular = with(popular) {
-                                                GetConfigQuery.Popular(
-                                                    title = title,
-                                                    media = GetConfigQuery.Media5(
+                                                    media = GetConfigQuery.Media4(
                                                         keyName = media?.keyName ?: "",
                                                         url = media?.url ?: "",
                                                         alt = media?.alt ?: "",
@@ -614,16 +628,27 @@ internal class AdminConfigInputHandler :
                                             },
                                             sales = GetConfigQuery.Sales(
                                                 title = sales.title,
-                                                media = GetConfigQuery.Media4(
+                                                media = GetConfigQuery.Media5(
                                                     keyName = sales.media?.keyName ?: "",
                                                     url = sales.media?.url ?: "",
                                                     alt = sales.media?.alt ?: "",
                                                     type = sales.media?.type ?: MediaType.Image,
                                                 ),
                                             ),
+                                            popular = with(popular) {
+                                                GetConfigQuery.Popular(
+                                                    title = title,
+                                                    media = GetConfigQuery.Media6(
+                                                        keyName = media?.keyName ?: "",
+                                                        url = media?.url ?: "",
+                                                        alt = media?.alt ?: "",
+                                                        type = media?.type ?: MediaType.Image,
+                                                    )
+                                                )
+                                            },
                                             mens = GetConfigQuery.Mens(
                                                 title = mens.title,
-                                                media = GetConfigQuery.Media6(
+                                                media = GetConfigQuery.Media7(
                                                     keyName = mens.media?.keyName ?: "",
                                                     url = mens.media?.url ?: "",
                                                     alt = mens.media?.alt ?: "",
@@ -632,7 +657,7 @@ internal class AdminConfigInputHandler :
                                             ),
                                             women = GetConfigQuery.Women(
                                                 title = women.title,
-                                                media = GetConfigQuery.Media7(
+                                                media = GetConfigQuery.Media8(
                                                     keyName = women.media?.keyName ?: "",
                                                     url = women.media?.url ?: "",
                                                     alt = women.media?.alt ?: "",
@@ -641,7 +666,7 @@ internal class AdminConfigInputHandler :
                                             ),
                                             kids = GetConfigQuery.Kids(
                                                 title = kids.title,
-                                                media = GetConfigQuery.Media8(
+                                                media = GetConfigQuery.Media9(
                                                     keyName = women.media?.keyName ?: "",
                                                     url = women.media?.url ?: "",
                                                     alt = women.media?.alt ?: "",

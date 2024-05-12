@@ -36,8 +36,7 @@ include(
     ":components:notification",
     ":components:pictures",
     ":components:localization",
-    ":components:theme",
-    ":components:material3",
+//    ":components:theme",
     ":components:swiper",
 
     // Shared features

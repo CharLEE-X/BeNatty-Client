@@ -1,40 +1,26 @@
 package web
 
-import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
-import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.graphics.Colors
-import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.color
-import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontFamily
 import com.varabyte.kobweb.compose.ui.modifiers.fontSize
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.lineHeight
-import com.varabyte.kobweb.compose.ui.modifiers.opacity
-import com.varabyte.kobweb.compose.ui.modifiers.padding
-import com.varabyte.kobweb.compose.ui.modifiers.setVariable
-import com.varabyte.kobweb.compose.ui.modifiers.textAlign
-import com.varabyte.kobweb.silk.components.forms.ButtonStyle
-import com.varabyte.kobweb.silk.components.forms.ButtonVars
 import com.varabyte.kobweb.silk.components.layout.HorizontalDividerStyle
 import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.addVariantBase
 import com.varabyte.kobweb.silk.components.style.base
-import com.varabyte.kobweb.silk.components.style.hover
 import com.varabyte.kobweb.silk.init.InitSilk
 import com.varabyte.kobweb.silk.init.InitSilkContext
 import com.varabyte.kobweb.silk.init.registerStyleBase
+import com.varabyte.kobweb.silk.theme.colors.palette.background
 import com.varabyte.kobweb.silk.theme.colors.palette.color
 import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import com.varabyte.kobweb.silk.theme.modifyComponentStyleBase
 import org.jetbrains.compose.web.css.cssRem
-import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.value
-import theme.CSSMaterialTheme
 
 @InitSilk
 fun initSiteStyles(ctx: InitSilkContext) {
@@ -54,47 +40,47 @@ fun initSiteStyles(ctx: InitSilkContext) {
     }
 }
 
-val HeadlineTextStyle by ComponentStyle.base {
+val HeadlineStyle by ComponentStyle.base {
     Modifier
         .fontSize(2.cssRem)
-        .textAlign(TextAlign.Start)
-        .color(CSSMaterialTheme.colors.onSurface.value())
+        .color(colorMode.opposite.toPalette().background)
         .lineHeight(1.2) //1.5x doesn't look as good on very large text
         .fontFamily(HEADLINE_FONT)
-        .fontWeight(FontWeight.Light)
+        .fontWeight(600)
 }
 
-val HeadlineTextStyleLight by HeadlineTextStyle.addVariantBase {
+val H1Variant by HeadlineStyle.addVariantBase {
+    Modifier.fontSize(30.px)
+}
+
+val H2Variant by HeadlineStyle.addVariantBase {
+    Modifier.fontSize(24.px)
+}
+
+val H3Variant by HeadlineStyle.addVariantBase {
+    Modifier.fontSize(18.px)
+}
+
+val HeadlineLightVariant by HeadlineStyle.addVariantBase {
     Modifier.fontWeight(FontWeight.Light)
 }
 
-val HeadlineTextStyleBold by HeadlineTextStyle.addVariantBase {
+val HeadlineBoldVariant by HeadlineStyle.addVariantBase {
     Modifier.fontWeight(FontWeight.Bold)
 }
 
-val SubheadlineTextStyle by ComponentStyle.base {
+val SubHeadlineStyle by ComponentStyle.base {
     Modifier
         .fontSize(1.cssRem)
-        .textAlign(TextAlign.Start)
         .color(colorMode.toPalette().color.toRgb().copyf(alpha = 0.8f))
 }
 
-val CircleButtonVariant by ButtonStyle.addVariantBase {
-    Modifier.padding(0.px).borderRadius(50.percent)
+val BodyStyle by ComponentStyle.base {
+    Modifier
+        .fontSize(15.px)
 }
 
-val UncoloredButtonVariant by ButtonStyle.addVariantBase {
-    Modifier.setVariable(ButtonVars.BackgroundDefaultColor, Colors.Transparent)
-}
-
-val NavIconStyle by ComponentStyle {
-    base {
-        Modifier
-            .cursor(Cursor.Pointer)
-            .fontSize(28.px)
-    }
-
-    hover {
-        Modifier.opacity(0.6)
-    }
+val SubtitleStyle by ComponentStyle.base {
+    Modifier
+        .fontSize(12.px)
 }

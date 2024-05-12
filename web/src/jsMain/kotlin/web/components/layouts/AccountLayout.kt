@@ -15,9 +15,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.graphics.Colors
-import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
-import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
@@ -38,7 +35,6 @@ import feature.shop.navbar.label
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
 import web.util.onEnterKeyDown
 
 @Composable
@@ -121,33 +117,33 @@ fun SideNavMainItem(
     onMenuItemClicked: () -> Unit,
 ) {
     var hovered by remember { mutableStateOf(false) }
-    val bgColor = if (isLogout) {
-        when {
-            hovered -> MaterialTheme.colors.errorContainer
-            else -> Colors.Transparent
-        }
-    } else {
-        when {
-            isCurrent && hovered -> MaterialTheme.colors.primaryContainer
-            isCurrent && !hovered -> MaterialTheme.colors.primary
-            !isCurrent && hovered -> MaterialTheme.colors.surfaceContainerLow
-            else -> Colors.Transparent
-        }
-    }
-
-    val contentColor = if (isLogout) {
-        when {
-            hovered -> MaterialTheme.colors.onErrorContainer
-            else -> MaterialTheme.colors.error
-        }
-    } else {
-        when {
-            isCurrent && hovered -> MaterialTheme.colors.onPrimaryContainer
-            isCurrent && !hovered -> MaterialTheme.colors.onPrimary
-            !isCurrent && hovered -> MaterialTheme.colors.onSurface
-            else -> MaterialTheme.colors.onSurface
-        }
-    }
+//    val bgColor = if (isLogout) {
+//        when {
+//            hovered -> Colors.RedContainer
+//            else -> Colors.Transparent
+//        }
+//    } else {
+//        when {
+//            isCurrent && hovered -> MaterialTheme.colors.primaryContainer
+//            isCurrent && !hovered -> MaterialTheme.colors.primary
+//            !isCurrent && hovered -> MaterialTheme.colors.surfaceContainerLow
+//            else -> Colors.Transparent
+//        }
+//    }
+//
+//    val contentColor = if (isLogout) {
+//        when {
+//            hovered -> MaterialTheme.colors.onErrorContainer
+//            else -> Colors.Red
+//        }
+//    } else {
+//        when {
+//            isCurrent && hovered -> MaterialTheme.colors.onPrimaryContainer
+//            isCurrent && !hovered -> MaterialTheme.colors.onPrimary
+//            !isCurrent && hovered -> ColorMode.current.toPalette().color
+//            else -> ColorMode.current.toPalette().color
+//        }
+//    }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -163,8 +159,8 @@ fun SideNavMainItem(
                 topBottom = 0.5.em,
             )
             .gap(0.5.em)
-            .backgroundColor(bgColor)
-            .color(contentColor)
+//            .backgroundColor(bgColor)
+//            .color(contentColor)
             .transition(
                 CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease),
                 CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease)
@@ -188,24 +184,24 @@ fun SideNavSubItem(
     onMenuItemClicked: () -> Unit
 ) {
     var hovered by remember { mutableStateOf(false) }
-    val bgColor = when {
-        isSubCurrent && hovered -> MaterialTheme.colors.primaryContainer
-        isSubCurrent && !hovered -> MaterialTheme.colors.primary
-        !isSubCurrent && hovered -> MaterialTheme.colors.surfaceContainerLow
-        else -> Colors.Transparent
-    }
-    val contentColor = when {
-        isSubCurrent && hovered -> MaterialTheme.colors.onPrimaryContainer
-        isSubCurrent && !hovered -> MaterialTheme.colors.onPrimary
-        !isSubCurrent && hovered -> MaterialTheme.colors.onSurface
-        else -> MaterialTheme.colors.onSurface
-    }
+//    val bgColor = when {
+//        isSubCurrent && hovered -> MaterialTheme.colors.primaryContainer
+//        isSubCurrent && !hovered -> MaterialTheme.colors.primary
+//        !isSubCurrent && hovered -> MaterialTheme.colors.surfaceContainerLow
+//        else -> Colors.Transparent
+//    }
+//    val contentColor = when {
+//        isSubCurrent && hovered -> MaterialTheme.colors.onPrimaryContainer
+//        isSubCurrent && !hovered -> MaterialTheme.colors.onPrimary
+//        !isSubCurrent && hovered -> ColorMode.current.toPalette().color
+//        else -> ColorMode.current.toPalette().color
+//    }
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxWidth()
-            .backgroundColor(bgColor)
+//            .backgroundColor(bgColor)
             .onClick { onMenuItemClicked() }
             .onMouseEnter { hovered = true }
             .onMouseLeave { hovered = false }
@@ -217,7 +213,7 @@ fun SideNavSubItem(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .color(contentColor)
+//                .color(contentColor)
                 .padding(
                     leftRight = 1.em,
                     topBottom = 0.5.em,

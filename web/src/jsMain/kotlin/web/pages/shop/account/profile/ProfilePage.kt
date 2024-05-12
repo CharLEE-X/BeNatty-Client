@@ -20,6 +20,7 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiLocationCity
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPassword
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPhone
+import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
 import component.localization.Strings
 import component.localization.getString
 import feature.shop.account.profile.ProfileContract
@@ -33,8 +34,6 @@ import web.components.widgets.EditCancelButton
 import web.components.widgets.PageHeader
 import web.components.widgets.SaveButton
 import web.components.widgets.SectionHeader
-import web.compose.material3.component.Divider
-import web.compose.material3.component.TextFieldType
 
 @Composable
 fun ProfilePage(
@@ -58,9 +57,9 @@ fun ProfilePage(
     ) {
         PageHeader(getString(Strings.Profile))
         PersonalDetails(vm, state)
-        Divider(modifier = Modifier.margin(topBottom = 1.em))
+        HorizontalDivider(modifier = Modifier.margin(topBottom = 1.em))
         Password(vm, state)
-        Divider(modifier = Modifier.margin(topBottom = 1.em))
+        HorizontalDivider(modifier = Modifier.margin(topBottom = 1.em))
         Address(vm, state)
     }
 }
@@ -94,7 +93,7 @@ private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) 
         label = getString(Strings.Email),
         errorText = state.emailError,
         leadingIcon = { MdiEmail() },
-        type = TextFieldType.TEXT,
+//        type = TextFieldType.TEXT,
         required = true,
         autoComplete = AutoComplete.email,
         shake = state.shakeEmail,
@@ -106,7 +105,7 @@ private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) 
         label = getString(Strings.Phone),
         errorText = state.phoneError,
         leadingIcon = { MdiPhone() },
-        type = TextFieldType.TEXT,
+//        type = TextFieldType.TEXT,
         autoComplete = AutoComplete.tel,
         shake = state.shakePhone,
         modifier = Modifier.fillMaxWidth(),

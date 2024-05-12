@@ -26,8 +26,8 @@ fun DeleteButtonWithConfirmation(
     if (!showDeleteConfirmation) {
         AppFilledButton(
             onClick = { showDeleteConfirmation = true },
-            leadingIcon = { MdiAdd() },
         ) {
+            MdiAdd()
             SpanText(text = deleteText)
         }
     } else {
@@ -35,19 +35,19 @@ fun DeleteButtonWithConfirmation(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.gap(1.em)
         ) {
-            AppFilledTonalButton(
+            AppFilledButton(
                 onClick = {
                     onDelete()
                     showDeleteConfirmation = false
                 },
-                leadingIcon = { MdiDelete() },
             ) {
+                MdiDelete()
                 SpanText(text = deleteText)
             }
             AppFilledButton(
                 onClick = { showDeleteConfirmation = false },
-                leadingIcon = { MdiCancel() },
             ) {
+                MdiCancel()
                 SpanText(text = cancelText)
             }
         }

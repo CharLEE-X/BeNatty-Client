@@ -8,7 +8,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.background
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxHeight
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.margin
@@ -20,7 +19,6 @@ import feature.checkout.CheckoutViewModel
 import feature.shop.footer.FooterRoutes
 import feature.shop.navbar.DesktopNavRoutes
 import org.jetbrains.compose.web.css.px
-import theme.MaterialTheme
 import web.components.layouts.GlobalVMs
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
@@ -62,7 +60,6 @@ fun CheckoutPage(
                 modifier = Modifier
                     .width(1.px)
                     .fillMaxHeight()
-                    .background(MaterialTheme.colors.surface)
             )
             RightSide(vm, state)
         }

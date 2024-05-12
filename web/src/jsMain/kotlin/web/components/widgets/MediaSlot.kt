@@ -6,7 +6,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
 import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
@@ -14,6 +13,7 @@ import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
 import com.varabyte.kobweb.compose.ui.modifiers.color
@@ -34,15 +34,20 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiAddAPhoto
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiCloudUpload
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEdit
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.border
+import com.varabyte.kobweb.silk.theme.colors.palette.color
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import org.w3c.files.File
-import theme.MaterialTheme
-import theme.roleStyle
+import web.H3Variant
+import web.HeadlineStyle
 import web.util.onEnterKeyDown
 
 @Composable
@@ -51,7 +56,6 @@ fun MediaSlot(
     url: String?,
     alt: String?,
     errorText: String?,
-    cornerRadius: CSSLengthOrPercentageNumericValue = 14.px,
     isImagesLoading: Boolean = false,
     isImageClickable: Boolean = true,
     hasDeleteButton: Boolean = true,
@@ -71,16 +75,10 @@ fun MediaSlot(
             .onClick { if (isImageClickable) onImageClick(url) }
             .onMouseOver { if (isImageClickable) imageHovered = true }
             .onMouseOut { if (isImageClickable) imageHovered = false }
-            .backgroundColor(
-                if ((imageHovered && isImageClickable) || addIconHovered) {
-                    MaterialTheme.colors.surfaceContainer
-                } else MaterialTheme.colors.surface
-            )
-            .transition(CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease))
             .thenIf(url == null) {
                 Modifier.border(
                     width = 2.px,
-                    color = MaterialTheme.colors.inverseSurface,
+                    color = ColorMode.current.toPalette().border,
                     style = LineStyle.Dashed,
                 )
             }
@@ -104,7 +102,7 @@ fun MediaSlot(
                 modifier = Modifier
                     .fillMaxSize()
                     .objectFit(ObjectFit.Cover)
-                    .backgroundColor(MaterialTheme.colors.onSurface)
+                    .backgroundColor(ColorMode.current.toPalette().color)
                     .transition(CSSTransition("backgroundColor", 0.3.s, TransitionTimingFunction.Ease))
             ) {}
             if (hasDeleteButton) {
@@ -154,10 +152,9 @@ fun MediaSlot(
             errorText?.let { errorText ->
                 SpanText(
                     text = errorText,
-                    modifier = Modifier
+                    modifier = HeadlineStyle.toModifier(H3Variant)
                         .align(Alignment.BottomCenter)
-                        .roleStyle(MaterialTheme.typography.labelSmall)
-                        .color(MaterialTheme.colors.error)
+                        .color(Colors.Red)
                         .margin(0.5.em)
                 )
             }
@@ -175,7 +172,7 @@ private fun ActionIcon(
 ) {
     var hovered by remember { mutableStateOf(false) }
 
-    AppFilledTonalIconButton(
+    AppIconButton(
         onClick = onClick,
         modifier = modifier
             .margin(1.em)

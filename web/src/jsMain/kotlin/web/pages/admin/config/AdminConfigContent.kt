@@ -60,14 +60,14 @@ import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
-import theme.roleStyle
-import web.HeadlineTextStyle
+import web.H1Variant
+import web.H3Variant
+import web.HeadlineStyle
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.OneThirdLayout
-import web.components.widgets.AppElevatedButton
 import web.components.widgets.AppElevatedCard
+import web.components.widgets.AppFilledButton
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.CardSection
 import web.components.widgets.HasChangesWidget
@@ -155,9 +155,7 @@ fun AdminConfigPage(
                 CardSection(title = getString(Strings.CompanyInfo)) {
                     SpanText(
                         text = getString(Strings.ContactInfo),
-                        modifier = Modifier
-                            .roleStyle(MaterialTheme.typography.headlineSmall)
-                            .color(MaterialTheme.colors.onSurface)
+                        modifier = HeadlineStyle.toModifier(H1Variant)
                     )
                     CompanyInfoEmail(vm, state)
                     CompanyInfoPhone(vm, state)
@@ -180,24 +178,22 @@ fun BannerSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
 
     SpanText(
         text = getString(Strings.Banner),
-        modifier = Modifier
-            .roleStyle(MaterialTheme.typography.headlineSmall)
-            .color(MaterialTheme.colors.onSurface)
+        modifier = HeadlineStyle.toModifier(H3Variant)
     )
     Row(
         modifier = gridModifier(columns = 2)
     ) {
-        with(state.current.landingConfig.bannerSection) {
+        with(state.current.landingConfig.topCategoriesSection.left) {
             AdminCollageItem(
-                title = left.title ?: "",
-                description = left.description ?: "",
+                title = title ?: "",
+                description = "",
                 onTitleChanged = { vm.trySend(AdminConfigContract.Inputs.OnBannerLeftTitleChanged(it)) },
-                onDescriptionChanged = { vm.trySend(AdminConfigContract.Inputs.OnBannerLeftDescriptionChanged(it)) },
+                onDescriptionChanged = { },
                 textPosition = TextPosition.LeftBottom,
                 image = { imageModifier ->
                     MediaSlot(
-                        url = left.media?.url,
-                        alt = left.media?.alt,
+                        url = media?.url,
+                        alt = media?.alt,
                         errorText = state.bannerLeftMediaDropError,
                         hasDeleteButton = false,
                         onFileDropped = { file ->
@@ -209,23 +205,55 @@ fun BannerSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
                             }
                         },
                         onImageClick = { mediaUrl ->
-                            mediaUrl?.let { vm.trySend(AdminConfigContract.Inputs.OnImageClick(left.toPreviewImage())) }
+                            mediaUrl?.let { vm.trySend(AdminConfigContract.Inputs.OnImageClick(toPreviewImage())) }
                         },
                         onDeleteClick = { },
                         modifier = imageModifier
                     )
                 }
             )
+        }
+        with(state.current.landingConfig.topCategoriesSection.middle) {
             AdminCollageItem(
-                title = right.title ?: "",
-                description = right.description ?: "",
+                title = title ?: "",
+                description = "",
+                onTitleChanged = { vm.trySend(AdminConfigContract.Inputs.OnBannerLeftTitleChanged(it)) },
+                onDescriptionChanged = { },
+                textPosition = TextPosition.LeftBottom,
+                image = { imageModifier ->
+                    MediaSlot(
+                        url = media?.url,
+                        alt = media?.alt,
+                        errorText = state.bannerMiddleMediaDropError,
+                        hasDeleteButton = false,
+                        onFileDropped = { file ->
+                            scope.launch {
+                                convertImageToBase64(file)?.let { imageString ->
+                                    vm.trySend(AdminConfigContract.Inputs.OnBannerLeftMediaDrop(imageString))
+                                }
+                                    ?: vm.trySend(AdminConfigContract.Inputs.SetBannerLeftImageDropError(error = "Not a PNG?"))
+                            }
+                        },
+                        onImageClick = { mediaUrl ->
+                            mediaUrl?.let { vm.trySend(AdminConfigContract.Inputs.OnImageClick(toPreviewImage())) }
+                        },
+                        onDeleteClick = { },
+                        modifier = imageModifier
+                    )
+                }
+            )
+        }
+        with(state.current.landingConfig.topCategoriesSection.right) {
+            AdminCollageItem(
+                title = title ?: "",
+                description = "",
                 onTitleChanged = { vm.trySend(AdminConfigContract.Inputs.OnBannerRightTitleChanged(it)) },
-                onDescriptionChanged = { vm.trySend(AdminConfigContract.Inputs.OnBannerRightDescriptionChanged(it)) },
+                onDescriptionChanged = { },
                 textPosition = TextPosition.RightTop,
                 image = { imageModifier ->
                     MediaSlot(
-                        url = right.media?.url,
-                        alt = right.media?.alt,
+                        url = media?.url,
+                        alt = media?.alt,
                         errorText = state.bannerRightMediaDropError,
                         onFileDropped = { file ->
                             scope.launch {
@@ -236,7 +264,7 @@ fun BannerSettings(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
                             }
                         },
                         onImageClick = { mediaUrl ->
-                            mediaUrl?.let { vm.trySend(AdminConfigContract.Inputs.OnImageClick(right.toPreviewImage())) }
+                            mediaUrl?.let { vm.trySend(AdminConfigContract.Inputs.OnImageClick(toPreviewImage())) }
                         },
                         onDeleteClick = {},
                         modifier = imageModifier
@@ -253,9 +281,7 @@ private fun CollageSettings(vm: AdminConfigViewModel, state: AdminConfigContract
 
     SpanText(
         text = getString(Strings.Collage),
-        modifier = Modifier
-            .roleStyle(MaterialTheme.typography.headlineSmall)
-            .color(MaterialTheme.colors.onSurface)
+        modifier = HeadlineStyle.toModifier(H3Variant)
     )
     Column(
         modifier = gridModifier(columns = 3)
@@ -366,7 +392,7 @@ private fun AdminCollageItem(
                 TextInput(
                     text = title.uppercase(),
                     onTextChanged = onTitleChanged,
-                    modifier = HeadlineTextStyle.toModifier()
+                    modifier = HeadlineStyle.toModifier()
                         .zIndex(1)
                         .textAlign(TextAlign.Center)
                         .fillMaxWidth()
@@ -405,9 +431,8 @@ private fun AdminCollageItem(
                         .resize(Resize.Vertical)
                 )
                 buttonText?.let {
-                    AppElevatedButton(
+                    AppFilledButton(
                         onClick = {},
-                        containerColor = MaterialTheme.colors.primary,
                         modifier = Modifier
                             .margin(top = 30.px)
                             .size(150.px, 60.px)
@@ -416,7 +441,6 @@ private fun AdminCollageItem(
                             text = it,
                             modifier = Modifier
                                 .fontSize(1.5.em)
-                                .color(MaterialTheme.colors.onPrimary)
                         )
                     }
                 }
@@ -561,7 +585,6 @@ fun UpdatedAt(state: AdminConfigContract.State) {
         if (updatedAt.isNotEmpty()) {
             SpanText(
                 text = "${getString(Strings.LastUpdatedAt)}: $updatedAt",
-                modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
             )
         }
     }

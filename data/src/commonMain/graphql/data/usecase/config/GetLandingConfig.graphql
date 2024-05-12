@@ -11,7 +11,7 @@ query GetLandingConfig($configId: String) {
       }
       title
     }
-    bannerSection {
+    topCategoriesSection {
       left {
         media {
           keyName
@@ -19,7 +19,15 @@ query GetLandingConfig($configId: String) {
           alt
           type
         }
-        description
+        title
+      }
+      middle {
+        media {
+          keyName
+          url
+          alt
+          type
+        }
         title
       }
       right {
@@ -29,7 +37,6 @@ query GetLandingConfig($configId: String) {
           alt
           type
         }
-        description
         title
       }
     }

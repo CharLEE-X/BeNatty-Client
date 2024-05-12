@@ -54,6 +54,11 @@ import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.IconStyle
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibility
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.background
+import com.varabyte.kobweb.silk.theme.colors.palette.border
+import com.varabyte.kobweb.silk.theme.colors.palette.color
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import core.models.Currency
 import data.GetCatalogPageQuery
 import org.jetbrains.compose.web.css.CSSColorValue
@@ -62,7 +67,6 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
 import web.pages.shop.home.gridModifier
 import web.pages.shop.product.page.ProductPrice
 import web.util.onEnterKeyDown
@@ -131,7 +135,6 @@ private fun MainImage(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .backgroundColor(MaterialTheme.colors.surfaceContainerHighest)
             .onClick { onClick() }
             .onMouseEnter { thisHovered = true }
             .onMouseLeave { thisHovered = false }
@@ -146,7 +149,7 @@ private fun MainImage(
             .userSelect(UserSelect.None)
             .border(
                 width = 1.px,
-                color = MaterialTheme.colors.surface,
+                color = ColorMode.current.toPalette().border,
                 style = LineStyle.Solid
             )
     ) {
@@ -169,7 +172,7 @@ private fun MainImage(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .padding(if (visibilityHovered) 0.5.em else 0.25.em)
-                    .backgroundColor(MaterialTheme.colors.onBackground)
+                    .backgroundColor(ColorMode.current.opposite.toPalette().background)
                     .zIndex(3)
                     .onMouseEnter { visibilityHovered = true }
                     .onMouseLeave { visibilityHovered = false }
@@ -184,7 +187,7 @@ private fun MainImage(
             ) {
                 MdiVisibility(
                     style = IconStyle.OUTLINED,
-                    modifier = Modifier.color(MaterialTheme.colors.background),
+                    modifier = Modifier.color(ColorMode.current.toPalette().background),
                 )
             }
         } ?: Box(
@@ -253,7 +256,7 @@ private fun ItemTitle(
     modifier: Modifier = Modifier,
     text: String,
     hovered: Boolean,
-    contentColor: CSSColorValue = MaterialTheme.colors.onSurface,
+    contentColor: CSSColorValue = ColorMode.current.toPalette().color,
     onClick: () -> Unit,
 ) {
     var focused by remember { mutableStateOf(false) }
@@ -284,7 +287,7 @@ private fun ItemTitle(
 @Composable
 private fun ItemText(
     text: String,
-    contentColor: CSSColorValue = MaterialTheme.colors.onSurface,
+    contentColor: CSSColorValue = ColorMode.current.toPalette().color,
 ) {
     SpanText(
         text = text,
@@ -304,8 +307,8 @@ private fun MiniatureItem(
     onHovered: (Boolean) -> Unit
 ) {
     var hovered by remember { mutableStateOf(false) }
-    val outerBorderColor = if (hovered) MaterialTheme.colors.onSurface else Colors.Transparent
-    val innerBorderColor = if (hovered) MaterialTheme.colors.background else Colors.Transparent
+    val outerBorderColor = if (hovered) ColorMode.current.toPalette().color else Colors.Transparent
+    val innerBorderColor = if (hovered) ColorMode.current.toPalette().background else Colors.Transparent
 
     Box(
         contentAlignment = Alignment.Center,

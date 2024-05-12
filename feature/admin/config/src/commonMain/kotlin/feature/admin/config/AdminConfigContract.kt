@@ -33,12 +33,10 @@ object AdminConfigContract {
                 showPress = false
             ), landingConfig = GetConfigQuery.LandingConfig(
                 slideshowItems = listOf(),
-                bannerSection = GetConfigQuery.BannerSection(
-                    left = GetConfigQuery.Left(
-                        media = null,
-                        description = null,
-                        title = null
-                    ), right = GetConfigQuery.Right(media = null, description = null, title = null)
+                topCategoriesSection = GetConfigQuery.TopCategoriesSection(
+                    left = GetConfigQuery.Left(media = null, title = null),
+                    middle = GetConfigQuery.Middle(media = null, title = null),
+                    right = GetConfigQuery.Right(media = null, title = null)
                 )
             ), catalogConfig = GetConfigQuery.CatalogConfig(
                 bannerConfig = GetConfigQuery.BannerConfig(
@@ -71,8 +69,13 @@ object AdminConfigContract {
 
         val collageMediaDropError: String? = null,
         val isCollageImagesLoading: Boolean = false,
+
         val bannerLeftMediaDropError: String? = null,
         val isBannerLeftImagesLoading: Boolean = false,
+
+        val isBannerMiddleImagesLoading: Boolean = false,
+        val bannerMiddleMediaDropError: String? = null,
+
         val bannerRightMediaDropError: String? = null,
         val isBannerRightImagesLoading: Boolean = false,
     )
@@ -96,12 +99,12 @@ object AdminConfigContract {
         data class OnCollageItemTitleChanged(val imageId: String, val title: String) : Inputs
         data class OnCollageItemDescriptionChanged(val imageId: String, val description: String) : Inputs
 
-        data class OnBannerLeftMediaDrop(val blob: String) : Inputs
         data class OnBannerLeftTitleChanged(val title: String) : Inputs
-        data class OnBannerLeftDescriptionChanged(val description: String) : Inputs
-        data class OnBannerRightMediaDrop(val blob: String) : Inputs
+        data class OnBannerLeftMediaDrop(val blob: String) : Inputs
+        data class OnBannerMiddleTitleChanged(val title: String) : Inputs
+        data class OnBannerMiddleMediaDrop(val blob: String) : Inputs
         data class OnBannerRightTitleChanged(val title: String) : Inputs
-        data class OnBannerRightDescriptionChanged(val description: String) : Inputs
+        data class OnBannerRightMediaDrop(val blob: String) : Inputs
 
         data class SetPreviewDialogOpen(val isOpen: Boolean) : Inputs
         data class SetDeleteImageDialogOpen(val isOpen: Boolean) : Inputs
@@ -118,6 +121,8 @@ object AdminConfigContract {
         data class SetCollageImagesLoading(val isLoading: Boolean) : Inputs
         data class SetBannerLeftImageDropError(val error: String?) : Inputs
         data class SetBannerLeftImagesLoading(val isLoading: Boolean) : Inputs
+        data class SetBannerMiddleImageDropError(val error: String?) : Inputs
+        data class SetBannerMiddleImagesLoading(val isLoading: Boolean) : Inputs
         data class SetBannerRightImageDropError(val error: String?) : Inputs
         data class SetBannerRightImagesLoading(val isLoading: Boolean) : Inputs
     }

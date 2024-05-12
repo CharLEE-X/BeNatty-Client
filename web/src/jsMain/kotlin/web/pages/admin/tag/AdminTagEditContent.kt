@@ -9,22 +9,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
 import feature.admin.tag.edit.AdminTagEditContract
 import feature.admin.tag.edit.AdminTagEditViewModel
-import theme.MaterialTheme
-import theme.roleStyle
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.OneThirdLayout
-import web.components.widgets.AppFilledButton
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.AppTooltip
 import web.components.widgets.CardSection
 import web.components.widgets.CreatorSection
+import web.components.widgets.EditButton
 import web.components.widgets.HasChangesWidget
 import web.components.widgets.ImproveWithButton
 import web.components.widgets.TakeActionDialog
@@ -85,15 +82,7 @@ fun AdminTagEditContent(
             subtitle = state.original.id,
             onGoBack = adminRoutes.goBack,
             hasBackButton = true,
-            actions = {
-                AppFilledButton(
-                    onClick = { deleteProductDialogOpen = !deleteProductDialogOpen },
-                    leadingIcon = { MdiDelete() },
-                    containerColor = MaterialTheme.colors.error,
-                ) {
-                    SpanText(getString(Strings.Delete))
-                }
-            },
+            actions = { EditButton { deleteProductDialogOpen = !deleteProductDialogOpen } },
             content = {
                 CardSection(getString(Strings.Details)) {
                     AppOutlinedTextField(
@@ -145,7 +134,6 @@ private fun UpdatedAt(state: AdminTagEditContract.State) {
     if (state.current.updatedAt.isNotEmpty()) {
         SpanText(
             text = "${getString(Strings.LastUpdatedAt)}: ${state.current.updatedAt}",
-            modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
         )
     }
 }
@@ -155,7 +143,6 @@ private fun CreatedAt(state: AdminTagEditContract.State) {
     if (state.current.createdAt.isNotEmpty()) {
         SpanText(
             text = "${getString(Strings.CreatedAt)}: ${state.current.createdAt}",
-            modifier = Modifier.roleStyle(MaterialTheme.typography.bodyLarge)
         )
     }
 }

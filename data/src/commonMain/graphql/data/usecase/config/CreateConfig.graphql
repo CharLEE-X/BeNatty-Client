@@ -33,7 +33,7 @@ mutation CreateConfig($input: CreateConfigInput!) {
         }
         title
       }
-      bannerSection {
+      topCategoriesSection {
         left {
           media {
             keyName
@@ -41,7 +41,15 @@ mutation CreateConfig($input: CreateConfigInput!) {
             alt
             type
           }
-          description
+          title
+        }
+        middle {
+          media {
+            keyName
+            url
+            alt
+            type
+          }
           title
         }
         right {
@@ -51,7 +59,6 @@ mutation CreateConfig($input: CreateConfigInput!) {
             alt
             type
           }
-          description
           title
         }
       }

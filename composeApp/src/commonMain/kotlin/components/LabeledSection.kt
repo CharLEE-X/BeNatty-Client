@@ -193,7 +193,7 @@ internal fun CheckBoxSectionItem(
             onCheckedChange = onValueChange,
             colors = CheckboxDefaults.colors(
                 checkedColor = MaterialTheme.colors.primary,
-                uncheckedColor = MaterialTheme.colors.onSurface.copy(alpha = 0.2f),
+                uncheckedColor = ColorMode.current.toPalette().color.copy(alpha = 0.2f),
                 checkmarkColor = MaterialTheme.colors.background,
             ),
         )

@@ -35,7 +35,7 @@ internal fun SimpleTopBar(
             Icon(
                 imageVector = Icons.Default.ChevronLeft,
                 contentDescription = "Back",
-                tint = MaterialTheme.colors.onSurface,
+                tint = ColorMode.current.toPalette().color,
                 modifier = Modifier
                     .size(32.dp)
                     .clickable(onClick = onBackClicked),

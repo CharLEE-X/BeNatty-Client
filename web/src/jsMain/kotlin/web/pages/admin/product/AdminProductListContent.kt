@@ -5,19 +5,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiCreate
-import com.varabyte.kobweb.silk.components.text.SpanText
-import component.localization.Strings
-import component.localization.getString
 import feature.admin.list.AdminListContract
 import feature.admin.list.AdminListViewModel
 import feature.admin.list.adminListStrings
-import theme.MaterialTheme
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.ListPageLayout
 import web.components.layouts.OneLayout
-import web.components.widgets.AppFilledButton
+import web.components.widgets.CreateButton
 
 @Composable
 fun AdminProductListPage(
@@ -52,18 +47,8 @@ fun AdminProductListPage(
             subtitle = null,
             onGoBack = adminRoutes.goBack,
             hasBackButton = false,
-            actions = {
-                AppFilledButton(
-                    onClick = { vm.trySend(AdminListContract.Inputs.Click.Create) },
-                    leadingIcon = { MdiCreate() },
-                    containerColor = MaterialTheme.colors.tertiary,
-                ) {
-                    SpanText(text = getString(Strings.Create))
-                }
-            },
-            content = {
-                ListPageLayout(state, vm)
-            }
+            actions = { CreateButton { vm.trySend(AdminListContract.Inputs.Click.Create) } },
+            content = { ListPageLayout(state, vm) }
         )
     }
 }

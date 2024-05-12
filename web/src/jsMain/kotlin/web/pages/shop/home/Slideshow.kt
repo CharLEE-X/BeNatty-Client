@@ -77,11 +77,10 @@ import org.jetbrains.compose.web.css.fr
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
-import theme.roleStyle
-import web.HeadlineTextStyle
-import web.components.widgets.AppElevatedButton
+import web.H1Variant
+import web.HeadlineStyle
 import web.components.widgets.AppElevatedCard
+import web.components.widgets.AppFilledButton
 import web.components.widgets.MainButton
 import web.components.widgets.Shimmer
 import web.util.onEnterKeyDown
@@ -265,7 +264,7 @@ private fun ColumnInfo(
         item.title?.let {
             SpanText(
                 text = it.uppercase(),
-                modifier = Modifier.roleStyle(MaterialTheme.typography.headlineLarge)
+                modifier = HeadlineStyle.toModifier(H1Variant)
             )
         }
         item.description?.let {
@@ -292,11 +291,6 @@ fun Navigator(
             .padding(16.px)
             .margin(16.px)
             .borderRadius(50.percent)
-            .backgroundColor(
-                if (hovered) MaterialTheme.colors.background.toRgb().copy(alpha = 50)
-                else MaterialTheme.colors.background
-            )
-            .color(MaterialTheme.colors.onBackground)
             .onMouseOver { if (enabled) hovered = true }
             .onMouseLeave { hovered = false }
             .onFocusIn { if (enabled) hovered = true }
@@ -365,7 +359,6 @@ fun CollageItem(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .backgroundColor(MaterialTheme.colors.surfaceContainerHighest)
                 .onClick { onClick() }
         ) {
             image(
@@ -399,7 +392,7 @@ fun CollageItem(
                 ) {
                     SpanText(
                         text = title.uppercase(),
-                        modifier = HeadlineTextStyle.toModifier()
+                        modifier = HeadlineStyle.toModifier()
                             .fontSize(2.em)
                             .color(contentColor)
                             .textShadow(
@@ -430,9 +423,8 @@ fun CollageItem(
                         )
                 )
                 buttonText?.let {
-                    AppElevatedButton(
+                    AppFilledButton(
                         onClick = onClick,
-                        containerColor = MaterialTheme.colors.primary,
                         modifier = Modifier
                             .margin(top = 30.px)
                             .size(200.px, 80.px)
@@ -443,7 +435,6 @@ fun CollageItem(
                             text = it,
                             modifier = Modifier
                                 .fontSize(1.5.em)
-                                .color(MaterialTheme.colors.onPrimary)
                         )
                     }
                 }

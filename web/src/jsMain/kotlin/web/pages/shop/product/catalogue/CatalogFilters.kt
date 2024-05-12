@@ -74,13 +74,17 @@ import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiBrokenImage
+import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.background
+import com.varabyte.kobweb.silk.theme.colors.palette.color
+import com.varabyte.kobweb.silk.theme.colors.palette.focusOutline
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.getString
-import core.util.enumCapitalized
 import data.type.Size
-import data.type.Trait
 import feature.product.catalog.CatalogContract
 import feature.product.catalog.CatalogViewModel
 import kotlinx.browser.window
@@ -96,14 +100,9 @@ import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import org.w3c.dom.Element
-import theme.MaterialTheme
-import theme.roleStyle
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.ExpandableSection
 import web.components.widgets.themeScrollbarStyle
-import web.compose.material3.component.ChipSet
-import web.compose.material3.component.Divider
-import web.compose.material3.component.FilterChip
 import web.util.onEnterKeyDown
 
 @Composable
@@ -155,27 +154,27 @@ fun CatalogueFilters(
                 CSSTransition("gap", 0.3.s, TransitionTimingFunction.Ease)
             )
     ) {
-        Divider(modifier = Modifier.color(MaterialTheme.colors.outline))
+        HorizontalDivider()
         ExpandableSection(title = getString(Strings.ProductType), openInitially = true) {
             CategoryFilters(vm, state)
         }
-        Divider(modifier = Modifier.color(MaterialTheme.colors.outline))
+        HorizontalDivider()
         ExpandableSection(title = getString(Strings.Color), openInitially = true) {
             ColorFilters(vm, state)
         }
-        Divider(modifier = Modifier.color(MaterialTheme.colors.outline))
+        HorizontalDivider()
         ExpandableSection(title = getString(Strings.Size), openInitially = true) {
             SizeFilters(vm, state)
         }
-        Divider(modifier = Modifier.color(MaterialTheme.colors.outline))
+        HorizontalDivider()
         ExpandableSection(title = getString(Strings.Price), openInitially = false) {
             PriceFilters(vm, state)
         }
-        Divider(modifier = Modifier.color(MaterialTheme.colors.outline))
+        HorizontalDivider()
         ExpandableSection(title = getString(Strings.Attributes), openInitially = false) {
             AttributeFilters(vm, state)
         }
-        Divider(modifier = Modifier.color(MaterialTheme.colors.outline))
+        HorizontalDivider()
     }
 }
 
@@ -199,14 +198,12 @@ private fun PriceFilters(vm: CatalogViewModel, state: CatalogContract.State) {
                     SpanText(
                         text = getString(Strings.TheHighestPriceIs),
                         modifier = Modifier
-                            .color(MaterialTheme.colors.onSurface)
-                            .roleStyle(MaterialTheme.typography.bodyMedium)
+                            .color(ColorMode.current.toPalette().color)
                     )
                     SpanText(
                         text = "£${it}", // TODO: Localize currency
                         modifier = Modifier
-                            .color(MaterialTheme.colors.onSurface)
-                            .roleStyle(MaterialTheme.typography.bodyMedium)
+                            .color(ColorMode.current.toPalette().color)
                     )
                 }
             } ?: Box(Modifier.weight(1f))
@@ -248,24 +245,25 @@ fun AttributeFilters(vm: CatalogViewModel, state: CatalogContract.State) {
             .fillMaxWidth()
             .gap(0.5.em)
     ) {
-        ChipSet {
-            Trait.entries.toList().filter { it != Trait.UNKNOWN__ }.forEach { trait ->
-                FilterChip(
-                    label = trait.name.enumCapitalized(),
-                    selected = trait in state.selectedTraits,
-                    iconSize = 0.px.toString(),
-                    onClick = { vm.trySend(CatalogContract.Inputs.OnTraitClicked(trait)) },
-                )
-            }
-        }
+        SpanText("FIXME: Implement attribute filters")
     }
+//        ChipSet {
+//            Trait.entries.toList().filter { it != Trait.UNKNOWN__ }.forEach { trait ->
+//                FilterChip(
+//                    label = trait.name.enumCapitalized(),
+//                    selected = trait in state.selectedTraits,
+//                    iconSize = 0.px.toString(),
+//                    onClick = { vm.trySend(CatalogContract.Inputs.OnTraitClicked(trait)) },
+//                )
+//            }
+//        }
 }
 
 @Composable
 private fun ResetButton(
     modifier: Modifier = Modifier,
     show: Boolean = false,
-    color: CSSColorValue = MaterialTheme.colors.onSurface,
+    color: CSSColorValue = ColorMode.current.toPalette().color,
     onClick: () -> Unit
 ) {
     var hovered by remember { mutableStateOf(false) }
@@ -291,7 +289,6 @@ private fun ResetButton(
             text = getString(Strings.Reset).uppercase(),
             modifier = Modifier
                 .color(color)
-                .roleStyle(MaterialTheme.typography.bodyMedium)
                 .whiteSpace(WhiteSpace.NoWrap)
         )
         Box(
@@ -308,7 +305,7 @@ private fun ResetButton(
 @Composable
 private fun Cross(
     modifier: Modifier = Modifier,
-    color: CSSColorValue = MaterialTheme.colors.onSurface
+    color: CSSColorValue = ColorMode.current.toPalette().color
 ) {
     Box(
         modifier = modifier
@@ -365,9 +362,8 @@ private fun CategoryFilters(vm: CatalogViewModel, state: CatalogContract.State) 
                         .border(
                             width = 1.px,
                             color = if (category.id in state.selectedCategoryIds)
-                                MaterialTheme.colors.onSurface else Colors.Transparent
+                                ColorMode.current.toPalette().color else Colors.Transparent
                         )
-                        .backgroundColor(MaterialTheme.colors.surfaceContainerHighest)
                         .objectFit(ObjectFit.Fill)
                         .transition(
                             CSSTransition("transform", 0.3.s, TransitionTimingFunction.Ease),
@@ -383,7 +379,7 @@ private fun CategoryFilters(vm: CatalogViewModel, state: CatalogContract.State) 
                                 .border(
                                     width = 1.px,
                                     color = if (category.id in state.selectedCategoryIds)
-                                        MaterialTheme.colors.onSurface else Colors.Transparent
+                                        ColorMode.current.toPalette().color else Colors.Transparent
                                 )
                                 .scale(if (hovered && enabled) 1.1f else 1f)
                                 .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
@@ -392,7 +388,7 @@ private fun CategoryFilters(vm: CatalogViewModel, state: CatalogContract.State) 
                         MdiBrokenImage(
                             modifier = Modifier
                                 .align(Alignment.Center)
-                                .color(MaterialTheme.colors.onSurface)
+                                .color(ColorMode.current.toPalette().color)
                         )
                     }
                     if (!enabled) {
@@ -408,7 +404,7 @@ private fun CategoryFilters(vm: CatalogViewModel, state: CatalogContract.State) 
                             .fillMaxSize()
                             .border(
                                 width = 2.px,
-                                color = if (selected) MaterialTheme.colors.onSurface else Colors.Transparent,
+                                color = if (selected) ColorMode.current.toPalette().color else Colors.Transparent,
                                 style = LineStyle.Solid
                             )
                             .transition(CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease))
@@ -419,7 +415,8 @@ private fun CategoryFilters(vm: CatalogViewModel, state: CatalogContract.State) 
                                 .padding(4.px)
                                 .border(
                                     width = 2.px,
-                                    color = if (selected) MaterialTheme.colors.background else Colors.Transparent,
+                                    color =
+                                    if (selected) ColorMode.current.toPalette().background else Colors.Transparent,
                                     style = LineStyle.Solid
                                 )
                                 .transition(CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease))
@@ -429,7 +426,6 @@ private fun CategoryFilters(vm: CatalogViewModel, state: CatalogContract.State) 
                 SpanText(
                     text = category.name,
                     modifier = Modifier
-                        .roleStyle(MaterialTheme.typography.bodyMedium)
                         .fontWeight(if (hovered && enabled) FontWeight.SemiBold else FontWeight.Normal)
                         .transition(CSSTransition("font-weight", 0.3.s, TransitionTimingFunction.Ease))
                 )
@@ -459,7 +455,7 @@ private fun ColorFilters(vm: CatalogViewModel, state: CatalogContract.State) {
                 .border(
                     width = if (colorOption.color == data.type.Color.WHITE || colorOption.color == data.type.Color.YELLOW)
                         1.px else 0.px,
-                    color = MaterialTheme.colors.outline,
+                    color = ColorMode.current.toPalette().focusOutline,
                     style = LineStyle.Solid
                 )
                 .onClick { vm.trySend(CatalogContract.Inputs.OnColorClicked(colorOption.color)) }
@@ -525,7 +521,7 @@ private fun ColorFilters(vm: CatalogViewModel, state: CatalogContract.State) {
                     }
                     if (!enabled) {
                         Cross(
-                            color = MaterialTheme.colors.background,
+                            color = ColorMode.current.toPalette().background,
                         )
                     }
                 }
@@ -540,9 +536,9 @@ private fun ColorFilters(vm: CatalogViewModel, state: CatalogContract.State) {
                                 data.type.Color.NAVY,
                                 data.type.Color.BLUE,
                                 data.type.Color.RED,
-                                data.type.Color.PURPLE -> MaterialTheme.colors.background
+                                data.type.Color.PURPLE -> ColorMode.current.toPalette().background
 
-                                else -> MaterialTheme.colors.onSurface
+                                else -> ColorMode.current.toPalette().color
                             },
                         )
                     }
@@ -551,7 +547,7 @@ private fun ColorFilters(vm: CatalogViewModel, state: CatalogContract.State) {
                             .fillMaxSize()
                             .border(
                                 width = 2.px,
-                                color = if (selected) MaterialTheme.colors.onSurface else Colors.Transparent,
+                                color = if (selected) ColorMode.current.toPalette().color else Colors.Transparent,
                                 style = LineStyle.Solid
                             )
                             .transition(CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease))
@@ -562,7 +558,7 @@ private fun ColorFilters(vm: CatalogViewModel, state: CatalogContract.State) {
                                 .padding(4.px)
                                 .border(
                                     width = 2.px,
-                                    color = if (selected) MaterialTheme.colors.background else Colors.Transparent,
+                                    color = if (selected) ColorMode.current.toPalette().background else Colors.Transparent,
                                     style = LineStyle.Solid
                                 )
                                 .transition(CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease))
@@ -615,13 +611,12 @@ fun ProductSizeItem(
             .onFocusIn { if (available) hovered = true }
             .onFocusOut { hovered = false }
             .minHeight(50.px)
-            .backgroundColor(if (selected) MaterialTheme.colors.primary else Colors.Transparent)
             .border(
                 width = 2.px,
                 color = when {
                     selected && available -> Colors.Transparent
-                    selected && !available -> MaterialTheme.colors.error
-                    else -> MaterialTheme.colors.outline
+                    selected && !available -> Colors.Red
+                    else -> ColorMode.current.toPalette().focusOutline
                 },
                 style = LineStyle.Solid
             )
@@ -645,8 +640,6 @@ fun ProductSizeItem(
             modifier = Modifier
                 .textDecorationLine(if (!available) TextDecorationLine.LineThrough else TextDecorationLine.None)
                 .fontWeight(if (!available) FontWeight.Normal else FontWeight.SemiBold)
-                .roleStyle(MaterialTheme.typography.bodyMedium)
-                .color(if (selected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface)
                 .transition(
                     CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease),
                     CSSTransition("font-weight", 0.3.s, TransitionTimingFunction.Ease),

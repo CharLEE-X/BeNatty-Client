@@ -16,7 +16,6 @@ import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.modifiers.animation
 import com.varabyte.kobweb.compose.ui.modifiers.background
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundPosition
@@ -35,8 +34,7 @@ import org.jetbrains.compose.web.css.ms
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
-import theme.sp
+import web.AppColors
 import web.pages.shop.home.TextPosition
 
 val ShimmerAnimation by Keyframes {
@@ -52,8 +50,8 @@ val ShimmerAnimation by Keyframes {
 fun Shimmer(
     modifier: Modifier = Modifier,
     textPosition: TextPosition = TextPosition.Center,
-    lightColor: Color = MaterialTheme.colors.surfaceContainerLowest,
-    darkColor: Color = MaterialTheme.colors.surfaceContainerHighest,
+//    lightColor: Color = MaterialTheme.colors.surfaceContainerLowest,
+//    darkColor: Color = MaterialTheme.colors.surfaceContainerHighest,
     delay: CSSTimeNumericValue = 0.s,
     content: @Composable ColumnScope.() -> Unit = {}
 ) {
@@ -64,11 +62,11 @@ fun Shimmer(
                 CSSBackground(
                     image = BackgroundImage.of(
                         linearGradient(angle = (-45).deg) {
-                            add(darkColor)
-                            add(darkColor)
-                            add(lightColor)
-                            add(darkColor)
-                            add(darkColor)
+                            add(AppColors.brandColor)
+                            add(AppColors.brandColor)
+                            add(AppColors.brandLightened)
+                            add(AppColors.brandColor)
+                            add(AppColors.brandColor)
                         }
                     )
                 )
@@ -112,7 +110,7 @@ fun ShimmerHeader(
     modifier: Modifier = Modifier,
 ) {
     Shimmer(
-        modifier = modifier.height(40.sp)
+        modifier = modifier.height(40.px)
     )
 }
 
@@ -131,7 +129,7 @@ fun ShimmerText(
     modifier: Modifier = Modifier,
 ) {
     Shimmer(
-        modifier = modifier.height(20.sp)
+        modifier = modifier.height(20.px)
     )
 }
 

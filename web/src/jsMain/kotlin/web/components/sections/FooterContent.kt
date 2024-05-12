@@ -13,8 +13,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
-import com.varabyte.kobweb.compose.ui.modifiers.background
-import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
@@ -31,6 +29,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.navigation.OpenLinkStrategy
 import com.varabyte.kobweb.navigation.open
 import com.varabyte.kobweb.silk.components.graphics.Image
+import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
@@ -38,28 +37,23 @@ import feature.shop.footer.FooterContract
 import feature.shop.footer.FooterRoutes
 import feature.shop.footer.FooterViewModel
 import kotlinx.browser.window
-import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.fr
 import org.jetbrains.compose.web.css.px
-import theme.MaterialTheme
-import theme.roleStyle
 import web.components.layouts.oneLayoutMaxWidth
-import web.components.widgets.AppOutlinedIconButton
+import web.components.widgets.AppIconButton
 import web.components.widgets.AppTextButton
 import web.components.widgets.ShimmerHeader
 import web.components.widgets.ShimmerText
-import web.compose.material3.component.Divider
 import web.util.sectionsGap
 
 @Composable
 fun Footer(
     footerRoutes: FooterRoutes,
     onError: suspend (String) -> Unit,
-    contentColor: CSSColorValue = MaterialTheme.colors.onSurface,
     isFullLayout: Boolean,
 ) {
     val scope = rememberCoroutineScope()
@@ -96,15 +90,15 @@ fun Footer(
                         .gridTemplateColumns { repeat(4) { size(1.fr) } }
                         .gap(2.em)
                 ) {
-                    CanWeHelpYouSection(state, contentColor, vm)
-                    CompanySection(state, contentColor, vm)
-                    HelpSection(state, contentColor, vm)
-                    FollowUsSection(state, contentColor)
+                    CanWeHelpYouSection(state, vm)
+                    CompanySection(state, vm)
+                    HelpSection(state, vm)
+                    FollowUsSection(state)
                 }
             }
-            Divider(modifier = Modifier.background(MaterialTheme.colors.surface))
+            HorizontalDivider()
         }
-        BottomSection(state, vm, contentColor)
+        BottomSection(state, vm)
     }
 }
 
@@ -112,7 +106,6 @@ fun Footer(
 private fun BottomSection(
     state: FooterContract.State,
     vm: FooterViewModel,
-    contentColor: CSSColorValue
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -132,7 +125,6 @@ private fun BottomSection(
                 } else {
                     SpanText(
                         text = "© ${state.year} ${getString(Strings.CompanyName)}",
-                        modifier = Modifier.color(contentColor)
                     )
                 }
             }
@@ -159,19 +151,17 @@ private fun BottomSection(
 @Composable
 private fun FollowUsSection(
     state: FooterContract.State,
-    contentColor: CSSColorValue
 ) {
     FooterSection(
         isLoading = state.isLoading,
         title = getString(Strings.FollowUs),
-        contentColor = contentColor,
     ) {
         if (!state.isLoading) {
             Row(
                 modifier = Modifier
                     .gap(1.em)
             ) {
-                AppOutlinedIconButton(
+                AppIconButton(
                     onClick = { },
                 ) {
                     Image(
@@ -180,7 +170,7 @@ private fun FollowUsSection(
                         modifier = Modifier.size(1.em)
                     )
                 }
-                AppOutlinedIconButton(
+                AppIconButton(
                     onClick = { },
                 ) {
                     Image(
@@ -189,7 +179,7 @@ private fun FollowUsSection(
                         modifier = Modifier.size(1.em)
                     )
                 }
-                AppOutlinedIconButton(
+                AppIconButton(
                     onClick = { },
                 ) {
                     Image(
@@ -219,13 +209,11 @@ private fun FollowUsSection(
 @Composable
 private fun HelpSection(
     state: FooterContract.State,
-    contentColor: CSSColorValue,
     vm: FooterViewModel
 ) {
     FooterSection(
         isLoading = state.isLoading,
         title = getString(Strings.Help),
-        contentColor = contentColor,
     ) {
         if ((!state.isLoading)) {
             FooterTextButton(
@@ -249,13 +237,11 @@ private fun HelpSection(
 @Composable
 private fun CompanySection(
     state: FooterContract.State,
-    contentColor: CSSColorValue,
     vm: FooterViewModel
 ) {
     FooterSection(
         isLoading = state.isLoading,
         title = getString(Strings.Company),
-        contentColor = contentColor,
     ) {
         if (!state.isLoading) {
             FooterTextButton(
@@ -297,13 +283,11 @@ private fun CompanySection(
 @Composable
 private fun CanWeHelpYouSection(
     state: FooterContract.State,
-    contentColor: CSSColorValue,
     vm: FooterViewModel
 ) {
     FooterSection(
         isLoading = state.isLoading,
         title = getString(Strings.CanWeHelpYou).uppercase() + "?",
-        contentColor = contentColor,
     ) {
         if (!state.isLoading) {
             AppTextButton(
@@ -318,24 +302,18 @@ private fun CanWeHelpYouSection(
                     "${state.companyInfo?.openingTimes?.open}" +
                     " ${getString(Strings.To)} ${state.companyInfo?.openingTimes?.close}.",
                 modifier = Modifier
-                    .roleStyle(MaterialTheme.typography.bodyMedium)
-                    .color(contentColor)
             )
             state.companyInfo?.contactInfo?.phone?.let { phone ->
                 SpanText(
                     text = "${getString(Strings.Tel)}: $phone".uppercase(),
                     modifier = Modifier
                         .padding(top = 1.em)
-                        .roleStyle(MaterialTheme.typography.bodyMedium)
-                        .color(contentColor)
                 )
                 SpanText(
                     text = "${getString(Strings.From)} ${state.companyInfo?.openingTimes?.dayFrom} ${getString(Strings.To)} " +
                         "${state.companyInfo?.openingTimes?.dayTo} ${getString(Strings.From).lowercase()} " +
                         "${state.companyInfo?.openingTimes?.open}" +
                         " ${getString(Strings.To)} ${state.companyInfo?.openingTimes?.close}.",
-                    modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
-                        .color(contentColor)
                 )
             }
             AppTextButton(
@@ -346,8 +324,6 @@ private fun CanWeHelpYouSection(
             }
             SpanText(
                 text = getString(Strings.WeWillReply),
-                modifier = Modifier.roleStyle(MaterialTheme.typography.bodyMedium)
-                    .color(contentColor)
             )
         } else {
             ShimmerFooterSection()
@@ -359,7 +335,6 @@ private fun CanWeHelpYouSection(
 private fun FooterSection(
     isLoading: Boolean,
     title: String,
-    contentColor: CSSColorValue,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(
@@ -369,7 +344,6 @@ private fun FooterSection(
             SpanText(
                 text = title.uppercase(),
                 modifier = Modifier
-                    .color(contentColor)
                     .margin(bottom = 0.25.em)
             )
         } else {

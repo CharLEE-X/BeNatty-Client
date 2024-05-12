@@ -22,7 +22,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.attrsModifier
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.boxSizing
-import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
@@ -49,7 +48,12 @@ import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.silk.components.icons.mdi.IconStyle
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiAddShoppingCart
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiContactSupport
+import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.color
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.getString
 import feature.product.page.ProductPageContract
@@ -65,8 +69,8 @@ import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.dom.Span
 import org.w3c.dom.Element
-import theme.MaterialTheme
-import theme.roleStyle
+import web.H3Variant
+import web.HeadlineStyle
 import web.components.layouts.GlobalVMs
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
@@ -75,7 +79,6 @@ import web.components.widgets.AppFilledButton
 import web.components.widgets.FlexSpacer
 import web.components.widgets.RotatableChevron
 import web.components.widgets.Spacer
-import web.compose.material3.component.Divider
 import web.pages.shop.home.gridModifier
 import web.pages.shop.product.page.dialogs.AskQuestionDialog
 import web.pages.shop.product.page.dialogs.SizeGuideDialog
@@ -193,17 +196,16 @@ private fun DescriptionsSection(state: ProductPageContract.State) {
             .display(DisplayStyle.Block)
             .margin(top = 1.em)
     ) {
-        Divider()
+        HorizontalDivider()
         ExpandableSection(
             title = getString(Strings.Description),
             enabled = state.product.description.isNotEmpty(),
         ) {
             SpanText(
                 text = state.product.description,
-                modifier = Modifier.color(MaterialTheme.colors.onBackground)
             )
         }
-        Divider()
+        HorizontalDivider()
         ExpandableSection(
             title = getString(Strings.Materials),
             enabled = true,
@@ -213,10 +215,9 @@ private fun DescriptionsSection(state: ProductPageContract.State) {
                     OUTER SHELL: 100% cotton
                     LINING: 100% cotton
                 """.trimIndent(),
-                modifier = Modifier.color(MaterialTheme.colors.onBackground)
             )
         }
-        Divider()
+        HorizontalDivider()
         ExpandableSection(
             title = getString(Strings.Care),
             enabled = true,
@@ -232,10 +233,9 @@ private fun DescriptionsSection(state: ProductPageContract.State) {
                     • Do not dry clean
                     • Do not tumble dry
                 """.trimIndent(),
-                modifier = Modifier.color(MaterialTheme.colors.onBackground)
             )
         }
-        Divider()
+        HorizontalDivider()
     }
 }
 
@@ -291,9 +291,7 @@ private fun ExpandableSection(
             ) {
                 SpanText(
                     text = title.uppercase(),
-                    modifier = Modifier
-                        .roleStyle(MaterialTheme.typography.titleMedium)
-                        .color(MaterialTheme.colors.onBackground)
+                    modifier = HeadlineStyle.toModifier(H3Variant)
                 )
                 if (enabled) {
                     FlexSpacer()
@@ -308,7 +306,6 @@ private fun ExpandableSection(
             Span(
                 Modifier
                     .padding(top = if (open) 1.em else 0.em)
-                    .roleStyle(MaterialTheme.typography.bodyLarge)
                     .thenIf(!open, Modifier.height(0.px))
                     .opacity(if (open) 1f else 0f)
                     .display(DisplayStyle.ListItem)
@@ -337,7 +334,6 @@ private fun AskQuestionButton(vm: ProductPageViewModel) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .gap(2.px)
-            .color(MaterialTheme.colors.onBackground)
             .onMouseOver { hovered = true }
             .onMouseLeave { hovered = false }
             .onFocusIn { hovered = true }
@@ -359,14 +355,13 @@ private fun AskQuestionButton(vm: ProductPageViewModel) {
         Box {
             SpanText(
                 text = getString(Strings.AskQuestion).uppercase(),
-                modifier = Modifier.roleStyle(MaterialTheme.typography.titleSmall)
             )
             Box(
                 modifier = Modifier
                     .translateY(22.px)
                     .height(2.px)
                     .fillMaxWidth(if (hovered) 100.percent else 0.percent)
-                    .backgroundColor(MaterialTheme.colors.onSurface)
+                    .backgroundColor(ColorMode.current.toPalette().color)
                     .transition(CSSTransition("width", 0.3.s, TransitionTimingFunction.Ease))
             )
         }
@@ -378,14 +373,12 @@ private fun AddToCartButton(vm: ProductPageViewModel, state: ProductPageContract
     AppFilledButton(
         disabled = !state.isAddToCartButtonEnabled,
         onClick = { vm.trySend(ProductPageContract.Inputs.OnAddToCartClicked) },
-        leadingIcon = { MdiAddShoppingCart() },
-        cornerRadius = 32.px,
         modifier = Modifier.fillMaxWidth()
     ) {
+        MdiAddShoppingCart()
         SpanText(
             text = getString(Strings.AddToCart).uppercase(),
             modifier = Modifier
-                .roleStyle(MaterialTheme.typography.titleMedium)
                 .padding(8.px)
         )
     }

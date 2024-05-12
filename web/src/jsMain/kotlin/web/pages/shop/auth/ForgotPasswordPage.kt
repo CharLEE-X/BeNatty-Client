@@ -22,6 +22,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEmail
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiError
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
@@ -31,17 +32,16 @@ import feature.shop.footer.FooterRoutes
 import feature.shop.navbar.DesktopNavRoutes
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
-import theme.MaterialTheme
-import theme.roleStyle
+import web.H1Variant
+import web.H3Variant
+import web.HeadlineStyle
+import web.SubHeadlineStyle
 import web.components.layouts.GlobalVMs
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
 import web.components.widgets.AppFilledButton
-import web.components.widgets.AppFilledTonalButton
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.AppTextButton
-import web.compose.material3.component.CircularProgress
-import web.compose.material3.component.TextFieldType
 
 @Composable
 fun ForgotPasswordPage(
@@ -98,11 +98,11 @@ private fun ForgotPassword(
 
     SpanText(
         text = getString(Strings.ForgotPassword),
-        modifier = Modifier.roleStyle(MaterialTheme.typography.headlineLarge)
+        modifier = HeadlineStyle.toModifier(H1Variant)
     )
     SpanText(
         text = getString(Strings.ForgotPasswordDescription),
-        modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
+        modifier = SubHeadlineStyle.toModifier()
     )
     AppOutlinedTextField(
         value = email,
@@ -114,7 +114,6 @@ private fun ForgotPassword(
         trailingIcon = { if (state.showError) MdiError() },
         supportingText = state.errorMessage,
         label = getString(Strings.Email),
-        type = TextFieldType.TEXT,
         error = state.showError,
         errorText = state.errorMessage,
         modifier = Modifier
@@ -127,17 +126,11 @@ private fun ForgotPassword(
         modifier = Modifier.fillMaxWidth()
     ) {
         if (state.isLoading) {
-            CircularProgress(
-                value = 0f,
-                intermediate = true,
-                fourColor = true,
-                modifier = Modifier
-                    .margin(top = 1.em)
-            )
+            SpanText("Loading...")
         } else {
             SpanText(
                 text = getString(Strings.GetAResetLink),
-                modifier = Modifier.roleStyle(MaterialTheme.typography.headlineSmall)
+                modifier = HeadlineStyle.toModifier(H3Variant)
             )
         }
     }
@@ -150,46 +143,41 @@ private fun CheckEmail(
 ) {
     SpanText(
         text = getString(Strings.CheckEmail),
-        modifier = Modifier.roleStyle(MaterialTheme.typography.headlineLarge)
+        modifier = HeadlineStyle.toModifier(H1Variant)
     )
     SpanText(
         text = getString(Strings.CheckEmailDescription),
-        modifier = Modifier.roleStyle(MaterialTheme.typography.labelLarge)
+        modifier = SubHeadlineStyle.toModifier()
     )
     Row(
         modifier = Modifier
             .gap(1.em)
             .margin(top = 1.em)
     ) {
-        AppFilledTonalButton(
+        AppFilledButton(
             onClick = { vm.trySend(ForgotPasswordContract.Inputs.OpenGmail) },
-            leadingIcon = {
-                Image(
-                    src = "/google.png",
-                    alt = "Google",
-                    modifier = Modifier.size(1.5.em)
-                )
-            },
         ) {
+            Image(
+                src = "/google.png",
+                alt = "Google",
+                modifier = Modifier.size(1.5.em)
+            )
             SpanText(
                 text = "Google",
-                modifier = Modifier
-                    .roleStyle(MaterialTheme.typography.headlineSmall)
+                modifier = HeadlineStyle.toModifier(H3Variant)
             )
         }
-        AppFilledTonalButton(
+        AppFilledButton(
             onClick = { vm.trySend(ForgotPasswordContract.Inputs.OpenOutlook) },
-            leadingIcon = {
-                Image(
-                    src = "/outlook.png",
-                    alt = "Outlook",
-                    modifier = Modifier.size(1.5.em)
-                )
-            },
         ) {
+            Image(
+                src = "/outlook.png",
+                alt = "Outlook",
+                modifier = Modifier.size(1.5.em)
+            )
             SpanText(
                 text = "Outlook",
-                modifier = Modifier.roleStyle(MaterialTheme.typography.headlineSmall)
+                modifier = HeadlineStyle.toModifier(H3Variant)
             )
         }
     }
@@ -206,15 +194,14 @@ private fun GoBackToLogin(
     ) {
         SpanText(
             text = getString(Strings.BackTo),
-            modifier = Modifier.roleStyle(MaterialTheme.typography.headlineSmall)
+            modifier = HeadlineStyle.toModifier(H3Variant)
         )
         AppTextButton(
             onClick = { vm.trySend(ForgotPasswordContract.Inputs.OnGoToLoginClick) },
         ) {
             SpanText(
                 text = getString(Strings.Login),
-                modifier = Modifier
-                    .roleStyle(MaterialTheme.typography.headlineSmall)
+                modifier = HeadlineStyle.toModifier(H3Variant)
                     .fontWeight(FontWeight.SemiBold)
             )
         }

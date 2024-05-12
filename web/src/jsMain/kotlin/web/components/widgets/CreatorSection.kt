@@ -8,7 +8,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.silk.components.text.SpanText
 import org.jetbrains.compose.web.css.em
 
-
 @Composable
 fun CreatorSection(
     title: String,

@@ -12,7 +12,6 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
-import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
@@ -32,8 +31,7 @@ import feature.product.catalog.CatalogContract
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import theme.MaterialTheme
-import web.HeadlineTextStyle
+import web.HeadlineStyle
 import web.components.widgets.AppElevatedCard
 import web.components.widgets.Shimmer
 import web.components.widgets.ShimmerButton
@@ -102,7 +100,6 @@ private fun Banner(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .backgroundColor(MaterialTheme.colors.surfaceContainerHighest)
         ) {
             val imageModifier = Modifier
                 .fillMaxSize()
@@ -118,7 +115,7 @@ private fun Banner(
             ) {
                 SpanText(
                     text = title.uppercase(),
-                    modifier = HeadlineTextStyle.toModifier()
+                    modifier = HeadlineStyle.toModifier()
                         .color(Colors.Black)
                 )
             }

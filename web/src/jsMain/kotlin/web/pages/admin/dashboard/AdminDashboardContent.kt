@@ -21,11 +21,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
-import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
-import com.varabyte.kobweb.compose.ui.modifiers.width
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.text.SpanText
-import component.localization.Strings
 import component.localization.Strings.Categories
 import component.localization.Strings.Customers
 import component.localization.Strings.Orders
@@ -37,18 +33,14 @@ import feature.admin.dashboard.AdminDashboardViewModel
 import feature.admin.dashboard.adminDashboardStrings
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.web.css.em
-import org.jetbrains.compose.web.css.px
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.OneLayout
-import web.components.widgets.AppFilledButton
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.CardSection
 import web.components.widgets.CreateButton
+import web.components.widgets.DeleteButton
 import web.components.widgets.SwitchSection
-import web.compose.material3.component.CircularProgress
-import web.compose.material3.component.TextFieldType
-import web.util.onEnterKeyDown
 
 @Composable
 fun AdminDashboardPage(
@@ -129,27 +121,24 @@ private fun DataGenerator(vm: AdminDashboardViewModel, state: AdminDashboardCont
                 value = state.productsToGenerate.toString(),
                 onValueChange = { vm.trySend(AdminDashboardContract.Inputs.SetProductsToGenerate(it)) },
                 label = getString(Products),
-                type = TextFieldType.NUMBER,
+//                type = TextFieldType.NUMBER,
                 modifier = Modifier.fillMaxWidth()
             )
             AppOutlinedTextField(
                 value = state.customersToGenerate.toString(),
                 onValueChange = { vm.trySend(AdminDashboardContract.Inputs.SetCustomersToGenerate(it)) },
                 label = getString(Customers),
-                type = TextFieldType.NUMBER,
+//                type = TextFieldType.NUMBER,
                 modifier = Modifier.fillMaxWidth()
             )
             AppOutlinedTextField(
                 value = state.ordersToGenerate.toString(),
                 onValueChange = { vm.trySend(AdminDashboardContract.Inputs.SetOrdersToGenerate(it)) },
                 label = getString(Orders),
-                type = TextFieldType.NUMBER,
+//                type = TextFieldType.NUMBER,
                 modifier = Modifier.fillMaxWidth()
             )
-
-            CreateButton(
-                onClick = { vm.trySend(AdminDashboardContract.Inputs.OnGenerateClicked) },
-            )
+            CreateButton { vm.trySend(AdminDashboardContract.Inputs.OnGenerateClicked) }
         }
     }
 }
@@ -178,16 +167,7 @@ private fun DataDeleter(vm: AdminDashboardViewModel, state: AdminDashboardContra
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Spacer()
-                AppFilledButton(
-                    onClick = { vm.trySend(AdminDashboardContract.Inputs.OnDeleteGeneratedClicked) },
-                    leadingIcon = { MdiDelete() },
-                    modifier = Modifier
-                        .width(150.px)
-                        .tabIndex(0)
-                        .onEnterKeyDown { vm.trySend(AdminDashboardContract.Inputs.OnDeleteGeneratedClicked) }
-                ) {
-                    SpanText(getString(Strings.Delete).uppercase())
-                }
+                DeleteButton { vm.trySend(AdminDashboardContract.Inputs.OnDeleteGeneratedClicked) }
             }
         }
     }
@@ -216,7 +196,7 @@ private fun LoaderComponent(show: Boolean, content: @Composable ColumnScope.() -
                         .fillMaxSize()
                         .backgroundColor(Colors.LightGray.copy(alpha = 50))
                 )
-                CircularProgress(intermediate = true, fourColor = true)
+                SpanText("Loading...")
             }
         }
     }

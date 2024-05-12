@@ -71,9 +71,7 @@ fun AdminCategoryCreateContent(
                             .onEnterKeyDown { vm.trySend(AdminCategoryCreateContract.Inputs.OnCreateClick) }
                     )
                     AppTooltip(getString(Strings.CategoryNameDescription))
-                    CreateButton(
-                        onClick = { vm.trySend(AdminCategoryCreateContract.Inputs.OnCreateClick) },
-                    )
+                    CreateButton { vm.trySend(AdminCategoryCreateContract.Inputs.OnCreateClick) }
                 }
             },
         )
