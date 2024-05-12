@@ -42,7 +42,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.silk.components.forms.TextInput
-import com.varabyte.kobweb.silk.components.icons.mdi.IconStyle
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiHome
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiKeyboardCommand
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiLightMode
@@ -341,18 +340,16 @@ private fun TopBarRightSection(
         var colorMode by ColorMode.currentState
         AppIconButton(
             onClick = { colorMode = colorMode.opposite },
-        ) {
-            if (colorMode.isLight) MdiLightMode(style = IconStyle.OUTLINED)
-            else MdiModeNight(style = IconStyle.OUTLINED)
-        }
+            icon = {
+                if (colorMode.isLight) MdiLightMode(style = it)
+                else MdiModeNight(style = it)
+            }
+        )
         AppIconButton(
             onClick = onNotificationButtonClick,
-        ) {
-            MdiNotifications()
-        }
-        AppFilledButton(
-            onClick = onBeNattyButtonClick,
-        ) {
+            icon = { MdiNotifications(style = it) }
+        )
+        AppFilledButton(onClick = onBeNattyButtonClick) {
             SpanText(getString(Strings.ShopName))
         }
     }

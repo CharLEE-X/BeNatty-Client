@@ -496,13 +496,8 @@ private fun CartItem(
                 )
                 AppIconButton(
                     onClick = { onRemoveClick() },
-                    modifier = Modifier
-                        .onEnterKeyDown(onRemoveClick)
-                ) {
-                    MdiDelete(
-                        style = IconStyle.OUTLINED,
-                    )
-                }
+                    icon = { MdiDelete(style = IconStyle.OUTLINED) },
+                )
             }
         }
         ProductPrice(

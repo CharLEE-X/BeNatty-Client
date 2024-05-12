@@ -25,7 +25,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.onKeyDown
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
 import com.varabyte.kobweb.compose.ui.modifiers.padding
-import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.width
@@ -36,12 +35,15 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiEmail
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiSend
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
+import component.localization.Strings
+import component.localization.getString
+import feature.shop.home.HomeContract
+import feature.shop.home.HomeViewModel
 import org.jetbrains.compose.web.attributes.AutoComplete
 import org.jetbrains.compose.web.attributes.InputType
-import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
-import web.H3Variant
+import web.H2Variant
 import web.HeadlineStyle
 import web.components.widgets.AppTextButton
 import web.components.widgets.ShimmerText
@@ -49,24 +51,12 @@ import web.util.onEnterKeyDown
 
 @Composable
 fun HomeSubscribe(
-    isLoading: Boolean,
-    subscribeText: String,
-    subscribeDescText: String,
-    emailText: String,
-    byAgreeingText: String,
-    privacyPolicyText: String,
-    andText: String,
-    termsOfServiceText: String,
-    emailPlaceholder: String,
-    onPrivacyPolicyClick: () -> Unit,
-    onTermsOfServiceClick: () -> Unit,
-    onEmailSend: () -> Unit,
-    onEmailChange: (String) -> Unit,
+    vm: HomeViewModel,
+    state: HomeContract.State,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .position(Position.Relative)
             .fillMaxWidth()
             .padding(leftRight = 24.px, topBottom = 56.px)
     ) {
@@ -75,20 +65,20 @@ fun HomeSubscribe(
             modifier = Modifier.gap(1.em)
         ) {
             SpanText(
-                text = subscribeText.uppercase(),
-                modifier = HeadlineStyle.toModifier(H3Variant)
+                text = getString(Strings.SubscribeToOurNewsletter).uppercase(),
+                modifier = HeadlineStyle.toModifier(H2Variant)
                     .fontWeight(FontWeight.Bold)
             )
             SpanText(
-                text = subscribeDescText,
+                text = getString(Strings.BeFirstToGetLatestOffers),
                 modifier = Modifier
                     .margin(leftRight = 3.em)
             )
             EmailTextField(
-                value = emailText,
-                onValueChange = onEmailChange,
-                placeholder = emailPlaceholder,
-                onEnterPress = onEmailSend,
+                value = state.email,
+                onValueChange = { vm.trySend(HomeContract.Inputs.OnEmailChange(it)) },
+                placeholder = getString(Strings.Email),
+                onEnterPress = { vm.trySend(HomeContract.Inputs.OnEmailSend) },
                 modifier = Modifier
                     .height(60.px)
                     .fillMaxWidth()
@@ -98,29 +88,26 @@ fun HomeSubscribe(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 SpanText(
-                    text = byAgreeingText,
+                    text = "${getString(Strings.ByAgreeing)} ",
                 )
-                if (!isLoading) {
+                if (!state.isLoading) {
                     AppTextButton(
-                        onClick = { onPrivacyPolicyClick() },
+                        onClick = { vm.trySend(HomeContract.Inputs.OnPrivacyPolicyClick) },
                         modifier = Modifier
                             .tabIndex(0)
-                            .onEnterKeyDown(onPrivacyPolicyClick)
+                            .onEnterKeyDown { vm.trySend(HomeContract.Inputs.OnPrivacyPolicyClick) }
                     ) {
-                        SpanText(text = privacyPolicyText)
+                        SpanText(getString(Strings.PrivacyPolicy))
                     }
                 } else {
                     ShimmerText(Modifier.width(90.px).margin(leftRight = 0.5.em))
                 }
-                SpanText(text = andText)
-                if (!isLoading) {
+                SpanText(text = " ${getString(Strings.And)} ")
+                if (!state.isLoading) {
                     AppTextButton(
-                        onClick = { onTermsOfServiceClick() },
-                        modifier = Modifier
-                            .tabIndex(0)
-                            .onEnterKeyDown(onTermsOfServiceClick)
+                        onClick = { vm.trySend(HomeContract.Inputs.OnTermsOfServiceClick) },
                     ) {
-                        SpanText(text = termsOfServiceText)
+                        SpanText(getString(Strings.TermsOfService))
                     }
                 } else {
                     ShimmerText(Modifier.width(90.px).margin(leftRight = 0.5.em))

@@ -22,7 +22,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.size
-import com.varabyte.kobweb.compose.ui.modifiers.translateX
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
@@ -30,6 +29,7 @@ import com.varabyte.kobweb.navigation.OpenLinkStrategy
 import com.varabyte.kobweb.navigation.open
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
+import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
@@ -43,6 +43,8 @@ import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.fr
 import org.jetbrains.compose.web.css.px
+import web.H3Variant
+import web.HeadlineStyle
 import web.components.layouts.oneLayoutMaxWidth
 import web.components.widgets.AppIconButton
 import web.components.widgets.AppTextButton
@@ -118,14 +120,12 @@ private fun BottomSection(
         if (!state.isLoading) {
             state.companyInfo?.contactInfo?.companyName?.let { companyName ->
                 if (state.companyInfo?.contactInfo?.companyWebsite?.isNotEmpty() == true) {
-                    FooterTextButton(
-                        text = "© ${state.year} $companyName",
+                    AppTextButton(
                         onClick = { vm.trySend(FooterContract.Inputs.OnCompanyNameClick) },
+                        content = { SpanText(text = "© ${state.year} $companyName") }
                     )
                 } else {
-                    SpanText(
-                        text = "© ${state.year} ${getString(Strings.CompanyName)}",
-                    )
+                    SpanText("© ${state.year} ${getString(Strings.CompanyName)}")
                 }
             }
         } else {
@@ -163,31 +163,34 @@ private fun FollowUsSection(
             ) {
                 AppIconButton(
                     onClick = { },
-                ) {
-                    Image(
-                        src = "/facebook.png",
-                        alt = "Facebook",
-                        modifier = Modifier.size(1.em)
-                    )
-                }
+                    icon = {
+                        Image(
+                            src = "/facebook.png",
+                            alt = "Facebook",
+                            modifier = Modifier.size(1.em)
+                        )
+                    }
+                )
                 AppIconButton(
                     onClick = { },
-                ) {
-                    Image(
-                        src = "/twitter.png",
-                        alt = "Twitter",
-                        modifier = Modifier.size(1.em)
-                    )
-                }
+                    icon = {
+                        Image(
+                            src = "/twitter.png",
+                            alt = "Twitter",
+                            modifier = Modifier.size(1.em)
+                        )
+                    }
+                )
                 AppIconButton(
                     onClick = { },
-                ) {
-                    Image(
-                        src = "/instagram.png",
-                        alt = "Instagram",
-                        modifier = Modifier.size(1.em)
-                    )
-                }
+                    icon = {
+                        Image(
+                            src = "/instagram.png",
+                            alt = "Instagram",
+                            modifier = Modifier.size(1.em)
+                        )
+                    }
+                )
             }
         } else {
             Column(
@@ -216,17 +219,17 @@ private fun HelpSection(
         title = getString(Strings.Help),
     ) {
         if ((!state.isLoading)) {
-            FooterTextButton(
-                text = getString(Strings.TrackOrder),
+            AppTextButton(
                 onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
+                content = { SpanText(getString(Strings.TrackOrder)) },
             )
-            FooterTextButton(
-                text = getString(Strings.Shipping),
+            AppTextButton(
                 onClick = { vm.trySend(FooterContract.Inputs.OnShippingClick) },
+                content = { SpanText(getString(Strings.Shipping)) },
             )
-            FooterTextButton(
-                text = getString(Strings.Returns),
+            AppTextButton(
                 onClick = { vm.trySend(FooterContract.Inputs.OnReturnsClick) },
+                content = { SpanText(getString(Strings.Returns)) },
             )
         } else {
             ShimmerFooterSection()
@@ -244,34 +247,34 @@ private fun CompanySection(
         title = getString(Strings.Company),
     ) {
         if (!state.isLoading) {
-            FooterTextButton(
-                text = getString(Strings.ContactUs),
+            AppTextButton(
                 onClick = { vm.trySend(FooterContract.Inputs.OnPrivacyPolicyClicked) },
+                content = { SpanText(getString(Strings.ContactUs)) },
             )
-            FooterTextButton(
-                text = getString(Strings.AboutUs),
+            AppTextButton(
                 onClick = { vm.trySend(FooterContract.Inputs.OnTermsOfServiceClicked) },
+                content = { SpanText(getString(Strings.AboutUs)) },
             )
             if (state.footerConfig?.showCareer == true) {
-                FooterTextButton(
-                    text = getString(Strings.Career),
+                AppTextButton(
                     onClick = { vm.trySend(FooterContract.Inputs.OnCareerClick) },
+                    content = { SpanText(getString(Strings.Career)) },
                 )
             }
             if (state.footerConfig?.showPress == true) {
-                FooterTextButton(
-                    text = getString(Strings.Press),
+                AppTextButton(
                     onClick = { vm.trySend(FooterContract.Inputs.OnPressClick) },
+                    content = { SpanText(getString(Strings.Press)) },
                 )
             }
-            FooterTextButton(
-                text = getString(Strings.PrivacyPolicy),
+            AppTextButton(
                 onClick = { vm.trySend(FooterContract.Inputs.OnPrivacyPolicyClicked) },
+                content = { SpanText(getString(Strings.PrivacyPolicy)) },
             )
             if (state.isAdmin) {
-                FooterTextButton(
-                    text = getString(Strings.Admin),
+                AppTextButton(
                     onClick = { vm.trySend(FooterContract.Inputs.OnGoToAdminHome) },
+                    content = { SpanText(getString(Strings.Admin)) },
                 )
             }
         } else {
@@ -292,22 +295,18 @@ private fun CanWeHelpYouSection(
         if (!state.isLoading) {
             AppTextButton(
                 onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
-                modifier = Modifier.translateX((-12).px)
-            ) {
-                SpanText(text = getString(Strings.StartChat).uppercase())
-            }
+                content = { SpanText(text = getString(Strings.StartChat).uppercase()) }
+            )
             SpanText(
                 text = "${getString(Strings.From)} ${state.companyInfo?.openingTimes?.dayFrom} ${getString(Strings.To)} " +
                     "${state.companyInfo?.openingTimes?.dayTo} \n${getString(Strings.From).lowercase()} " +
                     "${state.companyInfo?.openingTimes?.open}" +
                     " ${getString(Strings.To)} ${state.companyInfo?.openingTimes?.close}.",
-                modifier = Modifier
             )
             state.companyInfo?.contactInfo?.phone?.let { phone ->
                 SpanText(
                     text = "${getString(Strings.Tel)}: $phone".uppercase(),
-                    modifier = Modifier
-                        .padding(top = 1.em)
+                    modifier = Modifier.padding(top = 1.em)
                 )
                 SpanText(
                     text = "${getString(Strings.From)} ${state.companyInfo?.openingTimes?.dayFrom} ${getString(Strings.To)} " +
@@ -318,13 +317,9 @@ private fun CanWeHelpYouSection(
             }
             AppTextButton(
                 onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
-                modifier = Modifier.translateX((-12).px)
-            ) {
-                SpanText(text = getString(Strings.SendEmail).uppercase())
-            }
-            SpanText(
-                text = getString(Strings.WeWillReply),
+                content = { SpanText(text = getString(Strings.SendEmail).uppercase()) }
             )
+            SpanText(getString(Strings.WeWillReply))
         } else {
             ShimmerFooterSection()
         }
@@ -338,18 +333,20 @@ private fun FooterSection(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(
-        modifier = Modifier.position(Position.Relative)
+        modifier = Modifier
+            .position(Position.Relative)
+            .gap(1.em)
     ) {
-        if (!isLoading) {
+        if (isLoading) {
+            ShimmerHeader()
+        } else {
             SpanText(
                 text = title.uppercase(),
-                modifier = Modifier
+                modifier = HeadlineStyle.toModifier(H3Variant)
                     .margin(bottom = 0.25.em)
             )
-        } else {
-            ShimmerHeader()
+            content()
         }
-        content()
     }
 }
 
@@ -366,19 +363,6 @@ private fun ShimmerFooterSection() {
         repeat(4) {
             ShimmerText(Modifier.width(width))
         }
-    }
-}
-
-@Composable
-private fun FooterTextButton(
-    text: String,
-    onClick: () -> Unit,
-) {
-    AppTextButton(
-        onClick = { onClick() },
-        modifier = Modifier.translateX((-12).px)
-    ) {
-        SpanText(text = text)
     }
 }
 

@@ -75,7 +75,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.compose.ui.styleModifier
 import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.silk.components.graphics.Image
-import com.varabyte.kobweb.silk.components.icons.mdi.IconStyle
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiFacebook
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiLightMode
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiModeNight
@@ -110,7 +109,6 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import web.BodyStyle
 import web.H2Variant
 import web.H3Variant
 import web.HeadlineStyle
@@ -130,7 +128,6 @@ fun NavBar(
     basketCount: Int,
 ) {
     val scope = rememberCoroutineScope()
-    var searchValue by remember { mutableStateOf("") }
 
     var isShopHovered by remember { mutableStateOf(false) }
     var isShopBigMenuHovered by remember { mutableStateOf(false) }
@@ -303,12 +300,12 @@ private fun RightSection(
         if (isFullLayout) {
             AppIconButton(
                 onClick = { vm.trySend(NavbarContract.Inputs.OnSearchClicked) },
-                icon = { MdiSearch(style = IconStyle.OUTLINED) }
+                icon = { MdiSearch(style = it) }
             )
             if (!state.isCheckAuthLoading) {
                 AppIconButton(
                     onClick = { vm.trySend(NavbarContract.Inputs.OnUserClicked) },
-                    icon = { MdiPerson2(style = IconStyle.OUTLINED) }
+                    icon = { MdiPerson2(style = it) }
                 )
             } else {
                 ShimmerHeader(Modifier.aspectRatio(1))
@@ -317,8 +314,8 @@ private fun RightSection(
             AppIconButton(
                 onClick = { colorMode = colorMode.opposite },
                 icon = {
-                    if (colorMode.isLight) MdiLightMode(style = IconStyle.OUTLINED)
-                    else MdiModeNight(style = IconStyle.OUTLINED)
+                    if (colorMode.isLight) MdiLightMode(style = it)
+                    else MdiModeNight(style = it)
                 }
             )
 
@@ -353,7 +350,7 @@ private fun RightSection(
                 }
                 AppIconButton(
                     onClick = { vm.trySend(NavbarContract.Inputs.OnCartClick) },
-                    icon = { MdiShoppingCart(style = IconStyle.OUTLINED) }
+                    icon = { MdiShoppingCart(style = it) }
                 )
             }
         }
@@ -543,7 +540,7 @@ fun ExploreBigMenu(vm: NavbarViewModel, state: NavbarContract.State, modifier: M
                         .fontWeight(FontWeight.SemiBold)
                 )
                 Column(
-                    modifier = BodyStyle.toModifier()
+                    modifier = Modifier
                         .gap(1.em)
                 ) {
                     TextLink(
@@ -647,7 +644,7 @@ private fun RecommendedProductItem(
         }
         SpanText(
             text = name,
-            modifier = BodyStyle.toModifier()
+            modifier = Modifier
         )
         ProductPrice(
             regularPrice = regularPrice,
@@ -731,7 +728,7 @@ private fun MenuItem(
         ) {
             SpanText(
                 text = item,
-                modifier = BodyStyle.toModifier()
+                modifier = Modifier
                     .whiteSpace(WhiteSpace.NoWrap)
             )
             Box(

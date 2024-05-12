@@ -30,6 +30,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.silk.components.graphics.Image
+import com.varabyte.kobweb.silk.components.icons.mdi.IconStyle
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiAddAPhoto
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiCloudUpload
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
@@ -66,7 +67,6 @@ fun MediaSlot(
     onEditClick: () -> Unit = {},
 ) {
     var imageHovered by remember { mutableStateOf(false) }
-    var addIconHovered by remember { mutableStateOf(false) }
 
     Box(
         contentAlignment = Alignment.Center,
@@ -108,7 +108,6 @@ fun MediaSlot(
             if (hasDeleteButton) {
                 ActionIcon(
                     onClick = onDeleteClick,
-                    isParentHovered = imageHovered,
                     icon = { MdiDelete() },
                     modifier = Modifier.align(Alignment.TopEnd)
                 )
@@ -116,7 +115,6 @@ fun MediaSlot(
             if (hasEditButton) {
                 ActionIcon(
                     onClick = onEditClick,
-                    isParentHovered = imageHovered,
                     icon = { MdiEdit() },
                     modifier = Modifier.align(Alignment.TopEnd)
                 )
@@ -145,9 +143,7 @@ fun MediaSlot(
             )
             ActionIcon(
                 onClick = { onImageClick(url) },
-                isParentHovered = imageHovered,
                 icon = { MdiAddAPhoto() },
-                onHovered = { addIconHovered = it },
             )
             errorText?.let { errorText ->
                 SpanText(
@@ -166,27 +162,12 @@ fun MediaSlot(
 private fun ActionIcon(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    isParentHovered: Boolean,
-    icon: @Composable () -> Unit,
-    onHovered: (Boolean) -> Unit = {},
+    icon: @Composable (IconStyle) -> Unit,
 ) {
-    var hovered by remember { mutableStateOf(false) }
-
     AppIconButton(
         onClick = onClick,
+        icon = { icon(it) },
         modifier = modifier
             .margin(1.em)
-            .onMouseOver { hovered = true; onHovered(true) }
-            .onMouseOut { hovered = false; onHovered(false) }
-            .opacity(if (isParentHovered || hovered) 1.0 else 0.5)
-            .scale(if (hovered) 1.05 else 1.0)
-            .transition(
-                CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
-            )
-            .tabIndex(0)
-            .onEnterKeyDown(onClick)
-    ) {
-        icon()
-    }
+    )
 }

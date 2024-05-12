@@ -92,9 +92,8 @@ fun ImagePreviewDialog(
                     Spacer()
                     AppIconButton(
                         onClick = { onClose() },
-                    ) {
-                        MdiClose()
-                    }
+                        icon = { MdiClose() }
+                    )
                 }
                 Image(
                     src = imageUrl,

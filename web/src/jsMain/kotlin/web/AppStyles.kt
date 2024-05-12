@@ -22,15 +22,16 @@ import com.varabyte.kobweb.silk.theme.modifyComponentStyleBase
 import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.px
 
+@Suppress("unused")
 @InitSilk
 fun initSiteStyles(ctx: InitSilkContext) {
     ctx.stylesheet.registerStyleBase("body") {
         Modifier
             .fontFamily(
                 "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-                "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "sans-serif"
+                "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "sans-serif", HEADLINE_FONT
             )
-            .fontSize(18.px)
+            .fontSize(15.px)
             .lineHeight(1.5)
     }
 
@@ -73,11 +74,6 @@ val SubHeadlineStyle by ComponentStyle.base {
     Modifier
         .fontSize(1.cssRem)
         .color(colorMode.toPalette().color.toRgb().copyf(alpha = 0.8f))
-}
-
-val BodyStyle by ComponentStyle.base {
-    Modifier
-        .fontSize(15.px)
 }
 
 val SubtitleStyle by ComponentStyle.base {

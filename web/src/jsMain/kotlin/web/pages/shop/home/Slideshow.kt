@@ -10,7 +10,6 @@ import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
 import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
-import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
@@ -19,17 +18,12 @@ import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.graphics.Color
-import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
-import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
-import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
-import com.varabyte.kobweb.compose.ui.modifiers.fontSize
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.gridAutoRows
 import com.varabyte.kobweb.compose.ui.modifiers.gridColumn
@@ -37,26 +31,19 @@ import com.varabyte.kobweb.compose.ui.modifiers.gridRow
 import com.varabyte.kobweb.compose.ui.modifiers.gridTemplateColumns
 import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.margin
-import com.varabyte.kobweb.compose.ui.modifiers.objectFit
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusOut
-import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
 import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
-import com.varabyte.kobweb.compose.ui.modifiers.position
-import com.varabyte.kobweb.compose.ui.modifiers.scale
-import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
-import com.varabyte.kobweb.compose.ui.modifiers.textShadow
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translate
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
-import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiChevronLeft
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiChevronRight
@@ -67,11 +54,12 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
 import data.GetLandingConfigQuery
+import feature.shop.home.HomeContract
+import feature.shop.home.HomeViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.DisplayStyle
-import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.fr
 import org.jetbrains.compose.web.css.percent
@@ -79,9 +67,7 @@ import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import web.H1Variant
 import web.HeadlineStyle
-import web.components.widgets.AppElevatedCard
 import web.components.widgets.AppFilledButton
-import web.components.widgets.MainButton
 import web.components.widgets.Shimmer
 import web.util.onEnterKeyDown
 
@@ -104,20 +90,20 @@ val CollageBigItemStyle by ComponentStyle.base {
 
 @Composable
 fun Slideshow(
-    modifier: Modifier = Modifier,
-    isLoading: Boolean = false,
-    items: List<GetLandingConfigQuery.SlideshowItem>,
-    onCollageItemClick: (GetLandingConfigQuery.SlideshowItem) -> Unit,
+    vm: HomeViewModel,
+    state: HomeContract.State,
     height: CSSLengthOrPercentageNumericValue = 800.px
 ) {
-    val slideshowModifier = modifier
+    val items = state.landingConfig.slideshowItems
+
+    val slideshowModifier = Modifier
         .fillMaxWidth()
         .height(height)
         .margin(0.px)
         .userSelect(UserSelect.None)
         .overflow(Overflow.Hidden)
 
-    if (isLoading) {
+    if (state.isLoading) {
         Shimmer(slideshowModifier)
     } else {
         Box(
@@ -202,7 +188,7 @@ fun Slideshow(
                     if (bottomIndex % 2 != 0) {
                         ColumnInfo(
                             item = item,
-                            onClick = { onCollageItemClick(item) },
+                            onClick = { vm.trySend(HomeContract.Inputs.OnCollageItemClick(item)) },
                             show = showTitle,
                             modifier = Modifier
                                 .zIndex(20)
@@ -213,7 +199,7 @@ fun Slideshow(
                     } else {
                         ColumnInfo(
                             item = item,
-                            onClick = { onCollageItemClick(item) },
+                            onClick = { vm.trySend(HomeContract.Inputs.OnCollageItemClick(item)) },
                             show = showTitle,
                             modifier = Modifier
                                 .zIndex(20)
@@ -226,7 +212,9 @@ fun Slideshow(
                     enabled = !jobInProgress,
                     onClick = { prevSlide() },
                     icon = { modifier -> MdiChevronLeft(modifier) },
-                    modifier = Modifier.align(Alignment.CenterStart).zIndex(10)
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .zIndex(10)
                 )
                 Navigator(
                     enabled = !jobInProgress,
@@ -239,7 +227,9 @@ fun Slideshow(
                         }
                     },
                     icon = { modifier -> MdiChevronRight(modifier) },
-                    modifier = Modifier.align(Alignment.CenterEnd).zIndex(10)
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .zIndex(10)
                 )
             }
         }
@@ -270,10 +260,9 @@ private fun ColumnInfo(
         item.description?.let {
             SpanText(text = it)
         }
-        MainButton(
-            title = getString(Strings.ShopNow),
-            onClick = onClick,
-        )
+        AppFilledButton(onClick = onClick) {
+            SpanText(text = getString(Strings.ShopNow))
+        }
     }
 }
 
@@ -322,123 +311,4 @@ fun ShimmerCollageItem(
     }
 }
 
-enum class TextPosition {
-    Center, LeftBottom, RightTop
-}
-
-@Composable
-fun CollageItem(
-    modifier: Modifier = Modifier,
-    title: String,
-    description: String,
-    buttonText: String? = null,
-    textPosition: TextPosition,
-    onClick: () -> Unit,
-    contentColor: Color = Colors.White,
-    shadowColor: Color = Color.rgb(30, 30, 59),
-    image: @Composable (imageModifier: Modifier) -> Unit,
-) {
-    var hovered by remember { mutableStateOf(false) }
-
-    AppElevatedCard(
-        elevation = 0,
-        modifier = modifier
-            .fillMaxSize()
-            .position(Position.Relative)
-            .aspectRatio(1.0)
-            .onMouseEnter { hovered = true }
-            .onMouseLeave { hovered = false }
-            .cursor(Cursor.Pointer)
-            .overflow(Overflow.Hidden)
-            .scale(if (hovered) 1.01 else 1.0)
-            .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
-            .tabIndex(0)
-            .onEnterKeyDown(onClick)
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxSize()
-                .onClick { onClick() }
-        ) {
-            image(
-                Modifier
-                    .fillMaxSize()
-                    .objectFit(ObjectFit.Cover)
-                    .thenIf(hovered) { Modifier.scale(1.04) }
-                    .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
-            )
-            Column(
-                horizontalAlignment = when (textPosition) {
-                    TextPosition.Center -> Alignment.CenterHorizontally
-                    TextPosition.LeftBottom -> Alignment.Start
-                    TextPosition.RightTop -> Alignment.End
-                },
-                modifier = Modifier
-                    .align(
-                        when (textPosition) {
-                            TextPosition.Center -> Alignment.Center
-                            TextPosition.LeftBottom -> Alignment.BottomStart
-                            TextPosition.RightTop -> Alignment.TopEnd
-                        }
-                    )
-                    .padding(50.px)
-                    .thenIf(hovered) { Modifier.scale(1.05) }
-                    .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = modifier.gap(2.px)
-                ) {
-                    SpanText(
-                        text = title.uppercase(),
-                        modifier = HeadlineStyle.toModifier()
-                            .fontSize(2.em)
-                            .color(contentColor)
-                            .textShadow(
-                                offsetX = 2.px,
-                                offsetY = 2.px,
-                                blurRadius = 8.px,
-                                color = shadowColor
-                            )
-                    )
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.Start)
-                            .height(2.px)
-                            .fillMaxWidth(if (hovered) 100.percent else 0.percent)
-                            .backgroundColor(contentColor)
-                            .transition(CSSTransition("width", 0.3.s, TransitionTimingFunction.Ease))
-                    )
-                }
-                SpanText(
-                    text = description,
-                    modifier = Modifier
-                        .color(contentColor)
-                        .textShadow(
-                            offsetX = 2.px,
-                            offsetY = 2.px,
-                            blurRadius = 8.px,
-                            color = shadowColor
-                        )
-                )
-                buttonText?.let {
-                    AppFilledButton(
-                        onClick = onClick,
-                        modifier = Modifier
-                            .margin(top = 30.px)
-                            .size(200.px, 80.px)
-                            .tabIndex(0)
-                            .onEnterKeyDown(onClick)
-                    ) {
-                        SpanText(
-                            text = it,
-                            modifier = Modifier
-                                .fontSize(1.5.em)
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
+enum class TextPosition { Center, LeftBottom, RightTop }

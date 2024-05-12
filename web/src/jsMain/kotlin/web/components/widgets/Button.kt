@@ -7,13 +7,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
+import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.TextDecorationLine
+import com.varabyte.kobweb.compose.css.TextTransform
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.RowScope
 import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.border
@@ -21,14 +24,18 @@ import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
 import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.gap
+import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusOut
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
+import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.textDecorationLine
+import com.varabyte.kobweb.compose.ui.modifiers.textTransform
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.thenIf
@@ -38,15 +45,14 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiCreate
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEdit
 import com.varabyte.kobweb.silk.components.text.SpanText
-import com.varabyte.kobweb.silk.theme.colors.ColorMode
-import com.varabyte.kobweb.silk.theme.colors.palette.background
-import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.getString
+import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.dom.A
+import web.AppColors
 import web.util.onEnterKeyDown
 
 @Composable
@@ -54,15 +60,23 @@ fun AppFilledButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     disabled: Boolean = false,
+    bgColor: Color = AppColors.brandColor,
+    contentColor: Color = Colors.White,
     content: @Composable RowScope.() -> Unit
 ) {
     Button(
         onClick = { onClick() },
         enabled = !disabled,
         modifier = modifier
+            .height(48.px)
             .borderRadius(0.px)
             .tabIndex(0)
             .onEnterKeyDown(onClick)
+            .padding(14.px, 20.px)
+            .fontWeight(FontWeight.Light)
+            .backgroundColor(bgColor)
+            .color(contentColor)
+            .textTransform(TextTransform.Uppercase)
     ) {
         content()
     }
@@ -78,11 +92,13 @@ fun AppOutlinedButton(
     AppFilledButton(
         onClick = onClick,
         disabled = disabled,
+        bgColor = Colors.Transparent,
+        contentColor = AppColors.brandColor,
         modifier = modifier
-            .color(ColorMode.current.toPalette().background)
             .border(
-                width = 1.px,
-//                color = CSSColorValue.current,
+                width = 2.px,
+                color = AppColors.brandColor,
+                style = LineStyle.Solid
             )
     ) {
         content()
@@ -189,31 +205,4 @@ fun EditButton(
             SpanText(getString(Strings.Edit).uppercase())
         }
     }
-}
-
-@Composable
-fun MainButton(
-    modifier: Modifier = Modifier,
-    title: String,
-    enabled: Boolean = true,
-    onClick: () -> Unit,
-) {
-    var hovered by remember { mutableStateOf(false) }
-
-
-    SpanText(
-        text = title,
-        modifier = modifier
-            .onMouseOver { if (enabled) hovered = true }
-            .onMouseLeave { hovered = false }
-            .onFocusIn { if (enabled) hovered = true }
-            .onFocusOut { hovered = false }
-            .onClick { onClick() }
-            .thenIf(enabled, Modifier.tabIndex(0))
-            .onEnterKeyDown { if (enabled) onClick() }
-            .transition(
-                CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease),
-            )
-    )
 }

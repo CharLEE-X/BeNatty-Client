@@ -133,10 +133,9 @@ fun NavTopSection(
         if (hasBackButton) {
             AppIconButton(
                 onClick = { onGoBack() },
+                icon = { MdiArrowBack() },
                 modifier = Modifier.size(3.em)
-            ) {
-                MdiArrowBack()
-            }
+            )
         }
 
         Column(

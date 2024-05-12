@@ -14,11 +14,10 @@ fun ImproveWithButton(
 ) {
     AppIconButton(
         onClick = { onClick() },
+        icon = { MdiPsychology() },
         modifier = modifier
             .tabIndex(0)
             .onEnterKeyDown(onClick)
-    ) {
-        MdiPsychology()
-    }
+    )
     AppTooltip(tooltipText)
 }

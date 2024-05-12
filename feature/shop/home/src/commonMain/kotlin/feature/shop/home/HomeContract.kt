@@ -8,7 +8,14 @@ object HomeContract {
     data class State(
         val isLoading: Boolean = true,
 
-        val landingConfig: GetLandingConfigQuery.GetLandingConfig? = null,
+        val landingConfig: GetLandingConfigQuery.GetLandingConfig = GetLandingConfigQuery.GetLandingConfig(
+            slideshowItems = listOf(), topCategoriesSection = GetLandingConfigQuery.TopCategoriesSection(
+                left = GetLandingConfigQuery.Left(media = null, title = null),
+                middle = GetLandingConfigQuery.Middle(media = null, title = null),
+                right = GetLandingConfigQuery.Right(media = null, title = null)
+            )
+
+        ),
         val products: List<String> = emptyList(),
 
         val email: String = "",
