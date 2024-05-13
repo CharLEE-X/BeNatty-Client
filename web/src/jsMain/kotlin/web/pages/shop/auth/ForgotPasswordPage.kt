@@ -20,8 +20,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.silk.components.graphics.Image
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiEmail
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiError
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
@@ -105,17 +103,13 @@ private fun ForgotPassword(
         modifier = SubHeadlineStyle.toModifier()
     )
     AppOutlinedTextField(
-        value = email,
-        onValueChange = {
+        text = email,
+        onTextChanged = {
             email = it
             vm.trySend(ForgotPasswordContract.Inputs.SetEmail(it))
         },
-        leadingIcon = { MdiEmail() },
-        trailingIcon = { if (state.showError) MdiError() },
-        supportingText = state.errorMessage,
-        label = getString(Strings.Email),
-        error = state.showError,
-        errorText = state.errorMessage,
+        placeholder = getString(Strings.Email),
+        valid = !state.showError,
         modifier = Modifier
             .fillMaxWidth()
             .margin(top = 1.em)

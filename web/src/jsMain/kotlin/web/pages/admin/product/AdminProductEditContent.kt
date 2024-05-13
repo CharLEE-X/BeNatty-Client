@@ -105,7 +105,6 @@ import web.components.widgets.ImagePreviewDialog
 import web.components.widgets.MediaSlot
 import web.components.widgets.SwitchSection
 import web.components.widgets.TakeActionDialog
-import web.components.widgets.TrailingIconGoToNext
 import web.util.convertBase64ToFile
 import web.util.convertImageToBase64
 import web.util.onEnterKeyDown
@@ -554,14 +553,11 @@ private fun LocalVariantItem(
             }
             if (variant.enabled) {
                 AppOutlinedTextField(
-                    value = variant.quantity,
-                    onValueChange = onQuantityChanged,
-                    error = variant.quantityError != null,
-                    errorText = variant.quantityError,
+                    text = variant.quantity,
+                    onTextChanged = onQuantityChanged,
                     placeholder = "0",
-                    hasTrailingIcon = false,
-                    rows = 1,
-                    disabled = disabled,
+                    valid = variant.quantityError != null,
+                    enabled = !disabled,
                     modifier = Modifier.gridColumn(4, 5)
                 )
                 if (disabled) AppTooltip(getString(Strings.FinishAddingOptionToEnableEditing))
@@ -637,19 +633,12 @@ private fun LocalOptionBuilder(
                 var nameRef by remember { mutableStateOf<HTMLElement?>(null) }
 
                 AppOutlinedTextField(
-                    value = variant.name,
-                    onValueChange = {
-                        vm.trySend(
-                            AdminProductEditContract.Inputs.OnOptionNameChanged(
-                                optionIndex,
-                                it
-                            )
-                        )
+                    text = variant.name,
+                    onTextChanged = {
+                        vm.trySend(AdminProductEditContract.Inputs.OnOptionNameChanged(optionIndex, it))
                     },
                     placeholder = getString(Strings.Size),
-                    errorText = variant.nameError,
-                    error = variant.nameError != null,
-                    trailingIcon = { TrailingIconGoToNext(show = open || menuFocused) },
+                    valid = variant.nameError == null,
                     autoComplete = AutoComplete.off,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -703,8 +692,8 @@ private fun LocalOptionBuilder(
                     .gap(1.em)
             ) {
                 AppOutlinedTextField(
-                    value = attr.value,
-                    onValueChange = {
+                    text = attr.value,
+                    onTextChanged = {
                         vm.trySend(
                             AdminProductEditContract.Inputs.OnOptionAttrValueChanged(
                                 optionIndex = optionIndex,
@@ -720,9 +709,7 @@ private fun LocalOptionBuilder(
                         VariantType.Material -> getString(Strings.Cotton)
                         else -> getString(Strings.AddAnotherValue)
                     },
-                    errorText = attr.error,
-                    error = attr.error != null,
-                    trailingIcon = { TrailingIconGoToNext(show = isOptionFocused) },
+                    valid = attr.error == null,
                     modifier = Modifier
                         .fillMaxWidth()
                         .onFocusIn { isOptionFocused = true }
@@ -829,13 +816,12 @@ private fun ShippingPreset(vm: AdminProductEditViewModel, state: AdminProductEdi
 @Composable
 private fun Height(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     AppOutlinedTextField(
-        value = state.current.shipping.height.toString(),
-        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetHeight(it)) },
-        label = getString(Strings.Height),
-        errorText = state.heightError,
-        error = state.heightError != null,
+        text = state.current.shipping.height.toString(),
+        onTextChanged = { vm.trySend(AdminProductEditContract.Inputs.SetHeight(it)) },
+        placeholder = getString(Strings.Height),
+        valid = state.heightError == null,
 //        type = TextFieldType.NUMBER,
-        disabled = state.current.shipping.presetId != null,
+        enabled = state.current.shipping.presetId == null,
         modifier = Modifier.fillMaxWidth(),
     )
     AppTooltip(getString(Strings.HeightDesc))
@@ -844,13 +830,12 @@ private fun Height(vm: AdminProductEditViewModel, state: AdminProductEditContrac
 @Composable
 private fun Width(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     AppOutlinedTextField(
-        value = state.current.shipping.width.toString(),
-        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetWidth(it)) },
-        label = getString(Strings.Width),
-        errorText = state.widthError,
-        error = state.widthError != null,
+        text = state.current.shipping.width.toString(),
+        onTextChanged = { vm.trySend(AdminProductEditContract.Inputs.SetWidth(it)) },
+        placeholder = getString(Strings.Width),
+        valid = state.widthError == null,
 //        type = TextFieldType.NUMBER,
-        disabled = state.current.shipping.presetId != null,
+        enabled = state.current.shipping.presetId == null,
         modifier = Modifier.fillMaxWidth(),
     )
     AppTooltip(getString(Strings.WidthDesc))
@@ -859,13 +844,12 @@ private fun Width(vm: AdminProductEditViewModel, state: AdminProductEditContract
 @Composable
 private fun Length(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     AppOutlinedTextField(
-        value = state.current.shipping.length.toString(),
-        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetLength(it)) },
-        label = getString(Strings.Length),
-        errorText = state.lengthError,
-        error = state.lengthError != null,
+        text = state.current.shipping.length.toString(),
+        onTextChanged = { vm.trySend(AdminProductEditContract.Inputs.SetLength(it)) },
+        placeholder = getString(Strings.Length),
+        valid = state.lengthError == null,
 //        type = TextFieldType.NUMBER,
-        disabled = state.current.shipping.presetId != null,
+        enabled = state.current.shipping.presetId == null,
         modifier = Modifier.fillMaxWidth(),
     )
     AppTooltip(getString(Strings.LengthDesc))
@@ -874,13 +858,12 @@ private fun Length(vm: AdminProductEditViewModel, state: AdminProductEditContrac
 @Composable
 private fun Weight(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     AppOutlinedTextField(
-        value = state.current.shipping.weight.toString(),
-        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetWeight(it)) },
-        label = getString(Strings.Weight),
-        errorText = state.weightError,
-        error = state.weightError != null,
+        text = state.current.shipping.weight.toString(),
+        onTextChanged = { vm.trySend(AdminProductEditContract.Inputs.SetWeight(it)) },
+        placeholder = getString(Strings.Weight),
+        valid = state.weightError == null,
 //        type = TextFieldType.NUMBER,
-        disabled = state.current.shipping.presetId != null,
+        enabled = state.current.shipping.presetId == null,
         modifier = Modifier.fillMaxWidth(),
     )
     AppTooltip(getString(Strings.WeightDesc))
@@ -889,11 +872,10 @@ private fun Weight(vm: AdminProductEditViewModel, state: AdminProductEditContrac
 @Composable
 private fun RegularPrice(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     AppOutlinedTextField(
-        value = state.current.pricing.regularPrice.toString(),
-        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetRegularPrice(it)) },
-        label = getString(Strings.RegularPrice),
-        errorText = state.regularPriceError,
-        error = state.regularPriceError != null,
+        text = state.current.pricing.regularPrice.toString(),
+        onTextChanged = { vm.trySend(AdminProductEditContract.Inputs.SetRegularPrice(it)) },
+        placeholder = getString(Strings.RegularPrice),
+        valid = state.regularPriceError == null,
 //        type = TextFieldType.NUMBER,
         modifier = Modifier.fillMaxWidth(),
     )
@@ -903,11 +885,10 @@ private fun RegularPrice(vm: AdminProductEditViewModel, state: AdminProductEditC
 @Composable
 private fun SalePrice(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     AppOutlinedTextField(
-        value = state.current.pricing.salePrice.toString(),
-        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetSalePrice(it)) },
-        label = getString(Strings.SalePrice),
-        errorText = state.salePriceError,
-        error = state.salePriceError != null,
+        text = state.current.pricing.salePrice.toString(),
+        onTextChanged = { vm.trySend(AdminProductEditContract.Inputs.SetSalePrice(it)) },
+        placeholder = getString(Strings.SalePrice),
+        valid = state.salePriceError == null,
 //        type = TextFieldType.NUMBER,
         modifier = Modifier.fillMaxWidth(),
     )
@@ -948,17 +929,16 @@ private fun Media(
             MediaSlot(
                 url = image.url,
                 alt = image.alt,
-                errorText = null,
                 onFileDropped = {},
                 onImageClick = { onImageClick(image) },
-                onDeleteClick = { onImageDeleteClick(image.keyName) }
+                onDeleteClick = { onImageDeleteClick(image.keyName) },
+                errorText = "FIXME: Implement error text",
             )
         }
         MediaSlot(
             url = null,
             alt = null,
             isImagesLoading = state.isImagesLoading,
-            errorText = state.imageDropError,
             onFileDropped = { file ->
                 scope.launch {
                     convertImageToBase64(file)?.let { imageString ->
@@ -966,6 +946,7 @@ private fun Media(
                     } ?: vm.trySend(AdminProductEditContract.Inputs.SetImageDropError(error = "Not a PNG?"))
                 }
             },
+            errorText = "FIXME: Implement error text",
             modifier = Modifier.size(200.px)
         )
     }
@@ -1038,17 +1019,15 @@ private fun StatusOfStock(vm: AdminProductEditViewModel, state: AdminProductEdit
 @Composable
 private fun LowStockThreshold(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     AppOutlinedTextField(
-        value = state.current.inventory.lowStockThreshold.toString(),
-        onValueChange = {
+        text = state.current.inventory.lowStockThreshold.toString(),
+        onTextChanged = {
             vm.trySend(
                 AdminProductEditContract.Inputs.SetLowStockThreshold(
                     it.toIntOrNull() ?: 0
                 )
             )
         },
-        label = getString(Strings.LowStockThreshold),
-        errorText = state.lowStockThresholdError,
-//        type = TextFieldType.NUMBER,
+        placeholder = getString(Strings.LowStockThreshold),
         modifier = Modifier.fillMaxWidth(),
     )
     AppTooltip(getString(Strings.LowStockThresholdDesc))
@@ -1057,17 +1036,15 @@ private fun LowStockThreshold(vm: AdminProductEditViewModel, state: AdminProduct
 @Composable
 private fun RemainingStock(vm: AdminProductEditViewModel, state: AdminProductEditContract.State) {
     AppOutlinedTextField(
-        value = state.current.inventory.remainingStock.toString(),
-        onValueChange = {
+        text = state.current.inventory.remainingStock.toString(),
+        onTextChanged = {
             vm.trySend(
                 AdminProductEditContract.Inputs.SetRemainingStock(
                     it.toIntOrNull() ?: 0
                 )
             )
         },
-        label = getString(Strings.RemainingStock),
-        errorText = state.remainingStockError,
-//        type = TextFieldType.NUMBER,
+        placeholder = getString(Strings.RemainingStock),
         modifier = Modifier.fillMaxWidth(),
     )
     AppTooltip(getString(Strings.RemainingStockDesc))
@@ -1103,11 +1080,10 @@ private fun Name(
     vm: AdminProductEditViewModel
 ) {
     AppOutlinedTextField(
-        value = state.current.name,
-        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetName(it)) },
-        label = getString(Strings.Name),
-        errorText = state.titleError,
-        error = state.titleError != null,
+        text = state.current.name,
+        onTextChanged = { vm.trySend(AdminProductEditContract.Inputs.SetName(it)) },
+        placeholder = getString(Strings.Name),
+        valid = state.titleError == null,
         required = true,
         modifier = Modifier.fillMaxWidth()
     )
@@ -1119,13 +1095,10 @@ private fun Description(
     vm: AdminProductEditViewModel
 ) {
     AppOutlinedTextField(
-        value = state.current.description,
-        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetDescription(it)) },
-        label = getString(Strings.Description),
-        errorText = state.descriptionError,
-        error = state.descriptionError != null,
-//        type = TextFieldType.TEXTAREA,
-        rows = 5,
+        text = state.current.description,
+        onTextChanged = { vm.trySend(AdminProductEditContract.Inputs.SetDescription(it)) },
+        placeholder = getString(Strings.Description),
+        valid = state.descriptionError == null,
         modifier = Modifier
             .fillMaxWidth()
             .resize(Resize.Vertical)
@@ -1139,9 +1112,9 @@ private fun Vendor(
     vm: AdminProductEditViewModel
 ) {
     AppOutlinedTextField(
-        value = state.current.vendor,
-        onValueChange = { vm.trySend(AdminProductEditContract.Inputs.SetVendor(it)) },
-        label = getString(Strings.Vendor),
+        text = state.current.vendor,
+        onTextChanged = { vm.trySend(AdminProductEditContract.Inputs.SetVendor(it)) },
+        placeholder = getString(Strings.Vendor),
         modifier = Modifier
             .fillMaxWidth()
             .resize(Resize.Vertical)

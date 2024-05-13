@@ -43,10 +43,12 @@ internal class FooterInputHandler :
         FooterContract.Inputs.OnCurrencyClick -> noOp()
         FooterContract.Inputs.OnLanguageClick -> noOp()
         FooterContract.Inputs.OnTickerClick -> postEvent(FooterContract.Events.GoToCatalogue)
+        FooterContract.Inputs.OnConnectEmailSend -> noOp()
 
         is FooterContract.Inputs.SetIsLoading -> updateState { it.copy(isLoading = input.isLoading) }
         is FooterContract.Inputs.SetCompanyInfo -> updateState { it.copy(companyInfo = input.companyInfo) }
         is FooterContract.Inputs.SetFooterConfig -> updateState { it.copy(footerConfig = input.footerConfig) }
+        is FooterContract.Inputs.SetConnectEmail -> updateState { it.copy(connectEmail = input.email) }
     }
 
     private suspend fun InputScope.handleCheckUserRole() {

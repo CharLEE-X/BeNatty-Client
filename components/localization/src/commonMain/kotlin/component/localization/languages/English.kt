@@ -96,11 +96,10 @@ internal fun englishLanguage(
     Strings.ShippingReturns -> "Shipping & Returns"
     Strings.WeWillReply -> "We'll reply ASAP."
     Strings.HeightDesc -> "The height of the product in the store's current units."
-    Strings.BeFirstToGetLatestOffers -> "Be the first to get the latest news about trends, promotions and much more!"
-    Strings.ByAgreeing -> "By clicking the button you agree to the"
+    Strings.NoSpamUnsubscribeAnytime -> "No spam, unsubscribe anytime!"
+    Strings.YouAreSigningUpToReceiveEmails -> "*You're signing up to receive our emails and can unsubscribe at any time."
     Strings.EcoFriendlyClothing -> "Eco-Friendly clothing"
     Strings.CategoryNameDescription -> "The name of the category."
-
     Strings.HandmadeTraitDescription -> "Handmade products are made by hand, not by machine, and typically by an individual or a small group of people."
     Strings.OrganicTraitDescription -> "Organic products are made from materials that are grown without the use of synthetic chemicals or pesticides."
     Strings.EcoFriendlyTraitDescription -> "Eco-friendly products are made in a way that is not harmful to the environment."
@@ -133,6 +132,11 @@ internal fun englishLanguage(
     Strings.EasyCareTraitDescription -> "Easy-care products are made from materials that are easy to clean and maintain."
     Strings.MachineWashableTraitDescription -> "Machine-washable products can be safely washed in a washing machine."
     Strings.DryCleanOnlyTraitDescription -> "Dry-clean-only products must be professionally dry cleaned and cannot be washed in a washing machine."
+    Strings.OnAllOrdersOver -> "On all orders over \$100"
+    Strings.OnAllUnopenedUnusedItems -> "On all unopened, unused items"
+    Strings.ShopWithConfidence -> "Shop with confidence"
+    Strings.PercentSatisfaction -> "99.9% Satisfaction"
+    Strings.RatedExcellentByCustomers -> "Rated excellent by our customers"
 
     else -> key.name.enumCapitalized()
 }

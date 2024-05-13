@@ -10,16 +10,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiBusiness
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiEmail
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiFlag
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiGite
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiHome
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiLocalPostOffice
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiLocationCity
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiPassword
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiPhone
 import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
 import component.localization.Strings
 import component.localization.getString
@@ -78,36 +68,25 @@ private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) 
         )
     }
     AppOutlinedTextField(
-        value = state.detailsFirstName,
-        onValueChange = { vm.trySend(ProfileContract.Inputs.SetDetailsFullName(it)) },
-        label = getString(Strings.FirstName),
-        errorText = state.fullNameError,
-        leadingIcon = { MdiPerson() },
+        text = state.detailsFirstName,
+        onTextChanged = { vm.trySend(ProfileContract.Inputs.SetDetailsFullName(it)) },
+        placeholder = getString(Strings.FirstName),
         autoComplete = AutoComplete.givenName,
-        shake = state.shakeFullName,
         modifier = Modifier.fillMaxWidth(),
     )
     AppOutlinedTextField(
-        value = state.email,
-        onValueChange = { vm.trySend(ProfileContract.Inputs.SetEmail(it)) },
-        label = getString(Strings.Email),
-        errorText = state.emailError,
-        leadingIcon = { MdiEmail() },
-//        type = TextFieldType.TEXT,
+        text = state.email,
+        onTextChanged = { vm.trySend(ProfileContract.Inputs.SetEmail(it)) },
+        placeholder = getString(Strings.Email),
         required = true,
         autoComplete = AutoComplete.email,
-        shake = state.shakeEmail,
         modifier = Modifier.fillMaxWidth(),
     )
     AppOutlinedTextField(
-        value = state.phone,
-        onValueChange = { vm.trySend(ProfileContract.Inputs.SetPhone(it)) },
-        label = getString(Strings.Phone),
-        errorText = state.phoneError,
-        leadingIcon = { MdiPhone() },
-//        type = TextFieldType.TEXT,
+        text = state.phone,
+        onTextChanged = { vm.trySend(ProfileContract.Inputs.SetPhone(it)) },
+        placeholder = getString(Strings.Phone),
         autoComplete = AutoComplete.tel,
-        shake = state.shakePhone,
         modifier = Modifier.fillMaxWidth(),
     )
     SaveButton(
@@ -123,21 +102,15 @@ fun Password(vm: ProfileViewModel, state: ProfileContract.State) {
         text = getString(Strings.Password),
     )
     AppOutlinedTextField(
-        value = state.oldPassword,
-        onValueChange = { vm.trySend(ProfileContract.Inputs.SetOldPassword(it)) },
-        label = getString(Strings.OldPassword),
-        errorText = state.oldPasswordError,
-        leadingIcon = { MdiPassword() },
-        shake = state.shakeOldPassword,
+        text = state.oldPassword,
+        onTextChanged = { vm.trySend(ProfileContract.Inputs.SetOldPassword(it)) },
+        placeholder = getString(Strings.OldPassword),
         modifier = Modifier.fillMaxWidth(),
     )
     AppOutlinedTextField(
-        value = state.newPassword,
-        onValueChange = { vm.trySend(ProfileContract.Inputs.SetNewPassword(it)) },
-        label = getString(Strings.NewPassword),
-        errorText = state.newPasswordError,
-        leadingIcon = { MdiPassword() },
-        shake = state.shakeNewPassword,
+        text = state.newPassword,
+        onTextChanged = { vm.trySend(ProfileContract.Inputs.SetNewPassword(it)) },
+        placeholder = getString(Strings.NewPassword),
         modifier = Modifier.fillMaxWidth(),
     )
     SaveButton(
@@ -161,21 +134,16 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
         )
     }
     AppOutlinedTextField(
-        value = state.address,
-        onValueChange = { vm.trySend(ProfileContract.Inputs.SetAddress(it)) },
-        label = getString(Strings.Address),
-        errorText = state.addressError,
-        leadingIcon = { MdiHome() },
+        text = state.address,
+        onTextChanged = { vm.trySend(ProfileContract.Inputs.SetAddress(it)) },
+        placeholder = getString(Strings.Address),
         autoComplete = AutoComplete.streetAddress,
-        shake = state.shakeAddress,
         modifier = Modifier.fillMaxWidth(),
     )
     AppOutlinedTextField(
-        value = state.additionalInformation,
-        onValueChange = { vm.trySend(ProfileContract.Inputs.SetAdditionalInformation(it)) },
-        label = getString(Strings.Company),
-        errorText = state.additionalInformationError,
-        leadingIcon = { MdiBusiness() },
+        text = state.additionalInformation,
+        onTextChanged = { vm.trySend(ProfileContract.Inputs.SetAdditionalInformation(it)) },
+        placeholder = getString(Strings.Company),
         autoComplete = AutoComplete.ccAdditionalName,
         modifier = Modifier.fillMaxWidth(),
     )
@@ -185,23 +153,17 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
             .gap(1.em),
     ) {
         AppOutlinedTextField(
-            value = state.postcode,
-            onValueChange = { vm.trySend(ProfileContract.Inputs.SetPostcode(it)) },
-            label = getString(Strings.PostCode),
-            errorText = state.postcodeError,
-            leadingIcon = { MdiLocalPostOffice() },
+            text = state.postcode,
+            onTextChanged = { vm.trySend(ProfileContract.Inputs.SetPostcode(it)) },
+            placeholder = getString(Strings.PostCode),
             autoComplete = AutoComplete.postalCode,
-            shake = state.shakePostcode,
             modifier = Modifier.weight(1f),
         )
         AppOutlinedTextField(
-            value = state.city,
-            onValueChange = { vm.trySend(ProfileContract.Inputs.SetCity(it)) },
-            label = getString(Strings.City),
-            errorText = state.cityError,
-            leadingIcon = { MdiLocationCity() },
+            text = state.city,
+            onTextChanged = { vm.trySend(ProfileContract.Inputs.SetCity(it)) },
+            placeholder = getString(Strings.City),
             autoComplete = AutoComplete.addressLevel2,
-            shake = state.shakeCity,
             modifier = Modifier.weight(1f)
         )
     }
@@ -211,23 +173,17 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
             .gap(1.em),
     ) {
         AppOutlinedTextField(
-            value = state.state,
-            onValueChange = { vm.trySend(ProfileContract.Inputs.SetState(it)) },
-            label = getString(Strings.Apartment),
-            errorText = state.stateError,
-            leadingIcon = { MdiGite() },
+            text = state.state,
+            onTextChanged = { vm.trySend(ProfileContract.Inputs.SetState(it)) },
+            placeholder = getString(Strings.Apartment),
             autoComplete = AutoComplete.addressLevel1,
-            shake = state.shakeState,
             modifier = Modifier.weight(1f),
         )
         AppOutlinedTextField(
-            value = state.country,
-            onValueChange = { vm.trySend(ProfileContract.Inputs.SetCountry(it)) },
-            label = getString(Strings.Country),
-            errorText = state.countryError,
-            leadingIcon = { MdiFlag() },
+            text = state.country,
+            onTextChanged = { vm.trySend(ProfileContract.Inputs.SetCountry(it)) },
+            placeholder = getString(Strings.Country),
             autoComplete = AutoComplete.countryName,
-            shake = state.shakeCountry,
             modifier = Modifier.weight(1f)
         )
     }

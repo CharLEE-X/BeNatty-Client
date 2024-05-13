@@ -25,8 +25,6 @@ import web.components.layouts.OneLayout
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.CardSection
 import web.components.widgets.CreateButton
-import web.components.widgets.TrailingIconGoToNext
-import web.components.widgets.TrailingIconGoToNextOrSubmit
 import web.util.onEnterKeyDown
 
 @Composable
@@ -73,15 +71,12 @@ fun AdminCustomerCreateContent(
             content = {
                 CardSection(title = null) {
                     AppOutlinedTextField(
-                        value = state.email,
-                        onValueChange = { vm.trySend(AdminCustomerCreateContract.Inputs.SetEmail(it)) },
-                        label = getString(Strings.Email),
-                        errorText = state.emailError,
-                        error = state.emailError != null,
+                        text = state.email,
+                        onTextChanged = { vm.trySend(AdminCustomerCreateContract.Inputs.SetEmail(it)) },
+                        placeholder = getString(Strings.Email),
+                        valid = state.emailError != null,
 //                        type = TextFieldType.EMAIL, // Email has bug with typing
                         required = true,
-                        shake = state.emailShake,
-                        trailingIcon = { TrailingIconGoToNextOrSubmit(show = emailFocused && state.emailError == null) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .onEnterKeyDown { vm.trySend(AdminCustomerCreateContract.Inputs.OnCreateClick) }
@@ -95,20 +90,18 @@ fun AdminCustomerCreateContent(
                             .gap(1.em)
                     ) {
                         AppOutlinedTextField(
-                            value = state.firstName,
-                            onValueChange = { vm.trySend(AdminCustomerCreateContract.Inputs.SetDetailFirstName(it)) },
-                            label = getString(Strings.FirstName),
-                            trailingIcon = { TrailingIconGoToNext(show = firstNameFocused) },
+                            text = state.firstName,
+                            onTextChanged = { vm.trySend(AdminCustomerCreateContract.Inputs.SetDetailFirstName(it)) },
+                            placeholder = getString(Strings.FirstName),
                             modifier = Modifier
                                 .weight(1f)
                                 .onFocusIn { firstNameFocused = true }
                                 .onFocusOut { firstNameFocused = false }
                         )
                         AppOutlinedTextField(
-                            value = state.lastName,
-                            onValueChange = { vm.trySend(AdminCustomerCreateContract.Inputs.SetDetailLastName(it)) },
-                            label = getString(Strings.LastName),
-                            trailingIcon = { TrailingIconGoToNextOrSubmit(show = lastNameFocused) },
+                            text = state.lastName,
+                            onTextChanged = { vm.trySend(AdminCustomerCreateContract.Inputs.SetDetailLastName(it)) },
+                            placeholder = getString(Strings.LastName),
                             modifier = Modifier
                                 .weight(1f)
                                 .onFocusIn { lastNameFocused = true }

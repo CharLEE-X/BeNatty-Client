@@ -6,47 +6,62 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import com.varabyte.kobweb.compose.css.UserSelect
+import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.Spacer
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
+import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
+import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
+import com.varabyte.kobweb.compose.ui.modifiers.gridColumn
 import com.varabyte.kobweb.compose.ui.modifiers.gridTemplateColumns
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.onKeyDown
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
 import com.varabyte.kobweb.compose.ui.modifiers.width
-import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.navigation.OpenLinkStrategy
 import com.varabyte.kobweb.navigation.open
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.background
+import com.varabyte.kobweb.silk.theme.colors.palette.color
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.getString
 import feature.shop.footer.FooterContract
 import feature.shop.footer.FooterRoutes
 import feature.shop.footer.FooterViewModel
 import kotlinx.browser.window
+import org.jetbrains.compose.web.attributes.AutoComplete
+import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.fr
+import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import web.H3Variant
 import web.HeadlineStyle
 import web.components.layouts.oneLayoutMaxWidth
+import web.components.widgets.AppDividerHorizontal
+import web.components.widgets.AppFilledButton
 import web.components.widgets.AppIconButton
+import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.AppTextButton
 import web.components.widgets.ShimmerHeader
 import web.components.widgets.ShimmerText
@@ -73,12 +88,12 @@ fun Footer(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
-            .zIndex(2)
+            .backgroundColor(Color("#3e3e3e"))
+            .color(ColorMode.current.opposite.toPalette().color)
     ) {
         if (isFullLayout) {
             Column(
                 modifier = Modifier
-                    .position(Position.Relative)
                     .fillMaxWidth()
                     .margin(topBottom = sectionsGap)
                     .maxWidth(oneLayoutMaxWidth)
@@ -92,10 +107,9 @@ fun Footer(
                         .gridTemplateColumns { repeat(4) { size(1.fr) } }
                         .gap(2.em)
                 ) {
-                    CanWeHelpYouSection(state, vm)
                     CompanySection(state, vm)
                     HelpSection(state, vm)
-                    FollowUsSection(state)
+                    FollowUsSection(state, vm)
                 }
             }
             HorizontalDivider()
@@ -115,7 +129,7 @@ private fun BottomSection(
             .fillMaxWidth()
             .maxWidth(oneLayoutMaxWidth)
             .gap(1.em)
-            .padding(topBottom = 1.em, leftRight = 3.em),
+            .padding(top = 1.em, bottom = 3.em, leftRight = 3.em),
     ) {
         if (!state.isLoading) {
             state.companyInfo?.contactInfo?.companyName?.let { companyName ->
@@ -151,12 +165,35 @@ private fun BottomSection(
 @Composable
 private fun FollowUsSection(
     state: FooterContract.State,
+    vm: FooterViewModel
 ) {
     FooterSection(
         isLoading = state.isLoading,
-        title = getString(Strings.FollowUs),
+        title = getString(Strings.ConnectWithUs),
+        modifier = Modifier
+            .gridColumn(3, 5)
     ) {
         if (!state.isLoading) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                AppOutlinedTextField(
+                    text = state.connectEmail,
+                    onTextChanged = { vm.trySend(FooterContract.Inputs.SetConnectEmail(it)) },
+                    placeholder = getString(Strings.JoinOurEmailList),
+                    autoComplete = AutoComplete.email,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onKeyDown { if (it.key == "Enter") vm.trySend(FooterContract.Inputs.OnConnectEmailSend) }
+                )
+                AppFilledButton(
+                    onClick = { vm.trySend(FooterContract.Inputs.OnConnectEmailSend) },
+                    bgColor = ColorMode.current.opposite.toPalette().background,
+                    content = { SpanText(getString(Strings.Join)) },
+                    modifier = Modifier.width(30.percent)
+                )
+            }
             Row(
                 modifier = Modifier
                     .gap(1.em)
@@ -284,56 +321,14 @@ private fun CompanySection(
 }
 
 @Composable
-private fun CanWeHelpYouSection(
-    state: FooterContract.State,
-    vm: FooterViewModel
-) {
-    FooterSection(
-        isLoading = state.isLoading,
-        title = getString(Strings.CanWeHelpYou).uppercase() + "?",
-    ) {
-        if (!state.isLoading) {
-            AppTextButton(
-                onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
-                content = { SpanText(text = getString(Strings.StartChat).uppercase()) }
-            )
-            SpanText(
-                text = "${getString(Strings.From)} ${state.companyInfo?.openingTimes?.dayFrom} ${getString(Strings.To)} " +
-                    "${state.companyInfo?.openingTimes?.dayTo} \n${getString(Strings.From).lowercase()} " +
-                    "${state.companyInfo?.openingTimes?.open}" +
-                    " ${getString(Strings.To)} ${state.companyInfo?.openingTimes?.close}.",
-            )
-            state.companyInfo?.contactInfo?.phone?.let { phone ->
-                SpanText(
-                    text = "${getString(Strings.Tel)}: $phone".uppercase(),
-                    modifier = Modifier.padding(top = 1.em)
-                )
-                SpanText(
-                    text = "${getString(Strings.From)} ${state.companyInfo?.openingTimes?.dayFrom} ${getString(Strings.To)} " +
-                        "${state.companyInfo?.openingTimes?.dayTo} ${getString(Strings.From).lowercase()} " +
-                        "${state.companyInfo?.openingTimes?.open}" +
-                        " ${getString(Strings.To)} ${state.companyInfo?.openingTimes?.close}.",
-                )
-            }
-            AppTextButton(
-                onClick = { vm.trySend(FooterContract.Inputs.OnTrackOrderClick) },
-                content = { SpanText(text = getString(Strings.SendEmail).uppercase()) }
-            )
-            SpanText(getString(Strings.WeWillReply))
-        } else {
-            ShimmerFooterSection()
-        }
-    }
-}
-
-@Composable
 private fun FooterSection(
+    modifier: Modifier = Modifier,
     isLoading: Boolean,
     title: String,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .position(Position.Relative)
             .gap(1.em)
     ) {
@@ -343,8 +338,11 @@ private fun FooterSection(
             SpanText(
                 text = title.uppercase(),
                 modifier = HeadlineStyle.toModifier(H3Variant)
-                    .margin(bottom = 0.25.em)
+                    .margin(top = 1.em, bottom = 0.25.em)
+                    .color(ColorMode.current.opposite.toPalette().color)
             )
+            AppDividerHorizontal(color = Colors.White)
+            Box(Modifier.size(0.px))
             content()
         }
     }

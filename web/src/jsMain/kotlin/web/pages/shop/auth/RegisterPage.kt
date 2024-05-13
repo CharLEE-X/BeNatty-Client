@@ -22,13 +22,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
-import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.silk.components.forms.Checkbox
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiEmail
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiError
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiPassword
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibilityOff
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
@@ -40,7 +34,6 @@ import feature.router.Screen
 import feature.router.goHome
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
 import web.H1Variant
 import web.H3Variant
 import web.HeadlineStyle
@@ -115,85 +108,47 @@ private fun FieldsSection(
     var repeatPassword by remember { mutableStateOf("") }
 
     AppOutlinedTextField(
-        value = name,
-        onValueChange = {
+        text = name,
+        onTextChanged = {
             name = it
             vm.trySend(RegisterContract.Inputs.SetName(it))
         },
-        label = getString(Strings.Name),
-        leadingIcon = { MdiPerson() },
-        trailingIcon = { state.nameError?.let { MdiError() } },
-        error = state.nameError != null,
-        errorText = state.nameError,
+        placeholder = getString(Strings.Name),
+        valid = state.nameError == null,
         modifier = Modifier.fillMaxWidth()
     )
     AppOutlinedTextField(
-        value = email,
-        onValueChange = {
+        text = email,
+        onTextChanged = {
             email = it
             vm.trySend(RegisterContract.Inputs.SetEmail(it))
         },
-        label = getString(Strings.Email),
-        leadingIcon = { MdiEmail() },
-        trailingIcon = { state.emailError?.let { MdiError() } },
-        error = state.emailError != null,
-        errorText = state.emailError,
+        placeholder = getString(Strings.Email),
+        valid = state.emailError == null,
         modifier = Modifier
             .fillMaxWidth()
             .margin(top = 0.5.em)
     )
     AppOutlinedTextField(
-        value = password,
-        onValueChange = {
+        text = password,
+        onTextChanged = {
             password = it
             vm.trySend(RegisterContract.Inputs.SetPassword(it))
         },
-        label = getString(Strings.Password),
-        leadingIcon = { MdiPassword() },
-        trailingIcon = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .gap(0.5.em)
-                    .margin(right = 12.px)
-            ) {
-                state.passwordError?.let { MdiError() }
-                val modifier = Modifier
-                    .onClick { vm.trySend(RegisterContract.Inputs.TogglePasswordVisibility) }
-                    .cursor(Cursor.Pointer)
-                if (state.isPasswordVisible) MdiVisibilityOff(modifier) else MdiVisibilityOff(modifier)
-            }
-        },
-        error = state.passwordError != null,
-        errorText = state.passwordError,
+        placeholder = getString(Strings.Password),
+        valid = state.passwordError == null,
         modifier = Modifier
             .fillMaxWidth()
             .margin(top = 0.5.em)
     )
     AppOutlinedTextField(
-        value = repeatPassword,
-        onValueChange = {
+        text = repeatPassword,
+        onTextChanged = {
             repeatPassword = it
             vm.trySend(RegisterContract.Inputs.SetRepeatPassword(it))
         },
-        label = getString(Strings.RepeatPassword),
-        leadingIcon = { MdiPassword() },
-        trailingIcon = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .gap(0.5.em)
-                    .margin(right = 12.px)
-            ) {
-                state.repeatPasswordError?.let { MdiError() }
-                val modifier = Modifier
-                    .onClick { vm.trySend(RegisterContract.Inputs.ToggleRepeatPasswordVisibility) }
-                    .cursor(Cursor.Pointer)
-                if (state.isRepeatPasswordVisible) MdiVisibilityOff(modifier) else MdiVisibilityOff(modifier)
-            }
-        },
-        error = state.repeatPasswordError != null,
-        errorText = state.repeatPasswordError,
+        placeholder = getString(Strings.RepeatPassword),
+        valid = state.repeatPasswordError == null,
         modifier = Modifier
             .fillMaxWidth()
             .margin(top = 0.5.em)

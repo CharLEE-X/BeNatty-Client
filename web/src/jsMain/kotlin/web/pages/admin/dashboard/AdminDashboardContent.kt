@@ -118,24 +118,21 @@ private fun DataGenerator(vm: AdminDashboardViewModel, state: AdminDashboardCont
     CardSection(title = "Generator") {
         LoaderComponent(state.isGenerating) {
             AppOutlinedTextField(
-                value = state.productsToGenerate.toString(),
-                onValueChange = { vm.trySend(AdminDashboardContract.Inputs.SetProductsToGenerate(it)) },
-                label = getString(Products),
-//                type = TextFieldType.NUMBER,
+                text = state.productsToGenerate.toString(),
+                onTextChanged = { vm.trySend(AdminDashboardContract.Inputs.SetProductsToGenerate(it)) },
+                placeholder = getString(Products),
                 modifier = Modifier.fillMaxWidth()
             )
             AppOutlinedTextField(
-                value = state.customersToGenerate.toString(),
-                onValueChange = { vm.trySend(AdminDashboardContract.Inputs.SetCustomersToGenerate(it)) },
-                label = getString(Customers),
-//                type = TextFieldType.NUMBER,
+                text = state.customersToGenerate.toString(),
+                onTextChanged = { vm.trySend(AdminDashboardContract.Inputs.SetCustomersToGenerate(it)) },
+                placeholder = getString(Customers),
                 modifier = Modifier.fillMaxWidth()
             )
             AppOutlinedTextField(
-                value = state.ordersToGenerate.toString(),
-                onValueChange = { vm.trySend(AdminDashboardContract.Inputs.SetOrdersToGenerate(it)) },
-                label = getString(Orders),
-//                type = TextFieldType.NUMBER,
+                text = state.ordersToGenerate.toString(),
+                onTextChanged = { vm.trySend(AdminDashboardContract.Inputs.SetOrdersToGenerate(it)) },
+                placeholder = getString(Orders),
                 modifier = Modifier.fillMaxWidth()
             )
             CreateButton { vm.trySend(AdminDashboardContract.Inputs.OnGenerateClicked) }

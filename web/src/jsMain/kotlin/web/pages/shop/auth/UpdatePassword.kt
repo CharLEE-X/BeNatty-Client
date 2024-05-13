@@ -15,9 +15,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.margin
-import com.varabyte.kobweb.compose.ui.modifiers.onClick
-import com.varabyte.kobweb.compose.ui.modifiers.size
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibilityOff
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
@@ -101,19 +98,12 @@ fun UpdatingPassword(
     )
 
     AppOutlinedTextField(
-        value = state.password,
-        onValueChange = {
+        text = state.password,
+        onTextChanged = {
             password = it
             vm.trySend(UpdatePasswordContract.Inputs.SetPassword(it))
         },
-        label = getString(Strings.PasswordHint),
-        trailingIcon = {
-            val modifier = Modifier
-                .size(1.5.em)
-                .onClick { vm.trySend(UpdatePasswordContract.Inputs.ToggleShowPassword) }
-            if (state.showPassword) MdiVisibilityOff(modifier) else MdiVisibilityOff(modifier)
-
-        },
+        placeholder = getString(Strings.PasswordHint),
         modifier = Modifier
             .fillMaxWidth()
             .margin(top = 0.5.em)

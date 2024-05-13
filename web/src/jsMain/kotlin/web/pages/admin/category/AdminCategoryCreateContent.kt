@@ -18,7 +18,6 @@ import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.AppTooltip
 import web.components.widgets.CardSection
 import web.components.widgets.CreateButton
-import web.util.onEnterKeyDown
 
 @Composable
 fun AdminCategoryCreateContent(
@@ -58,17 +57,12 @@ fun AdminCategoryCreateContent(
             content = {
                 CardSection(title = null) {
                     AppOutlinedTextField(
-                        value = state.name,
-                        onValueChange = { vm.trySend(AdminCategoryCreateContract.Inputs.SetName(it)) },
-                        label = getString(Strings.Name),
-                        errorText = state.nameError,
-                        error = state.nameError != null,
-                        leadingIcon = null,
-                        shake = state.nameShake,
+                        text = state.name,
+                        onTextChanged = { vm.trySend(AdminCategoryCreateContract.Inputs.SetName(it)) },
+                        placeholder = getString(Strings.Name),
                         required = true,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .onEnterKeyDown { vm.trySend(AdminCategoryCreateContract.Inputs.OnCreateClick) }
+                        valid = state.nameError == null,
+                        modifier = Modifier.fillMaxWidth()
                     )
                     AppTooltip(getString(Strings.CategoryNameDescription))
                     CreateButton { vm.trySend(AdminCategoryCreateContract.Inputs.OnCreateClick) }

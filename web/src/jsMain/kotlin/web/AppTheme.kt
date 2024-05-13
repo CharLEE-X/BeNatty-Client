@@ -12,6 +12,7 @@ import com.varabyte.kobweb.silk.theme.colors.palette.border
 import com.varabyte.kobweb.silk.theme.colors.palette.button
 import com.varabyte.kobweb.silk.theme.colors.palette.color
 import com.varabyte.kobweb.silk.theme.colors.palette.link
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 
 const val HEADLINE_FONT = "Montserrat"
 
@@ -22,6 +23,10 @@ else Colors.White.copy(alpha = 25).toRgb()
 object AppColors {
     val brandColor = Color.rgb(0xc09e83)
     val brandLightened = brandColor.lightened(0.1f)
+    val lightBg = Color.rgb(0xf5f5f5)
+
+    @Composable
+    fun divider() = ColorMode.current.toPalette().color.toRgb().copy(alpha = 50)
 }
 
 @Suppress("unused")

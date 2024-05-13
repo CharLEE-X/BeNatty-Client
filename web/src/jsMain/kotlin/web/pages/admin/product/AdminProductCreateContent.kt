@@ -21,7 +21,6 @@ import web.components.layouts.OneLayout
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.CardSection
 import web.components.widgets.CreateButton
-import web.components.widgets.TrailingIconSubmit
 import web.util.onEnterKeyDown
 
 @Composable
@@ -65,13 +64,11 @@ fun AdminProductCreateContent(
         ) {
             CardSection(title = null) {
                 AppOutlinedTextField(
-                    value = state.name,
-                    onValueChange = { vm.trySend(AdminProductCreateContract.Inputs.SetName(it)) },
-                    label = getString(Strings.Name),
-                    errorText = state.nameError,
-                    error = state.nameError != null,
+                    text = state.name,
+                    onTextChanged = { vm.trySend(AdminProductCreateContract.Inputs.SetName(it)) },
+                    placeholder = getString(Strings.Name),
+                    valid = state.nameError == null,
                     required = true,
-                    trailingIcon = { TrailingIconSubmit(show = nameFocused && state.nameError == null) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .onEnterKeyDown { vm.trySend(AdminProductCreateContract.Inputs.OnCreateClick) }

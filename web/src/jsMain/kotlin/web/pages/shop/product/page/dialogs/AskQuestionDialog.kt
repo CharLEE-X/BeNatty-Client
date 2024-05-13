@@ -22,7 +22,6 @@ import feature.product.page.ProductPageContract
 import feature.product.page.ProductPageViewModel
 import org.jetbrains.compose.web.css.em
 import web.components.widgets.AppOutlinedTextField
-import web.components.widgets.TrailingIconGoToNext
 
 @Composable
 fun AskQuestionDialog(
@@ -90,23 +89,20 @@ fun AskQuestionDialog(
                     .gap(1.em)
             ) {
                 AppOutlinedTextField(
-                    label = getString(Strings.Name),
-                    value = state.askQuestionName,
-                    onValueChange = { vm.trySend(ProductPageContract.Inputs.OnAskQuestionNameChanged(it)) },
-                    trailingIcon = { TrailingIconGoToNext(show = nameFocused) },
+                    text = state.askQuestionName,
+                    onTextChanged = { vm.trySend(ProductPageContract.Inputs.OnAskQuestionNameChanged(it)) },
+                    placeholder = getString(Strings.Name),
                     modifier = Modifier
                         .weight(1f)
                         .onFocusIn { nameFocused = true }
                         .onFocusOut { nameFocused = false }
                 )
                 AppOutlinedTextField(
-                    label = getString(Strings.Email),
-                    value = state.askQuestionEmail,
-                    onValueChange = { vm.trySend(ProductPageContract.Inputs.OnAskQuestionEmailChanged(it)) },
+                    text = state.askQuestionEmail,
+                    onTextChanged = { vm.trySend(ProductPageContract.Inputs.OnAskQuestionEmailChanged(it)) },
+                    placeholder = getString(Strings.Email),
                     required = true,
-                    errorText = state.askQuestionEmailError,
-                    error = state.askQuestionEmailError != null,
-                    trailingIcon = { TrailingIconGoToNext(show = emailFocused) },
+                    valid = state.askQuestionEmailError == null,
                     modifier = Modifier
                         .weight(1f)
                         .resize(Resize.Vertical)
@@ -115,15 +111,11 @@ fun AskQuestionDialog(
                 )
             }
             AppOutlinedTextField(
-                label = getString(Strings.Comment),
-                value = state.askQuestionQuestion,
-                onValueChange = { vm.trySend(ProductPageContract.Inputs.OnAskQuestionQuestionChanged(it)) },
+                text = state.askQuestionQuestion,
+                onTextChanged = { vm.trySend(ProductPageContract.Inputs.OnAskQuestionQuestionChanged(it)) },
+                placeholder = getString(Strings.Comment),
                 required = true,
-                errorText = state.askQuestionQuestionError,
-                error = state.askQuestionQuestionError != null,
-//                type = TextFieldType.TEXTAREA,
-                rows = 5,
-                trailingIcon = { TrailingIconGoToNext(show = questionFocused) },
+                valid = state.askQuestionQuestionError == null,
                 modifier = Modifier.fillMaxWidth()
                     .resize(Resize.Vertical)
                     .onFocusIn { questionFocused = true }

@@ -452,10 +452,9 @@ private fun AdminCollageItem(
 @Composable
 private fun CompanyInfoEmail(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
     AppOutlinedTextField(
-        value = state.current.companyInfo.contactInfo.email ?: "",
-        onValueChange = { vm.trySend(AdminConfigContract.Inputs.SetEmail(it)) },
-        label = getString(Strings.Email),
-        errorText = state.emailError,
+        text = state.current.companyInfo.contactInfo.email ?: "",
+        onTextChanged = { vm.trySend(AdminConfigContract.Inputs.SetEmail(it)) },
+        placeholder = getString(Strings.Email),
         required = false,
         modifier = Modifier.fillMaxWidth()
     )
@@ -464,10 +463,9 @@ private fun CompanyInfoEmail(vm: AdminConfigViewModel, state: AdminConfigContrac
 @Composable
 private fun CompanyInfoPhone(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
     AppOutlinedTextField(
-        value = state.current.companyInfo.contactInfo.phone ?: "",
-        onValueChange = { vm.trySend(AdminConfigContract.Inputs.SetPhone(it)) },
-        label = getString(Strings.Phone),
-        errorText = state.phoneError,
+        text = state.current.companyInfo.contactInfo.phone ?: "",
+        onTextChanged = { vm.trySend(AdminConfigContract.Inputs.SetPhone(it)) },
+        placeholder = getString(Strings.Phone),
         required = false,
         modifier = Modifier.fillMaxWidth()
     )
@@ -476,10 +474,9 @@ private fun CompanyInfoPhone(vm: AdminConfigViewModel, state: AdminConfigContrac
 @Composable
 private fun CompanyInfoCompanyWebsite(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
     AppOutlinedTextField(
-        value = state.current.companyInfo.contactInfo.companyWebsite ?: "",
-        onValueChange = { vm.trySend(AdminConfigContract.Inputs.SetCompanyWebsite(it)) },
-        label = getString(Strings.CompanyWebsite),
-        errorText = state.companyWebsiteError,
+        text = state.current.companyInfo.contactInfo.companyWebsite ?: "",
+        onTextChanged = { vm.trySend(AdminConfigContract.Inputs.SetCompanyWebsite(it)) },
+        placeholder = getString(Strings.CompanyWebsite),
         required = false,
         modifier = Modifier.fillMaxWidth()
     )
@@ -553,10 +550,9 @@ fun OpeningTimes(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
         ) {
             SpanText(text = getString(Strings.OpenTime))
             AppOutlinedTextField(
-                value = state.current.companyInfo.openingTimes.open ?: "",
-                onValueChange = { vm.trySend(AdminConfigContract.Inputs.OnOpenDayToSelected(DayOfWeek.valueOf(it))) },
-                label = getString(Strings.OpenTime),
-                errorText = state.openTimeError,
+                text = state.current.companyInfo.openingTimes.open ?: "",
+                onTextChanged = { vm.trySend(AdminConfigContract.Inputs.OnOpenDayToSelected(DayOfWeek.valueOf(it))) },
+                placeholder = getString(Strings.OpenTime),
                 required = false,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -568,10 +564,9 @@ fun OpeningTimes(vm: AdminConfigViewModel, state: AdminConfigContract.State) {
         ) {
             SpanText(text = getString(Strings.CloseTime))
             AppOutlinedTextField(
-                value = state.current.companyInfo.openingTimes.close ?: "",
-                onValueChange = { vm.trySend(AdminConfigContract.Inputs.SetCloseTime(it)) },
-                label = getString(Strings.CloseTime),
-                errorText = state.closeTimeError,
+                text = state.current.companyInfo.openingTimes.close ?: "",
+                onTextChanged = { vm.trySend(AdminConfigContract.Inputs.SetCloseTime(it)) },
+                placeholder = getString(Strings.CloseTime),
                 required = false,
                 modifier = Modifier.fillMaxWidth()
             )

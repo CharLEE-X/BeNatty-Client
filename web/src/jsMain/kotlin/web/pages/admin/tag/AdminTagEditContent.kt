@@ -23,7 +23,6 @@ import web.components.widgets.CardSection
 import web.components.widgets.CreatorSection
 import web.components.widgets.EditButton
 import web.components.widgets.HasChangesWidget
-import web.components.widgets.ImproveWithButton
 import web.components.widgets.TakeActionDialog
 
 @Composable
@@ -86,19 +85,10 @@ fun AdminTagEditContent(
             content = {
                 CardSection(getString(Strings.Details)) {
                     AppOutlinedTextField(
-                        value = state.current.name,
-                        onValueChange = { vm.trySend(AdminTagEditContract.Inputs.SetName(it)) },
-                        label = getString(Strings.Name),
-                        errorText = state.nameError,
-                        leadingIcon = null,
-                        shake = state.shakeName,
+                        text = state.current.name,
+                        onTextChanged = { vm.trySend(AdminTagEditContract.Inputs.SetName(it)) },
+                        placeholder = getString(Strings.Name),
                         required = true,
-                        trailingIcon = {
-                            ImproveWithButton(
-                                tooltipText = getString(Strings.ImproveWithAi),
-                                onClick = { vm.trySend(AdminTagEditContract.Inputs.OnImproveNameClick) }
-                            )
-                        },
                         modifier = Modifier.fillMaxWidth()
                     )
                     CreatorSection(

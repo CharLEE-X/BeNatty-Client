@@ -18,7 +18,6 @@ import component.localization.Strings
 import component.localization.getString
 import feature.admin.customer.edit.AdminCustomerEditContract
 import feature.admin.customer.edit.AdminCustomerEditViewModel
-import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.css.em
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
@@ -192,9 +191,9 @@ private fun CollectTax(vm: AdminCustomerEditViewModel, state: AdminCustomerEditC
 @Composable
 private fun RowScope.DetailFirstName(vm: AdminCustomerEditViewModel, state: AdminCustomerEditContract.State) {
     AppOutlinedTextField(
-        value = state.current.details.firstName ?: "",
-        onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetDetailFirstName(it)) },
-        label = getString(Strings.FirstName),
+        text = state.current.details.firstName ?: "",
+        onTextChanged = { vm.trySend(AdminCustomerEditContract.Inputs.SetDetailFirstName(it)) },
+        placeholder = getString(Strings.FirstName),
         modifier = Modifier.weight(1f)
     )
 }
@@ -202,9 +201,9 @@ private fun RowScope.DetailFirstName(vm: AdminCustomerEditViewModel, state: Admi
 @Composable
 private fun RowScope.DetailLastName(vm: AdminCustomerEditViewModel, state: AdminCustomerEditContract.State) {
     AppOutlinedTextField(
-        value = state.current.details.lastName ?: "",
-        onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetDetailLastName(it)) },
-        label = getString(Strings.LastName),
+        text = state.current.details.lastName ?: "",
+        onTextChanged = { vm.trySend(AdminCustomerEditContract.Inputs.SetDetailLastName(it)) },
+        placeholder = getString(Strings.LastName),
         modifier = Modifier.weight(1f)
     )
 }
@@ -212,9 +211,9 @@ private fun RowScope.DetailLastName(vm: AdminCustomerEditViewModel, state: Admin
 @Composable
 private fun RowScope.AddressFirstName(vm: AdminCustomerEditViewModel, state: AdminCustomerEditContract.State) {
     AppOutlinedTextField(
-        value = state.current.address.firstName ?: "",
-        onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetAddressFirstName(it)) },
-        label = getString(Strings.FirstName),
+        text = state.current.address.firstName ?: "",
+        onTextChanged = { vm.trySend(AdminCustomerEditContract.Inputs.SetAddressFirstName(it)) },
+        placeholder = getString(Strings.FirstName),
         modifier = Modifier.weight(1f)
     )
 }
@@ -222,9 +221,9 @@ private fun RowScope.AddressFirstName(vm: AdminCustomerEditViewModel, state: Adm
 @Composable
 private fun RowScope.AddressLastName(vm: AdminCustomerEditViewModel, state: AdminCustomerEditContract.State) {
     AppOutlinedTextField(
-        value = state.current.address.lastName ?: "",
-        onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetAddressLastName(it)) },
-        label = getString(Strings.LastName),
+        text = state.current.address.lastName ?: "",
+        onTextChanged = { vm.trySend(AdminCustomerEditContract.Inputs.SetAddressLastName(it)) },
+        placeholder = getString(Strings.LastName),
         modifier = Modifier.weight(1f)
     )
 }
@@ -232,9 +231,9 @@ private fun RowScope.AddressLastName(vm: AdminCustomerEditViewModel, state: Admi
 @Composable
 private fun Language(vm: AdminCustomerEditViewModel, state: AdminCustomerEditContract.State) {
     AppOutlinedTextField(
-        value = state.current.details.language ?: "",
-        onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetLanguage(it)) },
-        label = getString(Strings.Language),
+        text = state.current.details.language ?: "",
+        onTextChanged = { vm.trySend(AdminCustomerEditContract.Inputs.SetLanguage(it)) },
+        placeholder = getString(Strings.Language),
         modifier = Modifier.fillMaxWidth(),
     )
     SpanText(text = getString(Strings.LanguageDesc))
@@ -243,13 +242,10 @@ private fun Language(vm: AdminCustomerEditViewModel, state: AdminCustomerEditCon
 @Composable
 private fun Email(vm: AdminCustomerEditViewModel, state: AdminCustomerEditContract.State) {
     AppOutlinedTextField(
-        value = state.current.details.email,
-        onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetEmail(it)) },
-        label = getString(Strings.Email),
-        errorText = state.emailError,
-        type = InputType.Email,
+        text = state.current.details.email,
+        onTextChanged = { vm.trySend(AdminCustomerEditContract.Inputs.SetEmail(it)) },
+        placeholder = getString(Strings.Email),
         required = true,
-        shake = state.emailShake,
         modifier = Modifier.fillMaxWidth(),
     )
 }
@@ -257,10 +253,9 @@ private fun Email(vm: AdminCustomerEditViewModel, state: AdminCustomerEditContra
 @Composable
 private fun DetailPhone(vm: AdminCustomerEditViewModel, state: AdminCustomerEditContract.State) {
     AppOutlinedTextField(
-        value = state.current.details.phone ?: "",
-        onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetDetailPhone(it)) },
-        label = getString(Strings.Phone),
-        type = InputType.Tel,
+        text = state.current.details.phone ?: "",
+        onTextChanged = { vm.trySend(AdminCustomerEditContract.Inputs.SetDetailPhone(it)) },
+        placeholder = getString(Strings.Phone),
         modifier = Modifier.fillMaxWidth(),
     )
 }
@@ -268,10 +263,9 @@ private fun DetailPhone(vm: AdminCustomerEditViewModel, state: AdminCustomerEdit
 @Composable
 private fun AddressPhone(vm: AdminCustomerEditViewModel, state: AdminCustomerEditContract.State) {
     AppOutlinedTextField(
-        value = state.current.address.phone ?: "",
-        onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetAddressPhone(it)) },
-        label = getString(Strings.Phone),
-        type = InputType.Tel,
+        text = state.current.address.phone ?: "",
+        onTextChanged = { vm.trySend(AdminCustomerEditContract.Inputs.SetAddressPhone(it)) },
+        placeholder = getString(Strings.Phone),
         modifier = Modifier.fillMaxWidth(),
     )
 }
@@ -282,9 +276,9 @@ private fun Address(
     vm: AdminCustomerEditViewModel
 ) {
     AppOutlinedTextField(
-        value = state.current.address.address ?: "",
-        onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetAddress(it)) },
-        label = getString(Strings.Address),
+        text = state.current.address.address ?: "",
+        onTextChanged = { vm.trySend(AdminCustomerEditContract.Inputs.SetAddress(it)) },
+        placeholder = getString(Strings.Address),
         modifier = Modifier.fillMaxWidth(),
     )
 }
@@ -295,9 +289,9 @@ private fun Company(
     vm: AdminCustomerEditViewModel
 ) {
     AppOutlinedTextField(
-        value = state.current.address.company ?: "",
-        onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetCompany(it)) },
-        label = getString(Strings.Company),
+        text = state.current.address.company ?: "",
+        onTextChanged = { vm.trySend(AdminCustomerEditContract.Inputs.SetCompany(it)) },
+        placeholder = getString(Strings.Company),
         modifier = Modifier.fillMaxWidth()
     )
 }
@@ -308,9 +302,9 @@ private fun Postcode(
     vm: AdminCustomerEditViewModel
 ) {
     AppOutlinedTextField(
-        value = state.current.address.postcode ?: "",
-        onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetPostcode(it)) },
-        label = getString(Strings.PostCode),
+        text = state.current.address.postcode ?: "",
+        onTextChanged = { vm.trySend(AdminCustomerEditContract.Inputs.SetPostcode(it)) },
+        placeholder = getString(Strings.PostCode),
         modifier = Modifier.fillMaxWidth(),
     )
 }
@@ -321,9 +315,9 @@ private fun City(
     vm: AdminCustomerEditViewModel
 ) {
     AppOutlinedTextField(
-        value = state.current.address.city ?: "",
-        onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetCity(it)) },
-        label = getString(Strings.City),
+        text = state.current.address.city ?: "",
+        onTextChanged = { vm.trySend(AdminCustomerEditContract.Inputs.SetCity(it)) },
+        placeholder = getString(Strings.City),
         modifier = Modifier.fillMaxWidth()
     )
 }
@@ -334,9 +328,9 @@ private fun Apartment(
     vm: AdminCustomerEditViewModel
 ) {
     AppOutlinedTextField(
-        value = state.current.address.apartment ?: "",
-        onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetApartment(it)) },
-        label = getString(Strings.Apartment),
+        text = state.current.address.apartment ?: "",
+        onTextChanged = { vm.trySend(AdminCustomerEditContract.Inputs.SetApartment(it)) },
+        placeholder = getString(Strings.Apartment),
         modifier = Modifier.fillMaxWidth()
     )
 }
@@ -347,9 +341,9 @@ private fun Country(
     vm: AdminCustomerEditViewModel
 ) {
     AppOutlinedTextField(
-        value = state.current.address.country ?: "",
-        onValueChange = { vm.trySend(AdminCustomerEditContract.Inputs.SetCountry(it)) },
-        label = getString(Strings.Country),
+        text = state.current.address.country ?: "",
+        onTextChanged = { vm.trySend(AdminCustomerEditContract.Inputs.SetCountry(it)) },
+        placeholder = getString(Strings.Country),
         modifier = Modifier.fillMaxWidth()
     )
 }

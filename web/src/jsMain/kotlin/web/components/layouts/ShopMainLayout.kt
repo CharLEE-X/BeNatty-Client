@@ -19,7 +19,6 @@ import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.gap
-import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.minHeight
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.transition
@@ -85,7 +84,6 @@ fun ShopMainLayout(
     footerRoutes: FooterRoutes,
     spacing: CSSLengthOrPercentageNumericValue = sectionsGap,
     overlay: @Composable BoxScope.() -> Unit = {},
-    banner: @Composable ColumnScope.() -> Unit = {},
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val cartState by globalVMs.cartVm.observeStates().collectAsState()
@@ -116,12 +114,10 @@ fun ShopMainLayout(
                 isFullLayout = isFullLayout,
                 modifier = Modifier.zIndex(10),
             )
-            banner()
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .maxWidth(oneLayoutMaxWidth)
                     .padding(
                         top = 100.px,
                         bottom = spacing

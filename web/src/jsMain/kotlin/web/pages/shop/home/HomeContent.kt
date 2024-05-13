@@ -43,13 +43,14 @@ fun HomeContent(
         desktopNavRoutes = desktopNavRoutes,
         footerRoutes = footerRoutes,
         globalVMs = globalVMs,
-        banner = {
-            state.landingConfig?.slideshowItems?.let {
-                Slideshow(vm, state)
-            }
-        }
     ) {
+        state.landingConfig.slideshowItems.let {
+            Slideshow(vm, state)
+        }
         CategoriesSection(vm, state)
+        FromTheBlog(vm, state)
+        OurCustomersSay(vm, state)
         HomeSubscribe(vm, state)
+        FreeSection(vm, state)
     }
 }

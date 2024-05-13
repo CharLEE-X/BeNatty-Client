@@ -81,8 +81,6 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiModeNight
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiPerson2
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiSearch
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiShoppingCart
-import com.varabyte.kobweb.silk.components.layout.HorizontalDivider
-import com.varabyte.kobweb.silk.components.layout.VerticalDivider
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
@@ -109,10 +107,11 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import web.H2Variant
 import web.H3Variant
 import web.HeadlineStyle
 import web.components.layouts.oneLayoutMaxWidth
+import web.components.widgets.AppDividerHorizontal
+import web.components.widgets.AppDividerVertical
 import web.components.widgets.AppIconButton
 import web.components.widgets.Logo
 import web.components.widgets.RotatableChevron
@@ -658,10 +657,9 @@ private fun RecommendedProductItem(
 private fun ContactSection(vm: NavbarViewModel, state: NavbarContract.State) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
     ) {
-        HorizontalDivider()
+        AppDividerHorizontal()
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -674,29 +672,26 @@ private fun ContactSection(vm: NavbarViewModel, state: NavbarContract.State) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .weight(1f)
                     .gap(1.em)
             ) {
                 MdiFacebook()
                 MdiFacebook()
                 MdiFacebook()
             }
-            VerticalDivider()
+            AppDividerVertical()
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .gap(1.em)
+                modifier = Modifier.weight(1f)
             ) {
                 TextLink(
                     text = getString(Strings.CustomerService),
                     onClick = { vm.trySend(NavbarContract.Inputs.OnCustomerServiceClicked) },
-                    textModifier = HeadlineStyle.toModifier(H2Variant)
                 )
             }
         }
-        HorizontalDivider()
+        AppDividerHorizontal()
     }
 }
 

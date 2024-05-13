@@ -18,8 +18,11 @@ import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
+import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
+import com.varabyte.kobweb.compose.ui.modifiers.color
 import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.display
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
@@ -43,7 +46,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translate
 import com.varabyte.kobweb.compose.ui.modifiers.userSelect
-import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiChevronLeft
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiChevronRight
@@ -51,6 +53,9 @@ import com.varabyte.kobweb.silk.components.style.ComponentStyle
 import com.varabyte.kobweb.silk.components.style.base
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.background
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.getString
 import data.GetLandingConfigQuery
@@ -191,7 +196,6 @@ fun Slideshow(
                             onClick = { vm.trySend(HomeContract.Inputs.OnCollageItemClick(item)) },
                             show = showTitle,
                             modifier = Modifier
-                                .zIndex(20)
                                 .align(Alignment.CenterStart)
                                 .translate(tx = 300.px, ty = 0.px)
                         )
@@ -202,7 +206,6 @@ fun Slideshow(
                             onClick = { vm.trySend(HomeContract.Inputs.OnCollageItemClick(item)) },
                             show = showTitle,
                             modifier = Modifier
-                                .zIndex(20)
                                 .align(Alignment.Center)
                                 .translate(tx = 0.px, ty = 100.px)
                         )
@@ -214,7 +217,6 @@ fun Slideshow(
                     icon = { modifier -> MdiChevronLeft(modifier) },
                     modifier = Modifier
                         .align(Alignment.CenterStart)
-                        .zIndex(10)
                 )
                 Navigator(
                     enabled = !jobInProgress,
@@ -229,7 +231,6 @@ fun Slideshow(
                     icon = { modifier -> MdiChevronRight(modifier) },
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
-                        .zIndex(10)
                 )
             }
         }
@@ -279,16 +280,21 @@ fun Navigator(
         modifier = modifier
             .padding(16.px)
             .margin(16.px)
+            .backgroundColor(if (hovered) Colors.Transparent else ColorMode.current.toPalette().background)
+            .color(ColorMode.current.opposite.toPalette().background)
             .borderRadius(50.percent)
-            .onMouseOver { if (enabled) hovered = true }
+            .onMouseOver { hovered = true }
             .onMouseLeave { hovered = false }
-            .onFocusIn { if (enabled) hovered = true }
+            .onFocusIn { hovered = true }
             .onFocusOut { hovered = false }
             .tabIndex(0)
             .cursor(Cursor.Pointer)
             .onClick { if (enabled) onClick() }
             .onEnterKeyDown { if (enabled) onClick() }
-            .transition(CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease))
+            .transition(
+                CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease),
+                CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease),
+            )
     ) {
         icon(Modifier.fillMaxSize())
     }

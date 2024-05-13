@@ -1,80 +1,66 @@
 package web.components.widgets
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
-import com.varabyte.kobweb.compose.foundation.layout.RowScope
+import com.varabyte.kobweb.compose.dom.ElementRefScope
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.graphics.Color
+import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
+import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.height
+import com.varabyte.kobweb.compose.ui.modifiers.lineHeight
+import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.silk.components.forms.InputDefaults
 import com.varabyte.kobweb.silk.components.forms.TextInput
-import feature.shop.account.profile.SHAKE_ANIM_DURATION
-import kotlinx.coroutines.delay
+import com.varabyte.kobweb.silk.components.style.ComponentVariant
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.background
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import org.jetbrains.compose.web.attributes.AutoComplete
-import org.jetbrains.compose.web.attributes.InputType
-import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
+import org.w3c.dom.HTMLInputElement
+import web.AppColors
 
 @Composable
 fun AppOutlinedTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    label: String? = null,
-    placeholder: String? = null,
-    leadingIcon: (@Composable () -> Unit)? = null,
-    trailingIcon: (@Composable RowScope.() -> Unit)? = null,
-    hasLeadingIcon: Boolean = false,
-    hasTrailingIcon: Boolean = false,
-    containerShape: CSSLengthOrPercentageNumericValue = 12.px,
-    inputTextColor: CSSColorValue? = null,
-    type: InputType.InputTypeWithStringValue = InputType.Text,
-    autoComplete: AutoComplete = AutoComplete.off,
-    required: Boolean = false,
-    disabled: Boolean = false,
-    error: Boolean = false,
-    errorText: String? = null,
-    prefixText: String? = null,
-    suffixText: String? = null,
-    supportingText: String? = null,
-    textDirection: String? = null,
-    rows: Int? = null,
-    cols: Int? = null,
-    max: String? = null,
-    maxLength: Int? = null,
-    min: String? = null,
-    minLength: Int? = null,
-    pattern: String? = null,
-    readOnly: Boolean = false,
-    multiple: Boolean = false,
-    step: String? = null,
-    shake: Boolean = false,
+    text: String,
+    onTextChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
-    unFocusedOutlineColor: CSSColorValue? = null,
-    focusedOutlineColor: CSSColorValue? = null,
-    hoverOutlineColor: CSSColorValue? = null,
+    variant: ComponentVariant? = InputDefaults.Variant,
+    placeholder: String? = null,
+    password: Boolean = false,
+    enabled: Boolean = true,
+    valid: Boolean = true,
+    required: Boolean = false,
+    readOnly: Boolean = false,
+    spellCheck: Boolean = false,
+    autoComplete: AutoComplete? = null,
+    onCommit: () -> Unit = {},
+    bgColor: Color = ColorMode.current.toPalette().background,
+    ref: ElementRefScope<HTMLInputElement>? = null,
 ) {
-    var translateX by remember { mutableStateOf(0.em) }
-
-    LaunchedEffect(shake) {
-        if (shake) {
-            translateX = 0.5.em
-            delay(SHAKE_ANIM_DURATION / 4)
-            translateX = (-0.5).em
-            delay(SHAKE_ANIM_DURATION / 4)
-            translateX = 0.5.em
-            delay(SHAKE_ANIM_DURATION / 4)
-            translateX = 0.em
-        }
-    }
-
     TextInput(
-        text = value,
-        onTextChanged = onValueChange,
+        text = text,
+        onTextChanged = onTextChanged,
         placeholder = placeholder,
-        spellCheck = false,
-        autoComplete = AutoComplete.off,
+        spellCheck = spellCheck,
+        autoComplete = autoComplete,
+        valid = valid,
+        enabled = enabled,
+        required = required,
+        password = password,
+        readOnly = readOnly,
+        onCommit = onCommit,
+        ref = ref,
+        variant = variant,
+        focusBorderColor = AppColors.brandColor,
+        modifier = modifier
+            .fillMaxWidth()
+            .borderRadius(0.px)
+            .height(48.px)
+            .lineHeight(48.px)
+            .backgroundColor(bgColor)
+            .padding(leftRight = 1.em)
     )
 }

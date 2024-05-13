@@ -8,7 +8,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.copperleaf.ballast.navigation.routing.RouterContract
-import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -16,17 +15,10 @@ import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
-import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
-import com.varabyte.kobweb.compose.ui.modifiers.onClick
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiEmail
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiError
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiPassword
-import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibilityOff
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
@@ -38,7 +30,6 @@ import feature.router.Screen
 import feature.router.goHome
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
 import web.H3Variant
 import web.HeadlineStyle
 import web.components.widgets.AppElevatedCard
@@ -127,44 +118,25 @@ private fun FieldsSection(
     var password by remember { mutableStateOf("") }
 
     AppOutlinedTextField(
-        value = email,
-        onValueChange = {
+        text = email,
+        onTextChanged = {
             email = it
             vm.trySend(LoginContract.Inputs.SetEmail(it))
         },
-        label = getString(Strings.Email),
-        leadingIcon = { MdiEmail() },
-        trailingIcon = { state.emailError?.let { MdiError() } },
-        error = state.emailError != null,
-        errorText = state.emailError,
+        placeholder = getString(Strings.Email),
+        valid = state.emailError == null,
         modifier = Modifier
             .fillMaxWidth()
             .margin(top = 0.5.em)
     )
     AppOutlinedTextField(
-        value = password,
-        onValueChange = {
+        text = password,
+        onTextChanged = {
             password = it
             vm.trySend(LoginContract.Inputs.SetPassword(it))
         },
-        label = getString(Strings.Password),
-        leadingIcon = { MdiPassword() },
-        trailingIcon = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .gap(0.5.em)
-                    .margin(right = 12.px)
-            ) {
-                state.passwordError?.let { MdiError() }
-                val modifier = Modifier
-                    .onClick { vm.trySend(LoginContract.Inputs.TogglePasswordVisibility) }
-                    .cursor(Cursor.Pointer)
-                if (state.isPasswordVisible) MdiVisibilityOff(modifier) else MdiVisibilityOff(modifier)
-            }
-        },
-        error = state.passwordError != null,
-        errorText = state.passwordError,
+        placeholder = getString(Strings.Password),
+        valid = state.passwordError == null,
         modifier = Modifier
             .fillMaxWidth()
             .margin(top = 0.5.em)

@@ -176,12 +176,9 @@ private fun Media(
 @Composable
 private fun Name(vm: AdminCategoryEditViewModel, state: AdminCategoryEditContract.State) {
     AppOutlinedTextField(
-        value = state.current.name,
-        onValueChange = { vm.trySend(AdminCategoryEditContract.Inputs.SetName(it)) },
-        label = getString(Strings.Name),
-        errorText = state.nameError,
-        leadingIcon = null,
-        shake = state.shakeName,
+        text = state.current.name,
+        onTextChanged = { vm.trySend(AdminCategoryEditContract.Inputs.SetName(it)) },
+        placeholder = getString(Strings.Name),
         required = true,
         modifier = Modifier.fillMaxWidth()
     )
@@ -238,51 +235,31 @@ private fun ShippingPreset(vm: AdminCategoryEditViewModel, state: AdminCategoryE
         },
     )
     AppOutlinedTextField(
-        value = state.current.shippingPreset?.weight ?: "",
-        onValueChange = { vm.trySend(AdminCategoryEditContract.Inputs.SetWeight(it)) },
-        label = getString(Strings.Weight),
-        errorText = state.weightError,
-        leadingIcon = null,
-        shake = state.shakeWeight,
+        text = state.current.shippingPreset?.weight ?: "",
+        onTextChanged = { vm.trySend(AdminCategoryEditContract.Inputs.SetWeight(it)) },
+        placeholder = getString(Strings.Weight),
         required = state.current.shippingPreset?.isPhysicalProduct == true,
-//        type = InputType.Number,
-        suffixText = getString(Strings.Kg),
         modifier = Modifier.fillMaxWidth(),
     )
     AppOutlinedTextField(
-        value = state.current.shippingPreset?.length ?: "",
-        onValueChange = { vm.trySend(AdminCategoryEditContract.Inputs.SetLength(it)) },
-        label = getString(Strings.Length),
-        errorText = state.lengthError,
-        leadingIcon = null,
-        shake = state.shakeLength,
+        text = state.current.shippingPreset?.length ?: "",
+        onTextChanged = { vm.trySend(AdminCategoryEditContract.Inputs.SetLength(it)) },
+        placeholder = getString(Strings.Length),
         required = state.current.shippingPreset?.isPhysicalProduct ?: false,
-//        type = TextFieldType.NUMBER,
-        suffixText = getString(Strings.Cm),
         modifier = Modifier.fillMaxWidth(),
     )
     AppOutlinedTextField(
-        value = state.current.shippingPreset?.width ?: "",
-        onValueChange = { vm.trySend(AdminCategoryEditContract.Inputs.SetWidth(it)) },
-        label = getString(Strings.Width),
-        errorText = state.widthError,
-        leadingIcon = null,
-        shake = state.shakeWidth,
+        text = state.current.shippingPreset?.width ?: "",
+        onTextChanged = { vm.trySend(AdminCategoryEditContract.Inputs.SetWidth(it)) },
+        placeholder = getString(Strings.Width),
         required = state.current.shippingPreset?.isPhysicalProduct ?: false,
-//        type = TextFieldType.NUMBER,
-        suffixText = getString(Strings.Cm),
         modifier = Modifier.fillMaxWidth(),
     )
     AppOutlinedTextField(
-        value = state.current.shippingPreset?.height ?: "",
-        onValueChange = { vm.trySend(AdminCategoryEditContract.Inputs.SetHeight(it)) },
-        label = getString(Strings.Height),
-        errorText = state.heightError,
-        leadingIcon = null,
-        shake = state.shakeHeight,
+        text = state.current.shippingPreset?.height ?: "",
+        onTextChanged = { vm.trySend(AdminCategoryEditContract.Inputs.SetHeight(it)) },
+        placeholder = getString(Strings.Height),
         required = state.current.shippingPreset?.isPhysicalProduct ?: false,
-//        type = TextFieldType.NUMBER,
-        suffixText = getString(Strings.Cm),
         modifier = Modifier.fillMaxWidth(),
     )
 }

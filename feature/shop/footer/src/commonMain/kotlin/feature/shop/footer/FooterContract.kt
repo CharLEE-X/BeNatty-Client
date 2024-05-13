@@ -23,6 +23,8 @@ object FooterContract : KoinComponent {
 
         val companyInfo: GetConfigQuery.CompanyInfo? = null,
         val footerConfig: GetConfigQuery.FooterConfig? = null,
+
+        val connectEmail: String = "",
     )
 
     sealed interface Inputs {
@@ -30,6 +32,7 @@ object FooterContract : KoinComponent {
         data object CheckUserRole : Inputs
         data object GetConfig : Inputs
 
+        data object OnConnectEmailSend : Inputs
         data object OnPrivacyPolicyClicked : Inputs
         data object OnTermsOfServiceClicked : Inputs
         data object OnAccessibilityClicked : Inputs
@@ -51,6 +54,7 @@ object FooterContract : KoinComponent {
         data class SetIsLoading(val isLoading: Boolean) : Inputs
         data class SetCompanyInfo(val companyInfo: GetConfigQuery.CompanyInfo) : Inputs
         data class SetFooterConfig(val footerConfig: GetConfigQuery.FooterConfig) : Inputs
+        data class SetConnectEmail(val email: String) : Inputs
     }
 
     sealed interface Events {

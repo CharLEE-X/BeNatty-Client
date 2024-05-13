@@ -27,6 +27,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.height
+import com.varabyte.kobweb.compose.ui.modifiers.letterSpacing
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusOut
@@ -77,6 +78,7 @@ fun AppFilledButton(
             .backgroundColor(bgColor)
             .color(contentColor)
             .textTransform(TextTransform.Uppercase)
+            .letterSpacing(1.px)
     ) {
         content()
     }

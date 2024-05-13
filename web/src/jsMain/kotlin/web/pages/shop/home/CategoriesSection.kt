@@ -9,7 +9,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.height
-import com.varabyte.kobweb.compose.ui.modifiers.maxHeight
+import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.top
@@ -18,8 +18,10 @@ import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.shop.home.HomeContract
 import feature.shop.home.HomeViewModel
 import org.jetbrains.compose.web.css.Position
+import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
+import web.components.layouts.oneLayoutMaxWidth
 import web.components.widgets.AppFilledButton
 import web.components.widgets.ShimmerHeader
 import web.components.widgets.ShimmerText
@@ -27,10 +29,9 @@ import web.components.widgets.ShimmerText
 @Composable
 fun CategoriesSection(vm: HomeViewModel, state: HomeContract.State) {
     Row(
-        modifier = gridModifier(columns = 3)
-            .position(Position.Relative)
-            .maxHeight(400.px)
-            .padding(leftRight = 24.px, topBottom = 48.px)
+        modifier = gridModifier(columns = 3, gap = 1.5.em)
+            .maxWidth(oneLayoutMaxWidth)
+            .padding(leftRight = 24.px, top = 48.px, bottom = 1.5.em)
     ) {
         if (!state.isLoading) {
             state.categorySection
