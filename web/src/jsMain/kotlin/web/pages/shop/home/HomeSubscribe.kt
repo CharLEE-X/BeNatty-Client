@@ -27,7 +27,7 @@ import org.jetbrains.compose.web.attributes.AutoComplete
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
-import web.H1Variant
+import web.H2Variant
 import web.HeadlineStyle
 import web.components.layouts.oneLayoutMaxWidth
 import web.components.widgets.AppFilledButton
@@ -48,7 +48,7 @@ fun HomeSubscribe(
     ) {
         SpanText(
             text = getString(Strings.SignUpForUpdates).uppercase(),
-            modifier = HeadlineStyle.toModifier(H1Variant).fontWeight(FontWeight.Bold)
+            modifier = HeadlineStyle.toModifier(H2Variant).fontWeight(FontWeight.Bold)
         )
         SpanText(
             text = getString(Strings.NoSpamUnsubscribeAnytime),

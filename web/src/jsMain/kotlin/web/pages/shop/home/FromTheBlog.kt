@@ -27,7 +27,6 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import web.AppColors
-import web.H1Variant
 import web.H2Variant
 import web.HeadlineStyle
 import web.SubtitleStyle
@@ -45,7 +44,7 @@ fun FromTheBlog(viewModel: HomeViewModel, state: HomeContract.State) {
     ) {
         SpanText(
             text = getString(Strings.FromTheBlog).uppercase(),
-            modifier = HeadlineStyle.toModifier(H1Variant)
+            modifier = HeadlineStyle.toModifier(H2Variant)
                 .padding(topBottom = 1.5.em)
         )
         Row(

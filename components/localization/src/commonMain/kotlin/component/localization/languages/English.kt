@@ -137,6 +137,8 @@ internal fun englishLanguage(
     Strings.ShopWithConfidence -> "Shop with confidence"
     Strings.PercentSatisfaction -> "99.9% Satisfaction"
     Strings.RatedExcellentByCustomers -> "Rated excellent by our customers"
+    Strings.PlaysuitsAndRompers -> "Playsuits & Rompers"
+    Strings.LatestLooksDescription1 -> "We are delighted to announce our latest range."
 
     else -> key.name.enumCapitalized()
 }

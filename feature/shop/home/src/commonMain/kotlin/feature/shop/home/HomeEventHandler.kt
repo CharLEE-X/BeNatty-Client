@@ -9,10 +9,11 @@ internal class HomeEventHandler(
 ) : EventHandler<HomeContract.Inputs, HomeContract.Events, HomeContract.State> {
     override suspend fun EventHandlerScope<HomeContract.Inputs, HomeContract.Events, HomeContract.State>.handleEvent(
         event: HomeContract.Events,
-    ) = when (event) {
+    ): Unit = when (event) {
         is HomeContract.Events.OnError -> onError(event.message)
         HomeContract.Events.GoToPrivacyPolicy -> homeRoutes.privacyPolicy()
         HomeContract.Events.GoToTermsOfService -> homeRoutes.termsOfService()
         HomeContract.Events.GoToCatalogue -> homeRoutes.catalogue()
+        is HomeContract.Events.GoToProduct -> homeRoutes.goToProduct(event.id)
     }
 }

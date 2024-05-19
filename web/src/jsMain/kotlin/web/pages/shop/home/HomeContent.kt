@@ -32,6 +32,7 @@ fun HomeContent(
                 privacyPolicy = mainRoutes.goToPrivacyPolicy,
                 termsOfService = mainRoutes.goToTermsOfService,
                 catalogue = mainRoutes.goToCatalogue,
+                goToProduct = mainRoutes.goToProduct,
             ),
         )
     }
@@ -47,7 +48,13 @@ fun HomeContent(
         state.landingConfig.slideshowItems.let {
             Slideshow(vm, state)
         }
+        ShopByCollection(vm, state)
         CategoriesSection(vm, state)
+        JustArrived(vm, state)
+        LatestLooks(vm, state)
+        Featured(vm, state)
+        BlogFeatured(vm, state)
+        OurFavorites(vm, state)
         FromTheBlog(vm, state)
         OurCustomersSay(vm, state)
         HomeSubscribe(vm, state)

@@ -438,5 +438,14 @@ enum class Strings {
     ConnectWithUs,
     JoinOurEmailList,
     OurCustomerSay,
-    FromTheBlog
+    FromTheBlog,
+    ShopByCollection,
+    PlaysuitsAndRompers,
+    JustArrived,
+    SeeMoreNewArrivals,
+    TheLatestLooks,
+    LatestLooksDescription1,
+    SeeMoreFeatured,
+    ReadMore,
+    ViewOurFavorites
 }

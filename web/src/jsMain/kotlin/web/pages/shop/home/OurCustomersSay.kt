@@ -16,6 +16,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.flexDirection
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.gap
+import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.objectFit
 import com.varabyte.kobweb.compose.ui.modifiers.padding
@@ -36,7 +37,7 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import web.AppColors
-import web.H1Variant
+import web.H2Variant
 import web.H3Variant
 import web.HeadlineStyle
 import web.components.layouts.oneLayoutMaxWidth
@@ -52,11 +53,12 @@ fun OurCustomersSay(
             .fillMaxWidth()
             .maxWidth(oneLayoutMaxWidth)
             .padding(leftRight = 24.px)
+            .margin(top = 2.em)
             .gap(3.em)
     ) {
         SpanText(
             text = getString(Strings.OurCustomerSay).uppercase(),
-            modifier = HeadlineStyle.toModifier(H1Variant)
+            modifier = HeadlineStyle.toModifier(H2Variant)
         )
         Row(
             modifier = gridModifier(3, gap = 1.5.em)
