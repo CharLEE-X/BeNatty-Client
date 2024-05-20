@@ -48,7 +48,11 @@ fun FreeSection(
                 .maxWidth(oneLayoutMaxWidth)
                 .display(DisplayStyle.Grid)
                 .gridTemplateColumns { repeat(4) { size(1.fr) } }
-                .padding(top = 2.5.em, bottom = 1.em)
+                .padding(
+                    top = 2.5.em,
+                    bottom = 1.em,
+                    leftRight = 24.px
+                )
         ) {
             FreeItem(
                 title = getString(Strings.FreeShipping),

@@ -11,6 +11,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
+import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.toModifier
@@ -20,6 +21,7 @@ import component.localization.getString
 import feature.shop.home.HomeContract
 import feature.shop.home.HomeViewModel
 import org.jetbrains.compose.web.css.em
+import org.jetbrains.compose.web.css.px
 import web.H2Variant
 import web.HeadlineStyle
 import web.components.layouts.oneLayoutMaxWidth
@@ -33,6 +35,7 @@ fun ShopByCollection(vm: HomeViewModel, state: HomeContract.State) {
             .fillMaxWidth()
             .gap(2.em)
             .margin(top = 2.em)
+            .padding(leftRight = 24.px)
     ) {
         SpanText(
             text = getString(Strings.ShopByCollection).uppercase(),
