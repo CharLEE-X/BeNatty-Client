@@ -40,6 +40,6 @@ class RouterViewModel(
 )
 
 fun RouterViewModel.goHome() =
-    trySend(RouterContract.Inputs.GoToDestination(Screen.Home.matcher.routeFormat))
+    trySend(RouterContract.Inputs.GoToDestination(Screen.AdminHome.matcher.routeFormat))
 
 fun <T : Route> T.idPath(id: String): String = this.directions().pathParameter("id", id).build()

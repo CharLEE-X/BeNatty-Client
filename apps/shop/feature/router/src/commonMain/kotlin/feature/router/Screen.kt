@@ -14,7 +14,6 @@ private const val FORGOT_PASSWORD = "/forgot-password"
 private const val UPDATE_EMAIL = "/update-email"
 private const val PRODUCTS = "/products"
 private const val CATALOGUE = "/catalogue"
-private const val CART = "/cart"
 private const val CHECKOUT = "/checkout"
 private const val ORDERS = "/orders"
 private const val PAYMENT = "/payment"
@@ -35,39 +34,8 @@ private const val ID = "/{id}"
 private const val VARIANT = "/{variant}"
 private const val ACCESSIBILITY = "/accessibility"
 
-const val ADMIN = "/admin"
-private const val CONFIG = "/config"
-private const val CUSTOMERS = "/customers"
-private const val NEW = "/new"
-private const val CATEGORIES = "/categories"
-private const val TAGS = "/tags"
-
 enum class Screen(routeFormat: String, override val annotations: Set<RouteAnnotation> = emptySet()) : Route {
     Home(HOME),
-
-    // Admin
-    AdminHome(ADMIN),
-    AdminConfig(ADMIN + CONFIG),
-
-    AdminUsers(ADMIN + CUSTOMERS),
-    AdminUserCreate(ADMIN + CUSTOMERS + NEW),
-    AdminUserProfile(ADMIN + CUSTOMERS + ID),
-
-    AdminProducts(ADMIN + PRODUCTS),
-    AdminProductCreate(ADMIN + PRODUCTS + NEW),
-    AdminProductProfile(ADMIN + PRODUCTS + ID),
-
-    AdminCategoryList(ADMIN + CATEGORIES),
-    AdminCategoryCreate(ADMIN + CATEGORIES + NEW),
-    AdminCategoryProfile(ADMIN + CATEGORIES + ID),
-
-    AdminTagList(ADMIN + TAGS),
-    AdminTagCreate(ADMIN + TAGS + NEW),
-    AdminTagProfile(ADMIN + TAGS + ID),
-
-    AdminOrderList(ADMIN + ORDERS),
-    AdminOrderCreate(ADMIN + ORDERS + NEW),
-    AdminOrderProfile(ADMIN + ORDERS + ID),
 
     // Auth
     Login(LOGIN),

@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "name": "Kobweb Run Shop",
+      "type": "command",
+      "workingDir": "$PROJECT_DIR$/apps/shop/web/",
+      "program": "/bin/zsh",
+      "args": [
+        "-c",
+        "kobweb run"
+      ]
+    },
+    {
+      "name": "Kobweb Run Admin",
+      "type": "command",
+      "workingDir": "$PROJECT_DIR$/apps/admin/web/",
+      "program": "/bin/zsh",
+      "args": [
+        "-c",
+        "kobweb run"
+      ]
+    }
+  ]
+}

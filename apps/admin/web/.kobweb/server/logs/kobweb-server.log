@@ -1,11 +1,7 @@
-2024-05-23 20:32:07.405 [main] DEBUG ktor.application - Java Home: /Users/adrianwitaszak/.sdkman/candidates/java
-2024-05-23 20:32:07.406 [main] DEBUG ktor.application - Class Loader: jdk.internal.loader.ClassLoaders$AppClassLoader@1cf4f579: [file:/Users/adrianwitaszak/CharLEEX/BeNatty/BeNatty-Client/web/.kobweb/server/server.jar!/ch]
-2024-05-23 20:32:07.418 [main] WARN  ktor.application - API jar specified but does not exist! Please fix conf.yaml. Invalid path: "build/libs/nataliashop.jar"
-2024-05-23 20:32:07.448 [main] INFO  ktor.application - Application started in 0.092 seconds.
-2024-05-23 20:32:07.537 [main] INFO  ktor.application - Responding at http://0.0.0.0:8081
-2024-05-23 20:32:15.841 [eventLoopGroupProxy-4-2] DEBUG ktor.application - Client connected and is requesting kobweb status events.
-2024-05-23 20:37:38.616 [eventLoopGroupProxy-4-2] DEBUG ktor.application - Stopped sending kobweb status events, probably because client disconnected or server is shutting down. (ChannelWriteException: Cannot write to a channel)
-2024-05-23 20:37:47.813 [eventLoopGroupProxy-4-5] DEBUG ktor.application - Client connected and is requesting kobweb status events.
-2024-05-23 20:41:13.936 [eventLoopGroupProxy-4-5] DEBUG ktor.application - Stopped sending kobweb status events, probably because client disconnected or server is shutting down. (ChannelWriteException: Cannot write to a channel)
-2024-05-23 20:41:16.490 [kotlinx.coroutines.DefaultExecutor] INFO  ktor.application - Kobweb server shutting down...
-2024-05-23 20:41:18.578 [kotlinx.coroutines.DefaultExecutor] INFO  ktor.application - Server finished shutting down.
+2024-05-24 21:55:52.803 [main] DEBUG ktor.application - Java Home: /Users/adrianwitaszak/.sdkman/candidates/java
+2024-05-24 21:55:52.805 [main] DEBUG ktor.application - Class Loader: jdk.internal.loader.ClassLoaders$AppClassLoader@1cf4f579: [file:/Users/adrianwitaszak/CharLEEX/BeNatty/BeNatty-Client/apps/admin/web/.kobweb/server/server.jar!/ch]
+2024-05-24 21:55:52.817 [main] WARN  ktor.application - API jar specified but does not exist! Please fix conf.yaml. Invalid path: "build/libs/benatty.jar"
+2024-05-24 21:55:52.844 [main] INFO  ktor.application - Application started in 0.073 seconds.
+2024-05-24 21:55:52.916 [main] INFO  ktor.application - Responding at http://0.0.0.0:8081
+2024-05-24 21:55:57.294 [eventLoopGroupProxy-4-1] DEBUG ktor.application - Client connected and is requesting kobweb status events.
+2024-05-24 21:56:04.318 [eventLoopGroupProxy-4-1] DEBUG ktor.application - Stopped sending kobweb status events, probably because client disconnected or server is shutting down. (ChannelWriteException: Cannot write to a channel)

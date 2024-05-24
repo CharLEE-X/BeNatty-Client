@@ -38,7 +38,7 @@ internal class FooterInputHandler :
         FooterContract.Inputs.OnReturnsClick -> postEvent(FooterContract.Events.GoToReturns)
         FooterContract.Inputs.OnShippingClick -> postEvent(FooterContract.Events.GoToShipping)
         FooterContract.Inputs.OnTrackOrderClick -> postEvent(FooterContract.Events.GoToTrackOrder)
-        FooterContract.Inputs.OnGoToAdminHome -> postEvent(FooterContract.Events.GoToAdminHome)
+        FooterContract.Inputs.OnGoToAdminHome -> noOp()
         FooterContract.Inputs.OnCompanyNameClick -> handleCompanyNameClick()
         FooterContract.Inputs.OnCurrencyClick -> noOp()
         FooterContract.Inputs.OnLanguageClick -> noOp()

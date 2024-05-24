@@ -17,7 +17,8 @@ import com.copperleaf.ballast.navigation.vm.withRouter
 import com.copperleaf.ballast.plusAssign
 import kotlinx.coroutines.CoroutineScope
 
-typealias RouterInterceptor = BallastInterceptor<RouterContract.Inputs<Screen>, RouterContract.Events<Screen>, RouterContract.State<Screen>>
+typealias RouterInterceptor =
+    BallastInterceptor<RouterContract.Inputs<Screen>, RouterContract.Events<Screen>, RouterContract.State<Screen>>
 
 class RouterViewModel(
     viewModelScope: CoroutineScope,

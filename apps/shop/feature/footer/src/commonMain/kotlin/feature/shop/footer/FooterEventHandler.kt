@@ -26,7 +26,6 @@ internal class FooterEventHandler(
         FooterContract.Events.GoToShipping -> footerRoutes.goToShipping()
         FooterContract.Events.GoToTermsOfService -> footerRoutes.goToTermsOfService()
         FooterContract.Events.GoToTrackOrder -> footerRoutes.goToTrackOrder()
-        FooterContract.Events.GoToAdminHome -> footerRoutes.goToAdminHome()
         is FooterContract.Events.GoToCompanyWebsite -> goToCompanyWebsite(event.url)
         FooterContract.Events.GoToCatalogue -> footerRoutes.goToCatalogue()
     }

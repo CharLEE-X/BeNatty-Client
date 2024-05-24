@@ -23,7 +23,7 @@ internal class RouterEventHandler : EventHandler<
         when {
             event is RouterContract.Events.BackstackEmptied -> {
                 if (authService.isAuth()) {
-                    postInput(RouterContract.Inputs.GoToDestination(Screen.Home.matcher.routeFormat))
+                    postInput(RouterContract.Inputs.GoToDestination(Screen.AdminHome.matcher.routeFormat))
                 } else {
                     postInput(RouterContract.Inputs.GoToDestination(Screen.Login.matcher.routeFormat))
                 }

@@ -5,10 +5,10 @@ server:
   files:
     dev:
       contentRoot: "build/processedResources/js/main/public"
-      script: "build/dist/js/developmentExecutable/nataliashop.js"
-      api: "build/libs/nataliashop.jar"
+      script: "build/dist/js/developmentExecutable/benatty.js"
+      api: "build/libs/benatty.jar"
     prod:
-      script: "build/dist/js/productionExecutable/nataliashop.js"
+      script: "build/dist/js/productionExecutable/benatty.js"
       siteRoot: ".kobweb/site"
 
   port: 8080

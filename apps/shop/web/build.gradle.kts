@@ -28,7 +28,7 @@ kobweb {
 }
 
 kotlin {
-    configAsKobwebApplication("nataliashop")
+    configAsKobwebApplication("benatty")
 
     sourceSets {
         jsMain.dependencies {
@@ -38,40 +38,27 @@ kotlin {
 //                implementation(components.theme)
                 implementation(components.localization)
 
-                implementation(feature.debug)
-                implementation(feature.root)
-                implementation(feature.router)
-
-                implementation(feature.auth.login)
-                implementation(feature.auth.register)
-                implementation(feature.auth.forgotPassword)
-                implementation(feature.auth.updatePassword)
-
-                implementation(feature.admin.dashboard)
-                implementation(feature.admin.config)
-                implementation(feature.admin.list)
-                implementation(feature.admin.category.create)
-                implementation(feature.admin.category.edit)
-                implementation(feature.admin.customer.create)
-                implementation(feature.admin.customer.edit)
-                implementation(feature.admin.product.create)
-                implementation(feature.admin.product.edit)
-                implementation(feature.admin.order.page)
-                implementation(feature.admin.tag.create)
-                implementation(feature.admin.tag.edit)
-
-                implementation(feature.shop.navbar)
-                implementation(feature.shop.footer)
-                implementation(feature.shop.cart)
-                implementation(feature.shop.home)
-                implementation(feature.shop.account.profile)
-                implementation(feature.shop.account.orders)
-                implementation(feature.shop.account.returns)
-                implementation(feature.shop.account.wishlist)
-                implementation(feature.shop.product.catalog)
-                implementation(feature.shop.product.page)
-                implementation(feature.shop.checkout)
+                with(apps.shop.feature) {
+                    implementation(root)
+                    implementation(router)
+                    implementation(auth.login)
+                    implementation(auth.register)
+                    implementation(auth.forgotPassword)
+                    implementation(auth.updatePassword)
+                    implementation(navbar)
+                    implementation(footer)
+                    implementation(cart)
+                    implementation(home)
+                    implementation(account.profile)
+                    implementation(account.orders)
+                    implementation(account.returns)
+                    implementation(account.wishlist)
+                    implementation(product.catalog)
+                    implementation(product.page)
+                    implementation(checkout)
+                }
             }
+
             implementation(compose.runtime)
             implementation(compose.html.core)
             implementation(compose.html.svg)

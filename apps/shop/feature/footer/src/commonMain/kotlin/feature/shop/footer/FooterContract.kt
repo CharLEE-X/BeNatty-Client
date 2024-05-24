@@ -71,7 +71,6 @@ object FooterContract : KoinComponent {
         data object GoToCareer : Events
         data object GoToCyberSecurity : Events
         data object GoToPress : Events
-        data object GoToAdminHome : Events
         data class GoToCompanyWebsite(val url: String) : Events
         data object GoToCatalogue : Events
     }
@@ -90,6 +89,5 @@ data class FooterRoutes(
     val goToShipping: () -> Unit,
     val goToTermsOfService: () -> Unit,
     val goToTrackOrder: () -> Unit,
-    val goToAdminHome: () -> Unit,
     val goToCatalogue: () -> Unit,
 )

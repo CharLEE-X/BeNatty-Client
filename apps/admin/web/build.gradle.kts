@@ -28,49 +28,35 @@ kobweb {
 }
 
 kotlin {
-    configAsKobwebApplication("nataliashop")
+    configAsKobwebApplication("benatty")
 
     sourceSets {
         jsMain.dependencies {
             with(projects) {
                 implementation(data)
                 implementation(core)
-                implementation(components.theme)
+//                implementation(components.theme)
                 implementation(components.localization)
-            }
-//            with(projects.apps.admin) {
-//                implementation(feature.debug)
-//                implementation(feature.root)
-//                implementation(feature.router)
-//                implementation(feature.admin.dashboard)
-//                implementation(feature.admin.config)
-//                implementation(feature.admin.list)
-//                implementation(feature.admin.category.create)
-//                implementation(feature.admin.category.edit)
-//                implementation(feature.admin.customer.create)
-//                implementation(feature.admin.customer.edit)
-//                implementation(feature.admin.product.create)
-//                implementation(feature.admin.product.edit)
-//                implementation(feature.admin.order.page)
-//                implementation(feature.admin.tag.create)
-//                implementation(feature.admin.tag.edit)
-//            }
-            with(projects.apps.shop) {
-                implementation(feature.auth.login)
-                implementation(feature.auth.register)
-                implementation(feature.auth.forgotPassword)
-                implementation(feature.auth.updatePassword)
-                implementation(feature.navbar)
-                implementation(feature.footer)
-                implementation(feature.cart)
-                implementation(feature.home)
-                implementation(feature.account.profile)
-                implementation(feature.account.orders)
-                implementation(feature.account.returns)
-                implementation(feature.account.wishlist)
-                implementation(feature.product.catalog)
-                implementation(feature.product.page)
-                implementation(feature.checkout)
+
+                with(apps.admin) {
+                    implementation(feature.debug)
+                    implementation(feature.root)
+                    implementation(feature.router)
+                    implementation(feature.dashboard)
+                    implementation(feature.config)
+                    implementation(feature.list)
+                    implementation(feature.auth.login)
+                    implementation(feature.auth.register)
+                    implementation(feature.category.create)
+                    implementation(feature.category.edit)
+                    implementation(feature.customer.create)
+                    implementation(feature.customer.edit)
+                    implementation(feature.product.create)
+                    implementation(feature.product.edit)
+                    implementation(feature.order.page)
+                    implementation(feature.tag.create)
+                    implementation(feature.tag.edit)
+                }
             }
 
             implementation(compose.runtime)
