@@ -18,7 +18,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.ColumnScope
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.graphics.Colors
 import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
 import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
 import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
@@ -125,7 +124,7 @@ fun Slideshow(
                 var topShow by remember { mutableStateOf(true) }
                 var showTitle by remember { mutableStateOf(false) }
 
-                println("Job in progress: $jobInProgress")
+//                println("Job in progress: $jobInProgress")
 
                 suspend fun nextSlide() {
                     jobInProgress = true
@@ -280,7 +279,10 @@ fun Navigator(
         modifier = modifier
             .padding(16.px)
             .margin(16.px)
-            .backgroundColor(if (hovered) Colors.Transparent else ColorMode.current.toPalette().background)
+            .backgroundColor(
+                if (hovered) ColorMode.current.toPalette().background.toRgb().copy(alpha = 100)
+                else ColorMode.current.toPalette().background
+            )
             .color(ColorMode.current.opposite.toPalette().background)
             .borderRadius(50.percent)
             .onMouseOver { hovered = true }
@@ -289,6 +291,7 @@ fun Navigator(
             .onFocusOut { hovered = false }
             .tabIndex(0)
             .cursor(Cursor.Pointer)
+            .userSelect(UserSelect.None)
             .onClick { if (enabled) onClick() }
             .onEnterKeyDown { if (enabled) onClick() }
             .transition(

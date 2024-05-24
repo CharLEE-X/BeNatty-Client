@@ -14,7 +14,6 @@ import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
-import com.varabyte.kobweb.compose.css.TextDecorationLine
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.css.Visibility
@@ -60,10 +59,8 @@ import com.varabyte.kobweb.compose.ui.modifiers.opacity
 import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
-import com.varabyte.kobweb.compose.ui.modifiers.scale
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
-import com.varabyte.kobweb.compose.ui.modifiers.textDecorationLine
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.translate
 import com.varabyte.kobweb.compose.ui.modifiers.translateY
@@ -73,7 +70,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.whiteSpace
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.modifiers.zIndex
 import com.varabyte.kobweb.compose.ui.styleModifier
-import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiFacebook
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiLightMode
@@ -116,6 +112,7 @@ import web.components.widgets.AppIconButton
 import web.components.widgets.Logo
 import web.components.widgets.RotatableChevron
 import web.components.widgets.ShimmerHeader
+import web.components.widgets.TextLink
 import web.pages.shop.home.gridModifier
 import web.pages.shop.product.page.ProductPrice
 import web.util.onEnterKeyDown
@@ -247,7 +244,9 @@ fun NavBar(
             }
             Logo(
                 onClick = { vm.trySend(NavbarContract.Inputs.OnLogoClick) },
-                modifier = Modifier.margin(leftRight = 1.em)
+                modifier = Modifier
+                    .margin(leftRight = 1.em)
+                    .translateY(4.px)
             )
             RightSection(
                 vm = vm,
@@ -294,7 +293,9 @@ private fun RightSection(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End,
-        modifier = modifier.color(ColorMode.current.toPalette().color)
+        modifier = modifier
+            .color(ColorMode.current.toPalette().color)
+            .translateY(6.px)
     ) {
         if (isFullLayout) {
             AppIconButton(
@@ -622,7 +623,6 @@ private fun RecommendedProductItem(
                 .overflow(Overflow.Hidden)
                 .userSelect(UserSelect.None)
                 .draggable(false)
-                .scale(if (hovered) 1.02f else 1f)
                 .transition(
                     CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
                     CSSTransition("transform", 0.2.s, TransitionTimingFunction.Ease)
@@ -782,51 +782,6 @@ private fun ListMenuItem(
                 .height(2.px)
                 .fillMaxWidth(if (hovered) 100.percent else 0.percent)
                 .backgroundColor(contentColor)
-                .transition(CSSTransition("width", 0.3.s, TransitionTimingFunction.Ease))
-        )
-    }
-}
-
-@Composable
-fun TextLink(
-    text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    textModifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    color: CSSColorValue = ColorMode.current.toPalette().color,
-) {
-    var hovered by remember { mutableStateOf(false) }
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .onClick { if (enabled) onClick() }
-            .gap(4.px)
-            .cursor(if (enabled) Cursor.Pointer else Cursor.Auto)
-            .onEnterKeyDown(onClick)
-            .onMouseOver { if (enabled) hovered = true }
-            .onMouseOut { hovered = false }
-            .onFocusIn { if (enabled) hovered = true }
-            .onFocusOut { hovered = false }
-            .tabIndex(0)
-            .onEnterKeyDown { if (enabled) onClick() }
-            .opacity(if (enabled) 1.0 else 0.6)
-            .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
-    ) {
-        SpanText(
-            text = text.uppercase(),
-            modifier = textModifier
-                .color(color)
-                .thenIf(!enabled) { Modifier.textDecorationLine(TextDecorationLine.LineThrough) }
-                .whiteSpace(WhiteSpace.NoWrap)
-        )
-        Box(
-            modifier = Modifier
-                .align(Alignment.Start)
-                .height(2.px)
-                .fillMaxWidth(if (hovered && enabled) 100.percent else 0.percent)
-                .backgroundColor(color)
                 .transition(CSSTransition("width", 0.3.s, TransitionTimingFunction.Ease))
         )
     }

@@ -63,21 +63,21 @@ fun OurCustomersSay(
         Row(
             modifier = gridModifier(3, gap = 1.5.em)
         ) {
-            Item(
+            ScrollableItem(
                 title = "Great store",
                 description = "Such a great variety and well priced too!",
                 url = "https://icon-shopify-theme.myshopify.com/cdn/shop/files/looks4.jpg?v=1614301039&width=500",
                 rating = 5,
                 author = "Stephanie, London"
             )
-            Item(
+            ScrollableItem(
                 title = "Lovely team",
                 description = "The team is always so helpful and willing to assist",
                 url = "https://icon-shopify-theme.myshopify.com/cdn/shop/files/slidefour.jpg?v=1613676525&width=500",
                 rating = 5,
                 author = "Jane, Manchester"
             )
-            Item(
+            ScrollableItem(
                 title = "Fast shipping",
                 description = "Always delivered so quickly, I am impressed",
                 url = "https://icon-shopify-theme.myshopify.com/cdn/shop/files/looks6.jpg?v=1614301039&width=500",
@@ -89,7 +89,7 @@ fun OurCustomersSay(
 }
 
 @Composable
-private fun Item(
+private fun ScrollableItem(
     title: String,
     description: String,
     url: String,

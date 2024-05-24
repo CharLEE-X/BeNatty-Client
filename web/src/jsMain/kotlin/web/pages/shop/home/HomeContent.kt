@@ -45,9 +45,7 @@ fun HomeContent(
         footerRoutes = footerRoutes,
         globalVMs = globalVMs,
     ) {
-        state.landingConfig.slideshowItems.let {
-            Slideshow(vm, state)
-        }
+        Slideshow(vm, state)
         ShopByCollection(vm, state)
         CategoriesSection(vm, state)
         JustArrived(vm, state)

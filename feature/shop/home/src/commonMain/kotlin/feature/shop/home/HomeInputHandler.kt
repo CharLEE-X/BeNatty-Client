@@ -40,8 +40,11 @@ internal class HomeInputHandler :
         is HomeContract.Inputs.OnJustArrivedClicked -> postEvent(HomeContract.Events.GoToProduct(input.id))
         is HomeContract.Inputs.OnFeaturedClicked -> postEvent(HomeContract.Events.GoToProduct(input.id))
         is HomeContract.Inputs.OnCollectionClicked -> postEvent(HomeContract.Events.GoToCatalogue)
-        HomeContract.Inputs.OnOnSeeMoreNewArrivalsClicked -> postEvent(HomeContract.Events.GoToCatalogue)
+        HomeContract.Inputs.OnSeeMoreNewArrivalsClicked -> postEvent(HomeContract.Events.GoToCatalogue)
         is HomeContract.Inputs.OnLatestLooksItemClick -> postEvent(HomeContract.Events.GoToCatalogue)
+        is HomeContract.Inputs.OnFavoriteClicked -> postEvent(HomeContract.Events.GoToProduct(input.id))
+        HomeContract.Inputs.OnSeeAllFavoritesClicked -> postEvent(HomeContract.Events.GoToCatalogue)
+        HomeContract.Inputs.OnSeeMoreFeaturedClicked -> postEvent(HomeContract.Events.GoToCatalogue)
     }
 
     private suspend fun InputScope.handleCollageItemClick(item: GetLandingConfigQuery.SlideshowItem) {

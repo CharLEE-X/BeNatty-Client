@@ -119,7 +119,7 @@ fun ShopMainLayout(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        top = 100.px,
+                        top = 60.px,
                         bottom = spacing
                     )
                     .gap(spacing)

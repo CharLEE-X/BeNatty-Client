@@ -11,6 +11,9 @@ import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.TextDecorationLine
 import com.varabyte.kobweb.compose.css.TextTransform
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
+import com.varabyte.kobweb.compose.css.WhiteSpace
+import com.varabyte.kobweb.compose.foundation.layout.Box
+import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.foundation.layout.RowScope
 import com.varabyte.kobweb.compose.foundation.layout.Spacer
@@ -32,12 +35,15 @@ import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusOut
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
+import com.varabyte.kobweb.compose.ui.modifiers.onMouseOut
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
+import com.varabyte.kobweb.compose.ui.modifiers.opacity
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.textDecorationLine
 import com.varabyte.kobweb.compose.ui.modifiers.textTransform
 import com.varabyte.kobweb.compose.ui.modifiers.transition
+import com.varabyte.kobweb.compose.ui.modifiers.whiteSpace
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.thenIf
 import com.varabyte.kobweb.compose.ui.toAttrs
@@ -46,10 +52,15 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiCreate
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiDelete
 import com.varabyte.kobweb.silk.components.icons.mdi.MdiEdit
 import com.varabyte.kobweb.silk.components.text.SpanText
+import com.varabyte.kobweb.silk.theme.colors.ColorMode
+import com.varabyte.kobweb.silk.theme.colors.palette.color
+import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.getString
+import org.jetbrains.compose.web.css.CSSColorValue
 import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.em
+import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.dom.A
@@ -206,5 +217,50 @@ fun EditButton(
             MdiEdit()
             SpanText(getString(Strings.Edit).uppercase())
         }
+    }
+}
+
+@Composable
+fun TextLink(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    textModifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    color: CSSColorValue = ColorMode.current.toPalette().color,
+) {
+    var hovered by remember { mutableStateOf(false) }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .onClick { if (enabled) onClick() }
+            .gap(4.px)
+            .cursor(if (enabled) Cursor.Pointer else Cursor.Auto)
+            .onEnterKeyDown(onClick)
+            .onMouseOver { if (enabled) hovered = true }
+            .onMouseOut { hovered = false }
+            .onFocusIn { if (enabled) hovered = true }
+            .onFocusOut { hovered = false }
+            .tabIndex(0)
+            .onEnterKeyDown { if (enabled) onClick() }
+            .opacity(if (enabled) 1.0 else 0.6)
+            .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
+    ) {
+        SpanText(
+            text = text.uppercase(),
+            modifier = textModifier
+                .color(color)
+                .thenIf(!enabled) { Modifier.textDecorationLine(TextDecorationLine.LineThrough) }
+                .whiteSpace(WhiteSpace.NoWrap)
+        )
+        Box(
+            modifier = Modifier
+                .align(Alignment.Start)
+                .height(2.px)
+                .fillMaxWidth(if (hovered && enabled) 100.percent else 0.percent)
+                .backgroundColor(color)
+                .transition(CSSTransition("width", 0.3.s, TransitionTimingFunction.Ease))
+        )
     }
 }

@@ -134,7 +134,7 @@ fun LatestLooks(vm: HomeViewModel, state: HomeContract.State) {
                 }
                 Spacer(1.em)
                 AppFilledButton(
-                    onClick = { vm.trySend(HomeContract.Inputs.OnOnSeeMoreNewArrivalsClicked) },
+                    onClick = { vm.trySend(HomeContract.Inputs.OnSeeMoreNewArrivalsClicked) },
                     content = { SpanText(getString(Strings.Explore)) }
                 )
             }
