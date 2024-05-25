@@ -67,13 +67,13 @@ fun LatestLooks(vm: HomeViewModel, state: HomeContract.State) {
         val topVisible = element.getBoundingClientRect().top - window.innerHeight
         imageTranslateY = topVisible.px * multiplier
 
-        println(
-            """
-            windowHeight: ${window.outerHeight}
-            imageHeight: $imageHeight
-            imageTranslateY: $imageTranslateY
-        """.trimIndent()
-        )
+//        println(
+//            """
+//            windowHeight: ${window.outerHeight}
+//            imageHeight: $imageHeight
+//            imageTranslateY: $imageTranslateY
+//        """.trimIndent()
+//        )
     })
 
     Column(

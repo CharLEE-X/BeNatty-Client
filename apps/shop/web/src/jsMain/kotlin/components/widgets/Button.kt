@@ -212,7 +212,6 @@ fun TextLink(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .onClick { if (enabled) onClick() }
-            .gap(4.px)
             .cursor(if (enabled) Cursor.Pointer else Cursor.Auto)
             .onEnterKeyDown(onClick)
             .onMouseOver { if (enabled) hovered = true }

@@ -19,6 +19,16 @@
         "-c",
         "kobweb run"
       ]
+    },
+    {
+      "name": "Server Run",
+      "type": "command",
+      "workingDir": "$PROJECT_DIR$/scripts/",
+      "program": "/bin/zsh",
+      "args": [
+        "-c",
+        "./run_backend.sh"
+      ]
     }
   ]
 }

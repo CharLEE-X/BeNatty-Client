@@ -21,7 +21,7 @@ fun shadow() = if (ColorMode.current.isLight) Colors.Black.copy(alpha = 25).toRg
 else Colors.White.copy(alpha = 25).toRgb()
 
 object AppColors {
-    val brandColor = Color.rgb(0xc09e83)
+    val brandColor = Color.rgb(0xc0a888)
     val brandLightened = brandColor.lightened(0.1f)
     val lightBg = Color.rgb(0xf5f5f5)
 

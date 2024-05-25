@@ -31,7 +31,7 @@ import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import web.components.layouts.GlobalVMs
-import web.components.widgets.PromoSection
+import web.components.widgets.TickerSection
 import web.components.widgets.tickerHeight
 import web.shadow
 
@@ -104,7 +104,7 @@ fun DesktopNavContent(
             )
     ) {
         if (isFullLayout) {
-            PromoSection(vm, navbarState)
+            TickerSection(vm, navbarState)
         }
         NavBar(
             vm = vm,
