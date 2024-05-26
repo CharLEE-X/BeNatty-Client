@@ -387,8 +387,7 @@ object HomeContract {
         data class OnCollageItemClick(val item: GetLandingConfigQuery.SlideshowItem) : Inputs
         data object OnPrivacyPolicyClick : Inputs
         data object OnTermsOfServiceClick : Inputs
-        data object OnBannerLeftClick : Inputs
-        data object OnBannerRightClick : Inputs
+        data class OnCategoryItemClick(val id: String) : Inputs
         data class OnCollectionClicked(val title: String) : Inputs
         data class OnJustArrivedClicked(val id: String) : Inputs
         data class OnFavoriteClicked(val id: String) : Inputs
@@ -419,6 +418,7 @@ object HomeContract {
     data class ShopByCollectionItem(val title: String, val url: String)
     data class LatestLookItem(val title: String, val url: String)
     data class ItemWithPrice(
+        // Also in the CatalogContract
         val id: String,
         val title: String,
         val urls: List<String>,

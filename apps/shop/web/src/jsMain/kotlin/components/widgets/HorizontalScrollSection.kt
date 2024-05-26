@@ -44,10 +44,10 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.SMOOTH
 import org.w3c.dom.ScrollBehavior
 import org.w3c.dom.ScrollToOptions
+import pages.home.Navigator
 import web.H2Variant
 import web.HeadlineStyle
 import web.components.layouts.oneLayoutMaxWidth
-import web.pages.home.Navigator
 import web.util.onEnterKeyDown
 
 data class ScrollableItem(

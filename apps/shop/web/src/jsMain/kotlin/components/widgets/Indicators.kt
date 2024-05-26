@@ -1,4 +1,4 @@
-package web.components.widgets
+package components.widgets
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.css.CSSTransition
@@ -25,18 +25,19 @@ fun RotatableChevron(
     modifier: Modifier = Modifier,
     hovered: Boolean = false,
     open: Boolean = false,
+    initialRotate: Int = 90,
     color: CSSColorValue = ColorMode.current.toPalette().color,
 ) {
     MdiChevronLeft(
         modifier = modifier
-            .rotate(if (open) 90.deg else 270.deg)
+            .rotate(if (open) initialRotate.deg else (-180 - initialRotate).deg)
             .color(color)
             .fontWeight(if (hovered) FontWeight.Bold else FontWeight.Normal)
             .userSelect(UserSelect.None)
             .draggable(false)
             .transition(
-                CSSTransition("rotate", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease),
+                CSSTransition("rotate", 0.2.s, TransitionTimingFunction.Ease),
+                CSSTransition("color", 0.2.s, TransitionTimingFunction.Ease),
             )
     )
 }

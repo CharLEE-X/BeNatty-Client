@@ -1,4 +1,4 @@
-package web.pages.product.catalogue
+package pages.product.catalogue
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,6 +29,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.cursor
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
+import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.objectFit
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
@@ -40,7 +41,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
 import com.varabyte.kobweb.compose.ui.modifiers.opacity
 import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
-import com.varabyte.kobweb.compose.ui.modifiers.scale
 import com.varabyte.kobweb.compose.ui.modifiers.size
 import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.textOverflow
@@ -56,19 +56,17 @@ import com.varabyte.kobweb.silk.components.icons.mdi.MdiVisibility
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import com.varabyte.kobweb.silk.theme.colors.palette.background
-import com.varabyte.kobweb.silk.theme.colors.palette.border
 import com.varabyte.kobweb.silk.theme.colors.palette.color
 import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
-import core.models.Currency
 import data.GetCatalogPageQuery
 import org.jetbrains.compose.web.css.CSSColorValue
-import org.jetbrains.compose.web.css.LineStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
-import web.pages.home.gridModifier
-import web.pages.product.page.ProductPrice
+import pages.home.gridModifier
+import web.components.widgets.Spacer
+import web.components.widgets.TextLink
 import web.util.onEnterKeyDown
 
 @Composable
@@ -76,47 +74,53 @@ fun CatalogItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     title: String,
-    regularPrice: Double,
-    salePrice: Double?,
-    currency: Currency,
+    currentPrice: String,
+    sizes: List<String>,
     media: List<GetCatalogPageQuery.Medium>,
     imageHeight: CSSLengthOrPercentageNumericValue? = 600.px,
     miniaturesMinHeight: CSSLengthOrPercentageNumericValue = 100.px,
 ) {
     var hovered by remember { mutableStateOf(false) }
-    var currentMedia by remember { mutableStateOf(media.firstOrNull()) }
+    var mainMedia by remember { mutableStateOf(media.firstOrNull()) }
+    val previewMedia = media.getOrNull(1) ?: media.firstOrNull()
 
     Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxWidth()
             .onMouseEnter { hovered = true }
             .onMouseLeave { hovered = false }
+            .whiteSpace(WhiteSpace.NoWrap)
+            .textOverflow(TextOverflow.Ellipsis)
     ) {
         MainImage(
             onClick = onClick,
-            media = currentMedia,
-            hovered = hovered,
+            mainMedia = mainMedia,
+            previewMedia = previewMedia,
             imageHeight = imageHeight,
-            modifier = Modifier
         )
         Box(Modifier.size(0.5.em))
-        Miniatures(
-            media = media,
-            onMiniatureHoveredChanged = { currentMedia = it ?: media.firstOrNull() },
-            onClick = onClick,
-            minHeight = miniaturesMinHeight
-        )
-        Box(Modifier.size(0.5.em))
-        ItemTitle(
-            text = title,
-            hovered = hovered,
-            onClick = { onClick() },
-        )
-        ProductPrice(
-            regularPrice = regularPrice.toString(),
-            salePrice = salePrice?.toString(),
-            currency = currency
-        )
+//        Miniatures(
+//            media = media,
+//            onMiniatureHoveredChanged = { mainMedia = it ?: media.firstOrNull() },
+//            onClick = onClick,
+//            minHeight = miniaturesMinHeight
+//        )
+        Spacer(1.em)
+        SpanText(title)
+        Spacer(1.em)
+        SpanText(text = currentPrice)
+        Spacer(1.em)
+        Row(
+            modifier = Modifier.gap(0.5.em)
+        ) {
+            sizes.forEach { size ->
+                TextLink(
+                    text = size,
+                    onClick = { }, // TODO: Implement size selection
+                )
+            }
+        }
     }
 }
 
@@ -124,42 +128,34 @@ fun CatalogItem(
 private fun MainImage(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    media: GetCatalogPageQuery.Medium?,
-    hovered: Boolean,
-    hoveredScale: Double = 1.02,
+    mainMedia: GetCatalogPageQuery.Medium?,
+    previewMedia: GetCatalogPageQuery.Medium?,
     imageHeight: CSSLengthOrPercentageNumericValue?
 ) {
-    var thisHovered by remember { mutableStateOf(false) }
-    var focused by remember { mutableStateOf(false) }
+    var hovered by remember { mutableStateOf(false) }
+    val currentMedia = previewMedia?.let {
+        if (hovered) previewMedia else (mainMedia ?: previewMedia)
+    }
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .onClick { onClick() }
-            .onMouseEnter { thisHovered = true }
-            .onMouseLeave { thisHovered = false }
-            .onFocusIn { focused = true }
-            .onFocusOut { focused = false }
+            .onMouseEnter { hovered = true }
+            .onMouseLeave { hovered = false }
+            .onFocusIn { hovered = true }
+            .onFocusOut { hovered = false }
             .cursor(Cursor.Pointer)
             .overflow(Overflow.Hidden)
-            .scale(if (hovered || focused) hoveredScale else 1.0)
-            .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
             .tabIndex(0)
             .onEnterKeyDown(onClick)
             .userSelect(UserSelect.None)
-            .border(
-                width = 1.px,
-                color = ColorMode.current.toPalette().border,
-                style = LineStyle.Solid
-            )
     ) {
         val imageModifier = Modifier
             .fillMaxWidth()
             .thenIf(imageHeight != null) { Modifier.height(imageHeight!!) }
             .objectFit(ObjectFit.Cover)
-            .thenIf(hovered || focused) { Modifier.scale(hoveredScale) }
-            .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
-        media?.let { media ->
+        currentMedia?.let { media ->
             Image(
                 src = media.url,
                 alt = media.alt,
@@ -176,8 +172,8 @@ private fun MainImage(
                     .zIndex(3)
                     .onMouseEnter { visibilityHovered = true }
                     .onMouseLeave { visibilityHovered = false }
-                    .thenIf(!(thisHovered || visibilityHovered)) { Modifier.translateY((50).percent) }
-                    .opacity(if (thisHovered) 1.0 else 0.0)
+                    .thenIf(!(hovered || visibilityHovered)) { Modifier.translateY((50).percent) }
+                    .opacity(if (hovered) 1.0 else 0.0)
                     .backdropFilter(blur(12.px))
                     .transition(
                         CSSTransition("translate", 0.3.s, TransitionTimingFunction.EaseInOut),
@@ -190,9 +186,7 @@ private fun MainImage(
                     modifier = Modifier.color(ColorMode.current.toPalette().background),
                 )
             }
-        } ?: Box(
-            modifier = imageModifier
-        )
+        } ?: Box(imageModifier)
     }
 }
 

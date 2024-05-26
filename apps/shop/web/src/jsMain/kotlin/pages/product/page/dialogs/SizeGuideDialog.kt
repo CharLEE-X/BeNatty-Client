@@ -1,4 +1,4 @@
-package web.pages.product.page.dialogs
+package pages.product.page.dialogs
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.silk.components.text.SpanText

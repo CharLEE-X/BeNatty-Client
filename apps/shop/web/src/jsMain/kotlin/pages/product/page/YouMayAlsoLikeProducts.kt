@@ -1,4 +1,4 @@
-package web.pages.product.page
+package pages.product.page
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -21,9 +21,9 @@ import feature.shop.cart.CartContract
 import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
+import pages.home.gridModifier
+import pages.product.catalogue.CatalogItem
 import web.HeadlineStyle
-import web.pages.home.gridModifier
-import web.pages.product.catalogue.CatalogItem
 
 @Composable
 fun YouMayAlsoLike(
@@ -49,16 +49,15 @@ fun YouMayAlsoLike(
             productPageState.recommendedProducts.forEach { product ->
                 CatalogItem(
                     title = product.name,
-                    regularPrice = product.regularPrice,
-                    salePrice = product.salePrice,
+                    currentPrice = product.currentPrice,
                     media = product.media.map {
                         GetCatalogPageQuery.Medium(
                             url = it.url, keyName = it.keyName, alt = it.alt, type = it.type,
                         )
                     },
+                    sizes = product.sizes,
                     imageHeight = null,
                     miniaturesMinHeight = 80.px,
-                    currency = cartState.currency,
                     onClick = { vm.trySend(ProductPageContract.Inputs.OnGoToProductClicked(product.id)) },
                     modifier = Modifier.aspectRatio(0.667)
                 )

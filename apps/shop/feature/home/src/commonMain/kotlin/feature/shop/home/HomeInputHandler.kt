@@ -35,8 +35,7 @@ internal class HomeInputHandler :
         is HomeContract.Inputs.SetLandingConfig -> updateState { it.copy(landingConfig = input.landingConfig) }
         is HomeContract.Inputs.SetProducts -> updateState { it.copy(products = input.products) }
         is HomeContract.Inputs.SetEmail -> handleSetEmail(input.email)
-        HomeContract.Inputs.OnBannerLeftClick -> postEvent(HomeContract.Events.GoToCatalogue)
-        HomeContract.Inputs.OnBannerRightClick -> postEvent(HomeContract.Events.GoToCatalogue)
+        is HomeContract.Inputs.OnCategoryItemClick -> postEvent(HomeContract.Events.GoToCatalogue)
         is HomeContract.Inputs.OnJustArrivedClicked -> postEvent(HomeContract.Events.GoToProduct(input.id))
         is HomeContract.Inputs.OnFeaturedClicked -> postEvent(HomeContract.Events.GoToProduct(input.id))
         is HomeContract.Inputs.OnCollectionClicked -> postEvent(HomeContract.Events.GoToCatalogue)

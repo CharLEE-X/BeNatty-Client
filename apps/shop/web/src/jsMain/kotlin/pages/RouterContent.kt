@@ -10,7 +10,6 @@ import com.copperleaf.ballast.navigation.browser.BrowserHashNavigationIntercepto
 import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.copperleaf.ballast.navigation.routing.RouterContract.Inputs.GoToDestination
 import com.copperleaf.ballast.navigation.routing.RouterContract.Inputs.PopUntilRoute
-import com.copperleaf.ballast.navigation.routing.RouterContract.Inputs.ReplaceTopDestination
 import com.copperleaf.ballast.navigation.routing.build
 import com.copperleaf.ballast.navigation.routing.currentDestinationOrNull
 import com.copperleaf.ballast.navigation.routing.directions
@@ -32,6 +31,9 @@ import feature.shop.navbar.NavbarContract
 import feature.shop.navbar.NavbarViewModel
 import kotlinx.browser.window
 import kotlinx.serialization.json.Json
+import pages.home.HomeContent
+import pages.product.catalogue.CatalogContent
+import pages.product.page.ProductPage
 import web.components.layouts.GlobalVMs
 import web.components.layouts.MainRoutes
 import web.pages.account.TrackOrderPage
@@ -54,11 +56,8 @@ import web.pages.help.ShippingPage
 import web.pages.help.TermsOfServicePage
 import web.pages.help.about.AboutPage
 import web.pages.help.contact.ContactPage
-import web.pages.home.HomeContent
 import web.pages.payment.PaymentPage
 import web.pages.payment.checkout.CheckoutPage
-import web.pages.product.catalogue.CatalogContent
-import web.pages.product.page.ProductPage
 import web.pages.settings.SettingsPage
 
 @Composable

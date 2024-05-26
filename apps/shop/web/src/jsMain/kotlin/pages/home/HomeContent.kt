@@ -1,4 +1,4 @@
-package web.pages.home
+package pages.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -8,12 +8,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import component.localization.Strings
 import component.localization.getString
 import feature.shop.footer.FooterRoutes
+import feature.shop.home.HomeContract
 import feature.shop.home.HomeRoutes
 import feature.shop.home.HomeViewModel
 import feature.shop.navbar.DesktopNavRoutes
 import web.components.layouts.GlobalVMs
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
+import web.components.widgets.AppDividerHorizontal
 
 @Composable
 fun HomeContent(
@@ -47,7 +49,13 @@ fun HomeContent(
     ) {
         Slideshow(vm, state)
         ShopByCollection(vm, state)
-        CategoriesSection(vm, state)
+        CategoriesSection(
+            isLoading = state.isLoading,
+            items = state.categorySection.mapIndexed { i, it ->
+                CategoryItem(i.toString(), it.title, it.url)
+            },
+            onItemClick = { vm.trySend(HomeContract.Inputs.OnCategoryItemClick(it)) }
+        )
         JustArrived(vm, state)
         LatestLooks(vm, state)
         Featured(vm, state)
@@ -56,6 +64,7 @@ fun HomeContent(
         FromTheBlog(vm, state)
         OurCustomersSay(vm, state)
         HomeSubscribe(vm, state)
-        FreeSection(vm, state)
+        AppDividerHorizontal()
+        FreeSection()
     }
 }

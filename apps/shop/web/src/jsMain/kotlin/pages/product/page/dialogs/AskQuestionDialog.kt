@@ -1,4 +1,4 @@
-package web.pages.product.page.dialogs
+package pages.product.page.dialogs
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

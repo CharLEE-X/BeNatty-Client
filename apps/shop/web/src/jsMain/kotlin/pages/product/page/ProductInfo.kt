@@ -1,7 +1,17 @@
-package web.pages.product.page
+package pages.product.page
 
-import androidx.compose.runtime.*
-import com.varabyte.kobweb.compose.css.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.varabyte.kobweb.compose.css.CSSTransition
+import com.varabyte.kobweb.compose.css.Cursor
+import com.varabyte.kobweb.compose.css.FontWeight
+import com.varabyte.kobweb.compose.css.ObjectFit
+import com.varabyte.kobweb.compose.css.Overflow
+import com.varabyte.kobweb.compose.css.TransitionTimingFunction
+import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -10,9 +20,44 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.graphics.Colors
-import com.varabyte.kobweb.compose.ui.modifiers.*
+import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
+import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
+import com.varabyte.kobweb.compose.ui.modifiers.border
+import com.varabyte.kobweb.compose.ui.modifiers.borderRadius
+import com.varabyte.kobweb.compose.ui.modifiers.color
+import com.varabyte.kobweb.compose.ui.modifiers.cursor
+import com.varabyte.kobweb.compose.ui.modifiers.draggable
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.fontSize
+import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
+import com.varabyte.kobweb.compose.ui.modifiers.gap
+import com.varabyte.kobweb.compose.ui.modifiers.objectFit
+import com.varabyte.kobweb.compose.ui.modifiers.onClick
+import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
+import com.varabyte.kobweb.compose.ui.modifiers.onFocusOut
+import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
+import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
+import com.varabyte.kobweb.compose.ui.modifiers.opacity
+import com.varabyte.kobweb.compose.ui.modifiers.overflow
+import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.scale
+import com.varabyte.kobweb.compose.ui.modifiers.size
+import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
+import com.varabyte.kobweb.compose.ui.modifiers.transition
+import com.varabyte.kobweb.compose.ui.modifiers.userSelect
+import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.silk.components.graphics.Image
-import com.varabyte.kobweb.silk.components.icons.mdi.*
+import com.varabyte.kobweb.silk.components.icons.mdi.IconStyle
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiAir
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiCheck
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiDryCleaning
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiEco
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiInfo
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiIron
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiLocalShipping
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiWash
+import com.varabyte.kobweb.silk.components.icons.mdi.MdiWavingHand
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
@@ -28,12 +73,16 @@ import data.type.Trait
 import feature.product.page.ProductPageContract
 import feature.product.page.ProductPageViewModel
 import feature.shop.cart.CartContract
-import org.jetbrains.compose.web.css.*
+import org.jetbrains.compose.web.css.LineStyle
+import org.jetbrains.compose.web.css.em
+import org.jetbrains.compose.web.css.percent
+import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.css.s
+import pages.home.gridModifier
+import pages.product.catalogue.ProductSizeItem
 import web.H1Variant
 import web.HeadlineStyle
 import web.components.widgets.AppTooltip
-import web.pages.home.gridModifier
-import web.pages.product.catalogue.ProductSizeItem
 import web.util.descriptionString
 import web.util.onEnterKeyDown
 import web.util.titleString
@@ -373,7 +422,7 @@ private fun Price(
     cartState: CartContract.State,
 ) {
     ProductPrice(
-        regularPrice = productPageState.product.pricing.regularPrice.toString(),
+        currentPrice = productPageState.product.pricing.regularPrice.toString(),
         salePrice = productPageState.product.pricing.salePrice?.toString(),
         currency = cartState.currency,
         containerModifier = Modifier

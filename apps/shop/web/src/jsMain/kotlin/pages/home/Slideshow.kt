@@ -1,4 +1,4 @@
-package web.pages.home
+package pages.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect

@@ -86,7 +86,7 @@ import com.varabyte.kobweb.silk.theme.colors.palette.color
 import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.getString
-import core.models.Currency
+import components.widgets.RotatableChevron
 import data.GetRecommendedProductsQuery
 import feature.shop.navbar.NavbarContract
 import feature.shop.navbar.NavbarViewModel
@@ -103,6 +103,7 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
+import pages.home.gridModifier
 import web.H3Variant
 import web.HeadlineStyle
 import web.components.layouts.oneLayoutMaxWidth
@@ -110,11 +111,8 @@ import web.components.widgets.AppDividerHorizontal
 import web.components.widgets.AppDividerVertical
 import web.components.widgets.AppIconButton
 import web.components.widgets.Logo
-import web.components.widgets.RotatableChevron
 import web.components.widgets.ShimmerHeader
 import web.components.widgets.TextLink
-import web.pages.home.gridModifier
-import web.pages.product.page.ProductPrice
 import web.util.onEnterKeyDown
 
 @Composable
@@ -469,9 +467,7 @@ fun ShopBigMenu(vm: NavbarViewModel, state: NavbarContract.State, modifier: Modi
                     .forEach { product ->
                         RecommendedProductItem(
                             name = product.name,
-                            currency = state.currency,
-                            regularPrice = product.regularPrice.toString(),
-                            salePrice = product.salePrice.toString(),
+                            currentPrice = product.currentPrice,
                             media = product.media,
                             onClick = { vm.trySend(NavbarContract.Inputs.OnRecommendedProductClicked(product.id)) }
                         )
@@ -591,9 +587,7 @@ fun ExploreBigMenu(vm: NavbarViewModel, state: NavbarContract.State, modifier: M
 @Composable
 private fun RecommendedProductItem(
     name: String,
-    currency: Currency,
-    regularPrice: String,
-    salePrice: String?,
+    currentPrice: String,
     media: List<GetRecommendedProductsQuery.Medium>,
     onClick: () -> Unit,
 ) {
@@ -641,15 +635,8 @@ private fun RecommendedProductItem(
                 )
             }
         }
-        SpanText(
-            text = name,
-            modifier = Modifier
-        )
-        ProductPrice(
-            regularPrice = regularPrice,
-            salePrice = salePrice,
-            currency = currency,
-        )
+        SpanText(name)
+        SpanText(currentPrice)
     }
 }
 

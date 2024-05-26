@@ -87,6 +87,9 @@ import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
+import pages.home.gridModifier
+import pages.product.page.ProductPrice
+import pages.product.page.SpendMore
 import web.H1Variant
 import web.H2Variant
 import web.H3Variant
@@ -98,9 +101,6 @@ import web.components.widgets.AppTextButton
 import web.components.widgets.FlexSpacer
 import web.components.widgets.Spacer
 import web.components.widgets.themeScrollbarStyle
-import web.pages.home.gridModifier
-import web.pages.product.page.ProductPrice
-import web.pages.product.page.SpendMore
 import web.shadow
 import web.util.onEnterKeyDown
 
@@ -260,9 +260,7 @@ fun BottomSection(vm: CartViewModel, state: CartContract.State) {
             state.topSellingProducts.forEach { product ->
                 TopProductItem(
                     name = product.name,
-                    currency = state.currency,
-                    regularPrice = product.regularPrice.toString(),
-                    salePrice = product.salePrice?.toString(),
+                    currentPrice = product.currentPrice,
                     media = product.media.first(),
                     onClick = { vm.trySend(CartContract.Inputs.OnTopProductClicked(product.id)) }
                 )
@@ -274,9 +272,7 @@ fun BottomSection(vm: CartViewModel, state: CartContract.State) {
 @Composable
 private fun TopProductItem(
     name: String,
-    currency: Currency,
-    regularPrice: String,
-    salePrice: String?,
+    currentPrice: String,
     media: GetTopSellingProductsQuery.Medium,
     onClick: () -> Unit,
 ) {
@@ -316,17 +312,9 @@ private fun TopProductItem(
             )
         }
         Spacer()
-        SpanText(
-            text = name,
-            modifier = SubtitleStyle.toModifier()
-                .overflow(Overflow.Hidden)
-        )
+        SpanText(name)
         Spacer(0.5.em)
-        ProductPrice(
-            regularPrice = regularPrice,
-            salePrice = salePrice,
-            currency = currency,
-        )
+        SpanText(currentPrice)
     }
 }
 
@@ -501,7 +489,7 @@ private fun CartItem(
             }
         }
         ProductPrice(
-            regularPrice = item.regularPrice.toString(),
+            currentPrice = item.regularPrice.toString(),
             salePrice = item.salePrice?.toString(),
             currency = currency,
             containerModifier = Modifier.whiteSpace(WhiteSpace.NoWrap),

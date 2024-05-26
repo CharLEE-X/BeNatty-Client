@@ -1,4 +1,4 @@
-package web.pages.product.catalogue
+package pages.product.catalogue
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
@@ -20,7 +20,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.maxHeight
 import com.varabyte.kobweb.compose.ui.modifiers.objectFit
 import com.varabyte.kobweb.compose.ui.modifiers.overflow
 import com.varabyte.kobweb.compose.ui.modifiers.padding
-import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.compose.ui.modifiers.transition
 import com.varabyte.kobweb.compose.ui.modifiers.width
@@ -28,14 +27,12 @@ import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import feature.product.catalog.CatalogContract
-import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
+import pages.home.TextPosition
 import web.HeadlineStyle
-import web.components.widgets.AppElevatedCard
 import web.components.widgets.Shimmer
 import web.components.widgets.ShimmerButton
-import web.pages.home.TextPosition
 
 @Composable
 fun CatalogBanner(
@@ -43,16 +40,16 @@ fun CatalogBanner(
     modifier: Modifier = Modifier,
 ) {
     if (state.showBanner) {
-        val bannerHeight: CSSLengthOrPercentageNumericValue = 350.px
+        val bannerHeight: CSSLengthOrPercentageNumericValue = 400.px
 
         if (!state.isCatalogConfigLoading) {
             Banner(
                 title = state.bannerTitle ?: "",
                 height = bannerHeight,
-                modifier = modifier
             ) { imageModifier ->
                 Image(
-                    src = state.bannerImageUrl ?: "",
+//                    src = state.bannerImageUrl ?: "", // FIXME
+                    src = "https://icon-shopify-theme.myshopify.com/cdn/shop/files/icon__hero--image-1.jpg?v=1635967751&width=2000",
                     alt = state.bannerTitle ?: "",
                     modifier = imageModifier
                 )
@@ -81,44 +78,36 @@ private fun BannerShimmer(modifier: Modifier) {
 
 @Composable
 private fun Banner(
-    modifier: Modifier = Modifier,
     title: String,
-    height: CSSLengthOrPercentageNumericValue = 350.px,
+    height: CSSLengthOrPercentageNumericValue,
     image: @Composable (imageModifier: Modifier) -> Unit,
 ) {
-    AppElevatedCard(
-        elevation = 0,
-        modifier = modifier
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
             .fillMaxWidth()
             .maxHeight(height)
-            .position(Position.Relative)
             .aspectRatio(1.0)
             .overflow(Overflow.Clip)
             .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
     ) {
-        Box(
-            contentAlignment = Alignment.Center,
+        val imageModifier = Modifier
+            .fillMaxSize()
+            .objectFit(ObjectFit.Cover)
+            .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
+        image(imageModifier)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .fillMaxSize()
-        ) {
-            val imageModifier = Modifier
-                .fillMaxSize()
-                .objectFit(ObjectFit.Cover)
+                .align(Alignment.Center)
+                .padding(50.px)
                 .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
-            image(imageModifier)
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(50.px)
-                    .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
-            ) {
-                SpanText(
-                    text = title.uppercase(),
-                    modifier = HeadlineStyle.toModifier()
-                        .color(Colors.Black)
-                )
-            }
+        ) {
+            SpanText(
+                text = title.uppercase(),
+                modifier = HeadlineStyle.toModifier()
+                    .color(Colors.White)
+            )
         }
     }
 }

@@ -1,10 +1,12 @@
-package web.pages.product.catalogue
+package pages.product.catalogue
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -35,13 +37,18 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.ms
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
+import pages.home.CategoriesSection
+import pages.home.CategoryItem
+import pages.home.FreeSection
+import pages.home.gridModifier
 import web.components.layouts.GlobalVMs
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
+import web.components.layouts.oneLayoutMaxWidth
 import web.components.widgets.ObserveViewportEntered
 import web.components.widgets.Shimmer
 import web.components.widgets.ShimmerText
-import web.pages.home.gridModifier
+import web.components.widgets.Spacer
 
 @Composable
 fun CatalogContent(
@@ -63,6 +70,7 @@ fun CatalogContent(
         )
     }
     val state by vm.observeStates().collectAsState()
+    var showFilters by remember { mutableStateOf(true) }
 
     ShopMainLayout(
         title = getString(Strings.ProductPage),
@@ -73,32 +81,56 @@ fun CatalogContent(
         globalVMs = globalVMs,
     ) {
         Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(left = 24.px, right = 24.px, top = 24.px, bottom = 48.px)
-                .gap(2.em)
+                .padding(top = 24.px, bottom = 48.px)
         ) {
+            AddSection()
             CatalogBanner(state = state)
-            CatalogueHeader(vm, state)
-            Row(
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .display(DisplayStyle.Flex)
-                    .gap(1.em)
+                    .maxWidth(oneLayoutMaxWidth)
             ) {
-                CatalogueFilters(
+                CatalogueHeader(
                     vm = vm,
                     state = state,
+                    showFilters = showFilters,
+                    onFiltersClicked = { showFilters = !showFilters }
+                )
+                Row(
                     modifier = Modifier
-                        .maxWidth(20.percent)
+                        .fillMaxWidth()
+                        .display(DisplayStyle.Flex)
+                        .gap(1.em)
+                        .padding(leftRight = 24.px)
+                ) {
+                    if (showFilters) {
+                        CatalogueFilters(
+                            vm = vm,
+                            state = state,
+                            modifier = Modifier
+                                .maxWidth(20.percent)
+                        )
+                    }
+                    CatalogueContent(
+                        vm = vm,
+                        state = state,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                YouAlsoViewed(vm, state)
+                CategoriesSection(
+                    isLoading = state.isCatalogConfigLoading,
+                    items = state.categorySection.map { CategoryItem(it.id, it.title, it.url) },
+                    onItemClick = { vm.trySend(CatalogContract.Inputs.OnCategoryItemClick(it)) }
                 )
-                CatalogueContent(
-                    vm = vm,
-                    state = state,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                WhoWeAre(vm, state)
+                Spacer(2.em)
+                FreeSection()
             }
-            TrendingNow(vm, state)
         }
     }
 }
@@ -130,11 +162,10 @@ private fun CatalogueContent(
 
                     CatalogItem(
                         title = product.name,
-                        regularPrice = product.regularPrice,
-                        salePrice = product.salePrice,
+                        currentPrice = product.currentPrice,
+                        sizes = product.sizes,
                         media = product.media,
                         imageHeight = imageHeight,
-                        currency = state.currency,
                         onClick = { vm.trySend(CatalogContract.Inputs.OnGoToProductClicked(product.id)) },
                         modifier = Modifier
                             .id(product.id)

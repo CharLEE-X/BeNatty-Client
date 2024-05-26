@@ -1,4 +1,4 @@
-package web.pages.product.page
+package pages.product.page
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -101,8 +101,7 @@ fun SimilarProducts(
                 SimilarProductItem(
                     name = product.name,
                     currency = cartState.currency,
-                    regularPrice = product.regularPrice.toString(),
-                    salePrice = product.salePrice.toString(),
+                    currentPrice = product.currentPrice,
                     media = product.media.first(),
                     onClick = { vm.trySend(ProductPageContract.Inputs.OnGoToProductClicked(product.id)) }
                 )
@@ -115,8 +114,7 @@ fun SimilarProducts(
 private fun SimilarProductItem(
     name: String,
     currency: Currency,
-    regularPrice: String,
-    salePrice: String?,
+    currentPrice: String,
     media: GetSimilarProductsQuery.Medium,
     onClick: () -> Unit,
 ) {
@@ -162,22 +160,16 @@ private fun SimilarProductItem(
         Column(
             modifier = Modifier.weight(1f)
         ) {
-            SpanText(
-                text = name,
-            )
+            SpanText(name)
             Spacer(0.5.em)
-            ProductPrice(
-                regularPrice = regularPrice,
-                salePrice = salePrice,
-                currency = currency,
-            )
+            SpanText(currentPrice)
         }
     }
 }
 
 @Composable
 fun ProductPrice(
-    regularPrice: String,
+    currentPrice: String,
     salePrice: String?,
     currency: Currency,
     containerModifier: Modifier = Modifier,
@@ -195,7 +187,7 @@ fun ProductPrice(
         modifier = containerModifier
     ) {
         SpanText(
-            text = "${currency.symbol}$regularPrice ${currency.code}",
+            text = "${currency.symbol}$currentPrice ${currency.code}",
             modifier = Modifier
                 .scale(if (isOnSale) 0.8f else 1f)
                 .textDecorationLine(if (isOnSale) TextDecorationLine.LineThrough else TextDecorationLine.None)

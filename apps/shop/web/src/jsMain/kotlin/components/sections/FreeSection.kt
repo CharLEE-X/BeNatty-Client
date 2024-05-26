@@ -1,4 +1,4 @@
-package web.pages.home
+package pages.home
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -21,8 +21,6 @@ import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
 import component.localization.getString
-import feature.shop.home.HomeContract
-import feature.shop.home.HomeViewModel
 import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.fr
@@ -30,18 +28,13 @@ import org.jetbrains.compose.web.css.px
 import web.H3Variant
 import web.HeadlineStyle
 import web.components.layouts.oneLayoutMaxWidth
-import web.components.widgets.AppDividerHorizontal
 
 @Composable
-fun FreeSection(
-    vm: HomeViewModel,
-    state: HomeContract.State,
-) {
+fun FreeSection() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
     ) {
-        AppDividerHorizontal()
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -54,7 +47,7 @@ fun FreeSection(
                     leftRight = 24.px
                 )
         ) {
-            FreeItem(
+            AddItem(
                 title = getString(Strings.FreeShipping),
                 description = getString(Strings.OnAllOrdersOver),
                 icon = {
@@ -64,7 +57,7 @@ fun FreeSection(
                     )
                 }
             )
-            FreeItem(
+            AddItem(
                 title = getString(Strings.FreeReturns),
                 description = getString(Strings.OnAllUnopenedUnusedItems),
                 icon = {
@@ -74,7 +67,7 @@ fun FreeSection(
                     )
                 }
             )
-            FreeItem(
+            AddItem(
                 title = getString(Strings.SecureShipping),
                 description = getString(Strings.ShopWithConfidence),
                 icon = {
@@ -84,7 +77,7 @@ fun FreeSection(
                     )
                 }
             )
-            FreeItem(
+            AddItem(
                 title = getString(Strings.PercentSatisfaction),
                 description = getString(Strings.RatedExcellentByCustomers),
                 icon = {
@@ -99,7 +92,7 @@ fun FreeSection(
 }
 
 @Composable
-private fun FreeItem(
+private fun AddItem(
     title: String,
     description: String,
     icon: @Composable () -> Unit,

@@ -68,38 +68,23 @@ internal class CatalogInputHandler :
 
         is CatalogContract.Inputs.SetQuery -> updateState { it.copy(query = input.query) }
         is CatalogContract.Inputs.SetSelectedCategories -> updateState {
-            it.copy(
-                selectedCategoryIds = input.categories,
-                showCategoryReset = input.categories.isNotEmpty(),
-            )
+            it.copy(selectedCategoryIds = input.categories, showCategoryReset = input.categories.isNotEmpty())
         }
 
         is CatalogContract.Inputs.SetSelectedColors -> updateState {
-            it.copy(
-                selectedColors = input.colors,
-                showColorReset = input.colors.isNotEmpty(),
-            )
+            it.copy(selectedColors = input.colors, showColorReset = input.colors.isNotEmpty())
         }
 
         is CatalogContract.Inputs.SetSelectedSizes -> updateState {
-            it.copy(
-                selectedSizes = input.sizes,
-                showSizeReset = input.sizes.isNotEmpty(),
-            )
+            it.copy(selectedSizes = input.sizes, showSizeReset = input.sizes.isNotEmpty())
         }
 
         is CatalogContract.Inputs.SetPriceFrom -> updateState {
-            it.copy(
-                priceFrom = input.priceFrom,
-                showPriceReset = input.priceFrom != null || it.priceTo != null,
-            )
+            it.copy(priceFrom = input.priceFrom, showPriceReset = input.priceFrom != null || it.priceTo != null)
         }
 
         is CatalogContract.Inputs.SetPriceTo -> updateState {
-            it.copy(
-                priceTo = input.priceTo,
-                showPriceReset = it.priceFrom != null || input.priceTo != null,
-            )
+            it.copy(priceTo = input.priceTo, showPriceReset = it.priceFrom != null || input.priceTo != null)
         }
 
         CatalogContract.Inputs.OnCategoryResetClicked -> handleOnCategoryResetClicked()
@@ -119,6 +104,8 @@ internal class CatalogInputHandler :
 
         is CatalogContract.Inputs.OnTraitClicked -> handleOnTraitClicked(input.trait)
         is CatalogContract.Inputs.SetTraits -> updateState { it.copy(selectedTraits = input.traits) }
+        is CatalogContract.Inputs.OnYouAlsoViewedItemClicked -> postEvent(CatalogContract.Events.GoToProduct(input.id))
+        is CatalogContract.Inputs.OnCategoryItemClick -> postEvent(CatalogContract.Events.GoToProduct(input.id))
     }
 
     private suspend fun InputScope.handleOnTraitClicked(trait: Trait) {

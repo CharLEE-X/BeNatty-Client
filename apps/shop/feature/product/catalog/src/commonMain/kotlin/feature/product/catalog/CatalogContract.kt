@@ -69,6 +69,56 @@ object CatalogContract {
         val showTraitsReset: Boolean = false,
 
         val currency: Currency = Currency("£", "GBP"),
+
+        val youAlsoViewed: List<ItemWithPrice> = listOf(
+            ItemWithPrice(
+                id = "1",
+                title = "Sweet Harvest Playsuit",
+                urls = listOf(
+                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-1_09e467d5-e880-4f17-8af6-9e4aa6674456.jpg?v=1493315056&width=700",
+                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700"
+                ),
+                price = "£59.00",
+                sizes = "S, M, L",
+            ),
+            ItemWithPrice(
+                id = "2",
+                title = "Songbird Playsuit",
+                urls = listOf(
+                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/9k_-2_0e3ad28e-b1a4-4940-bfd5-169df323e2bd.jpg?v=1493326475&width=700",
+                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-1_b5ecc059-d675-4b8c-ada6-2d935faf0fb6.jpg?v=1493326475&width=700"
+                ),
+                price = "£59.00",
+                sizes = "S, M, L",
+            ),
+            ItemWithPrice(
+                id = "1",
+                title = "Sweet Harvest Playsuit",
+                urls = listOf(
+                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-3_e64bbab2-8f73-47fc-93b8-1df2b79127b6.jpg?v=1493325632&width=700",
+                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700"
+                ),
+                price = "£59.00",
+                sizes = "S, M, L",
+            ),
+        ),
+        val categorySection: List<CategoryItem> = listOf(
+            CategoryItem(
+                id = "1",
+                title = "Tops",
+                url = "https://icon-shopify-theme.myshopify.com/cdn/shop/files/looks1.jpg?v=1614301039&width=600",
+            ),
+            CategoryItem(
+                id = "2",
+                title = "Playsuits",
+                url = "https://icon-shopify-theme.myshopify.com/cdn/shop/files/looks2.jpg?v=1614301039&width=600",
+            ),
+            CategoryItem(
+                id = "3",
+                title = "Dresses",
+                url = "https://icon-shopify-theme.myshopify.com/cdn/shop/files/looks3.jpg?v=1614301039&width=600",
+            ),
+        ),
     )
 
     sealed interface Inputs {
@@ -84,6 +134,7 @@ object CatalogContract {
             val priceTo: String?,
             val traits: List<Trait>,
         ) : Inputs
+
         data class FetchProducts(
             val page: Int,
             val query: String,
@@ -110,6 +161,8 @@ object CatalogContract {
         data class OnPriceFromChanged(val priceFrom: String) : Inputs
         data class OnPriceToChanged(val priceTo: String) : Inputs
         data class OnTraitClicked(val trait: Trait) : Inputs
+        data class OnYouAlsoViewedItemClicked(val id: String) : Inputs
+        data class OnCategoryItemClick(val id: String) : Inputs
 
         data class SetIsCatalogConfigLoading(val loading: Boolean) : Inputs
         data class SetProducts(val products: List<GetCatalogPageQuery.Product>) : Inputs
@@ -141,6 +194,16 @@ object CatalogContract {
         data class OnError(val message: String) : Events
         data class GoToProduct(val productId: String) : Events
     }
+
+    data class ItemWithPrice(
+        val id: String,
+        val title: String,
+        val urls: List<String>,
+        val price: String,
+        val sizes: String,
+    )
+
+    data class CategoryItem(val id: String, val title: String, val url: String)
 }
 
 @Serializable

@@ -1,19 +1,19 @@
-package pages.home
+package pages.product.catalogue
 
 import androidx.compose.runtime.Composable
 import component.localization.Strings
 import component.localization.getString
-import feature.shop.home.HomeContract
-import feature.shop.home.HomeViewModel
+import feature.product.catalog.CatalogContract
+import feature.product.catalog.CatalogViewModel
 import web.components.widgets.HorizontalScrollSection
 import web.components.widgets.ScrollableItem
 
 @Composable
-fun JustArrived(vm: HomeViewModel, state: HomeContract.State) {
+fun YouAlsoViewed(vm: CatalogViewModel, state: CatalogContract.State) {
     HorizontalScrollSection(
-        title = getString(Strings.JustArrived).uppercase(),
+        title = getString(Strings.YouAlsoViewed).uppercase(),
         seeMoreTitle = getString(Strings.SeeMoreNewArrivals),
-        items = state.justArrived.map { item ->
+        items = state.youAlsoViewed.map { item ->
             ScrollableItem(
                 id = item.id,
                 urls = item.urls,
@@ -22,7 +22,7 @@ fun JustArrived(vm: HomeViewModel, state: HomeContract.State) {
                 sizes = item.sizes,
             )
         },
-        onSeeMoreClicked = { vm.trySend(HomeContract.Inputs.OnSeeMoreNewArrivalsClicked) },
-        onItemClicked = { vm.trySend(HomeContract.Inputs.OnJustArrivedClicked(it)) },
+        onItemClicked = { vm.trySend(CatalogContract.Inputs.OnYouAlsoViewedItemClicked(it)) },
+        onSeeMoreClicked = { },
     )
 }

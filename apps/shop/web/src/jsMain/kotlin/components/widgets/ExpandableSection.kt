@@ -21,6 +21,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOut
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
 import com.varabyte.kobweb.silk.components.text.SpanText
+import components.widgets.RotatableChevron
 import org.jetbrains.compose.web.css.em
 
 @Composable

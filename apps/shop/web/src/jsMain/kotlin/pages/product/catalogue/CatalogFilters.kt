@@ -1,4 +1,4 @@
-package web.pages.product.catalogue
+package pages.product.catalogue
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

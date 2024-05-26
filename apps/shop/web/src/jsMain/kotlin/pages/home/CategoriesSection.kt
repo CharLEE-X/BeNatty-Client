@@ -1,4 +1,4 @@
-package web.pages.home
+package pages.home
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -15,8 +15,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.top
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.text.SpanText
-import feature.shop.home.HomeContract
-import feature.shop.home.HomeViewModel
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
@@ -26,22 +24,46 @@ import web.components.widgets.AppFilledButton
 import web.components.widgets.ShimmerHeader
 import web.components.widgets.ShimmerText
 
+data class CategoryItem(val id: String, val title: String, val url: String)
+
 @Composable
-fun CategoriesSection(vm: HomeViewModel, state: HomeContract.State) {
+fun CategoriesSection(
+    isLoading: Boolean,
+    items: List<CategoryItem>,
+    onItemClick: (title: String) -> Unit,
+) {
     Row(
         modifier = gridModifier(columns = 3, gap = 1.5.em)
             .maxWidth(oneLayoutMaxWidth)
             .padding(leftRight = 24.px, top = 48.px, bottom = 1.5.em)
     ) {
-        if (!state.isLoading) {
-            state.categorySection
+        if (!isLoading) {
+            items
                 .take(3)
                 .forEach { item ->
-                    CategoryItem(
-                        title = item.title,
-                        url = item.url,
-                        onClick = { vm.trySend(HomeContract.Inputs.OnBannerLeftClick) }
-                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(1f)
+                    ) {
+                        Image(
+                            src = item.url,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .position(Position.Relative)
+                                .top(70.percent)
+                        ) {
+                            AppFilledButton(
+                                onClick = { onItemClick(item.id) },
+                            ) {
+                                SpanText(item.title.uppercase())
+                            }
+                        }
+                    }
                 }
         } else {
             ShimmerCollageItem(Modifier.fillMaxWidth().height(350.px)) {
@@ -54,37 +76,6 @@ fun CategoriesSection(vm: HomeViewModel, state: HomeContract.State) {
             ) {
                 ShimmerHeader(Modifier.fillMaxWidth(80.percent))
                 ShimmerText(Modifier.fillMaxWidth(60.percent))
-            }
-        }
-    }
-}
-
-@Composable
-private fun CategoryItem(
-    title: String,
-    url: String,
-    onClick: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1f)
-    ) {
-        Image(
-            src = url,
-            modifier = Modifier.fillMaxSize()
-        )
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .position(Position.Relative)
-                .top(70.percent)
-        ) {
-            AppFilledButton(
-                onClick = onClick,
-            ) {
-                SpanText(title.uppercase())
             }
         }
     }

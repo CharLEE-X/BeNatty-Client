@@ -8,15 +8,15 @@ query GetCatalogPage($input: CatalogPageInput!) {
     }
     products {
       id
+      name
+      currentPrice
+      sizes
       media {
         keyName
         url
         alt
         type
       }
-      regularPrice
-      salePrice
-      name
     }
   }
 }

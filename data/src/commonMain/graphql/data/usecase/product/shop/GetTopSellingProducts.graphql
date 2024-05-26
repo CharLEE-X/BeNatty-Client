@@ -7,8 +7,8 @@ query GetTopSellingProducts {
       alt
       type
     }
-    regularPrice
-    salePrice
+    currentPrice
+    sizes
     name
   }
 }

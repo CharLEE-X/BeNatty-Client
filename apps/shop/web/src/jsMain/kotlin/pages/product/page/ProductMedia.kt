@@ -1,4 +1,4 @@
-package web.pages.product.page
+package pages.product.page
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -64,8 +64,8 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import org.w3c.dom.HTMLElement
+import pages.home.gridModifier
 import web.components.widgets.themeScrollbarStyle
-import web.pages.home.gridModifier
 import web.util.onEnterKeyDown
 
 @Composable

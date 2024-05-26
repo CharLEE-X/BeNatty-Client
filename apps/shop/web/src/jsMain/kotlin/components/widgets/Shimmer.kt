@@ -34,8 +34,8 @@ import org.jetbrains.compose.web.css.ms
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
+import pages.home.TextPosition
 import web.AppColors
-import web.pages.home.TextPosition
 
 val ShimmerAnimation by Keyframes {
     from {

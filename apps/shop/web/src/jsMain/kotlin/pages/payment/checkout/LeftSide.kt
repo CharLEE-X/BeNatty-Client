@@ -26,8 +26,8 @@ import feature.checkout.toPaymentMethod
 import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
+import pages.home.gridModifier
 import web.components.widgets.AppFilledButton
-import web.pages.home.gridModifier
 
 @Composable
 fun LeftSide(vm: CheckoutViewModel, state: CheckoutContract.State) {
