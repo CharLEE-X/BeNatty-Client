@@ -42,6 +42,7 @@ import web.components.layouts.GlobalVMs
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
 import web.components.layouts.oneLayoutMaxWidth
+import web.components.widgets.AppDividerHorizontal
 import web.components.widgets.ObserveViewportEntered
 import web.components.widgets.Shimmer
 import web.components.widgets.ShimmerText
@@ -93,6 +94,7 @@ fun CatalogContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .maxWidth(oneLayoutMaxWidth)
+                    .padding(leftRight = 24.px)
             ) {
                 CatalogueHeader(
                     vm = vm,
@@ -100,27 +102,25 @@ fun CatalogContent(
                     showFilters = showFilters,
                     onFiltersClicked = { showFilters = !showFilters }
                 )
+                AppDividerHorizontal(modifier = Modifier.margin(top = 1.em))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .display(DisplayStyle.Flex)
                         .gap(1.em)
-                        .padding(leftRight = 24.px)
+                        .margin(top = 2.em)
                 ) {
                     if (showFilters) {
                         CatalogueFilters(
                             vm = vm,
                             state = state,
-                            modifier = Modifier
-                                .maxWidth(20.percent)
+                            modifier = Modifier.width(33.percent)
                         )
                     }
                     CatalogueContent(
                         vm = vm,
                         state = state,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .margin(top = 1.em)
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
                 YouAlsoViewed(vm, state)
@@ -129,10 +129,10 @@ fun CatalogContent(
                     items = state.categorySection.map { CategoryItem(it.id, it.title, it.url) },
                     onItemClick = { vm.trySend(CatalogContract.Inputs.OnCategoryItemClick(it)) }
                 )
-                WhoWeAre(vm, state)
-                Spacer(2.em)
-                FreeSection()
             }
+            WhoWeAre(vm, state)
+            Spacer(2.em)
+            FreeSection()
         }
     }
 }

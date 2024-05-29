@@ -205,7 +205,6 @@ internal class ProductServiceImpl(private val apolloClient: ApolloClient) : Prod
                     backorderStatus = backorderStatus.skipIfNull(),
                     lowStockThreshold = lowStockThreshold.skipIfNull(),
                     remainingStock = remainingStock.skipIfNull(),
-                    stockStatus = stockStatus.skipIfNull(),
                     trackQuantity = trackQuantity.skipIfNull(),
                 )
             )
@@ -296,7 +295,7 @@ internal class ProductServiceImpl(private val apolloClient: ApolloClient) : Prod
     ): Either<RemoteError, GetCatalogPageQuery.Data> {
         val pageInput = CatalogPageInput(
             page = page,
-            size = Optional.present(16),
+            size = Optional.present(9),
             query = query.skipIfNull(),
             filters = CurrentCatalogFilterInput(
                 categories = categories.skipIfNull(),

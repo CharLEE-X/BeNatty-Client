@@ -69,9 +69,7 @@ private fun AddItem(
             .gap(0.5.em)
             .fontSize(16.px)
     ) {
-        SpanText(
-            text = title,
-        )
+        SpanText(title)
         TextLink(
             text = linkText,
             onClick = onClick,

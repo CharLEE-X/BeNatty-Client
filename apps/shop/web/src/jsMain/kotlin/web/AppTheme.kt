@@ -14,8 +14,6 @@ import com.varabyte.kobweb.silk.theme.colors.palette.color
 import com.varabyte.kobweb.silk.theme.colors.palette.link
 import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 
-const val HEADLINE_FONT = "Montserrat"
-
 @Composable
 fun shadow() = if (ColorMode.current.isLight) Colors.Black.copy(alpha = 25).toRgb()
 else Colors.White.copy(alpha = 25).toRgb()

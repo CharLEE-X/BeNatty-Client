@@ -17,10 +17,8 @@ import component.localization.getString
 import data.GetCatalogPageQuery
 import feature.product.page.ProductPageContract
 import feature.product.page.ProductPageViewModel
-import feature.shop.cart.CartContract
 import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.em
-import org.jetbrains.compose.web.css.px
 import web.HeadlineStyle
 import web.pages.home.gridModifier
 import web.pages.product.catalogue.CatalogItem
@@ -29,7 +27,6 @@ import web.pages.product.catalogue.CatalogItem
 fun YouMayAlsoLike(
     vm: ProductPageViewModel,
     productPageState: ProductPageContract.State,
-    cartState: CartContract.State,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -57,7 +54,6 @@ fun YouMayAlsoLike(
                     },
                     sizes = product.sizes,
                     imageHeight = null,
-                    miniaturesMinHeight = 80.px,
                     onClick = { vm.trySend(ProductPageContract.Inputs.OnGoToProductClicked(product.id)) },
                     modifier = Modifier.aspectRatio(0.667)
                 )

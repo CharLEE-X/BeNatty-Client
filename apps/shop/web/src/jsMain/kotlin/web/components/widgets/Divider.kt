@@ -13,9 +13,9 @@ import org.jetbrains.compose.web.css.px
 import web.AppColors
 
 @Composable
-fun AppDividerHorizontal(color: Color = AppColors.divider()) {
+fun AppDividerHorizontal(color: Color = AppColors.divider(), modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(1.px)
             .backgroundColor(color)

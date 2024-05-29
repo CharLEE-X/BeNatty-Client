@@ -22,6 +22,9 @@ import com.varabyte.kobweb.silk.theme.modifyComponentStyleBase
 import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.css.px
 
+const val HEADLINE_FONT = "Montserrat"
+const val BODY_FONT = "DM Sans"
+
 @Suppress("unused")
 @InitSilk
 fun initSiteStyles(ctx: InitSilkContext) {
@@ -29,10 +32,12 @@ fun initSiteStyles(ctx: InitSilkContext) {
         Modifier
             .fontFamily(
                 "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-                "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "sans-serif", HEADLINE_FONT
+                "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "sans-serif", HEADLINE_FONT, BODY_FONT
             )
-            .fontSize(15.px)
+            .fontSize(14.px)
             .lineHeight(1.5)
+            .fontWeight(400)
+            .fontFamily(BODY_FONT, "sans-serif")
     }
 
     // Silk dividers only extend 90% by default; we want full width dividers in our site

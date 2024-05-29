@@ -1,9 +1,23 @@
 query GetCurrentCatalogFilterOptions($input: CurrentCatalogFilterInput!) {
   getCurrentCatalogFilterOptions(input: $input) {
+    stockStatuses {
+      name
+      count
+    }
     total
-    categories
-    colors
-    sizes
+    productTypes {
+      id
+      name
+      count
+    }
+    colors {
+      name
+      count
+    }
+    sizes {
+      name
+      count
+    }
     highestPrice
   }
 }

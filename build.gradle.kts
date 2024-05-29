@@ -18,6 +18,7 @@ plugins {
     alias(libs.plugins.kover) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.ktLint)
+    id("com.github.johnrengelman.shadow") version "8.1.1" apply false
 }
 
 subprojects {

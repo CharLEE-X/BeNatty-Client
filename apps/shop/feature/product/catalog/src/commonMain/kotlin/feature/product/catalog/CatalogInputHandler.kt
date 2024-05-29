@@ -9,6 +9,7 @@ import data.service.ProductService
 import data.type.Color
 import data.type.ProductsSort
 import data.type.Size
+import data.type.StockStatus
 import data.type.Trait
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -106,6 +107,33 @@ internal class CatalogInputHandler :
         is CatalogContract.Inputs.SetTraits -> updateState { it.copy(selectedTraits = input.traits) }
         is CatalogContract.Inputs.OnYouAlsoViewedItemClicked -> postEvent(CatalogContract.Events.GoToProduct(input.id))
         is CatalogContract.Inputs.OnCategoryItemClick -> postEvent(CatalogContract.Events.GoToProduct(input.id))
+        is CatalogContract.Inputs.OnAvailabilityClicked -> handleOnAvailabilityClicked(input.availability)
+        is CatalogContract.Inputs.SetSelectedAvailabilities ->
+            updateState { it.copy(selectedStockStatuses = input.availabilities) }
+    }
+
+    private suspend fun InputScope.handleOnAvailabilityClicked(availability: StockStatus) {
+        val state = getCurrentState()
+        val newAvailability = if (state.selectedStockStatuses.contains(availability)) {
+            state.selectedStockStatuses - availability
+        } else {
+            state.selectedStockStatuses + availability
+        }
+        sideJob("onAvailabilityClicked") {
+            postInput(CatalogContract.Inputs.SetSelectedAvailabilities(newAvailability))
+            postInput(
+                CatalogContract.Inputs.FetchProducts(
+                    page = 0,
+                    query = state.query,
+                    categoryFilters = state.selectedCategoryIds,
+                    colorFilters = state.selectedColors,
+                    sizeFilters = state.selectedSizes,
+                    priceFrom = state.priceFrom,
+                    priceTo = state.priceTo,
+                    traits = state.selectedTraits,
+                )
+            )
+        }
     }
 
     private suspend fun InputScope.handleOnTraitClicked(trait: Trait) {
@@ -566,7 +594,7 @@ internal class CatalogInputHandler :
         priceTo: String?,
         traits: List<Trait>
     ) {
-        println("fetchProducts fetching products for page $page with query $query and filters $categoryFilters, $colorFilters, $sizeFilters, $priceFrom, $priceTo")
+//        println("fetchProducts fetching products for page $page with query $query and filters $categoryFilters, $colorFilters, $sizeFilters, $priceFrom, $priceTo")
         val state = getCurrentState()
         sideJob("fetchProducts") {
             productService.getCataloguePage(
@@ -582,8 +610,11 @@ internal class CatalogInputHandler :
             ).fold(
                 { postEvent(CatalogContract.Events.OnError(it.mapToUiMessage())) },
                 {
-                    val products = if (page == 0)
-                        it.getCatalogPage.products else state.products + it.getCatalogPage.products
+                    val products = if (page == 0) {
+                        it.getCatalogPage.products
+                    } else {
+                        state.products + it.getCatalogPage.products
+                    }
                     postInput(CatalogContract.Inputs.SetProducts(products))
                     postInput(CatalogContract.Inputs.SetPageInfo(it.getCatalogPage.info))
                 },

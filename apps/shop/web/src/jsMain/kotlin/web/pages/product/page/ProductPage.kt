@@ -183,7 +183,7 @@ fun ProductPage(
                     )
                 }
             }
-            YouMayAlsoLike(vm, productPageState, cartState)
+            YouMayAlsoLike(vm, productPageState)
         }
     }
 }

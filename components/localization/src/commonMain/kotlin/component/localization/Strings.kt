@@ -449,5 +449,6 @@ enum class Strings {
     ReadMore,
     ViewOurFavorites,
     YouAlsoViewed,
-    Learn
+    Learn,
+    Availability
 }

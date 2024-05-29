@@ -17,6 +17,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.fontSize
 import com.varabyte.kobweb.compose.ui.modifiers.fontWeight
 import com.varabyte.kobweb.compose.ui.modifiers.gap
+import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOut
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
@@ -37,7 +38,7 @@ fun ExpandableSection(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .gap(1.em)
+            .margin(bottom = 1.em)
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -47,6 +48,7 @@ fun ExpandableSection(
                 .onMouseOver { headerHovered = true }
                 .onMouseOut { headerHovered = false }
                 .cursor(Cursor.Pointer)
+                .margin(bottom = 1.em)
         ) {
             SpanText(
                 text = title.uppercase(),
@@ -60,12 +62,14 @@ fun ExpandableSection(
                     .fontSize(1.5.em)
             )
         }
+        AppDividerHorizontal()
         if (expanded) {
             Column(
                 content = content,
                 modifier = Modifier
                     .fillMaxWidth()
                     .gap(0.5.em)
+                    .margin(top = 1.em)
             )
         }
     }

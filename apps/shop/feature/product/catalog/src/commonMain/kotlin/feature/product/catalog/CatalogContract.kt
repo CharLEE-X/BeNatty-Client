@@ -9,6 +9,7 @@ import data.GetTrendingNowProductsQuery
 import data.type.Color
 import data.type.ProductsSort
 import data.type.Size
+import data.type.StockStatus
 import data.type.Trait
 import kotlinx.serialization.Serializable
 
@@ -43,14 +44,17 @@ object CatalogContract {
 
         val currentVariantOptions: GetCurrentCatalogFilterOptionsQuery.GetCurrentCatalogFilterOptions =
             GetCurrentCatalogFilterOptionsQuery.GetCurrentCatalogFilterOptions(
-                total = 0,
-                categories = emptyList(),
+                stockStatuses = listOf(),
+                productTypes = emptyList(),
                 colors = emptyList(),
                 sizes = emptyList(),
                 highestPrice = null,
+                total = 0,
             ),
 
         val query: String = "",
+
+        val selectedStockStatuses: List<StockStatus> = listOf(),
 
         val selectedCategoryIds: List<String> = listOf(),
         val showCategoryReset: Boolean = false,
@@ -163,6 +167,7 @@ object CatalogContract {
         data class OnTraitClicked(val trait: Trait) : Inputs
         data class OnYouAlsoViewedItemClicked(val id: String) : Inputs
         data class OnCategoryItemClick(val id: String) : Inputs
+        data class OnAvailabilityClicked(val availability: StockStatus) : Inputs
 
         data class SetIsCatalogConfigLoading(val loading: Boolean) : Inputs
         data class SetProducts(val products: List<GetCatalogPageQuery.Product>) : Inputs
@@ -188,6 +193,7 @@ object CatalogContract {
         data class SetPriceTo(val priceTo: String?) : Inputs
         data class SetSortBy(val sortBy: ProductsSort) : Inputs
         data class SetTraits(val traits: List<Trait>) : Inputs
+        data class SetSelectedAvailabilities(val availabilities: List<StockStatus>) : Inputs
     }
 
     sealed interface Events {

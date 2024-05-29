@@ -78,7 +78,7 @@ import web.util.onEnterKeyDown
 fun gridModifier(
     columns: Int = 3,
     gap: CSSLengthOrPercentageNumericValue = 1.5.em,
-    rowMinHeight: CSSLengthOrPercentageNumericValue = 200.px
+    rowMinHeight: CSSLengthOrPercentageNumericValue = 20.px
 ) = Modifier
     .fillMaxWidth()
     .display(DisplayStyle.Grid)

@@ -64,7 +64,6 @@ import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.s
 import org.jetbrains.compose.web.dom.Span
 import web.components.sections.AppMenu
-import web.components.widgets.AppDividerHorizontal
 import web.components.widgets.RotatableChevron
 import web.components.widgets.ShimmerButton
 import web.components.widgets.ShimmerText
@@ -108,7 +107,6 @@ fun CatalogueHeader(
         modifier = Modifier
             .fillMaxWidth()
             .margin(top = 4.em)
-            .padding(leftRight = 24.px)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -168,8 +166,6 @@ fun CatalogueHeader(
                 )
             }
         }
-        Spacer(1.em)
-        AppDividerHorizontal()
     }
 }
 
