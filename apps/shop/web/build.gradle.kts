@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.kobweb.application)
     kotlin("plugin.serialization")
-    id("com.github.johnrengelman.shadow")
 }
 
 group = project.name

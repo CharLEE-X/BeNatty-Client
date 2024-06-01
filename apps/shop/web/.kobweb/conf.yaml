@@ -1,14 +1,18 @@
 site:
-  title: "NataliaShop"
+  title: "BeNatty"
 
 server:
   files:
     dev:
       contentRoot: "build/processedResources/js/main/public"
       script: "build/dist/js/developmentExecutable/benatty.js"
-      api: "build/libs/benatty.jar"
     prod:
       script: "build/dist/js/productionExecutable/benatty.js"
       siteRoot: ".kobweb/site"
+  cors:
+    hosts:
+      - name: "kobweb-todo.onrender.com"
+        schemes:
+          - "https"
 
   port: 8080
