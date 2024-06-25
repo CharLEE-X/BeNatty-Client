@@ -28,7 +28,9 @@ ENV PATH="/kobweb-${KOBWEB_CLI_VERSION}/bin:${PATH}"
 
 WORKDIR /project/${KOBWEB_APP_ROOT}
 
-RUN mkdir ~/.gradle && echo "org.gradle.jvmargs=-Xmx256m" >> ~/.gradle/gradle.properties
+RUN mkdir ~/.gradle && \
+    echo "org.gradle.jvmargs=-Xmx256m" >> ~/.gradle/gradle.properties
+
 RUN kobweb export --notty
 
 FROM java as run
