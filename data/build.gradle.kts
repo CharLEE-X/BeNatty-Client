@@ -50,7 +50,7 @@ kotlin {
 }
 
 private val serverUrlGraphQl: String =
-    properties["server.url.graphql"]?.toString() ?: error("No server.url.graphql property found")
+    System.getenv("server.url.graphql")?.toString() ?: error("No server.url.graphql property found")
 
 apollo {
     service(libs.versions.projectName.get()) {
@@ -66,8 +66,8 @@ apollo {
 
 buildkonfig {
     packageName = project.name
-    val dbName: String = properties["db.name"]?.toString() ?: error("No db.name property found")
-    val orgName: String = properties["org.name"]?.toString() ?: error("No org.name property found")
+    val dbName: String = System.getenv("db.name")?.toString() ?: error("No db.name property found")
+    val orgName: String = System.getenv("org.name")?.toString() ?: error("No org.name property found")
 
     defaultConfigs {
         buildConfigField(FieldSpec.Type.STRING, "serverUrlGraphQl", serverUrlGraphQl)
