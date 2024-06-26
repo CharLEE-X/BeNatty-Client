@@ -37,7 +37,6 @@ internal val apolloModule = module {
         }
         ApolloProviderImpl(
             baseUrlGraphQl = BuildKonfig.serverUrlGraphQl,
-            baseUrlSubscriptions = BuildKonfig.serverUrlSubscriptions,
             authorizationInterceptor = get(),
             normalizedCacheFactory = normalizedCacheFactory,
             dispatcher = Dispatchers.Default,

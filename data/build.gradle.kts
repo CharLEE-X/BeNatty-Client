@@ -1,5 +1,4 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec
-import org.jetbrains.compose.internal.utils.getLocalProperty
 
 plugins {
     alias(libs.plugins.ksp)
@@ -51,7 +50,7 @@ kotlin {
 }
 
 private val serverUrlGraphQl: String =
-    getLocalProperty("server.url.graphql") ?: error("No server.url.graphql property found")
+    properties["server.url.graphql"]?.toString() ?: error("No server.url.graphql property found")
 
 apollo {
     service(libs.versions.projectName.get()) {
@@ -67,16 +66,13 @@ apollo {
 
 buildkonfig {
     packageName = project.name
-    val dbName: String = getLocalProperty("db.name") ?: error("No db.name property found")
-    val orgName: String = getLocalProperty("org.name") ?: error("No org.name property found")
-    val serverUrlSubscriptions: String = getLocalProperty("server.url.subscription")
-        ?: error("No server.url.subscription property found")
+    val dbName: String = properties["db.name"]?.toString() ?: error("No db.name property found")
+    val orgName: String = properties["org.name"]?.toString() ?: error("No org.name property found")
 
     defaultConfigs {
         buildConfigField(FieldSpec.Type.STRING, "serverUrlGraphQl", serverUrlGraphQl)
         buildConfigField(FieldSpec.Type.STRING, "dbName", dbName)
         buildConfigField(FieldSpec.Type.STRING, "orgName", orgName)
-        buildConfigField(FieldSpec.Type.STRING, "serverUrlSubscriptions", serverUrlSubscriptions)
     }
 }
 
