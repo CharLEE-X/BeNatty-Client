@@ -50,4 +50,4 @@ jobs:
           RUNNER_ROLE: ${{ secrets.RUNNER_ROLE }}
         run: |
           echo $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          aws apprunner create-service --service-name benatty-shop-web-client --source-configuration '{"AuthenticationConfiguration": {"AccessRoleArn": $RUNNER_ROLE}, "ImageRepository": {"ImageIdentifier": "'"$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"'", "ImageRepositoryType": "ECR"}}'
+          aws apprunner create-service --service-name *** --source-configuration '{"AuthenticationConfiguration": {"AccessRoleArn": "'"$RUNNER_ROLE"'"}, "ImageRepository": {"ImageIdentifier": "'"$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"'", "ImageRepositoryType": "ECR"}}'
