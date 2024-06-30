@@ -1,5 +1,4 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec
-import org.jetbrains.compose.internal.utils.getLocalProperty
 
 plugins {
     id("common")
@@ -16,8 +15,10 @@ kotlin {
 
 buildkonfig {
     packageName = project.name
-    val appName: String = getLocalProperty("app.name") ?: error("No app.name property found")
-    val orgName: String = getLocalProperty("org.name") ?: error("No org.name property found")
+    val appName: String = "BeNatty"
+//        getLocalProperty("app.name") ?: error("No app.name property found")
+    val orgName: String = "CharLEE X"
+//        getLocalProperty("org.name") ?: error("No org.name property found")
 
     defaultConfigs {
         buildConfigField(FieldSpec.Type.STRING, "appName", appName)
