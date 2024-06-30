@@ -29,7 +29,7 @@ object HomeContract {
             SlideshowItem(
                 id = "1",
                 title = "Fine details",
-                description = null,
+                description = "Explore our collection",
                 media = GetLandingConfigQuery.Media(
                     keyName = "1",
                     url = "https://be-natty.co.uk/cdn/shop/files/Dolce_Theme_Slide_1.webp?v=1717262628&width=1200",
@@ -40,7 +40,7 @@ object HomeContract {
             SlideshowItem(
                 id = "2",
                 title = "Boho style",
-                description = null,
+                description = "Explore our new collection",
                 media = GetLandingConfigQuery.Media(
                     keyName = "1",
                     url = "https://be-natty.co.uk/cdn/shop/files/Dolce_Theme_Slide_3.webp?v=1717262705&width=1200",
@@ -51,15 +51,15 @@ object HomeContract {
         ),
         val categorySection: List<CategoryItem> = listOf(
             CategoryItem(
-                url = "https://icon-shopify-theme.myshopify.com/cdn/shop/files/looks1.jpg?v=1614301039&width=600",
+                url = "https://be-natty.co.uk/cdn/shop/files/DolceThemePreview_1.webp?v=1717228009&width=700",
                 title = getString(Strings.GetTops)
             ),
             CategoryItem(
-                url = "https://icon-shopify-theme.myshopify.com/cdn/shop/files/looks2.jpg?v=1614301039&width=600",
+                url = "https://be-natty.co.uk/cdn/shop/files/DolceThemePreview_1.webp?v=1717228009&width=700",
                 title = getString(Strings.GetBottoms)
             ),
             CategoryItem(
-                url = "https://icon-shopify-theme.myshopify.com/cdn/shop/files/looks3.jpg?v=1614301039&width=600",
+                url = "https://be-natty.co.uk/cdn/shop/files/DolceThemePreview_1.webp?v=1717228009&width=700",
                 title = getString(Strings.GetDresses)
             )
         ),
