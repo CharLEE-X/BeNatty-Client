@@ -11,9 +11,9 @@ import web.components.widgets.ScrollableItem
 @Composable
 fun JustArrived(vm: HomeViewModel, state: HomeContract.State) {
     HorizontalScrollSection(
-        title = getString(Strings.JustArrived).uppercase(),
+        title = state.justArrived.title.uppercase(),
         seeMoreTitle = getString(Strings.SeeMoreNewArrivals),
-        items = state.justArrived.map { item ->
+        items = state.justArrived.items.map { item ->
             ScrollableItem(
                 id = item.id,
                 urls = item.urls,

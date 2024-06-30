@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.Cursor
+import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -23,6 +24,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.gap
 import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.margin
 import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.objectFit
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.modifiers.onFocusIn
 import com.varabyte.kobweb.compose.ui.modifiers.onMouseOver
@@ -217,6 +219,7 @@ fun ScrollableItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1 / 2)
+                .objectFit(ObjectFit.Cover)
         )
         SpanText(text = title)
         SpanText(text = price)

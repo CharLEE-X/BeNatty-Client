@@ -18,7 +18,6 @@ object HomeContract {
                 middle = GetLandingConfigQuery.Middle(media = null, title = null),
                 right = GetLandingConfigQuery.Right(media = null, title = null)
             )
-
         ),
         val products: List<String> = emptyList(),
 
@@ -63,347 +62,128 @@ object HomeContract {
                 title = getString(Strings.GetDresses)
             )
         ),
-        val collections: List<ShopByCollectionItem> = listOf(
-            ShopByCollectionItem(
-                title = getString(Strings.Dresses),
-                url = "https://icon-shopify-theme.myshopify.com/cdn/shop/products/Z_88c2619d-266e-45af-a71e-5152e7bdde08.jpg?v=1493324969&width=800"
-            ),
-            ShopByCollectionItem(
-                title = getString(Strings.Tops),
-                url = "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-1.jpg?v=1493311371&width=800"
-            ),
-            ShopByCollectionItem(
-                title = getString(Strings.PlaysuitsAndRompers),
-                url = "https://icon-shopify-theme.myshopify.com/cdn/shop/products/9k_9bb3dbf6-73ca-48ff-983e-9c1113b4e231.jpg?v=1493327316&width=800"
-            ),
-            ShopByCollectionItem(
-                title = getString(Strings.NewArrivals),
-                url = "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-1_09e467d5-e880-4f17-8af6-9e4aa6674456.jpg?v=1493315056&width=800"
-            ),
-            ShopByCollectionItem(
-                title = getString(Strings.OurFavourites),
-                url = "https://icon-shopify-theme.myshopify.com/cdn/shop/products/9k_-2_4e00cfc1-fd41-4574-ab7f-56d73620e05e.jpg?v=1493312830&width=800"
+        val featuredCollections: Section<ShopByCollectionItem> = Section(
+            title = "Featured collections",
+            (1..5).map {
+                ShopByCollectionItem(
+                    title = getString(Strings.Dresses),
+                    url = "https://be-natty.co.uk/cdn/shop/files/DolceThemePreview_1.webp?v=1717228009&width=700"
+                )
+            },
+        ),
+        val latestLooks: String = "https://be-natty.co.uk/cdn/shop/files/DolceThemePreview_1.webp?v=1717228009&width=700",
+        val justArrived: Section<ItemWithPrice> = Section(
+            title = "Just arrived",
+            (1..5).map {
+                ItemWithPrice(
+                    id = "1",
+                    title = "Sweet Harvest Playsuit",
+                    urls = listOf(
+                        "https://be-natty.co.uk/cdn/shop/files/DolceThemePreview_1.webp?v=1717228009&width=700",
+                        "https://be-natty.co.uk/cdn/shop/files/DolceThemePreview_1.webp?v=1717228009&width=700"
+                    ),
+                    price = "£59.00",
+                    sizes = "S, M, L",
+                )
+            },
+        ),
+        val latestLooksCategories: Section<LatestLookItem> = Section(
+            title = "Latest looks",
+            items = (1..5).map {
+                LatestLookItem(
+                    title = "Tops",
+                    url = "",
+                )
+            },
+        ),
+        val featured: Section<ItemWithPrice> = Section(
+            title = "Featured",
+            items = (1..5).map {
+                ItemWithPrice(
+                    id = "1",
+                    title = "Sweet Harvest Playsuit",
+                    urls = listOf(
+                        "https://be-natty.co.uk/cdn/shop/files/DolceThemePreview_1.webp?v=1717228009&width=700",
+                        "https://be-natty.co.uk/cdn/shop/files/DolceThemePreview_1.webp?v=1717228009&width=700"
+                    ),
+                    price = "£59.00",
+                    sizes = "S, M, L",
+                )
+            }
+        ),
+        val ourFavorites: Section<ItemWithPrice> = Section(
+            title = "Our favorites",
+            items = (1..5).map {
+                ItemWithPrice(
+                    id = "1",
+                    title = "Sweet Harvest Playsuit",
+                    urls = listOf(
+                        "https://be-natty.co.uk/cdn/shop/files/DolceThemePreview_1.webp?v=1717228009&width=700",
+                        "https://be-natty.co.uk/cdn/shop/files/DolceThemePreview_1.webp?v=1717228009&width=700"
+                    ),
+                    price = "£59.00",
+                    sizes = "S, M, L",
+                )
+            }
+        ),
+        val fromTheBlog: Section<BlogItem> = Section(
+            title = "From the blog",
+            items = listOf(
+                BlogItem(
+                    title = "Color pop",
+                    description = "The best way to add a pop of color to your wardrobe",
+                    url = "https://be-natty.co.uk/cdn/shop/files/DolceThemePreview_1.webp?v=1717228009&width=700",
+                    date = "June 1, 2021",
+                    links = listOf(
+                        BlogItem.Link(
+                            title = "Clothing",
+                            url = ""
+                        ),
+                        BlogItem.Link(
+                            title = "Fashion",
+                            url = ""
+                        )
+                    )
+                ),
+                BlogItem(
+                    title = "Summer look book",
+                    description = "The best way to add a pop of color to your wardrobe",
+                    url = "https://be-natty.co.uk/cdn/shop/files/DolceThemePreview_1.webp?v=1717228009&width=700",
+                    date = "June 1, 2021",
+                    links = listOf(
+                        BlogItem.Link(
+                            title = "Clothing",
+                            url = ""
+                        ),
+                        BlogItem.Link(
+                            title = "Fashion",
+                            url = ""
+                        )
+                    )
+                )
             ),
         ),
-        val justArrived: List<ItemWithPrice> = listOf(
-            ItemWithPrice(
-                id = "1",
-                title = "Sweet Harvest Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-1_09e467d5-e880-4f17-8af6-9e4aa6674456.jpg?v=1493315056&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700"
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
+        val freeSection: List<FreeItem> = listOf(
+            FreeItem(
+                title = "Free shipping",
+                description = "On all orders over $100",
+                icon = "MdiLocalShipping"
             ),
-            ItemWithPrice(
-                id = "2",
-                title = "Songbird Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/9k_-2_0e3ad28e-b1a4-4940-bfd5-169df323e2bd.jpg?v=1493326475&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-1_b5ecc059-d675-4b8c-ada6-2d935faf0fb6.jpg?v=1493326475&width=700"
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
+            FreeItem(
+                title = "Free returns",
+                description = "On all unopened unused items",
+                icon = "MdiRefresh"
             ),
-            ItemWithPrice(
-                id = "1",
-                title = "Sweet Harvest Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-3_e64bbab2-8f73-47fc-93b8-1df2b79127b6.jpg?v=1493325632&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700"
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
+            FreeItem(
+                title = "Secure shipping",
+                description = "Shop with confidence",
+                icon = "MdiVerifiedUser"
             ),
-            ItemWithPrice(
-                id = "3",
-                title = "Holding on Tunic",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/9k_-1_5208346c-ce37-4404-b7dc-dd869cf7bc32.jpg?v=1493325201&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_dfb262cc-ce27-4532-bd88-5e24b06b6522.jpg?v=1493325632&width=700",
-                ),
-                price = "£79.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "1",
-                title = "Sweet Harvest Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_dfb262cc-ce27-4532-bd88-5e24b06b6522.jpg?v=1493325632&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700",
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "1",
-                title = "Sweet Harvest Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-1_09e467d5-e880-4f17-8af6-9e4aa6674456.jpg?v=1493315056&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700"
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "2",
-                title = "Songbird Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/9k_-2_0e3ad28e-b1a4-4940-bfd5-169df323e2bd.jpg?v=1493326475&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-1_b5ecc059-d675-4b8c-ada6-2d935faf0fb6.jpg?v=1493326475&width=700"
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "1",
-                title = "Sweet Harvest Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-3_e64bbab2-8f73-47fc-93b8-1df2b79127b6.jpg?v=1493325632&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700"
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "3",
-                title = "Holding on Tunic",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/9k_-1_5208346c-ce37-4404-b7dc-dd869cf7bc32.jpg?v=1493325201&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_dfb262cc-ce27-4532-bd88-5e24b06b6522.jpg?v=1493325632&width=700",
-                ),
-                price = "£79.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "1",
-                title = "Sweet Harvest Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_dfb262cc-ce27-4532-bd88-5e24b06b6522.jpg?v=1493325632&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700",
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-        ),
-        val latestLooksCategories: List<LatestLookItem> = listOf(
-            LatestLookItem(
-                title = "Tops",
-                url = "",
-            ),
-            LatestLookItem(
-                title = "Playsuits",
-                url = "",
-            ),
-            LatestLookItem(
-                title = "Dresses",
-                url = "",
-            ),
-        ),
-        val featured: List<ItemWithPrice> = listOf(
-            ItemWithPrice(
-                id = "1",
-                title = "Sweet Harvest Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-1_09e467d5-e880-4f17-8af6-9e4aa6674456.jpg?v=1493315056&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700"
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "2",
-                title = "Songbird Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/9k_-2_0e3ad28e-b1a4-4940-bfd5-169df323e2bd.jpg?v=1493326475&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-1_b5ecc059-d675-4b8c-ada6-2d935faf0fb6.jpg?v=1493326475&width=700"
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "1",
-                title = "Sweet Harvest Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-3_e64bbab2-8f73-47fc-93b8-1df2b79127b6.jpg?v=1493325632&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700"
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "3",
-                title = "Holding on Tunic",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/9k_-1_5208346c-ce37-4404-b7dc-dd869cf7bc32.jpg?v=1493325201&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_dfb262cc-ce27-4532-bd88-5e24b06b6522.jpg?v=1493325632&width=700",
-                ),
-                price = "£79.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "1",
-                title = "Sweet Harvest Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_dfb262cc-ce27-4532-bd88-5e24b06b6522.jpg?v=1493325632&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700",
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "1",
-                title = "Sweet Harvest Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-1_09e467d5-e880-4f17-8af6-9e4aa6674456.jpg?v=1493315056&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700"
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "2",
-                title = "Songbird Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/9k_-2_0e3ad28e-b1a4-4940-bfd5-169df323e2bd.jpg?v=1493326475&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-1_b5ecc059-d675-4b8c-ada6-2d935faf0fb6.jpg?v=1493326475&width=700"
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "1",
-                title = "Sweet Harvest Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-3_e64bbab2-8f73-47fc-93b8-1df2b79127b6.jpg?v=1493325632&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700"
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "3",
-                title = "Holding on Tunic",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/9k_-1_5208346c-ce37-4404-b7dc-dd869cf7bc32.jpg?v=1493325201&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_dfb262cc-ce27-4532-bd88-5e24b06b6522.jpg?v=1493325632&width=700",
-                ),
-                price = "£79.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "1",
-                title = "Sweet Harvest Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_dfb262cc-ce27-4532-bd88-5e24b06b6522.jpg?v=1493325632&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700",
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-        ),
-        val ourFavorites: List<ItemWithPrice> = listOf(
-            ItemWithPrice(
-                id = "1",
-                title = "Sweet Harvest Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-1_09e467d5-e880-4f17-8af6-9e4aa6674456.jpg?v=1493315056&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700"
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "2",
-                title = "Songbird Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/9k_-2_0e3ad28e-b1a4-4940-bfd5-169df323e2bd.jpg?v=1493326475&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-1_b5ecc059-d675-4b8c-ada6-2d935faf0fb6.jpg?v=1493326475&width=700"
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "1",
-                title = "Sweet Harvest Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-3_e64bbab2-8f73-47fc-93b8-1df2b79127b6.jpg?v=1493325632&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700"
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "3",
-                title = "Holding on Tunic",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/9k_-1_5208346c-ce37-4404-b7dc-dd869cf7bc32.jpg?v=1493325201&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_dfb262cc-ce27-4532-bd88-5e24b06b6522.jpg?v=1493325632&width=700",
-                ),
-                price = "£79.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "1",
-                title = "Sweet Harvest Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_dfb262cc-ce27-4532-bd88-5e24b06b6522.jpg?v=1493325632&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700",
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "1",
-                title = "Sweet Harvest Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-1_09e467d5-e880-4f17-8af6-9e4aa6674456.jpg?v=1493315056&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700"
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "2",
-                title = "Songbird Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/9k_-2_0e3ad28e-b1a4-4940-bfd5-169df323e2bd.jpg?v=1493326475&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-1_b5ecc059-d675-4b8c-ada6-2d935faf0fb6.jpg?v=1493326475&width=700"
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "1",
-                title = "Sweet Harvest Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_-3_e64bbab2-8f73-47fc-93b8-1df2b79127b6.jpg?v=1493325632&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700"
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "3",
-                title = "Holding on Tunic",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/9k_-1_5208346c-ce37-4404-b7dc-dd869cf7bc32.jpg?v=1493325201&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_dfb262cc-ce27-4532-bd88-5e24b06b6522.jpg?v=1493325632&width=700",
-                ),
-                price = "£79.00",
-                sizes = "S, M, L",
-            ),
-            ItemWithPrice(
-                id = "1",
-                title = "Sweet Harvest Playsuit",
-                urls = listOf(
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_dfb262cc-ce27-4532-bd88-5e24b06b6522.jpg?v=1493325632&width=700",
-                    "https://icon-shopify-theme.myshopify.com/cdn/shop/products/2Q_7fc77ee9-6a77-4d42-b30c-b548ecd2c34b.jpg?v=1493315057&width=700",
-                ),
-                price = "£59.00",
-                sizes = "S, M, L",
-            ),
+            FreeItem(
+                title = "Percent satisfaction",
+                description = "Rated excellent by customers",
+                icon = "MdiSentimentSatisfied"
+            )
         )
     )
 
@@ -452,6 +232,30 @@ object HomeContract {
         val urls: List<String>,
         val price: String,
         val sizes: String,
+    )
+
+    data class Section<T>(
+        val title: String,
+        val items: List<T>,
+    )
+
+    data class BlogItem(
+        val title: String,
+        val description: String,
+        val url: String,
+        val date: String,
+        val links: List<Link>,
+    ) {
+        data class Link(
+            val title: String,
+            val url: String,
+        )
+    }
+
+    data class FreeItem(
+        val title: String,
+        val description: String,
+        val icon: String,
     )
 }
 

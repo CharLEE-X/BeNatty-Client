@@ -37,11 +37,11 @@ import org.jetbrains.compose.web.css.em
 import org.jetbrains.compose.web.css.ms
 import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
-import pages.home.FreeSection
 import web.components.layouts.GlobalVMs
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
 import web.components.layouts.oneLayoutMaxWidth
+import web.components.sections.FreeSection
 import web.components.widgets.AppDividerHorizontal
 import web.components.widgets.ObserveViewportEntered
 import web.components.widgets.Shimmer

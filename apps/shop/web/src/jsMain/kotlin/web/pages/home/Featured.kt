@@ -11,9 +11,9 @@ import web.components.widgets.ScrollableItem
 @Composable
 fun Featured(vm: HomeViewModel, state: HomeContract.State) {
     HorizontalScrollSection(
-        title = getString(Strings.Featured).uppercase(),
+        title = state.featured.title.uppercase(),
         seeMoreTitle = getString(Strings.SeeMoreFeatured),
-        items = state.featured.map { item ->
+        items = state.featured.items.map { item ->
             ScrollableItem(
                 id = item.id,
                 urls = item.urls,

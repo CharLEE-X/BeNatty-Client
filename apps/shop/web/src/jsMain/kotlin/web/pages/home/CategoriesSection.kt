@@ -1,6 +1,7 @@
 package web.pages.home
 
 import androidx.compose.runtime.Composable
+import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -10,6 +11,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.maxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.objectFit
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
 import com.varabyte.kobweb.compose.ui.modifiers.top
@@ -48,7 +50,9 @@ fun CategoriesSection(
                     ) {
                         Image(
                             src = item.url,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .objectFit(ObjectFit.Cover)
                         )
                         Box(
                             contentAlignment = Alignment.Center,

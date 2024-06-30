@@ -12,10 +12,10 @@ import feature.shop.home.HomeContract
 import feature.shop.home.HomeRoutes
 import feature.shop.home.HomeViewModel
 import feature.shop.navbar.DesktopNavRoutes
-import pages.home.FreeSection
 import web.components.layouts.GlobalVMs
 import web.components.layouts.MainRoutes
 import web.components.layouts.ShopMainLayout
+import web.components.sections.FreeSection
 import web.components.widgets.AppDividerHorizontal
 
 @Composable

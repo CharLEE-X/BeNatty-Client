@@ -49,7 +49,9 @@ kotlin {
     }
 }
 
-private val serverUrlGraphQl: String = "https://be-natty-server-ef8e2a031806.herokuapp.com/graphql"
+private val serverUrlGraphQl: String =
+//    "https://be-natty-server-ef8e2a031806.herokuapp.com/graphql"
+    "http://localhost:8080/graphql"
 //    property("API")?.toString()
 //        ?: error("No server.url.graphql property found")
 

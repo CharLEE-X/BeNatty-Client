@@ -16,8 +16,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.tabIndex
 import com.varabyte.kobweb.silk.components.graphics.Image
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
-import component.localization.Strings
-import component.localization.getString
 import feature.shop.home.HomeContract
 import feature.shop.home.HomeViewModel
 import org.jetbrains.compose.web.css.em
@@ -38,7 +36,7 @@ fun ShopByCollection(vm: HomeViewModel, state: HomeContract.State) {
             .padding(leftRight = 24.px)
     ) {
         SpanText(
-            text = getString(Strings.ShopByCollection).uppercase(),
+            text = state.featuredCollections.title.uppercase(),
             modifier = HeadlineStyle.toModifier(H2Variant)
         )
         Row(
@@ -46,7 +44,7 @@ fun ShopByCollection(vm: HomeViewModel, state: HomeContract.State) {
                 .fillMaxWidth()
                 .maxWidth(oneLayoutMaxWidth)
         ) {
-            state.collections.forEach { collection ->
+            state.featuredCollections.items.forEach { collection ->
                 Item(
                     url = collection.url,
                     title = collection.title,

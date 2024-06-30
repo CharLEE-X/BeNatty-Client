@@ -1,4 +1,4 @@
-package pages.home
+package web.components.sections
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.foundation.layout.Column

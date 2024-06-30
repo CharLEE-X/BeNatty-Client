@@ -109,14 +109,14 @@ fun LatestLooks(vm: HomeViewModel, state: HomeContract.State) {
                     .backgroundColor(ColorMode.current.toPalette().background)
             ) {
                 SpanText(
-                    text = getString(Strings.TheLatestLooks).uppercase(),
+                    text = state.latestLooksCategories.title.uppercase(),
                     modifier = HeadlineStyle.toModifier(H2Variant)
                 )
                 SpanText(getString(Strings.LatestLooksDescription1))
                 Row {
                     SpanText("${getString(Strings.Shop)}: ")
-                    state.latestLooksCategories.forEachIndexed { index, item ->
-                        val isLast = index == state.latestLooksCategories.size - 1
+                    state.latestLooksCategories.items.forEachIndexed { index, item ->
+                        val isLast = index == state.latestLooksCategories.items.size - 1
 
                         if (index > 0 && !isLast) {
                             SpanText(", ")
