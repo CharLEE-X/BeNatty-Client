@@ -8,7 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.varabyte.kobweb.compose.css.AlignItems
-import com.varabyte.kobweb.compose.css.CSSTransition
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -131,7 +131,7 @@ fun AdminLayout(
                         .alignItems(AlignItems.Center)
                         .minWidth(0.px)
                         .zIndex(1)
-                        .transition(CSSTransition("background-color", 0.3.s, TransitionTimingFunction.EaseInOut))
+                        .transition(Transition.of("background-color", 0.3.s, TransitionTimingFunction.EaseInOut))
                 ) {
                     content()
                 }
@@ -371,7 +371,7 @@ private fun SearchBar(
                 .align(Alignment.CenterStart)
                 .userSelect(UserSelect.None)
                 .margin(left = 0.5.em)
-                .transition(CSSTransition("color", 0.3.s, TransitionTimingFunction.EaseInOut))
+                .transition(Transition.of("color", 0.3.s, TransitionTimingFunction.EaseInOut))
         )
 
         TextInput(

@@ -5,9 +5,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.graphics.Color
@@ -67,8 +67,8 @@ fun AppIconButton(
                 .scale(if (hovered) 1.1f else 1f)
                 .fontWeight(FontWeight.Lighter)
                 .transition(
-                    CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
-                    CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
+                    Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                    Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease),
                 )
             )
             .thenIf(!enabled, Modifier.opacity(0.6f))

@@ -9,10 +9,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.BoxSizing
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.ListStyleType
 import com.varabyte.kobweb.compose.css.Overflow
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -311,11 +311,11 @@ private fun ExpandableSection(
                     .display(DisplayStyle.ListItem)
                     .margin(bottom = 30.px)
                     .transition(
-                        CSSTransition("visibility", 0.3.s, TransitionTimingFunction.Ease),
-                        CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
-                        CSSTransition("height", 0.3.s, TransitionTimingFunction.Ease),
-                        CSSTransition("max-height", 0.3.s, TransitionTimingFunction.Ease),
-                        CSSTransition("padding", 0.3.s, TransitionTimingFunction.Ease),
+                        Transition.of("visibility", 0.3.s, TransitionTimingFunction.Ease),
+                        Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                        Transition.of("height", 0.3.s, TransitionTimingFunction.Ease),
+                        Transition.of("max-height", 0.3.s, TransitionTimingFunction.Ease),
+                        Transition.of("padding", 0.3.s, TransitionTimingFunction.Ease),
                     )
                     .toAttrs()
             ) {
@@ -343,14 +343,14 @@ private fun AskQuestionButton(vm: ProductPageViewModel) {
             .onEnterKeyDown { vm.trySend(ProductPageContract.Inputs.OnAskQuestionClicked) }
             .cursor(Cursor.Pointer)
             .opacity(if (hovered) 1f else 0.85f)
-            .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
+            .transition(Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease))
     ) {
         MdiContactSupport(
             style = IconStyle.OUTLINED,
             modifier = Modifier
                 .size(24.px)
                 .opacity(if (hovered) 1f else 0.5f)
-                .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
+                .transition(Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease))
         )
         Box {
             SpanText(
@@ -362,7 +362,7 @@ private fun AskQuestionButton(vm: ProductPageViewModel) {
                     .height(2.px)
                     .fillMaxWidth(if (hovered) 100.percent else 0.percent)
                     .backgroundColor(ColorMode.current.toPalette().color)
-                    .transition(CSSTransition("width", 0.3.s, TransitionTimingFunction.Ease))
+                    .transition(Transition.of("width", 0.3.s, TransitionTimingFunction.Ease))
             )
         }
     }

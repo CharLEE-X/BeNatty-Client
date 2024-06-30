@@ -8,9 +8,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.Overflow
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -183,7 +183,7 @@ fun Slideshow(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .opacity(if (topVisible) 1.0 else 0.0)
-                                    .transition(CSSTransition("opacity", 0.75.s, TransitionTimingFunction.Ease))
+                                    .transition(Transition.of("opacity", 0.75.s, TransitionTimingFunction.Ease))
                             )
                         }
                     }
@@ -249,7 +249,7 @@ private fun ColumnInfo(
             .padding(64.px)
             .gap(1.em)
             .opacity(if (show) 1.0 else 0.0)
-            .transition(CSSTransition("opacity", 0.5.s, TransitionTimingFunction.Ease))
+            .transition(Transition.of("opacity", 0.5.s, TransitionTimingFunction.Ease))
     ) {
         item.title?.let {
             SpanText(
@@ -295,8 +295,8 @@ fun Navigator(
             .onClick { if (enabled) onClick() }
             .onEnterKeyDown { if (enabled) onClick() }
             .transition(
-                CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("background-color", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("color", 0.3.s, TransitionTimingFunction.Ease),
             )
     ) {
         icon(Modifier.fillMaxSize())

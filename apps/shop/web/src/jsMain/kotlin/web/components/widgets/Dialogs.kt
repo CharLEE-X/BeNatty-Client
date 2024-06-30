@@ -1,8 +1,8 @@
 package web.components.widgets
 
 import androidx.compose.runtime.Composable
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.ObjectFit
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -60,7 +60,7 @@ fun ImagePreviewDialog(
                 .backgroundColor(ColorMode.current.toPalette().color)
                 .opacity(if (open) 0.7 else 0.0)
                 .onClick { onClose() }
-                .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease)),
+                .transition(Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease)),
         )
         AppFilledCard(
             modifier = Modifier
@@ -68,8 +68,8 @@ fun ImagePreviewDialog(
                 .opacity(if (open) 1.0 else 0.0)
                 .scaleY(if (open) 1.0 else 0.5)
                 .transition(
-                    CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
-                    CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
+                    Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                    Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease),
                 ),
         ) {
             Column(

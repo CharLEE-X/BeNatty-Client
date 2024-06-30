@@ -8,7 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
-import com.varabyte.kobweb.compose.css.CSSTransition
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.BoxScope
@@ -103,7 +103,7 @@ fun ShopMainLayout(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = topSpacing + 60.px)
-                .transition(CSSTransition("padding", 0.3.s, TransitionTimingFunction.Ease))
+                .transition(Transition.of("padding", 0.3.s, TransitionTimingFunction.Ease))
         ) {
             DesktopNavContent(
                 desktopNavRoutes = desktopNavRoutes,

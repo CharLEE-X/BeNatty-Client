@@ -2,9 +2,9 @@ package web.pages.product.catalogue
 
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -89,19 +89,19 @@ private fun Banner(
             .maxHeight(height)
             .aspectRatio(1.0)
             .overflow(Overflow.Clip)
-            .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
+            .transition(Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease))
     ) {
         val imageModifier = Modifier
             .fillMaxSize()
             .objectFit(ObjectFit.Cover)
-            .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
+            .transition(Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease))
         image(imageModifier)
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .align(Alignment.Center)
                 .padding(50.px)
-                .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
+                .transition(Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease))
         ) {
             SpanText(
                 text = title.uppercase(),

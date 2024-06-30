@@ -6,12 +6,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.TextDecorationLine
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -145,8 +145,8 @@ private fun SimilarProductItem(
                 .draggable(false)
                 .scale(if (hovered) 1.02f else 1f)
                 .transition(
-                    CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
-                    CSSTransition("transform", 0.2.s, TransitionTimingFunction.Ease)
+                    Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease),
+                    Transition.of("transform", 0.2.s, TransitionTimingFunction.Ease)
                 )
         ) {
             Image(
@@ -196,9 +196,9 @@ fun ProductPrice(
                     ty = if (isOnSale) (-0.5).em else 0.em,
                 )
                 .transition(
-                    CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
-                    CSSTransition("tex-decoration", 0.3.s, TransitionTimingFunction.Ease),
-                    CSSTransition("translate", 0.3.s, TransitionTimingFunction.cubicBezier(0.4, 0.0, 0.2, 1.0)),
+                    Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease),
+                    Transition.of("tex-decoration", 0.3.s, TransitionTimingFunction.Ease),
+                    Transition.of("translate", 0.3.s, TransitionTimingFunction.cubicBezier(0.4, 0.0, 0.2, 1.0)),
                 )
         )
         salePrice?.let { price ->
@@ -212,9 +212,9 @@ fun ProductPrice(
                         ty = if (isOnSale) 0.5.em else 0.em,
                     )
                     .transition(
-                        CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease),
-                        CSSTransition("translate", 0.3.s, TransitionTimingFunction.Ease),
-                        CSSTransition("font-weight", 0.3.s, TransitionTimingFunction.Ease),
+                        Transition.of("color", 0.3.s, TransitionTimingFunction.Ease),
+                        Transition.of("translate", 0.3.s, TransitionTimingFunction.Ease),
+                        Transition.of("font-weight", 0.3.s, TransitionTimingFunction.Ease),
                     )
             )
         }

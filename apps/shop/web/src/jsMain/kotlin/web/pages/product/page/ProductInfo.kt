@@ -5,11 +5,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -151,7 +151,7 @@ fun SizesSection(
                         .tabIndex(0)
                         .cursor(Cursor.Pointer)
                         .opacity(if (hovered) 1.0 else 0.5)
-                        .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
+                        .transition(Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease))
                 )
             }
             Row(
@@ -240,8 +240,8 @@ private fun ColorMiniatureItem(
             )
             .scale(if (hovered) 1.02f else 1f)
             .transition(
-                CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease)
+                Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("border", 0.3.s, TransitionTimingFunction.Ease)
             )
     ) {
         media?.let {
@@ -290,7 +290,7 @@ fun Traits(state: ProductPageContract.State) {
                     modifier = Modifier
                         .fontSize(16.px)
                         .opacity(if (hovered) 1.0 else 0.5)
-                        .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
+                        .transition(Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease))
                 )
             }
             AppTooltip(trait.descriptionString())

@@ -1,8 +1,8 @@
 package web.components.widgets
 
 import androidx.compose.runtime.Composable
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.FontWeight
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -35,8 +35,8 @@ fun RotatableChevron(
             .userSelect(UserSelect.None)
             .draggable(false)
             .transition(
-                CSSTransition("rotate", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("rotate", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("color", 0.3.s, TransitionTimingFunction.Ease),
             )
     )
 }

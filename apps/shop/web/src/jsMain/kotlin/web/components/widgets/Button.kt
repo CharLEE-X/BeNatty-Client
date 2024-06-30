@@ -5,11 +5,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.TextDecorationLine
 import com.varabyte.kobweb.compose.css.TextTransform
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.WhiteSpace
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -139,7 +139,7 @@ fun AppTextButton(
                 .onFocusIn { hovered = true }
                 .onFocusOut { hovered = false }
                 .textDecorationLine(if (hovered) TextDecorationLine.Underline else TextDecorationLine.None)
-                .transition(CSSTransition("text-decoration-line", 0.3.s, TransitionTimingFunction.Ease))
+                .transition(Transition.of("text-decoration-line", 0.3.s, TransitionTimingFunction.Ease))
             )
             .toAttrs(),
     ) {
@@ -221,7 +221,7 @@ fun TextLink(
             .tabIndex(0)
             .onEnterKeyDown { if (enabled) onClick() }
             .opacity(if (enabled) 1.0 else 0.6)
-            .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
+            .transition(Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease))
     ) {
         SpanText(
             text = text.uppercase(),
@@ -236,7 +236,7 @@ fun TextLink(
                 .height(2.px)
                 .fillMaxWidth(if (hovered && enabled) 100.percent else 0.percent)
                 .backgroundColor(color)
-                .transition(CSSTransition("width", 0.3.s, TransitionTimingFunction.Ease))
+                .transition(Transition.of("width", 0.3.s, TransitionTimingFunction.Ease))
         )
     }
 }

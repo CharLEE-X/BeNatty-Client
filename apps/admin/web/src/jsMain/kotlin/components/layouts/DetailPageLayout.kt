@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.AlignItems
-import com.varabyte.kobweb.compose.css.CSSTransition
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -155,7 +155,7 @@ fun NavTopSection(
                         .opacity(subOpacity)
                         .onMouseOver { subHovered = true }
                         .onMouseOut { subHovered = false }
-                        .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
+                        .transition(Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease))
                 )
             }
         }

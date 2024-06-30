@@ -1,8 +1,8 @@
 package web.components.widgets
 
 import androidx.compose.runtime.Composable
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
@@ -49,7 +49,7 @@ fun CheckboxSection(
                 text = title,
                 modifier = Modifier
                     .opacity(opacity)
-                    .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
+                    .transition(Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease))
             )
         }
         errorText?.let {

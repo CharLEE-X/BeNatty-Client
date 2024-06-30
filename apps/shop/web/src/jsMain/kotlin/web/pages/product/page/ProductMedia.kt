@@ -6,10 +6,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -98,8 +98,8 @@ fun ProductMedia(vm: ProductPageViewModel, state: ProductPageContract.State) {
             .position(Position.Sticky)
             .top(40.px)
             .transition(
-                CSSTransition("top", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("position", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("top", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("position", 0.3.s, TransitionTimingFunction.Ease),
             )
     ) {
         Column(
@@ -168,9 +168,9 @@ private fun ProductDetailMiniatureItem(
                 style = LineStyle.Solid
             )
             .transition(
-                CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("translate", 0.2.s, TransitionTimingFunction.Ease)
+                Transition.of("border", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("translate", 0.2.s, TransitionTimingFunction.Ease)
             )
     ) {
         Image(
@@ -225,7 +225,7 @@ private fun MainImage(
                     .scale(1.5f)
                     .color(ColorMode.current.toPalette().color)
                     .opacity(if (hovered) 1f else 0.6f)
-                    .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
+                    .transition(Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease))
             )
         } ?: Box(
             modifier = imageModifier

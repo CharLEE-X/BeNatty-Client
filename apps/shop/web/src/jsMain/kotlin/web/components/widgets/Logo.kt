@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -58,7 +58,7 @@ fun Logo(
             .scale(if (hovered) 1.05 else 1.0)
             .onClick { onClick() }
             .cursor(Cursor.Pointer)
-            .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
+            .transition(Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease))
             .tabIndex(0)
             .onEnterKeyDown(onClick)
     ) {

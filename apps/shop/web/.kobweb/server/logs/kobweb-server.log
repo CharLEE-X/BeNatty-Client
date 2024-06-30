@@ -1,18 +1,6 @@
-2024-06-30 12:51:04.035 [main] DEBUG ktor.application - Java Home: /Users/adrianwitaszak/.sdkman/candidates/java
-2024-06-30 12:51:04.036 [main] DEBUG ktor.application - Class Loader: jdk.internal.loader.ClassLoaders$AppClassLoader@1cf4f579: [file:/Users/adrianwitaszak/CharLEEX/BeNatty/kotlin/BeNatty-Client/apps/shop/web/.kobweb/server/server.jar!/ch]
-2024-06-30 12:51:04.046 [main] INFO  ktor.application - No API jar file specified in conf.yaml. Server API routes will not be available.
-2024-06-30 12:51:04.076 [main] INFO  ktor.application - Application started in 0.075 seconds.
-2024-06-30 12:51:04.158 [main] INFO  ktor.application - Responding at http://0.0.0.0:8080
-2024-06-30 12:51:22.281 [eventLoopGroupProxy-4-1] DEBUG ktor.application - Served fallback index.html file in response to "/"
-2024-06-30 12:51:23.489 [eventLoopGroupProxy-4-1] DEBUG ktor.application - Client connected and is requesting kobweb status events.
-2024-06-30 12:53:10.508 [eventLoopGroupProxy-4-2] DEBUG ktor.application - Served fallback index.html file in response to "/"
-2024-06-30 12:53:11.080 [eventLoopGroupProxy-4-1] DEBUG ktor.application - Stopped sending kobweb status events, probably because client disconnected or server is shutting down. (ChannelWriteException: Cannot write to a channel)
-2024-06-30 12:53:12.311 [eventLoopGroupProxy-4-2] DEBUG ktor.application - Client connected and is requesting kobweb status events.
-2024-06-30 12:53:19.500 [eventLoopGroupProxy-4-3] DEBUG ktor.application - Served fallback index.html file in response to "/"
-2024-06-30 12:53:19.906 [eventLoopGroupProxy-4-2] DEBUG ktor.application - Stopped sending kobweb status events, probably because client disconnected or server is shutting down. (ChannelWriteException: Cannot write to a channel)
-2024-06-30 12:53:21.113 [eventLoopGroupProxy-4-3] DEBUG ktor.application - Client connected and is requesting kobweb status events.
-2024-06-30 12:53:32.050 [eventLoopGroupProxy-4-4] DEBUG ktor.application - Served fallback index.html file in response to "/"
-2024-06-30 12:53:33.124 [eventLoopGroupProxy-4-4] DEBUG ktor.application - Client connected and is requesting kobweb status events.
-2024-06-30 12:53:39.672 [eventLoopGroupProxy-4-3] DEBUG ktor.application - Stopped sending kobweb status events, probably because client disconnected or server is shutting down. (ChannelWriteException: Cannot write to a channel)
-2024-06-30 12:54:26.951 [kotlinx.coroutines.DefaultExecutor] INFO  ktor.application - Kobweb server shutting down...
-2024-06-30 12:54:29.041 [kotlinx.coroutines.DefaultExecutor] INFO  ktor.application - Server finished shutting down.
+2024-06-30 13:48:10.374 [main] DEBUG ktor.application - Java Home: /Users/adrianwitaszak/.sdkman/candidates/java
+2024-06-30 13:48:10.374 [main] DEBUG ktor.application - Class Loader: jdk.internal.loader.ClassLoaders$AppClassLoader@1cf4f579: [file:/Users/adrianwitaszak/CharLEEX/BeNatty/kotlin/BeNatty-Client/apps/shop/web/.kobweb/server/server.jar!/ch]
+2024-06-30 13:48:10.387 [main] INFO  ktor.application - No API jar file specified in conf.yaml. Server API routes will not be available.
+2024-06-30 13:48:10.422 [main] INFO  ktor.application - Application started in 0.088 seconds.
+2024-06-30 13:48:10.511 [main] INFO  ktor.application - Responding at http://0.0.0.0:8080
+2024-06-30 13:58:22.267 [eventLoopGroupProxy-4-1] DEBUG ktor.application - Client connected and is requesting kobweb status events.

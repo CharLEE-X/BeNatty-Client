@@ -9,11 +9,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.AlignItems
 import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.css.Visibility
@@ -334,8 +334,8 @@ private fun RightSection(
                             style = LineStyle.Solid
                         )
                         .transition(
-                            CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
-                            CSSTransition("translate", 0.3.s, TransitionTimingFunction.Ease),
+                            Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                            Transition.of("translate", 0.3.s, TransitionTimingFunction.Ease),
                         )
                 ) {
                     SpanText(
@@ -382,10 +382,10 @@ fun AppMenu(
                 ty = if (open) (-5).px else 20.px,
             )
             .transition(
-                CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("top", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("visibility", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("translate", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("top", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("visibility", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("translate", 0.3.s, TransitionTimingFunction.Ease),
             )
             .tabIndex(0)
     ) {
@@ -618,8 +618,8 @@ private fun RecommendedProductItem(
                 .userSelect(UserSelect.None)
                 .draggable(false)
                 .transition(
-                    CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
-                    CSSTransition("transform", 0.2.s, TransitionTimingFunction.Ease)
+                    Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease),
+                    Transition.of("transform", 0.2.s, TransitionTimingFunction.Ease)
                 )
         ) {
             media.firstOrNull()?.let { firstMedia ->
@@ -720,7 +720,7 @@ private fun MenuItem(
                     .height(2.px)
                     .fillMaxWidth(if (itemHovered) 100.percent else 0.percent)
                     .backgroundColor(ColorMode.current.toPalette().color)
-                    .transition(CSSTransition("width", 0.3.s, TransitionTimingFunction.Ease))
+                    .transition(Transition.of("width", 0.3.s, TransitionTimingFunction.Ease))
             )
         }
     }
@@ -769,7 +769,7 @@ private fun ListMenuItem(
                 .height(2.px)
                 .fillMaxWidth(if (hovered) 100.percent else 0.percent)
                 .backgroundColor(contentColor)
-                .transition(CSSTransition("width", 0.3.s, TransitionTimingFunction.Ease))
+                .transition(Transition.of("width", 0.3.s, TransitionTimingFunction.Ease))
         )
     }
 }

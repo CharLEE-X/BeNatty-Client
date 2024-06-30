@@ -5,9 +5,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.ObjectFit
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
@@ -253,8 +253,8 @@ fun Item(
             .onClick { vm.trySend(AdminListContract.Inputs.Click.Item(item.id)) }
             .cursor(Cursor.Pointer)
             .transition(
-                CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("background-color", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("color", 0.3.s, TransitionTimingFunction.Ease),
             )
     ) {
         when (state.dataType) {
@@ -312,7 +312,7 @@ private fun MiniImage(url: String) {
             .onMouseLeave { hovered = false }
 //            .overflow(Overflow.Hidden)
             .scale(if (hovered) 4 else 1.0)
-            .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
+            .transition(Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease))
     )
 }
 
@@ -339,7 +339,7 @@ private fun TopBarItem(
                     .cursor(Cursor.Pointer)
                     .onMouseEnter { hovered = true }
                     .onMouseLeave { hovered = false }
-                    .transition(CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease))
+                    .transition(Transition.of("color", 0.3.s, TransitionTimingFunction.Ease))
             }
     ) {
         SpanText(text)
@@ -350,9 +350,9 @@ private fun TopBarItem(
                     .opacity(if (isSelected) 1.0 else 0.0)
                     .rotateZ(if (sortDirection == SortDirection.ASC) 0.deg else 180.deg)
                     .transition(
-                        CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
-                        CSSTransition("rotate", 0.3.s, TransitionTimingFunction.Ease),
-                        CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
+                        Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                        Transition.of("rotate", 0.3.s, TransitionTimingFunction.Ease),
+                        Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease),
                     )
             )
         }

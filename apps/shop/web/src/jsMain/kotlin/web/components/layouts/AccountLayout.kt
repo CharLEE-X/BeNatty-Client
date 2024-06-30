@@ -5,9 +5,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.TextOverflow
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -162,8 +162,8 @@ fun SideNavMainItem(
 //            .backgroundColor(bgColor)
 //            .color(contentColor)
             .transition(
-                CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease)
+                Transition.of("background-color", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("color", 0.3.s, TransitionTimingFunction.Ease)
             )
             .tabIndex(0)
             .onEnterKeyDown(onMenuItemClicked)
@@ -205,7 +205,7 @@ fun SideNavSubItem(
             .onClick { onMenuItemClicked() }
             .onMouseEnter { hovered = true }
             .onMouseLeave { hovered = false }
-            .transition(CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease))
+            .transition(Transition.of("background-color", 0.3.s, TransitionTimingFunction.Ease))
             .cursor(Cursor.Pointer)
             .tabIndex(0)
     ) {
@@ -225,8 +225,8 @@ fun SideNavSubItem(
                     .opacity(if (isSubCurrent) 1f else 0f)
                     .translateX(if (isSubCurrent) 0.em else (-0.5).em)
                     .transition(
-                        CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
-                        CSSTransition("translate", 0.3.s, TransitionTimingFunction.Ease),
+                        Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                        Transition.of("translate", 0.3.s, TransitionTimingFunction.Ease),
                     )
             )
             SpanText(

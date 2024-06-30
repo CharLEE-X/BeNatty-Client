@@ -8,10 +8,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.Resize
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -66,6 +66,7 @@ import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
 import component.localization.Strings
 import component.localization.Strings.Edit
 import component.localization.getString
+import components.widgets.AppMenu
 import core.models.VariantType
 import data.AdminProductGetByIdQuery
 import data.type.BackorderStatus
@@ -91,7 +92,6 @@ import org.w3c.dom.url.URL
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.OneThirdLayout
-import components.widgets.AppMenu
 import web.components.widgets.AppFilledButton
 import web.components.widgets.AppOutlinedButton
 import web.components.widgets.AppOutlinedTextField
@@ -753,7 +753,7 @@ private fun DeleteButton(
             .onMouseOver { hovered = true }
             .onMouseOut { hovered = false }
             .opacity(if (hovered && !disabled) 1.0 else 0.5)
-            .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
+            .transition(Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease))
             .tabIndex(0)
     )
 }
@@ -773,7 +773,7 @@ private fun UndoButton(
             .onMouseOver { hovered = true }
             .onMouseOut { hovered = false }
             .opacity(if (hovered) 1.0 else 0.5)
-            .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
+            .transition(Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease))
             .tabIndex(0)
             .onEnterKeyDown(onClick)
     )

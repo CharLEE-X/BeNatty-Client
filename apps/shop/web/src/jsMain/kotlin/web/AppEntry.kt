@@ -2,8 +2,8 @@ package web
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.ScrollBehavior
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.ui.Modifier
@@ -55,7 +55,7 @@ fun AppEntry(content: @Composable () -> Unit) {
                 .minHeight(100.vh)
                 .scrollBehavior(ScrollBehavior.Smooth)
                 .backgroundColor(colorMode.toPalette().background)
-                .transition(CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease))
+                .transition(Transition.of("background-color", 0.3.s, TransitionTimingFunction.Ease))
         ) {
             content()
         }

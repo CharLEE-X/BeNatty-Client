@@ -6,9 +6,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.PointerEvents
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -102,8 +102,8 @@ fun HasChangesWidget(
                         style = LineStyle.Solid,
                     )
                     .transition(
-                        CSSTransition("translate", 0.15.s, TransitionTimingFunction.Ease),
-                        CSSTransition("opacity", 0.15.s, TransitionTimingFunction.Ease),
+                        Transition.of("translate", 0.15.s, TransitionTimingFunction.Ease),
+                        Transition.of("opacity", 0.15.s, TransitionTimingFunction.Ease),
                     )
             ) {
                 Row(

@@ -1,7 +1,7 @@
 package web.components.widgets
 
 import androidx.compose.runtime.Composable
-import com.varabyte.kobweb.compose.css.CSSTransition
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -23,7 +23,7 @@ fun TrailingIconGoToNextOrSubmit(show: Boolean) {
             .gap(0.25.em)
             .opacity(if (show) 0.6 else 0)
             .transition(
-                CSSTransition("opacity", 0.3.s, TransitionTimingFunction.EaseInOut)
+                Transition.of("opacity", 0.3.s, TransitionTimingFunction.EaseInOut)
             )
     ) {
         MdiKeyboardTab()
@@ -43,7 +43,7 @@ fun TrailingIconGoToNext(show: Boolean) {
         modifier = Modifier
             .opacity(if (show) 0.6 else 0)
             .transition(
-                CSSTransition("opacity", 0.3.s, TransitionTimingFunction.EaseInOut)
+                Transition.of("opacity", 0.3.s, TransitionTimingFunction.EaseInOut)
             )
     )
 }
@@ -54,7 +54,7 @@ fun TrailingIconSubmit(show: Boolean) {
         modifier = Modifier
             .opacity(if (show) 0.6 else 0)
             .transition(
-                CSSTransition("opacity", 0.3.s, TransitionTimingFunction.EaseInOut)
+                Transition.of("opacity", 0.3.s, TransitionTimingFunction.EaseInOut)
             )
     )
 }

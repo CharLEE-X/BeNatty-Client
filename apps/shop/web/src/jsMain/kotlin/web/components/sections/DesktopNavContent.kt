@@ -8,7 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.BoxSizing
-import com.varabyte.kobweb.compose.css.CSSTransition
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -97,10 +97,10 @@ fun DesktopNavContent(
                 color = shadow(),
             )
             .transition(
-                CSSTransition("top", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("translate", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("box-shadow", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("position", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("top", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("translate", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("box-shadow", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("position", 0.3.s, TransitionTimingFunction.Ease),
             )
     ) {
         if (isFullLayout) {

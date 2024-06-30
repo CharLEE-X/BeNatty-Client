@@ -6,9 +6,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -96,14 +96,14 @@ fun MediaSlot(
                     .fillMaxSize()
                     .scale(if (imageHovered && isImageClickable) 1.05 else 1.0)
                     .objectFit(ObjectFit.Cover)
-                    .transition(CSSTransition("scale", 0.5.s, TransitionTimingFunction.Ease))
+                    .transition(Transition.of("scale", 0.5.s, TransitionTimingFunction.Ease))
             )
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .objectFit(ObjectFit.Cover)
                     .backgroundColor(ColorMode.current.toPalette().color)
-                    .transition(CSSTransition("backgroundColor", 0.3.s, TransitionTimingFunction.Ease))
+                    .transition(Transition.of("backgroundColor", 0.3.s, TransitionTimingFunction.Ease))
             ) {}
             if (hasDeleteButton) {
                 ActionIcon(
@@ -132,7 +132,7 @@ fun MediaSlot(
             MdiCloudUpload(
                 modifier = Modifier
                     .opacity(opacity)
-                    .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
+                    .transition(Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease))
             )
         } else {
             ImagePicker(

@@ -1,8 +1,8 @@
 package web.components.widgets
 
 import androidx.compose.runtime.Composable
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.WhiteSpace
 import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -56,8 +56,8 @@ fun TickerSection(
             .backgroundColor(ColorMode.current.toPalette().button.default)
             .color(ColorMode.current.opposite.toPalette().color)
             .transition(
-                CSSTransition("background-color", SmoothColorTransitionDurationVar.value()),
-                CSSTransition("color", SmoothColorTransitionDurationVar.value()),
+                Transition.of("background-color", SmoothColorTransitionDurationVar.value()),
+                Transition.of("color", SmoothColorTransitionDurationVar.value()),
             )
     ) {
         LinksSection(vm, state, modifier = Modifier.margin(left = 24.px))

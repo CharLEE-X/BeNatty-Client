@@ -6,11 +6,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.css.WhiteSpace
@@ -132,7 +132,7 @@ fun BoxScope.CartPanel(vm: CartViewModel, state: CartContract.State, zIndex: Int
                 .zIndex(zIndex)
                 .onClick { vm.trySend(CartContract.Inputs.HideCart) }
                 .opacity(if (opened) 1f else 0f)
-                .transition(CSSTransition("opacity", 0.6.s, TransitionTimingFunction.Ease))
+                .transition(Transition.of("opacity", 0.6.s, TransitionTimingFunction.Ease))
         )
         Box(
             modifier = Modifier
@@ -151,7 +151,7 @@ fun BoxScope.CartPanel(vm: CartViewModel, state: CartContract.State, zIndex: Int
                     color = shadow(),
                 )
                 .translateX(if (opened) 0.px else sidebarWidth)
-                .transition(CSSTransition("translate", 0.3.s, TransitionTimingFunction.Ease))
+                .transition(Transition.of("translate", 0.3.s, TransitionTimingFunction.Ease))
         ) {
             CloseButton(
                 onCloseCLick = { vm.trySend(CartContract.Inputs.HideCart) }
@@ -247,7 +247,7 @@ fun BottomSection(vm: CartViewModel, state: CartContract.State) {
             .fillMaxWidth()
             .padding(1.5.em)
             .margin(bottom = 1.5.em)
-            .transition(CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease))
+            .transition(Transition.of("background-color", 0.3.s, TransitionTimingFunction.Ease))
     ) {
         SpanText(
             text = getString(Strings.TopProductsOfThisWeek).uppercase(),
@@ -299,8 +299,8 @@ private fun TopProductItem(
                 .draggable(false)
                 .scale(if (hovered) 1.02f else 1f)
                 .transition(
-                    CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
-                    CSSTransition("transform", 0.2.s, TransitionTimingFunction.Ease)
+                    Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease),
+                    Transition.of("transform", 0.2.s, TransitionTimingFunction.Ease)
                 )
         ) {
             Image(
@@ -521,7 +521,7 @@ private fun IncDecButton(
             )
             .onMouseOver { containerHovered = true }
             .onMouseLeave { containerHovered = false }
-            .transition(CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease))
+            .transition(Transition.of("border", 0.3.s, TransitionTimingFunction.Ease))
     ) {
         MdiRemove(
             style = IconStyle.OUTLINED,
@@ -536,8 +536,8 @@ private fun IncDecButton(
                 .opacity(if (minusHovered) 1f else 0.6f)
                 .scale(if (minusHovered) 1.2f else 1f)
                 .transition(
-                    CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
-                    CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease)
+                    Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                    Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease)
                 )
         )
         SpanText(
@@ -556,8 +556,8 @@ private fun IncDecButton(
                 .opacity(if (plusHovered) 1f else 0.6f)
                 .scale(if (plusHovered) 1.2f else 1f)
                 .transition(
-                    CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
-                    CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease)
+                    Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                    Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease)
                 )
         )
     }

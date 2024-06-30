@@ -6,12 +6,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.TextDecorationLine
 import com.varabyte.kobweb.compose.css.TextOverflow
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.css.WhiteSpace
@@ -145,8 +145,8 @@ fun CatalogueFilters(
             }
             .gap(if (showScrollbar) 1.em else 1.5.em)
             .transition(
-                CSSTransition("padding", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("gap", 0.3.s, TransitionTimingFunction.Ease)
+                Transition.of("padding", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("gap", 0.3.s, TransitionTimingFunction.Ease)
             )
     ) {
         ExpandableSection(title = getString(Strings.Availability), openInitially = true) {
@@ -269,7 +269,7 @@ private fun ResetButton(
             .opacity(if (show) 1f else 0f)
             .onMouseOver { hovered = true }
             .onMouseOut { hovered = false }
-            .transition(CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease))
+            .transition(Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease))
     ) {
         SpanText(
             text = getString(Strings.Reset).uppercase(),
@@ -283,7 +283,7 @@ private fun ResetButton(
                 .height(2.px)
                 .fillMaxWidth(if (hovered) 100.percent else 0.percent)
                 .backgroundColor(color)
-                .transition(CSSTransition("width", 0.3.s, TransitionTimingFunction.Ease))
+                .transition(Transition.of("width", 0.3.s, TransitionTimingFunction.Ease))
         )
     }
 }
@@ -359,7 +359,7 @@ fun CheckableItem(
             .onEnterKeyDown { onClick() }
             .tabIndex(0)
             .fontWeight(if (checked || hovered) FontWeight.SemiBold else FontWeight.Normal)
-            .transition(CSSTransition("font-weight", 0.3.s, TransitionTimingFunction.Ease))
+            .transition(Transition.of("font-weight", 0.3.s, TransitionTimingFunction.Ease))
     ) {
         Checkbox(
             checked = checked,
@@ -600,10 +600,10 @@ fun ProductSizeItem(
             .scale(if (hovered && available) 1.02f else 1f)
             .translateX(if (hovered && isLeft && available) 4.px else 0.px)
             .transition(
-                CSSTransition("translate", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("background-color", 0.3.s, TransitionTimingFunction.Ease),
-                CSSTransition("border", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("translate", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("background-color", 0.3.s, TransitionTimingFunction.Ease),
+                Transition.of("border", 0.3.s, TransitionTimingFunction.Ease),
             )
     ) {
         SpanText(
@@ -612,8 +612,8 @@ fun ProductSizeItem(
                 .textDecorationLine(if (!available) TextDecorationLine.LineThrough else TextDecorationLine.None)
                 .fontWeight(if (!available) FontWeight.Normal else FontWeight.SemiBold)
                 .transition(
-                    CSSTransition("color", 0.3.s, TransitionTimingFunction.Ease),
-                    CSSTransition("font-weight", 0.3.s, TransitionTimingFunction.Ease),
+                    Transition.of("color", 0.3.s, TransitionTimingFunction.Ease),
+                    Transition.of("font-weight", 0.3.s, TransitionTimingFunction.Ease),
                 )
         )
     }

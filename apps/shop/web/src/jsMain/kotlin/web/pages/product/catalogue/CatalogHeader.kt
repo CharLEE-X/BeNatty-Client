@@ -7,9 +7,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.FontWeight
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -213,7 +213,7 @@ private fun SortByButton(
         MdiChevronLeft(
             modifier = Modifier
                 .rotate(if (menuOpened) 90.deg else 270.deg)
-                .transition(CSSTransition("rotate", 0.3.s, TransitionTimingFunction.Ease))
+                .transition(Transition.of("rotate", 0.3.s, TransitionTimingFunction.Ease))
         )
     }
 }
@@ -239,7 +239,7 @@ private fun ButtonLayout(
             .cursor(Cursor.Pointer)
             .onMouseOver { hovered = true }
             .onMouseLeave { hovered = false }
-            .transition(CSSTransition.group(listOf("border", "background-color"), 0.3.s, TransitionTimingFunction.Ease))
+            .transition(Transition.group(listOf("border", "background-color"), 0.3.s, TransitionTimingFunction.Ease))
             .onClick { onClick() }
             .userSelect(UserSelect.None)
             .gap(0.25.em)

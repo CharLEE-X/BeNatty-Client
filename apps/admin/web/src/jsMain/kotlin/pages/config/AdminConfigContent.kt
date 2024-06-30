@@ -7,45 +7,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import com.varabyte.kobweb.compose.css.CSSTransition
-import com.varabyte.kobweb.compose.css.Cursor
-import com.varabyte.kobweb.compose.css.ObjectFit
-import com.varabyte.kobweb.compose.css.Overflow
-import com.varabyte.kobweb.compose.css.Resize
-import com.varabyte.kobweb.compose.css.TextAlign
-import com.varabyte.kobweb.compose.css.TransitionTimingFunction
-import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.foundation.layout.Row
-import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.graphics.Color
-import com.varabyte.kobweb.compose.ui.graphics.Colors
-import com.varabyte.kobweb.compose.ui.modifiers.alignContent
-import com.varabyte.kobweb.compose.ui.modifiers.aspectRatio
-import com.varabyte.kobweb.compose.ui.modifiers.backgroundColor
-import com.varabyte.kobweb.compose.ui.modifiers.color
-import com.varabyte.kobweb.compose.ui.modifiers.cursor
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
-import com.varabyte.kobweb.compose.ui.modifiers.fontSize
 import com.varabyte.kobweb.compose.ui.modifiers.gap
-import com.varabyte.kobweb.compose.ui.modifiers.margin
-import com.varabyte.kobweb.compose.ui.modifiers.objectFit
-import com.varabyte.kobweb.compose.ui.modifiers.onMouseEnter
-import com.varabyte.kobweb.compose.ui.modifiers.onMouseLeave
-import com.varabyte.kobweb.compose.ui.modifiers.overflow
-import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.position
-import com.varabyte.kobweb.compose.ui.modifiers.resize
-import com.varabyte.kobweb.compose.ui.modifiers.scale
-import com.varabyte.kobweb.compose.ui.modifiers.size
-import com.varabyte.kobweb.compose.ui.modifiers.textAlign
-import com.varabyte.kobweb.compose.ui.modifiers.textShadow
-import com.varabyte.kobweb.compose.ui.modifiers.transition
-import com.varabyte.kobweb.compose.ui.modifiers.zIndex
-import com.varabyte.kobweb.compose.ui.thenIf
-import com.varabyte.kobweb.silk.components.forms.TextInput
 import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.components.text.SpanText
 import component.localization.Strings
@@ -55,19 +22,14 @@ import feature.admin.config.AdminConfigContract
 import feature.admin.config.AdminConfigViewModel
 import feature.admin.config.model.toPreviewImage
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.web.css.AlignContent
 import org.jetbrains.compose.web.css.Position
 import org.jetbrains.compose.web.css.em
-import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.s
 import web.H1Variant
 import web.H3Variant
 import web.HeadlineStyle
 import web.components.layouts.AdminLayout
 import web.components.layouts.AdminRoutes
 import web.components.layouts.OneThirdLayout
-import web.components.widgets.AppElevatedCard
-import web.components.widgets.AppFilledButton
 import web.components.widgets.AppOutlinedTextField
 import web.components.widgets.CardSection
 import web.components.widgets.HasChangesWidget
@@ -304,29 +266,29 @@ private fun CollageSettings(vm: AdminConfigViewModel, state: AdminConfigContract
 //                },
 //                modifier = Modifier.thenIf(index == 0) { CollageBigItemStyle.toModifier() }
 //            ) { imageModifier ->
-                MediaSlot(
-                    url = item.media?.url,
-                    alt = item.media?.alt,
-                    errorText = null,
-                    onFileDropped = { file ->
-                        println("Dropped file: $file")
-                        scope.launch {
-                            convertImageToBase64(file)?.let { imageString ->
-                                vm.trySend(AdminConfigContract.Inputs.OnCollageMediaDrop(item.id, imageString))
-                            }
-                                ?: vm.trySend(AdminConfigContract.Inputs.SetCollageImageDropError(error = "Not a PNG?"))
+            MediaSlot(
+                url = item.media?.url,
+                alt = item.media?.alt,
+                errorText = null,
+                onFileDropped = { file ->
+                    println("Dropped file: $file")
+                    scope.launch {
+                        convertImageToBase64(file)?.let { imageString ->
+                            vm.trySend(AdminConfigContract.Inputs.OnCollageMediaDrop(item.id, imageString))
                         }
-                    },
-                    onImageClick = { mediaUrl ->
-                        println("Image clicked: $mediaUrl")
-                        mediaUrl?.let { vm.trySend(AdminConfigContract.Inputs.OnImageClick(item.toPreviewImage())) }
-                    },
-                    onDeleteClick = { vm.trySend(AdminConfigContract.Inputs.OnImageDeleteClick(item.id)) },
+                            ?: vm.trySend(AdminConfigContract.Inputs.SetCollageImageDropError(error = "Not a PNG?"))
+                    }
+                },
+                onImageClick = { mediaUrl ->
+                    println("Image clicked: $mediaUrl")
+                    mediaUrl?.let { vm.trySend(AdminConfigContract.Inputs.OnImageClick(item.toPreviewImage())) }
+                },
+                onDeleteClick = { vm.trySend(AdminConfigContract.Inputs.OnImageDeleteClick(item.id)) },
 //                    modifier = imageModifier
-                )
-            }
+            )
         }
     }
+}
 //}
 
 //@Composable
@@ -359,13 +321,13 @@ private fun CollageSettings(vm: AdminConfigViewModel, state: AdminConfigContract
 //                .cursor(Cursor.Pointer)
 //                .overflow(Overflow.Hidden)
 //                .scale(if (hovered) 1.01 else 1.0)
-//                .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
+//                .transition(Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease))
 //        ) {
 //            val imageModifier = Modifier
 //                .fillMaxSize()
 //                .objectFit(ObjectFit.Cover)
 //                .thenIf(hovered) { Modifier.scale(1.04) }
-//                .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
+//                .transition(Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease))
 //            image(imageModifier)
 //            Column(
 //                horizontalAlignment = when (textPosition) {
@@ -384,7 +346,7 @@ private fun CollageSettings(vm: AdminConfigViewModel, state: AdminConfigContract
 //                    .padding(1.em)
 //                    .gap(0.5.em)
 //                    .thenIf(hovered) { Modifier.scale(1.05) }
-//                    .transition(CSSTransition("scale", 0.3.s, TransitionTimingFunction.Ease))
+//                    .transition(Transition.of("scale", 0.3.s, TransitionTimingFunction.Ease))
 //            ) {
 //                TextInput(
 //                    text = title.uppercase(),

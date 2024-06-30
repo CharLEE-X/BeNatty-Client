@@ -6,11 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.varabyte.kobweb.compose.css.CSSLengthOrPercentageNumericValue
-import com.varabyte.kobweb.compose.css.CSSTransition
 import com.varabyte.kobweb.compose.css.Cursor
 import com.varabyte.kobweb.compose.css.ObjectFit
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.TextOverflow
+import com.varabyte.kobweb.compose.css.Transition
 import com.varabyte.kobweb.compose.css.TransitionTimingFunction
 import com.varabyte.kobweb.compose.css.UserSelect
 import com.varabyte.kobweb.compose.css.WhiteSpace
@@ -147,9 +147,9 @@ private fun MainImage(
                     .thenIf(!(hovered || visibilityHovered)) { Modifier.translateY((50).percent) }
                     .opacity(if (hovered) 1.0 else 0.0)
                     .transition(
-                        CSSTransition("translate", 0.3.s, TransitionTimingFunction.EaseInOut),
-                        CSSTransition("opacity", 0.3.s, TransitionTimingFunction.Ease),
-                        CSSTransition("padding", 0.3.s, TransitionTimingFunction.Ease),
+                        Transition.of("translate", 0.3.s, TransitionTimingFunction.EaseInOut),
+                        Transition.of("opacity", 0.3.s, TransitionTimingFunction.Ease),
+                        Transition.of("padding", 0.3.s, TransitionTimingFunction.Ease),
                     )
             ) {
                 MdiVisibility(style = IconStyle.OUTLINED)
