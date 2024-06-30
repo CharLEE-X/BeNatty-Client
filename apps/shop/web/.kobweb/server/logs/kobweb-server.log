@@ -6,3 +6,5 @@
 2024-06-30 21:39:55.061 [eventLoopGroupProxy-4-1] DEBUG ktor.application - Served fallback index.html file in response to "/"
 2024-06-30 21:39:56.363 [eventLoopGroupProxy-4-1] DEBUG ktor.application - Client connected and is requesting kobweb status events.
 2024-06-30 21:40:13.735 [eventLoopGroupProxy-4-1] DEBUG ktor.application - Stopped sending kobweb status events, probably because client disconnected or server is shutting down. (ChannelWriteException: Cannot write to a channel)
+2024-06-30 21:55:20.912 [kotlinx.coroutines.DefaultExecutor] INFO  ktor.application - Kobweb server shutting down...
+2024-06-30 21:55:22.996 [kotlinx.coroutines.DefaultExecutor] INFO  ktor.application - Server finished shutting down.
