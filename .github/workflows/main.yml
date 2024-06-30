@@ -8,9 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      ECR_CLUSTER: ${{ secrets.ECR_CLUSTER }}
-      ECR_SERVICE: ${{ secrets.ECR_SERVICE }}
 
     steps:
       - name: Checkout code
@@ -66,5 +63,8 @@ jobs:
       #        run: echo "App runner URL ${{ steps.deploy-apprunner.outputs.service-url }}"
 
       - name: Update image in AWS
+        env:
+          ECR_CLUSTER: ${{ secrets.ECR_CLUSTER }}
+          ECR_SERVICE: ${{ secrets.ECR_SERVICE }}
         run: |
           aws ecs update-service --cluster $ECR_CLUSTER --service $ECR_SERVICE --force-new-deployment
