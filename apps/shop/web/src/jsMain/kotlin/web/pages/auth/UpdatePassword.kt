@@ -99,7 +99,7 @@ fun UpdatingPassword(
 
     AppOutlinedTextField(
         text = state.password,
-        onTextChanged = {
+        onTextChange = {
             password = it
             vm.trySend(UpdatePasswordContract.Inputs.SetPassword(it))
         },

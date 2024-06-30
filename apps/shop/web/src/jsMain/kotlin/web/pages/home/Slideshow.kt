@@ -98,7 +98,7 @@ fun Slideshow(
     state: HomeContract.State,
     height: CSSLengthOrPercentageNumericValue = 800.px
 ) {
-    val items = state.landingConfig.slideshowItems
+    val items = state.slideshowItems
 
     val slideshowModifier = Modifier
         .fillMaxWidth()

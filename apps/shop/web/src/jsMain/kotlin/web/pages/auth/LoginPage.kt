@@ -119,7 +119,7 @@ private fun FieldsSection(
 
     AppOutlinedTextField(
         text = email,
-        onTextChanged = {
+        onTextChange = {
             email = it
             vm.trySend(LoginContract.Inputs.SetEmail(it))
         },
@@ -131,7 +131,7 @@ private fun FieldsSection(
     )
     AppOutlinedTextField(
         text = password,
-        onTextChanged = {
+        onTextChange = {
             password = it
             vm.trySend(LoginContract.Inputs.SetPassword(it))
         },

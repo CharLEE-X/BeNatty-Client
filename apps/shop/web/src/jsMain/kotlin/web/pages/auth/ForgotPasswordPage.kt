@@ -104,7 +104,7 @@ private fun ForgotPassword(
     )
     AppOutlinedTextField(
         text = email,
-        onTextChanged = {
+        onTextChange = {
             email = it
             vm.trySend(ForgotPasswordContract.Inputs.SetEmail(it))
         },

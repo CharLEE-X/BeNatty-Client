@@ -69,14 +69,14 @@ private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) 
     }
     AppOutlinedTextField(
         text = state.detailsFirstName,
-        onTextChanged = { vm.trySend(ProfileContract.Inputs.SetDetailsFullName(it)) },
+        onTextChange = { vm.trySend(ProfileContract.Inputs.SetDetailsFullName(it)) },
         placeholder = getString(Strings.FirstName),
         autoComplete = AutoComplete.givenName,
         modifier = Modifier.fillMaxWidth(),
     )
     AppOutlinedTextField(
         text = state.email,
-        onTextChanged = { vm.trySend(ProfileContract.Inputs.SetEmail(it)) },
+        onTextChange = { vm.trySend(ProfileContract.Inputs.SetEmail(it)) },
         placeholder = getString(Strings.Email),
         required = true,
         autoComplete = AutoComplete.email,
@@ -84,7 +84,7 @@ private fun PersonalDetails(vm: ProfileViewModel, state: ProfileContract.State) 
     )
     AppOutlinedTextField(
         text = state.phone,
-        onTextChanged = { vm.trySend(ProfileContract.Inputs.SetPhone(it)) },
+        onTextChange = { vm.trySend(ProfileContract.Inputs.SetPhone(it)) },
         placeholder = getString(Strings.Phone),
         autoComplete = AutoComplete.tel,
         modifier = Modifier.fillMaxWidth(),
@@ -103,13 +103,13 @@ fun Password(vm: ProfileViewModel, state: ProfileContract.State) {
     )
     AppOutlinedTextField(
         text = state.oldPassword,
-        onTextChanged = { vm.trySend(ProfileContract.Inputs.SetOldPassword(it)) },
+        onTextChange = { vm.trySend(ProfileContract.Inputs.SetOldPassword(it)) },
         placeholder = getString(Strings.OldPassword),
         modifier = Modifier.fillMaxWidth(),
     )
     AppOutlinedTextField(
         text = state.newPassword,
-        onTextChanged = { vm.trySend(ProfileContract.Inputs.SetNewPassword(it)) },
+        onTextChange = { vm.trySend(ProfileContract.Inputs.SetNewPassword(it)) },
         placeholder = getString(Strings.NewPassword),
         modifier = Modifier.fillMaxWidth(),
     )
@@ -135,14 +135,14 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
     }
     AppOutlinedTextField(
         text = state.address,
-        onTextChanged = { vm.trySend(ProfileContract.Inputs.SetAddress(it)) },
+        onTextChange = { vm.trySend(ProfileContract.Inputs.SetAddress(it)) },
         placeholder = getString(Strings.Address),
         autoComplete = AutoComplete.streetAddress,
         modifier = Modifier.fillMaxWidth(),
     )
     AppOutlinedTextField(
         text = state.additionalInformation,
-        onTextChanged = { vm.trySend(ProfileContract.Inputs.SetAdditionalInformation(it)) },
+        onTextChange = { vm.trySend(ProfileContract.Inputs.SetAdditionalInformation(it)) },
         placeholder = getString(Strings.Company),
         autoComplete = AutoComplete.ccAdditionalName,
         modifier = Modifier.fillMaxWidth(),
@@ -154,14 +154,14 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
     ) {
         AppOutlinedTextField(
             text = state.postcode,
-            onTextChanged = { vm.trySend(ProfileContract.Inputs.SetPostcode(it)) },
+            onTextChange = { vm.trySend(ProfileContract.Inputs.SetPostcode(it)) },
             placeholder = getString(Strings.PostCode),
             autoComplete = AutoComplete.postalCode,
             modifier = Modifier.weight(1f),
         )
         AppOutlinedTextField(
             text = state.city,
-            onTextChanged = { vm.trySend(ProfileContract.Inputs.SetCity(it)) },
+            onTextChange = { vm.trySend(ProfileContract.Inputs.SetCity(it)) },
             placeholder = getString(Strings.City),
             autoComplete = AutoComplete.addressLevel2,
             modifier = Modifier.weight(1f)
@@ -174,14 +174,14 @@ private fun Address(vm: ProfileViewModel, state: ProfileContract.State) {
     ) {
         AppOutlinedTextField(
             text = state.state,
-            onTextChanged = { vm.trySend(ProfileContract.Inputs.SetState(it)) },
+            onTextChange = { vm.trySend(ProfileContract.Inputs.SetState(it)) },
             placeholder = getString(Strings.Apartment),
             autoComplete = AutoComplete.addressLevel1,
             modifier = Modifier.weight(1f),
         )
         AppOutlinedTextField(
             text = state.country,
-            onTextChanged = { vm.trySend(ProfileContract.Inputs.SetCountry(it)) },
+            onTextChange = { vm.trySend(ProfileContract.Inputs.SetCountry(it)) },
             placeholder = getString(Strings.Country),
             autoComplete = AutoComplete.countryName,
             modifier = Modifier.weight(1f)

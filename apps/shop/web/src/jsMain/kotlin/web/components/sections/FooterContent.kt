@@ -180,7 +180,7 @@ private fun FollowUsSection(
             ) {
                 AppOutlinedTextField(
                     text = state.connectEmail,
-                    onTextChanged = { vm.trySend(FooterContract.Inputs.SetConnectEmail(it)) },
+                    onTextChange = { vm.trySend(FooterContract.Inputs.SetConnectEmail(it)) },
                     placeholder = getString(Strings.JoinOurEmailList),
                     autoComplete = AutoComplete.email,
                     modifier = Modifier

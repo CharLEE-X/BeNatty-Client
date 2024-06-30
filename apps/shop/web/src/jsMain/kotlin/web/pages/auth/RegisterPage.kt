@@ -109,7 +109,7 @@ private fun FieldsSection(
 
     AppOutlinedTextField(
         text = name,
-        onTextChanged = {
+        onTextChange = {
             name = it
             vm.trySend(RegisterContract.Inputs.SetName(it))
         },
@@ -119,7 +119,7 @@ private fun FieldsSection(
     )
     AppOutlinedTextField(
         text = email,
-        onTextChanged = {
+        onTextChange = {
             email = it
             vm.trySend(RegisterContract.Inputs.SetEmail(it))
         },
@@ -131,7 +131,7 @@ private fun FieldsSection(
     )
     AppOutlinedTextField(
         text = password,
-        onTextChanged = {
+        onTextChange = {
             password = it
             vm.trySend(RegisterContract.Inputs.SetPassword(it))
         },
@@ -143,7 +143,7 @@ private fun FieldsSection(
     )
     AppOutlinedTextField(
         text = repeatPassword,
-        onTextChanged = {
+        onTextChange = {
             repeatPassword = it
             vm.trySend(RegisterContract.Inputs.SetRepeatPassword(it))
         },

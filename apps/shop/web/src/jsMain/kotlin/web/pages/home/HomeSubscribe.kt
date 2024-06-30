@@ -61,7 +61,7 @@ fun HomeSubscribe(
         ) {
             AppOutlinedTextField(
                 text = state.email,
-                onTextChanged = { vm.trySend(HomeContract.Inputs.OnEmailChange(it)) },
+                onTextChange = { vm.trySend(HomeContract.Inputs.OnEmailChange(it)) },
                 placeholder = getString(Strings.EmailAddress),
                 autoComplete = AutoComplete.email,
                 modifier = Modifier

@@ -65,7 +65,7 @@ fun RouterContent(
     isAuthenticated: Boolean,
     onError: (String) -> Unit,
     homeScreen: Screen = Screen.Home,
-    loginScreen: Screen = Screen.Login,
+    loginScreen: Screen = Screen.Home,
 ) {
     val scope = rememberCoroutineScope()
     val initialRoute = when (isAuthenticated) {

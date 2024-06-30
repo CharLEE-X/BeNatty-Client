@@ -3,13 +3,16 @@ package feature.shop.home
 import component.localization.Strings
 import component.localization.getString
 import data.GetLandingConfigQuery
+import data.GetLandingConfigQuery.SlideshowItem
+import data.type.MediaType
 
 object HomeContract {
     data class State(
         val isLoading: Boolean = true,
 
         val landingConfig: GetLandingConfigQuery.GetLandingConfig = GetLandingConfigQuery.GetLandingConfig(
-            slideshowItems = listOf(), topCategoriesSection = GetLandingConfigQuery.TopCategoriesSection(
+            slideshowItems = listOf(),
+            topCategoriesSection = GetLandingConfigQuery.TopCategoriesSection(
                 left = GetLandingConfigQuery.Left(media = null, title = null),
                 middle = GetLandingConfigQuery.Middle(media = null, title = null),
                 right = GetLandingConfigQuery.Right(media = null, title = null)
@@ -21,6 +24,30 @@ object HomeContract {
         val email: String = "",
         val emailError: String? = null,
 
+        val slideshowItems: List<SlideshowItem> = listOf(
+            SlideshowItem(
+                id = "1",
+                title = "Fine details",
+                description = null,
+                media = GetLandingConfigQuery.Media(
+                    keyName = "1",
+                    url = "https://be-natty.co.uk/cdn/shop/files/Dolce_Theme_Slide_1.webp?v=1717262628&width=1200",
+                    alt = "Hero 1",
+                    type = MediaType.Image
+                ),
+            ),
+            SlideshowItem(
+                id = "2",
+                title = "Boho style",
+                description = null,
+                media = GetLandingConfigQuery.Media(
+                    keyName = "1",
+                    url = "https://be-natty.co.uk/cdn/shop/files/Dolce_Theme_Slide_3.webp?v=1717262705&width=1200",
+                    alt = "Hero 1",
+                    type = MediaType.Image
+                ),
+            )
+        ),
         val categorySection: List<CategoryItem> = listOf(
             CategoryItem(
                 url = "https://icon-shopify-theme.myshopify.com/cdn/shop/files/looks1.jpg?v=1614301039&width=600",
@@ -384,7 +411,7 @@ object HomeContract {
         data object FetchLandingConfig : Inputs
         data object FetchProducts : Inputs
 
-        data class OnCollageItemClick(val item: GetLandingConfigQuery.SlideshowItem) : Inputs
+        data class OnCollageItemClick(val item: SlideshowItem) : Inputs
         data object OnPrivacyPolicyClick : Inputs
         data object OnTermsOfServiceClick : Inputs
         data class OnCategoryItemClick(val id: String) : Inputs

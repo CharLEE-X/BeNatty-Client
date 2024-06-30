@@ -90,7 +90,7 @@ fun AskQuestionDialog(
             ) {
                 AppOutlinedTextField(
                     text = state.askQuestionName,
-                    onTextChanged = { vm.trySend(ProductPageContract.Inputs.OnAskQuestionNameChanged(it)) },
+                    onTextChange = { vm.trySend(ProductPageContract.Inputs.OnAskQuestionNameChanged(it)) },
                     placeholder = getString(Strings.Name),
                     modifier = Modifier
                         .weight(1f)
@@ -99,7 +99,7 @@ fun AskQuestionDialog(
                 )
                 AppOutlinedTextField(
                     text = state.askQuestionEmail,
-                    onTextChanged = { vm.trySend(ProductPageContract.Inputs.OnAskQuestionEmailChanged(it)) },
+                    onTextChange = { vm.trySend(ProductPageContract.Inputs.OnAskQuestionEmailChanged(it)) },
                     placeholder = getString(Strings.Email),
                     required = true,
                     valid = state.askQuestionEmailError == null,
@@ -112,7 +112,7 @@ fun AskQuestionDialog(
             }
             AppOutlinedTextField(
                 text = state.askQuestionQuestion,
-                onTextChanged = { vm.trySend(ProductPageContract.Inputs.OnAskQuestionQuestionChanged(it)) },
+                onTextChange = { vm.trySend(ProductPageContract.Inputs.OnAskQuestionQuestionChanged(it)) },
                 placeholder = getString(Strings.Comment),
                 required = true,
                 valid = state.askQuestionQuestionError == null,

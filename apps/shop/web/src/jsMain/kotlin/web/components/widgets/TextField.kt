@@ -10,9 +10,7 @@ import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.lineHeight
 import com.varabyte.kobweb.compose.ui.modifiers.padding
-import com.varabyte.kobweb.silk.components.forms.InputDefaults
 import com.varabyte.kobweb.silk.components.forms.TextInput
-import com.varabyte.kobweb.silk.components.style.ComponentVariant
 import com.varabyte.kobweb.silk.theme.colors.ColorMode
 import com.varabyte.kobweb.silk.theme.colors.palette.background
 import com.varabyte.kobweb.silk.theme.colors.palette.toPalette
@@ -25,9 +23,8 @@ import web.AppColors
 @Composable
 fun AppOutlinedTextField(
     text: String,
-    onTextChanged: (String) -> Unit,
+    onTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    variant: ComponentVariant? = InputDefaults.Variant,
     placeholder: String? = null,
     password: Boolean = false,
     enabled: Boolean = true,
@@ -42,7 +39,7 @@ fun AppOutlinedTextField(
 ) {
     TextInput(
         text = text,
-        onTextChanged = onTextChanged,
+        onTextChange = onTextChange,
         placeholder = placeholder,
         spellCheck = spellCheck,
         autoComplete = autoComplete,
@@ -53,7 +50,6 @@ fun AppOutlinedTextField(
         readOnly = readOnly,
         onCommit = onCommit,
         ref = ref,
-        variant = variant,
         focusBorderColor = AppColors.brandColor,
         modifier = modifier
             .fillMaxWidth()

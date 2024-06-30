@@ -210,12 +210,12 @@ private fun PriceFilters(vm: CatalogViewModel, state: CatalogContract.State) {
         ) {
             AppOutlinedTextField(
                 text = state.priceFrom ?: "",
-                onTextChanged = { vm.trySend(CatalogContract.Inputs.OnPriceFromChanged(it)) },
+                onTextChange = { vm.trySend(CatalogContract.Inputs.OnPriceFromChanged(it)) },
                 placeholder = getString(Strings.From),
             )
             AppOutlinedTextField(
                 text = state.priceTo ?: "",
-                onTextChanged = { vm.trySend(CatalogContract.Inputs.OnPriceToChanged(it)) },
+                onTextChange = { vm.trySend(CatalogContract.Inputs.OnPriceToChanged(it)) },
                 placeholder = getString(Strings.To),
             )
         }
