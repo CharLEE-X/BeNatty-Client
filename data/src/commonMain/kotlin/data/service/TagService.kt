@@ -30,8 +30,11 @@ interface TagService {
     ): Either<RemoteError, GetTagsAsPageQuery.Data>
 
     suspend fun getById(id: String): Either<RemoteError, GetTagByIdQuery.Data>
+
     suspend fun getTagsAllMinimal(): Either<RemoteError, TagsGetAllMinimalQuery.Data>
+
     suspend fun deleteById(id: String): Either<RemoteError, DeleteTagMutation.Data>
+
     suspend fun update(
         id: String,
         name: String?,
@@ -53,13 +56,14 @@ internal class TagServiceImpl(private val apolloClient: ApolloClient) : TagServi
         sortBy: String?,
         sortDirection: SortDirection?,
     ): Either<RemoteError, GetTagsAsPageQuery.Data> {
-        val pageInput = PageInput(
-            page = page,
-            size = size,
-            query = query.skipIfNull(),
-            sortBy = sortBy.skipIfNull(),
-            sortDirection = sortDirection.skipIfNull(),
-        )
+        val pageInput =
+            PageInput(
+                page = page,
+                size = size,
+                query = query.skipIfNull(),
+                sortBy = sortBy.skipIfNull(),
+                sortDirection = sortDirection.skipIfNull(),
+            )
         return apolloClient.query(GetTagsAsPageQuery(pageInput))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
@@ -87,10 +91,11 @@ internal class TagServiceImpl(private val apolloClient: ApolloClient) : TagServi
         id: String,
         name: String?,
     ): Either<RemoteError, UpdateTagMutation.Data> {
-        val input = TagUpdateInput(
-            id = id,
-            name = name.skipIfNull(),
-        )
+        val input =
+            TagUpdateInput(
+                id = id,
+                name = name.skipIfNull(),
+            )
         return apolloClient.mutation(UpdateTagMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()

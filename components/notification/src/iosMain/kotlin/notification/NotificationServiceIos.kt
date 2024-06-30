@@ -40,15 +40,16 @@ import platform.darwin.NSObject
 import kotlin.coroutines.suspendCoroutine
 
 internal class NotificationServiceIos(private val logger: Logger) : NotificationService {
-    private val delegate = object : UNUserNotificationCenterDelegateProtocol, NSObject() {
-        override fun userNotificationCenter(
-            center: UNUserNotificationCenter,
-            willPresentNotification: UNNotification,
-            withCompletionHandler: (UNNotificationPresentationOptions) -> Unit,
-        ) {
-            withCompletionHandler(UNNotificationPresentationOptionAlert)
+    private val delegate =
+        object : UNUserNotificationCenterDelegateProtocol, NSObject() {
+            override fun userNotificationCenter(
+                center: UNUserNotificationCenter,
+                willPresentNotification: UNNotification,
+                withCompletionHandler: (UNNotificationPresentationOptions) -> Unit,
+            ) {
+                withCompletionHandler(UNNotificationPresentationOptionAlert)
+            }
         }
-    }
 
     private val notificationCenter: UNUserNotificationCenter by lazy {
         UNUserNotificationCenter.currentNotificationCenter().apply {
@@ -57,17 +58,18 @@ internal class NotificationServiceIos(private val logger: Logger) : Notification
     }
 
     override suspend fun checkPermission(): PermissionStatus {
-        val status = suspendCoroutine { continuation ->
-            notificationCenter.getNotificationSettingsWithCompletionHandler(
-                mainContinuation { settings: UNNotificationSettings? ->
-                    continuation.resumeWith(
-                        Result.success(
-                            settings?.authorizationStatus ?: UNAuthorizationStatusNotDetermined,
-                        ),
-                    )
-                },
-            )
-        }
+        val status =
+            suspendCoroutine { continuation ->
+                notificationCenter.getNotificationSettingsWithCompletionHandler(
+                    mainContinuation { settings: UNNotificationSettings? ->
+                        continuation.resumeWith(
+                            Result.success(
+                                settings?.authorizationStatus ?: UNAuthorizationStatusNotDetermined,
+                            ),
+                        )
+                    },
+                )
+            }
         return when (status) {
             UNAuthorizationStatusAuthorized,
             UNAuthorizationStatusProvisional,
@@ -81,32 +83,34 @@ internal class NotificationServiceIos(private val logger: Logger) : Notification
     }
 
     override suspend fun requestPermission() {
-        val status: UNAuthorizationStatus = suspendCoroutine { continuation ->
-            notificationCenter.getNotificationSettingsWithCompletionHandler(
-                mainContinuation { settings: UNNotificationSettings? ->
-                    continuation.resumeWith(
-                        Result.success(settings?.authorizationStatus ?: UNAuthorizationStatusNotDetermined),
-                    )
-                },
-            )
-        }
+        val status: UNAuthorizationStatus =
+            suspendCoroutine { continuation ->
+                notificationCenter.getNotificationSettingsWithCompletionHandler(
+                    mainContinuation { settings: UNNotificationSettings? ->
+                        continuation.resumeWith(
+                            Result.success(settings?.authorizationStatus ?: UNAuthorizationStatusNotDetermined),
+                        )
+                    },
+                )
+            }
         when (status) {
             UNAuthorizationStatusAuthorized -> return
             UNAuthorizationStatusNotDetermined -> {
-                val isSuccess = suspendCoroutine { continuation ->
-                    UNUserNotificationCenter.currentNotificationCenter().requestAuthorizationWithOptions(
-                        UNAuthorizationOptionSound
-                            .or(UNAuthorizationOptionAlert)
-                            .or(UNAuthorizationOptionBadge),
-                        mainContinuation { isOk, error ->
-                            if (isOk && error == null) {
-                                continuation.resumeWith(Result.success(true))
-                            } else {
-                                continuation.resumeWith(Result.success(false))
-                            }
-                        },
-                    )
-                }
+                val isSuccess =
+                    suspendCoroutine { continuation ->
+                        UNUserNotificationCenter.currentNotificationCenter().requestAuthorizationWithOptions(
+                            UNAuthorizationOptionSound
+                                .or(UNAuthorizationOptionAlert)
+                                .or(UNAuthorizationOptionBadge),
+                            mainContinuation { isOk, error ->
+                                if (isOk && error == null) {
+                                    continuation.resumeWith(Result.success(true))
+                                } else {
+                                    continuation.resumeWith(Result.success(false))
+                                }
+                            },
+                        )
+                    }
                 if (isSuccess) {
                     requestPermission()
                 } else {
@@ -128,10 +132,11 @@ internal class NotificationServiceIos(private val logger: Logger) : Notification
         val timeNow = Clock.System.now()
         when (notificationType) {
             is NotificationType.Immediate -> {
-                val trigger = UNTimeIntervalNotificationTrigger.triggerWithTimeInterval(
-                    0.1,
-                    false,
-                )
+                val trigger =
+                    UNTimeIntervalNotificationTrigger.triggerWithTimeInterval(
+                        0.1,
+                        false,
+                    )
                 sendNotification(
                     title = notificationType.title,
                     body = notificationType.body,
@@ -141,19 +146,21 @@ internal class NotificationServiceIos(private val logger: Logger) : Notification
             }
 
             is NotificationType.Scheduled -> {
-                val allUnits = NSCalendarUnitSecond or
-                    NSCalendarUnitMinute or
-                    NSCalendarUnitHour or
-                    NSCalendarUnitDay or
-                    NSCalendarUnitMonth or
-                    NSCalendarUnitYear or
-                    NSCalendarUnitTimeZone
+                val allUnits =
+                    NSCalendarUnitSecond or
+                        NSCalendarUnitMinute or
+                        NSCalendarUnitHour or
+                        NSCalendarUnitDay or
+                        NSCalendarUnitMonth or
+                        NSCalendarUnitYear or
+                        NSCalendarUnitTimeZone
                 val deliveryDate = notificationType.delivery.toNSDate()
                 val dateComponents = NSCalendar.currentCalendar.components(allUnits, deliveryDate)
-                val trigger = UNCalendarNotificationTrigger.triggerWithDateMatchingComponents(
-                    dateComponents = dateComponents,
-                    repeats = false,
-                )
+                val trigger =
+                    UNCalendarNotificationTrigger.triggerWithDateMatchingComponents(
+                        dateComponents = dateComponents,
+                        repeats = false,
+                    )
                 sendNotification(
                     title = notificationType.title,
                     body = notificationType.body,
@@ -177,17 +184,19 @@ internal class NotificationServiceIos(private val logger: Logger) : Notification
         soundType: SoundType,
         trigger: UNNotificationTrigger,
     ) {
-        val content = UNMutableNotificationContent().apply {
-            setTitle(title)
-            body?.let { setBody(it) }
-            soundType.toUNNotificationSound()?.let { setSound(it) }
-            setInterruptionLevel(UNNotificationInterruptionLevel.UNNotificationInterruptionLevelTimeSensitive)
-        }
-        val request = UNNotificationRequest.requestWithIdentifier(
-            identifier = uuid4().toString(),
-            content = content,
-            trigger = trigger,
-        )
+        val content =
+            UNMutableNotificationContent().apply {
+                setTitle(title)
+                body?.let { setBody(it) }
+                soundType.toUNNotificationSound()?.let { setSound(it) }
+                setInterruptionLevel(UNNotificationInterruptionLevel.UNNotificationInterruptionLevelTimeSensitive)
+            }
+        val request =
+            UNNotificationRequest.requestWithIdentifier(
+                identifier = uuid4().toString(),
+                content = content,
+                trigger = trigger,
+            )
 
         notificationCenter.addNotificationRequest(request) { error ->
             if (error == null) {

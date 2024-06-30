@@ -25,11 +25,24 @@ import kotlinx.coroutines.isActive
 interface AuthService {
     val userId: String?
     val userRole: Role?
-    suspend fun login(email: String, password: String): Either<RemoteError, LoginMutation.Data>
-    suspend fun register(email: String, password: String, name: String): Either<RemoteError, RegisterMutation.Data>
+
+    suspend fun login(
+        email: String,
+        password: String,
+    ): Either<RemoteError, LoginMutation.Data>
+
+    suspend fun register(
+        email: String,
+        password: String,
+        name: String,
+    ): Either<RemoteError, RegisterMutation.Data>
+
     suspend fun forgotPassword(email: String): Either<RemoteError, ForgotPasswordMutation.Data>
+
     suspend fun signOut()
+
     fun isAuth(): Boolean
+
     suspend fun observeToken(): Flow<String?>
 }
 
@@ -43,10 +56,13 @@ internal class AuthServiceImpl(
 
     private var token by settings.nullableString()
 
-    private var _role by settings.nullableString()
-    override val userRole: Role? get() = _role?.let { Role.valueOf(it) }
+    private var role by settings.nullableString()
+    override val userRole: Role? get() = role?.let { Role.valueOf(it) }
 
-    override suspend fun login(email: String, password: String): Either<RemoteError, LoginMutation.Data> {
+    override suspend fun login(
+        email: String,
+        password: String,
+    ): Either<RemoteError, LoginMutation.Data> {
         val authInput = LoginInput(email = email, password = password)
         return apolloClient.mutation(LoginMutation(authInput)).handle {
             saveData(it.login.userMinimal.id, it.login.token, it.login.userMinimal.role)
@@ -56,7 +72,7 @@ internal class AuthServiceImpl(
     override suspend fun register(
         email: String,
         password: String,
-        name: String
+        name: String,
     ): Either<RemoteError, RegisterMutation.Data> {
         val authInput = RegisterInput(email = email, password = password, name = name)
         return apolloClient.mutation(RegisterMutation(authInput)).handle {
@@ -79,21 +95,26 @@ internal class AuthServiceImpl(
         return isAuth
     }
 
-    override suspend fun observeToken(): Flow<String?> = flow {
-        while (currentCoroutineContext().isActive) {
-            emit(token)
-            delay(16)
+    override suspend fun observeToken(): Flow<String?> =
+        flow {
+            while (currentCoroutineContext().isActive) {
+                emit(token)
+                delay(16)
+            }
         }
-    }
-        .distinctUntilChanged()
-        .onEach {
-            logger.d("userId=$userId,\nrole=$userRole,\ntoken=$token")
-        }
+            .distinctUntilChanged()
+            .onEach {
+                logger.d("userId=$userId,\nrole=$userRole,\ntoken=$token")
+            }
 
-    private fun saveData(userId: String?, token: String?, role: Role?): String? {
+    private fun saveData(
+        userId: String?,
+        token: String?,
+        role: Role?,
+    ): String? {
         logger.d { "Saving data:\nuserId=$userId,\nrole=$role,\ntoken=$token" }
         _userId = userId
-        _role = role?.name
+        this.role = role?.name
         this.token = token
         return this.token
     }

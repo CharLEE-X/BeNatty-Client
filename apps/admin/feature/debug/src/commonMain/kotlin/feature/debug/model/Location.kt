@@ -16,15 +16,17 @@ data class Location(
     val country: String,
 )
 
-internal fun CoreLatLng.toLatLng() = LatLng(
-    latitude = latitude,
-    longitude = longitude,
-)
+internal fun CoreLatLng.toLatLng() =
+    LatLng(
+        latitude = latitude,
+        longitude = longitude,
+    )
 
-internal fun CoreLocation.toLocation() = Location(
-    latitude = latLng.latitude,
-    longitude = latLng.longitude,
-    city = city,
-    state = state,
-    country = country,
-)
+internal fun CoreLocation.toLocation() =
+    Location(
+        latitude = latLng.latitude,
+        longitude = latLng.longitude,
+        city = city,
+        state = state,
+        country = country,
+    )

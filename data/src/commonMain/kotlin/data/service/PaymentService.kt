@@ -15,7 +15,7 @@ interface PaymentService {
 
 internal class PaymentServiceImpl(private val apolloClient: ApolloClient) : PaymentService {
     override suspend fun getPaymentMethods(
-        platforms: List<Platform>
+        platforms: List<Platform>,
     ): Either<RemoteError, GetPaymentMethodsQuery.Data> {
         return apolloClient.query(GetPaymentMethodsQuery(platforms))
             .fetchPolicy(FetchPolicy.NetworkOnly)

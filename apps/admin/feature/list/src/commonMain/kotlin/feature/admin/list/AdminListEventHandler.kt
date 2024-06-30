@@ -2,17 +2,19 @@ package feature.admin.list
 
 import com.copperleaf.ballast.EventHandler
 import com.copperleaf.ballast.EventHandlerScope
+import feature.admin.list.AdminListContract.Events
+import feature.admin.list.AdminListContract.Inputs
+import feature.admin.list.AdminListContract.State
 
 internal class AdminListEventHandler(
     private val onError: suspend (String) -> Unit,
     private val goToCreate: () -> Unit,
     private val goToDetail: (String) -> Unit,
-) : EventHandler<AdminListContract.Inputs, AdminListContract.Events, AdminListContract.State> {
-    override suspend fun EventHandlerScope<AdminListContract.Inputs, AdminListContract.Events, AdminListContract.State>.handleEvent(
-        event: AdminListContract.Events,
-    ) = when (event) {
-        is AdminListContract.Events.OnError -> onError(event.message)
-        is AdminListContract.Events.GoTo.Create -> goToCreate()
-        is AdminListContract.Events.GoTo.Detail -> goToDetail(event.id)
-    }
+) : EventHandler<Inputs, Events, State> {
+    override suspend fun EventHandlerScope<Inputs, Events, State>.handleEvent(event: Events) =
+        when (event) {
+            is Events.OnError -> onError(event.message)
+            is Events.GoTo.Create -> goToCreate()
+            is Events.GoTo.Detail -> goToDetail(event.id)
+        }
 }

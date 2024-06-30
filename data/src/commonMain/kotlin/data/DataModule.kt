@@ -33,83 +33,84 @@ import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-val dataModule = module {
-    includes(
-        platformModule,
-        apolloModule,
-    )
+val dataModule =
+    module {
+        includes(
+            platformModule,
+            apolloModule,
+        )
 
-    single<HttpClient> {
-        HttpClient(get<HttpClientEngine>()) {
-            install(Logging) {
-                level = LogLevel.ALL
-            }
-            install(ContentNegotiation) {
-                json(
-                    Json {
-                        ignoreUnknownKeys = true
-                        encodeDefaults = true
-                        isLenient = true
-                    }
-                )
+        single<HttpClient> {
+            HttpClient(get<HttpClientEngine>()) {
+                install(Logging) {
+                    level = LogLevel.ALL
+                }
+                install(ContentNegotiation) {
+                    json(
+                        Json {
+                            ignoreUnknownKeys = true
+                            encodeDefaults = true
+                            isLenient = true
+                        },
+                    )
+                }
             }
         }
-    }
 
-    single<DebugService> {
-        DebugServiceImpl(
-            apolloClient = get(),
-        )
+        single<DebugService> {
+            DebugServiceImpl(
+                apolloClient = get(),
+            )
+        }
+        single<AuthService> {
+            AuthServiceImpl(
+                logger = withTag(AuthService::class.simpleName!!),
+                apolloClient = get(),
+                settings = get(named(SettingsType.SETTINGS_ENCRYPTED.name)),
+            )
+        }
+        single<UserService> {
+            UserServiceImpl(
+                apolloClient = get(),
+                settings = get(named(SettingsType.SETTINGS_ENCRYPTED.name)),
+            )
+        }
+        single<ProductService> {
+            ProductServiceImpl(
+                apolloClient = get(),
+            )
+        }
+        single<AdminService> {
+            AdminServiceImpl(
+                apolloClient = get(),
+            )
+        }
+        single<CategoryService> {
+            CategoryServiceImpl(
+                apolloClient = get(),
+            )
+        }
+        single<TagService> {
+            TagServiceImpl(
+                apolloClient = get(),
+            )
+        }
+        single<OrderService> {
+            OrderServiceImpl(
+                apolloClient = get(),
+            )
+        }
+        single<ConfigService> {
+            ConfigServiceImpl(
+                apolloClient = get(),
+            )
+        }
+        single<PaymentService> {
+            PaymentServiceImpl(
+                apolloClient = get(),
+            )
+        }
     }
-    single<AuthService> {
-        AuthServiceImpl(
-            logger = withTag(AuthService::class.simpleName!!),
-            apolloClient = get(),
-            settings = get(named(SettingsType.SETTINGS_ENCRYPTED.name)),
-        )
-    }
-    single<UserService> {
-        UserServiceImpl(
-            apolloClient = get(),
-            settings = get(named(SettingsType.SETTINGS_ENCRYPTED.name)),
-        )
-    }
-    single<ProductService> {
-        ProductServiceImpl(
-            apolloClient = get(),
-        )
-    }
-    single<AdminService> {
-        AdminServiceImpl(
-            apolloClient = get(),
-        )
-    }
-    single<CategoryService> {
-        CategoryServiceImpl(
-            apolloClient = get(),
-        )
-    }
-    single<TagService> {
-        TagServiceImpl(
-            apolloClient = get(),
-        )
-    }
-    single<OrderService> {
-        OrderServiceImpl(
-            apolloClient = get(),
-        )
-    }
-    single<ConfigService> {
-        ConfigServiceImpl(
-            apolloClient = get(),
-        )
-    }
-    single<PaymentService> {
-        PaymentServiceImpl(
-            apolloClient = get(),
-        )
-    }
-}
 
 internal expect val platformModule: Module
 

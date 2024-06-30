@@ -9,12 +9,14 @@ internal class AdminCategoryCreateEventHandler(
 ) : EventHandler<
     AdminCategoryCreateContract.Inputs,
     AdminCategoryCreateContract.Events,
-    AdminCategoryCreateContract.State> {
+    AdminCategoryCreateContract.State,
+    > {
     override suspend fun EventHandlerScope<
         AdminCategoryCreateContract.Inputs,
         AdminCategoryCreateContract.Events,
-        AdminCategoryCreateContract.State>.handleEvent(
-        event: AdminCategoryCreateContract.Events
+        AdminCategoryCreateContract.State,
+        >.handleEvent(
+        event: AdminCategoryCreateContract.Events,
     ) = when (event) {
         is AdminCategoryCreateContract.Events.OnError -> onError(event.message)
         is AdminCategoryCreateContract.Events.GoToCategory -> goToCategory(event.id)

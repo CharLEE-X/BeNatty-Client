@@ -19,7 +19,8 @@ internal class ApolloProviderImpl(
     private val authorizationInterceptor: AuthorizationInterceptor,
     private val dispatcher: CoroutineDispatcher,
 ) : ApolloProvider {
-    override fun provide(): ApolloClient = ApolloClient.Builder()
+    override fun provide(): ApolloClient =
+        ApolloClient.Builder()
 //        .subscriptionNetworkTransport(
 //            WebSocketNetworkTransport.Builder()
 //                .protocol(GraphQLWsProtocol.Factory())
@@ -32,13 +33,13 @@ internal class ApolloProviderImpl(
 //                .idleTimeoutMillis(30.minutes.inWholeMilliseconds)
 //                .build(),
 //        )
-        .serverUrl(baseUrlGraphQl)
-        .httpEngine(KtorHttpEngine())
-        .addHttpInterceptor(authorizationInterceptor)
-        .addHttpInterceptor(LoggingInterceptor())
-        .normalizedCache(normalizedCacheFactory)
-        .dispatcher(dispatcher)
+            .serverUrl(baseUrlGraphQl)
+            .httpEngine(KtorHttpEngine())
+            .addHttpInterceptor(authorizationInterceptor)
+            .addHttpInterceptor(LoggingInterceptor())
+            .normalizedCache(normalizedCacheFactory)
+            .dispatcher(dispatcher)
 //        .autoPersistedQueries()
 //        .httpBatching()
-        .build()
+            .build()
 }

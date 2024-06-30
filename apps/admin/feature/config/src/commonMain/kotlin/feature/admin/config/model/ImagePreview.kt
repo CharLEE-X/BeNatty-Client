@@ -8,26 +8,30 @@ data class ImagePreview(
     val alt: String,
 )
 
-fun GetConfigQuery.SlideshowItem.toPreviewImage() = ImagePreview(
-    id = id,
-    url = media?.url ?: "",
-    alt = media?.alt ?: "",
-)
+fun GetConfigQuery.SlideshowItem.toPreviewImage() =
+    ImagePreview(
+        id = id,
+        url = media?.url ?: "",
+        alt = media?.alt ?: "",
+    )
 
-fun GetConfigQuery.Left.toPreviewImage() = ImagePreview(
-    id = "",
-    url = media?.url ?: "",
-    alt = media?.alt ?: "",
-)
+fun GetConfigQuery.Left.toPreviewImage() =
+    ImagePreview(
+        id = "",
+        url = media?.url ?: "",
+        alt = media?.alt ?: "",
+    )
 
-fun GetConfigQuery.Middle.toPreviewImage() = ImagePreview(
-    id = "",
-    url = media?.url ?: "",
-    alt = media?.alt ?: "",
-)
+fun GetConfigQuery.Middle.toPreviewImage() =
+    ImagePreview(
+        id = "",
+        url = media?.url ?: "",
+        alt = media?.alt ?: "",
+    )
 
-fun GetConfigQuery.Right.toPreviewImage() = ImagePreview(
-    id = "",
-    url = media?.url ?: "",
-    alt = media?.alt ?: "",
-)
+fun GetConfigQuery.Right.toPreviewImage() =
+    ImagePreview(
+        id = "",
+        url = media?.url ?: "",
+        alt = media?.alt ?: "",
+    )

@@ -14,7 +14,7 @@ object CartContract {
             guestCartId = null,
             items = emptyList(),
             subtotal = 0.0,
-            saved = 0.0
+            saved = 0.0,
         ),
         val topSellingProducts: List<GetTopSellingProductsQuery.GetTopSellingProduct> = emptyList(),
 

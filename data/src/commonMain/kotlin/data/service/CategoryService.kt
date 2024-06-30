@@ -36,8 +36,11 @@ interface CategoryService {
     ): Either<RemoteError, GetCategoriesAsPageQuery.Data>
 
     suspend fun getById(id: String): Either<RemoteError, GetCategoryByIdQuery.Data>
+
     suspend fun getCategoriesAllMinimal(): Either<RemoteError, GetAllCategoriesAsMinimalQuery.Data>
+
     suspend fun deleteById(id: String): Either<RemoteError, DeleteCategoryMutation.Data>
+
     suspend fun update(
         id: String,
         name: String?,
@@ -71,13 +74,14 @@ internal class CategoryServiceImpl(private val apolloClient: ApolloClient) : Cat
         sortBy: String?,
         sortDirection: SortDirection?,
     ): Either<RemoteError, GetCategoriesAsPageQuery.Data> {
-        val pageInput = PageInput(
-            page = page,
-            size = size,
-            query = query.skipIfNull(),
-            sortBy = sortBy.skipIfNull(),
-            sortDirection = sortDirection.skipIfNull(),
-        )
+        val pageInput =
+            PageInput(
+                page = page,
+                size = size,
+                query = query.skipIfNull(),
+                sortBy = sortBy.skipIfNull(),
+                sortDirection = sortDirection.skipIfNull(),
+            )
         return apolloClient.query(GetCategoriesAsPageQuery(pageInput))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
@@ -111,26 +115,30 @@ internal class CategoryServiceImpl(private val apolloClient: ApolloClient) : Cat
         height: String?,
         requiresShipping: Boolean?,
     ): Either<RemoteError, UpdateCategoryMutation.Data> {
-        val shippingPreset = if (
-            weight != null || length != null || width != null || height != null || requiresShipping != null
-        ) {
-            Optional.present(
-                ShippingPresetInput(
-                    weight = weight.skipIfNull(),
-                    length = length.skipIfNull(),
-                    width = width.skipIfNull(),
-                    height = height.skipIfNull(),
-                    requiresShipping = requiresShipping.skipIfNull(),
+        val shippingPreset =
+            if (
+                weight != null || length != null || width != null || height != null || requiresShipping != null
+            ) {
+                Optional.present(
+                    ShippingPresetInput(
+                        weight = weight.skipIfNull(),
+                        length = length.skipIfNull(),
+                        width = width.skipIfNull(),
+                        height = height.skipIfNull(),
+                        requiresShipping = requiresShipping.skipIfNull(),
+                    ),
                 )
-            )
-        } else Optional.absent()
+            } else {
+                Optional.absent()
+            }
 
-        val input = CategoryUpdateInput(
-            id = id,
-            name = name.skipIfNull(),
-            display = display.skipIfNull(),
-            shippingPreset = shippingPreset,
-        )
+        val input =
+            CategoryUpdateInput(
+                id = id,
+                name = name.skipIfNull(),
+                display = display.skipIfNull(),
+                shippingPreset = shippingPreset,
+            )
         return apolloClient.mutation(UpdateCategoryMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
@@ -141,11 +149,12 @@ internal class CategoryServiceImpl(private val apolloClient: ApolloClient) : Cat
         blob: String,
         type: MediaType,
     ): Either<RemoteError, AddCategoryImageMutation.Data> {
-        val input = AddMediaToCategoryInput(
-            categoryId = categoryId,
-            blob = BlobInput(blob),
-            type = type,
-        )
+        val input =
+            AddMediaToCategoryInput(
+                categoryId = categoryId,
+                blob = BlobInput(blob),
+                type = type,
+            )
         return apolloClient.mutation(AddCategoryImageMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()

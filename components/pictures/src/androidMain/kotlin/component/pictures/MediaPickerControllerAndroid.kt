@@ -29,23 +29,24 @@ internal class MediaPickerControllerAndroid(
             return null
         }
 
-
-        val imagePickerFragment: ImagePickerFragment = withContext(Dispatchers.Main) {
-            ImagePickerFragment.newInstance(1024, 1024).also {
-                fragmentManager!!
-                    .beginTransaction()
-                    .add(it, this::class.simpleName)
-                    .commitNow()
+        val imagePickerFragment: ImagePickerFragment =
+            withContext(Dispatchers.Main) {
+                ImagePickerFragment.newInstance(1024, 1024).also {
+                    fragmentManager!!
+                        .beginTransaction()
+                        .add(it, this::class.simpleName)
+                        .commitNow()
+                }
             }
-        }
 
-        val bitmap = suspendCoroutine { continuation ->
-            val action: (Result<android.graphics.Bitmap>) -> Unit = { continuation.resumeWith(it) }
-            when (source) {
-                MediaSource.GALLERY -> imagePickerFragment.pickGalleryImage(action)
-                MediaSource.CAMERA -> imagePickerFragment.pickCameraImage(action)
+        val bitmap =
+            suspendCoroutine { continuation ->
+                val action: (Result<android.graphics.Bitmap>) -> Unit = { continuation.resumeWith(it) }
+                when (source) {
+                    MediaSource.GALLERY -> imagePickerFragment.pickGalleryImage(action)
+                    MediaSource.CAMERA -> imagePickerFragment.pickCameraImage(action)
+                }
             }
-        }
 
         return Bitmap(bitmap)
     }
@@ -53,13 +54,14 @@ internal class MediaPickerControllerAndroid(
     private fun bind() {
         this.fragmentManager = activity.value.fragmentManager
 
-        val observer = object : LifecycleObserver {
-            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-            fun onDestroyed(source: LifecycleOwner) {
-                this@MediaPickerControllerAndroid.fragmentManager = null
-                source.lifecycle.removeObserver(this)
+        val observer =
+            object : LifecycleObserver {
+                @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+                fun onDestroyed(source: LifecycleOwner) {
+                    this@MediaPickerControllerAndroid.fragmentManager = null
+                    source.lifecycle.removeObserver(this)
+                }
             }
-        }
         MainScope().launch {
             activity.value.lifecycle.addObserver(observer)
         }

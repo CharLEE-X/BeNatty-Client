@@ -20,5 +20,5 @@ sealed interface NotificationType {
 enum class SoundType {
     DEFAULT,
     CRITICAL,
-    NONE
+    NONE,
 }

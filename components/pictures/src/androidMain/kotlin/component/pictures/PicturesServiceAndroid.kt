@@ -26,7 +26,7 @@ class PicturesServiceAndroid(
             context = context,
             activity = activity,
             logger = logger,
-            permissions = galleryCompat()
+            permissions = galleryCompat(),
         )
     }
 
@@ -35,7 +35,7 @@ class PicturesServiceAndroid(
             context = context,
             activity = activity,
             logger = logger,
-            permissions = listOf(Manifest.permission.CAMERA)
+            permissions = listOf(Manifest.permission.CAMERA),
         )
     }
 
@@ -65,7 +65,7 @@ private fun galleryCompat() =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         listOf(
             Manifest.permission.READ_MEDIA_IMAGES,
-            Manifest.permission.READ_MEDIA_VIDEO
+            Manifest.permission.READ_MEDIA_VIDEO,
         )
     } else {
         listOf(Manifest.permission.READ_EXTERNAL_STORAGE)

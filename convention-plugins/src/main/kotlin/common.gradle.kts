@@ -1,9 +1,11 @@
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
+    id("lint")
 }
 
 val libs = the<LibrariesForLibs>()
@@ -44,7 +46,7 @@ kotlin {
 }
 
 android {
-    namespace = group.toString()
+    namespace = "${libs.versions.packageName.get()}.$group"
     compileSdk = ProjectConfig.Android.compileSdk
     defaultConfig {
         minSdk = ProjectConfig.Android.minSdk
@@ -53,4 +55,8 @@ android {
         sourceCompatibility = ProjectConfig.Kotlin.javaVersion
         targetCompatibility = ProjectConfig.Kotlin.javaVersion
     }
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions.jvmTarget = libs.versions.jvmTarget.get()
 }

@@ -99,7 +99,10 @@ internal class LocationServiceAndroid(
         return location
     }
 
-    override suspend fun getPlaceDetails(latitude: Double, longitude: Double): Location? {
+    override suspend fun getPlaceDetails(
+        latitude: Double,
+        longitude: Double,
+    ): Location? {
         logger.v { "Getting place details for $latitude, $longitude" }
 
         val geocoder = Geocoder(context, Locale.ENGLISH)

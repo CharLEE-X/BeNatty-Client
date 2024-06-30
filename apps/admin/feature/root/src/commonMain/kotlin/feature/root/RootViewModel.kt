@@ -15,7 +15,8 @@ class RootViewModel(
     RootContract.Events,
     RootContract.State,
     >(
-    config = BallastViewModelConfiguration.Builder()
+    config =
+    BallastViewModelConfiguration.Builder()
         .apply {
 //            this += LoggingInterceptor()
             logger = { PrintlnLogger() }
@@ -26,7 +27,8 @@ class RootViewModel(
             name = TAG,
         )
         .build(),
-    eventHandler = RootEventHandler(
+    eventHandler =
+    RootEventHandler(
         onError = onError,
     ),
     coroutineScope = scope,

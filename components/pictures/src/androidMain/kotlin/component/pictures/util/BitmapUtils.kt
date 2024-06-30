@@ -22,15 +22,19 @@ object BitmapUtils {
         orientation: Int,
         sampleSize: Int? = null,
     ): Bitmap {
-        val bitmapOptions = if (sampleSize != null) {
-            BitmapFactory.Options().apply {
-                inJustDecodeBounds = false
-                inSampleSize = sampleSize
+        val bitmapOptions =
+            if (sampleSize != null) {
+                BitmapFactory.Options().apply {
+                    inJustDecodeBounds = false
+                    inSampleSize = sampleSize
+                }
+            } else {
+                null
             }
-        } else null
 
-        val bitmap = BitmapFactory.decodeStream(bitmapStream, null, bitmapOptions)
-            ?: throw IOException("Can't decode bitmap stream")
+        val bitmap =
+            BitmapFactory.decodeStream(bitmapStream, null, bitmapOptions)
+                ?: throw IOException("Can't decode bitmap stream")
 
         val matrix = Matrix()
         when (orientation) {
@@ -56,7 +60,10 @@ object BitmapUtils {
         return result
     }
 
-    fun getResizedBitmap(bitmap: Bitmap, maxSize: Int = DEFAULT_MAX_SIZE): Bitmap {
+    fun getResizedBitmap(
+        bitmap: Bitmap,
+        maxSize: Int = DEFAULT_MAX_SIZE,
+    ): Bitmap {
         var width = bitmap.width
         var height = bitmap.height
 
@@ -71,9 +78,7 @@ object BitmapUtils {
         return Bitmap.createScaledBitmap(bitmap, width, height, true)
     }
 
-    fun getBitmapOptionsFromStream(
-        inputStream: InputStream,
-    ): BitmapFactory.Options {
+    fun getBitmapOptionsFromStream(inputStream: InputStream): BitmapFactory.Options {
         return BitmapFactory.Options().apply {
             inJustDecodeBounds = true
             BitmapFactory.decodeStream(inputStream, null, this)
@@ -90,7 +95,6 @@ object BitmapUtils {
         var inSampleSize = 1
 
         if (height > maxHeight || width > maxWidth) {
-
             val halfHeight: Int = height / 2
             val halfWidth: Int = width / 2
 

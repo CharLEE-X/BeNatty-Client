@@ -19,7 +19,8 @@ class AdminConfigViewModel(
     AdminConfigContract.Events,
     AdminConfigContract.State,
     >(
-    config = BallastViewModelConfiguration.Builder()
+    config =
+    BallastViewModelConfiguration.Builder()
         .apply {
             this += LoggingInterceptor()
             logger = { PrintlnLogger() }
@@ -36,7 +37,8 @@ class AdminConfigViewModel(
             interceptorDispatcher = Dispatchers.Default,
         )
         .build(),
-    eventHandler = AdminConfigEventHandler(
+    eventHandler =
+    AdminConfigEventHandler(
         onError = onError,
     ),
     coroutineScope = scope,

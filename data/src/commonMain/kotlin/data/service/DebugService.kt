@@ -26,7 +26,8 @@ internal class DebugServiceImpl(private val apolloClient: ApolloClient) : DebugS
 //        return apolloClient.query(DeleteGeneratedUsersQuery()).handle()
 //    }
 
-    override suspend fun clearCache(): Either<RemoteError, Boolean> = either {
-        apolloClient.apolloStore.clearAll()
-    }
+    override suspend fun clearCache(): Either<RemoteError, Boolean> =
+        either {
+            apolloClient.apolloStore.clearAll()
+        }
 }

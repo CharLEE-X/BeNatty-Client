@@ -14,8 +14,12 @@ import data.utils.handle
 
 interface AdminService {
     suspend fun getStats(): Either<RemoteError, GetStatsQuery.Data>
+
     suspend fun generateData(input: GenerateDataInput): Either<RemoteError, GenerateDataMutation.Data>
-    suspend fun deleteGeneratedData(input: DeleteGenerateDataInput): Either<RemoteError, DeleteGeneratedDataMutation.Data>
+
+    suspend fun deleteGeneratedData(
+        input: DeleteGenerateDataInput,
+    ): Either<RemoteError, DeleteGeneratedDataMutation.Data>
 }
 
 internal class AdminServiceImpl(private val apolloClient: ApolloClient) : AdminService {
@@ -31,7 +35,7 @@ internal class AdminServiceImpl(private val apolloClient: ApolloClient) : AdminS
             .handle()
 
     override suspend fun deleteGeneratedData(
-        input: DeleteGenerateDataInput
+        input: DeleteGenerateDataInput,
     ): Either<RemoteError, DeleteGeneratedDataMutation.Data> =
         apolloClient.mutation(DeleteGeneratedDataMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)

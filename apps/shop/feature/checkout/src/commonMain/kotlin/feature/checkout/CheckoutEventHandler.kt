@@ -10,8 +10,10 @@ internal class CheckoutEventHandler(
     override suspend fun EventHandlerScope<
         CheckoutContract.Inputs,
         CheckoutContract.Events,
-        CheckoutContract.State
-        >.handleEvent(event: CheckoutContract.Events) = when (event) {
+        CheckoutContract.State,
+        >.handleEvent(
+        event: CheckoutContract.Events,
+    ) = when (event) {
         is CheckoutContract.Events.OnError -> onError(event.message)
     }
 }

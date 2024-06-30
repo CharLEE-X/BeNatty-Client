@@ -7,11 +7,13 @@ import data.service.AuthService
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-internal class RouterEventHandler : EventHandler<
-    RouterContract.Inputs<Screen>,
-    RouterContract.Events<Screen>,
-    RouterContract.State<Screen>,
-    >, KoinComponent {
+internal class RouterEventHandler :
+    EventHandler<
+        RouterContract.Inputs<Screen>,
+        RouterContract.Events<Screen>,
+        RouterContract.State<Screen>,
+        >,
+    KoinComponent {
 
     private val authService by inject<AuthService>()
 
@@ -19,7 +21,9 @@ internal class RouterEventHandler : EventHandler<
         RouterContract.Inputs<Screen>,
         RouterContract.Events<Screen>,
         RouterContract.State<Screen>,
-        >.handleEvent(event: RouterContract.Events<Screen>) {
+        >.handleEvent(
+        event: RouterContract.Events<Screen>,
+    ) {
         when {
             event is RouterContract.Events.BackstackEmptied -> {
                 if (authService.isAuth()) {

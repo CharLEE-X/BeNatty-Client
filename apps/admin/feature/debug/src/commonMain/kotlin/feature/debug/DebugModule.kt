@@ -5,10 +5,11 @@ import location.locationModule
 import notification.notificationModule
 import org.koin.dsl.module
 
-val debugModule = module {
-    includes(
-        locationModule,
-        notificationModule,
-        picturesModule,
-    )
-}
+val debugModule =
+    module {
+        includes(
+            locationModule,
+            notificationModule,
+            picturesModule,
+        )
+    }

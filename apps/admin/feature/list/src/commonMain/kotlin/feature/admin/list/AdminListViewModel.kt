@@ -20,7 +20,8 @@ class AdminListViewModel(
     AdminListContract.Events,
     AdminListContract.State,
     >(
-    config = BallastViewModelConfiguration.Builder()
+    config =
+    BallastViewModelConfiguration.Builder()
         .apply {
             this += LoggingInterceptor()
             logger = { PrintlnLogger() }
@@ -37,7 +38,8 @@ class AdminListViewModel(
 //            interceptorDispatcher = Dispatchers.Default,
 //        )
         .build(),
-    eventHandler = AdminListEventHandler(
+    eventHandler =
+    AdminListEventHandler(
         onError = onError,
         goToCreate = goToCreate,
         goToDetail = goToDetail,

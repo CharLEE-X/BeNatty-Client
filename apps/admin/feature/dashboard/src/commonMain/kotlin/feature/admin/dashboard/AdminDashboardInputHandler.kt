@@ -6,58 +6,58 @@ import core.mapToUiMessage
 import data.service.AdminService
 import data.type.DeleteGenerateDataInput
 import data.type.GenerateDataInput
+import feature.admin.dashboard.AdminDashboardContract.Events
+import feature.admin.dashboard.AdminDashboardContract.Inputs
+import feature.admin.dashboard.AdminDashboardContract.State
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-private typealias InputScope = InputHandlerScope<AdminDashboardContract.Inputs, AdminDashboardContract.Events, AdminDashboardContract.State>
+private typealias InputScope = InputHandlerScope<Inputs, Events, State>
 
-internal class AdminDashboardInputHandler :
-    KoinComponent,
-    InputHandler<AdminDashboardContract.Inputs, AdminDashboardContract.Events, AdminDashboardContract.State> {
-
+internal class AdminDashboardInputHandler : KoinComponent, InputHandler<Inputs, Events, State> {
     private val adminService: AdminService by inject()
 
-    override suspend fun InputHandlerScope<AdminDashboardContract.Inputs, AdminDashboardContract.Events, AdminDashboardContract.State>.handleInput(
-        input: AdminDashboardContract.Inputs,
-    ) = when (input) {
-        AdminDashboardContract.Inputs.Init -> handleInit()
-        AdminDashboardContract.Inputs.GetStats -> handleGetStats()
+    override suspend fun InputHandlerScope<Inputs, Events, State>.handleInput(input: Inputs) =
+        when (input) {
+            Inputs.Init -> handleInit()
+            Inputs.GetStats -> handleGetStats()
 
-        AdminDashboardContract.Inputs.OnGenerateClicked -> handleGenerateClicked()
-        AdminDashboardContract.Inputs.OnDeleteGeneratedClicked -> handleDeleteGenerateClicked()
+            Inputs.OnGenerateClicked -> handleGenerateClicked()
+            Inputs.OnDeleteGeneratedClicked -> handleDeleteGenerateClicked()
 
-        is AdminDashboardContract.Inputs.SetIsStatsLoading -> updateState { it.copy(isStatsLoading = input.isLoading) }
-        is AdminDashboardContract.Inputs.SetIsGenerating -> updateState { it.copy(isGenerating = input.isGenerating) }
-        is AdminDashboardContract.Inputs.SetStats -> updateState { it.copy(stats = input.stats) }
-        is AdminDashboardContract.Inputs.SetProductsToGenerate -> updateState { it.copy(productsToGenerate = input.products.toInt()) }
-        is AdminDashboardContract.Inputs.SetCustomersToGenerate -> updateState { it.copy(customersToGenerate = input.customers.toInt()) }
-        is AdminDashboardContract.Inputs.SetOrdersToGenerate -> updateState { it.copy(ordersToGenerate = input.orders.toInt()) }
-        AdminDashboardContract.Inputs.OnDeleteCustomersClicked -> updateState { it.copy(deleteCustomers = !it.deleteCustomers) }
-        AdminDashboardContract.Inputs.OnDeleteOrdersClicked -> updateState { it.copy(deleteOrders = !it.deleteOrders) }
-        AdminDashboardContract.Inputs.OnDeleteProductsClicked -> updateState { it.copy(deleteProducts = !it.deleteProducts) }
-        is AdminDashboardContract.Inputs.SetIsDeleting -> updateState { it.copy(isDeleting = input.isDeleting) }
-    }
+            is Inputs.SetIsStatsLoading -> updateState { it.copy(isStatsLoading = input.isLoading) }
+            is Inputs.SetIsGenerating -> updateState { it.copy(isGenerating = input.isGenerating) }
+            is Inputs.SetStats -> updateState { it.copy(stats = input.stats) }
+            is Inputs.SetProductsToGenerate -> updateState { it.copy(productsToGenerate = input.products.toInt()) }
+            is Inputs.SetCustomersToGenerate -> updateState { it.copy(customersToGenerate = input.customers.toInt()) }
+            is Inputs.SetOrdersToGenerate -> updateState { it.copy(ordersToGenerate = input.orders.toInt()) }
+            Inputs.OnDeleteCustomersClicked -> updateState { it.copy(deleteCustomers = !it.deleteCustomers) }
+            Inputs.OnDeleteOrdersClicked -> updateState { it.copy(deleteOrders = !it.deleteOrders) }
+            Inputs.OnDeleteProductsClicked -> updateState { it.copy(deleteProducts = !it.deleteProducts) }
+            is Inputs.SetIsDeleting -> updateState { it.copy(isDeleting = input.isDeleting) }
+        }
 
     private suspend fun InputScope.handleDeleteGenerateClicked() {
         val state = getCurrentState()
 
         if (!state.deleteProducts && !state.deleteCustomers && !state.deleteOrders) {
-            postEvent(AdminDashboardContract.Events.OnError("At least one field must be selected"))
+            postEvent(Events.OnError("At least one field must be selected"))
             return
         }
 
         sideJob("handleDeleteGenerateClicked") {
-            postInput(AdminDashboardContract.Inputs.SetIsDeleting(true))
-            val input = DeleteGenerateDataInput(
-                products = state.deleteProducts,
-                users = state.deleteCustomers,
-                orders = state.deleteOrders,
-            )
+            postInput(Inputs.SetIsDeleting(true))
+            val input =
+                DeleteGenerateDataInput(
+                    products = state.deleteProducts,
+                    users = state.deleteCustomers,
+                    orders = state.deleteOrders,
+                )
             adminService.deleteGeneratedData(input).fold(
-                { postEvent(AdminDashboardContract.Events.OnError(it.mapToUiMessage())) },
-                { postInput(AdminDashboardContract.Inputs.GetStats) },
+                { postEvent(Events.OnError(it.mapToUiMessage())) },
+                { postInput(Inputs.GetStats) },
             )
-            postInput(AdminDashboardContract.Inputs.SetIsDeleting(false))
+            postInput(Inputs.SetIsDeleting(false))
         }
     }
 
@@ -69,39 +69,40 @@ internal class AdminDashboardInputHandler :
         val ordersIsNumber = state.ordersToGenerate.toString().toIntOrNull() != null
 
         if (!productsIsNumber || !customersIsNumber || !ordersIsNumber) {
-            postEvent(AdminDashboardContract.Events.OnError("All fields must be numbers"))
+            postEvent(Events.OnError("All fields must be numbers"))
             return
         }
 
         sideJob("handleGenerateClicked") {
-            postInput(AdminDashboardContract.Inputs.SetIsGenerating(true))
-            val input = GenerateDataInput(
-                products = state.productsToGenerate,
-                users = state.customersToGenerate,
-                orders = state.ordersToGenerate,
-            )
+            postInput(Inputs.SetIsGenerating(true))
+            val input =
+                GenerateDataInput(
+                    products = state.productsToGenerate,
+                    users = state.customersToGenerate,
+                    orders = state.ordersToGenerate,
+                )
             adminService.generateData(input).fold(
-                { postEvent(AdminDashboardContract.Events.OnError(it.mapToUiMessage())) },
-                { postInput(AdminDashboardContract.Inputs.GetStats) },
+                { postEvent(Events.OnError(it.mapToUiMessage())) },
+                { postInput(Inputs.GetStats) },
             )
-            postInput(AdminDashboardContract.Inputs.SetIsGenerating(false))
+            postInput(Inputs.SetIsGenerating(false))
         }
     }
 
     private suspend fun InputScope.handleInit() {
         sideJob("handleInit") {
-            postInput(AdminDashboardContract.Inputs.GetStats)
+            postInput(Inputs.GetStats)
         }
     }
 
     private suspend fun InputScope.handleGetStats() {
         sideJob("handleGetStats") {
-            postInput(AdminDashboardContract.Inputs.SetIsStatsLoading(true))
+            postInput(Inputs.SetIsStatsLoading(true))
             adminService.getStats().fold(
-                { postEvent(AdminDashboardContract.Events.OnError(it.mapToUiMessage())) },
-                { postInput(AdminDashboardContract.Inputs.SetStats(it.getStats)) },
+                { postEvent(Events.OnError(it.mapToUiMessage())) },
+                { postInput(Inputs.SetStats(it.getStats)) },
             )
-            postInput(AdminDashboardContract.Inputs.SetIsStatsLoading(false))
+            postInput(Inputs.SetIsStatsLoading(false))
         }
     }
 }

@@ -16,8 +16,11 @@ object RootContract : KoinComponent {
         data class SetIsLoading(val isLoading: Boolean) : Inputs
 
         data object Init : Inputs
+
         data object ObserveAuthState : Inputs
+
         data class SendNotification(val title: String, val body: String) : Inputs
+
         data object LogOut : Inputs
 
         data class SetIsAuthenticated(val isAuthenticated: Boolean) : Inputs

@@ -23,20 +23,21 @@ import platform.Security.kSecAttrService
     ExperimentalSettingsImplementation::class,
 )
 @Suppress("unused")
-internal actual val platformModule: Module = module {
-    single<NormalizedCacheFactory>(named(NormalizedCacheType.SQL)) {
-        SqlNormalizedCacheFactory(
-            name = BuildKonfig.dbName,
-        )
+internal actual val platformModule: Module =
+    module {
+        single<NormalizedCacheFactory>(named(NormalizedCacheType.SQL)) {
+            SqlNormalizedCacheFactory(
+                name = BuildKonfig.dbName,
+            )
+        }
+        single<Settings>(named(SettingsType.SETTINGS_NON_ENCRYPTED.name)) {
+            NSUserDefaultsSettings.Factory().create(SettingsType.SETTINGS_NON_ENCRYPTED.name)
+        }
+        single<Settings>(named(SettingsType.SETTINGS_ENCRYPTED.name)) {
+            KeychainSettings(
+                kSecAttrService to CFBridgingRetain(SettingsType.SETTINGS_ENCRYPTED.name),
+                kSecAttrAccessible to kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
+            )
+        }
+        factory { Darwin.create() }
     }
-    single<Settings>(named(SettingsType.SETTINGS_NON_ENCRYPTED.name)) {
-        NSUserDefaultsSettings.Factory().create(SettingsType.SETTINGS_NON_ENCRYPTED.name)
-    }
-    single<Settings>(named(SettingsType.SETTINGS_ENCRYPTED.name)) {
-        KeychainSettings(
-            kSecAttrService to CFBridgingRetain(SettingsType.SETTINGS_ENCRYPTED.name),
-            kSecAttrAccessible to kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
-        )
-    }
-    factory { Darwin.create() }
-}

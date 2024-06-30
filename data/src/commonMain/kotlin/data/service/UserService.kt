@@ -32,6 +32,7 @@ interface UserService {
     ): Either<RemoteError, CreateCustomerMutation.Data>
 
     suspend fun getById(id: String): Either<RemoteError, GetCustomerByIdQuery.Data>
+
     suspend fun getAsPage(
         page: Int,
         size: Int,
@@ -71,9 +72,10 @@ interface UserService {
     ): Either<RemoteError, AddToCartMutation.Data>
 
     suspend fun getCart(): Either<RemoteError, GetUserCartQuery.Data>
+
     suspend fun removeItemFromCart(
         productId: String,
-        variantId: String
+        variantId: String,
     ): Either<RemoteError, RemoveItemFromUserCartMutation.Data>
 }
 
@@ -88,11 +90,12 @@ internal class UserServiceImpl(
         firstName: String,
         lastName: String,
     ): Either<RemoteError, CreateCustomerMutation.Data> {
-        val input = UserCreateInput(
-            email = email,
-            firstName = Optional.present(firstName),
-            lastName = Optional.present(lastName),
-        )
+        val input =
+            UserCreateInput(
+                email = email,
+                firstName = Optional.present(firstName),
+                lastName = Optional.present(lastName),
+            )
         return apolloClient.mutation(CreateCustomerMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
@@ -111,13 +114,14 @@ internal class UserServiceImpl(
         sortBy: String?,
         sortDirection: SortDirection?,
     ): Either<RemoteError, GetAllCustomersAsPageQuery.Data> {
-        val pageInput = PageInput(
-            page = page,
-            size = size,
-            query = query.skipIfNull(),
-            sortBy = sortBy.skipIfNull(),
-            sortDirection = sortDirection.skipIfNull(),
-        )
+        val pageInput =
+            PageInput(
+                page = page,
+                size = size,
+                query = query.skipIfNull(),
+                sortBy = sortBy.skipIfNull(),
+                sortDirection = sortDirection.skipIfNull(),
+            )
         return apolloClient.query(GetAllCustomersAsPageQuery(pageInput))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
@@ -150,26 +154,27 @@ internal class UserServiceImpl(
         marketingSms: Boolean?,
         password: String?,
     ): Either<RemoteError, UpdateCustomerMutation.Data> {
-        val input = UserUpdateInput(
-            id = id,
-            email = email.skipIfNull(),
-            password = password.skipIfNull(),
-            address = address.skipIfNull(),
-            addressFirstName = addressFirstName.skipIfNull(),
-            addressLastName = addressLastName.skipIfNull(),
-            apartment = apartment.skipIfNull(),
-            city = city.skipIfNull(),
-            collectTax = collectTax.skipIfNull(),
-            company = company.skipIfNull(),
-            country = country.skipIfNull(),
-            detailsFirstName = detailsFirstName.skipIfNull(),
-            detailsLastName = detailsLastName.skipIfNull(),
-            marketingEmails = marketingEmails.skipIfNull(),
-            marketingSms = marketingSms.skipIfNull(),
-            detailsPhone = detailPhone.skipIfNull(),
-            postcode = postcode.skipIfNull(),
-            addressPhone = addressPhone.skipIfNull(),
-        )
+        val input =
+            UserUpdateInput(
+                id = id,
+                email = email.skipIfNull(),
+                password = password.skipIfNull(),
+                address = address.skipIfNull(),
+                addressFirstName = addressFirstName.skipIfNull(),
+                addressLastName = addressLastName.skipIfNull(),
+                apartment = apartment.skipIfNull(),
+                city = city.skipIfNull(),
+                collectTax = collectTax.skipIfNull(),
+                company = company.skipIfNull(),
+                country = country.skipIfNull(),
+                detailsFirstName = detailsFirstName.skipIfNull(),
+                detailsLastName = detailsLastName.skipIfNull(),
+                marketingEmails = marketingEmails.skipIfNull(),
+                marketingSms = marketingSms.skipIfNull(),
+                detailsPhone = detailPhone.skipIfNull(),
+                postcode = postcode.skipIfNull(),
+                addressPhone = addressPhone.skipIfNull(),
+            )
 
         return apolloClient.mutation(UpdateCustomerMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
@@ -179,13 +184,14 @@ internal class UserServiceImpl(
     override suspend fun addProductToCart(
         productId: String,
         variantId: String,
-        quantity: Int
+        quantity: Int,
     ): Either<RemoteError, AddToCartMutation.Data> {
-        val input = AddToCartInput(
-            productId = productId,
-            variantId = variantId,
-            quantity = quantity,
-        )
+        val input =
+            AddToCartInput(
+                productId = productId,
+                variantId = variantId,
+                quantity = quantity,
+            )
         return apolloClient.mutation(AddToCartMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
@@ -200,14 +206,14 @@ internal class UserServiceImpl(
 
     override suspend fun removeItemFromCart(
         productId: String,
-        variantId: String
+        variantId: String,
     ): Either<RemoteError, RemoveItemFromUserCartMutation.Data> {
         return apolloClient.mutation(
             RemoveItemFromUserCartMutation(
                 Optional.present(guestCartId),
                 productId,
-                variantId
-            )
+                variantId,
+            ),
         )
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()

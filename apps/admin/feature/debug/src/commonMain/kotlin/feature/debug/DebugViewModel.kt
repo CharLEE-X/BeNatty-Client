@@ -19,7 +19,8 @@ class DebugViewModel(
     DebugContract.Events,
     DebugContract.State,
     >(
-    config = BallastViewModelConfiguration.Builder()
+    config =
+    BallastViewModelConfiguration.Builder()
         .apply {
 //            this += LoggingInterceptor()
             logger = { PrintlnLogger() }
@@ -36,7 +37,8 @@ class DebugViewModel(
             interceptorDispatcher = Dispatchers.Default,
         )
         .build(),
-    eventHandler = DebugEventHandler(
+    eventHandler =
+    DebugEventHandler(
         onError = onError,
         onGenerateUsersSuccess = onGenerateUsersSuccess,
         onDeleteUsersSuccess = onDeleteUsersSuccess,

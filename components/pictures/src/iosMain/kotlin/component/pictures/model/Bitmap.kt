@@ -17,11 +17,11 @@ import platform.UIKit.UIImageJPEGRepresentation
 
 @OptIn(ExperimentalForeignApi::class)
 actual class Bitmap(val image: UIImage) {
-
     @ExperimentalUnsignedTypes
     actual fun toByteArray(): ByteArray {
-        val imageData = UIImageJPEGRepresentation(image, 0.99)
-            ?: throw IllegalArgumentException("image data is null")
+        val imageData =
+            UIImageJPEGRepresentation(image, 0.99)
+                ?: throw IllegalArgumentException("image data is null")
         val bytes = imageData.bytes ?: throw IllegalArgumentException("image bytes is null")
         val length = imageData.length
 
@@ -30,8 +30,9 @@ actual class Bitmap(val image: UIImage) {
     }
 
     actual fun toBase64(): String {
-        val imageData = UIImageJPEGRepresentation(image, 0.99)
-            ?: throw IllegalArgumentException("image data is null")
+        val imageData =
+            UIImageJPEGRepresentation(image, 0.99)
+                ?: throw IllegalArgumentException("image data is null")
 
         return imageData.base64EncodedStringWithOptions(0u)
     }
@@ -48,10 +49,11 @@ actual class Bitmap(val image: UIImage) {
         UIGraphicsBeginImageContextWithOptions(CGSizeMake(newWidth, newHeight), false, 0.0)
         image.drawInRect(CGRectMake(0.0, 0.0, newWidth, newHeight))
         val newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext();
+        UIGraphicsEndImageContext()
 
-        val imageData = UIImageJPEGRepresentation(newImage!!, 0.99)
-            ?: throw IllegalArgumentException("image data is null")
+        val imageData =
+            UIImageJPEGRepresentation(newImage!!, 0.99)
+                ?: throw IllegalArgumentException("image data is null")
 
         return imageData.base64EncodedStringWithOptions(0u)
     }

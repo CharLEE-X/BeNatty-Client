@@ -20,37 +20,39 @@ import org.koin.core.component.get
  */
 internal suspend fun <T : Operation.Data> ApolloCall<T>.handle(
     block: suspend (T) -> Unit = {},
-): Either<RemoteError, T> = either {
-    val operationName = this@handle.operation.name()
-    val response = this@handle.execute()
+): Either<RemoteError, T> =
+    either {
+        val operationName = this@handle.operation.name()
+        val response = this@handle.execute()
 
-    ensure(response.errors.isNullOrEmpty()) {
-        val errorsAsString = response.errors?.joinToString { it.message } ?: ""
+        ensure(response.errors.isNullOrEmpty()) {
+            val errorsAsString = response.errors?.joinToString { it.message } ?: ""
 
-        if ("Forbidden" in errorsAsString || "Unauthorized" in errorsAsString) {
-            val authService = object : KoinComponent {}
-            authService.get<AuthService>().signOut()
-            raise(Unauthorized)
+            if ("Forbidden" in errorsAsString || "Unauthorized" in errorsAsString) {
+                val authService = object : KoinComponent {}
+                authService.get<AuthService>().signOut()
+                raise(Unauthorized)
+            }
+
+            raise(RequestError(operationName, "$operationName: $errorsAsString"))
         }
 
-        raise(RequestError(operationName, "$operationName: $errorsAsString"))
+        response.exception?.let { raise(RequestError(operationName, it.message)) }
+
+        val data = response.data ?: raise(NoData(operationName))
+        block(data)
+        data
     }
 
-    response.exception?.let { raise(RequestError(operationName, it.message)) }
-
-    val data = response.data ?: raise(NoData(operationName))
-    block(data)
-    data
-}
-
-internal fun <T : Operation.Data> ApolloResponse<T>.handle(): Either<RemoteError, T> = either {
-    val operationName = this@handle.operation.name()
-    ensure(!errors.isNullOrEmpty()) {
-        val errorsAsString = errors?.joinToString { it.message }
-        raise(RequestError(operationName, "$operationName: $errorsAsString"))
+internal fun <T : Operation.Data> ApolloResponse<T>.handle(): Either<RemoteError, T> =
+    either {
+        val operationName = this@handle.operation.name()
+        ensure(!errors.isNullOrEmpty()) {
+            val errorsAsString = errors?.joinToString { it.message }
+            raise(RequestError(operationName, "$operationName: $errorsAsString"))
+        }
+        data ?: raise(NoData(operationName))
     }
-    data ?: raise(NoData(operationName))
-}
 
 /**
  * Use this if you want to skip sending the value if value is null.

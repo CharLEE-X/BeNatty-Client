@@ -20,15 +20,22 @@ internal object StringProvider {
         get() = SupportedLanguage.currentLanguage()
 
     // "My name is Adrian and i have 3 cars." -> "My name is %0 and i have %1 cars."
-    operator fun invoke(key: Strings, params: Array<out Any>): String {
-        val stringTemplate = when (currentLanguage) {
-            SupportedLanguage.English -> englishLanguage(key)
-        }
+    operator fun invoke(
+        key: Strings,
+        params: Array<out Any>,
+    ): String {
+        val stringTemplate =
+            when (currentLanguage) {
+                SupportedLanguage.English -> englishLanguage(key)
+            }
 
         return formatString(stringTemplate, params)
     }
 
-    private fun formatString(template: String, params: Array<out Any>): String {
+    private fun formatString(
+        template: String,
+        params: Array<out Any>,
+    ): String {
         var result = template
         params.forEachIndexed { index, param ->
             result = result.replace("%$index", param.toString())
@@ -39,4 +46,7 @@ internal object StringProvider {
 
 internal expect fun getDeviceLanguageCode(): String
 
-fun getString(key: Strings, vararg params: Any): String = StringProvider.invoke(key, params)
+fun getString(
+    key: Strings,
+    vararg params: Any,
+): String = StringProvider.invoke(key, params)

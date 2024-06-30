@@ -14,16 +14,17 @@ actual fun ImageFile.toByteArray(): ByteArray {
 //    readAsByteArray(this).await()
 }
 
-fun readAsByteArray(file: File): Promise<ByteArray> = Promise { resolve, reject ->
-    val reader = FileReader()
-    reader.onloadend = { _ ->
-        resolve(Uint8Array(reader.result as ArrayBuffer).toByteArray())
+fun readAsByteArray(file: File): Promise<ByteArray> =
+    Promise { resolve, reject ->
+        val reader = FileReader()
+        reader.onloadend = { _ ->
+            resolve(Uint8Array(reader.result as ArrayBuffer).toByteArray())
+        }
+        reader.onerror = { _ ->
+            reject(Throwable("Failed to read file"))
+        }
+        reader.readAsArrayBuffer(file)
     }
-    reader.onerror = { _ ->
-        reject(Throwable("Failed to read file"))
-    }
-    reader.readAsArrayBuffer(file)
-}
 
 fun Uint8Array.toByteArray(): ByteArray {
     val byteArray = ByteArray(length)

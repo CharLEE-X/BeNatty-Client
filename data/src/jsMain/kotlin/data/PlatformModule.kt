@@ -8,12 +8,13 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 @Suppress("unused")
-internal actual val platformModule: Module = module {
-    single<Settings>(named(SettingsType.SETTINGS_NON_ENCRYPTED.name)) {
-        StorageSettings()
+internal actual val platformModule: Module =
+    module {
+        single<Settings>(named(SettingsType.SETTINGS_NON_ENCRYPTED.name)) {
+            StorageSettings()
+        }
+        single<Settings>(named(SettingsType.SETTINGS_ENCRYPTED.name)) {
+            StorageSettings()
+        }
+        factory { Js.create() }
     }
-    single<Settings>(named(SettingsType.SETTINGS_ENCRYPTED.name)) {
-        StorageSettings()
-    }
-    factory { Js.create() }
-}

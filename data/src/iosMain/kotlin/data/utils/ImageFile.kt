@@ -14,8 +14,9 @@ actual suspend fun ImageFile.toByteArray() =
     UIImagePNGRepresentation(this)?.toByteArray() ?: emptyArray<Byte>().toByteArray()
 
 @OptIn(ExperimentalForeignApi::class)
-private fun NSData.toByteArray(): ByteArray = ByteArray(length.toInt()).apply {
-    usePinned {
-        memcpy(it.addressOf(0), bytes, length)
+private fun NSData.toByteArray(): ByteArray =
+    ByteArray(length.toInt()).apply {
+        usePinned {
+            memcpy(it.addressOf(0), bytes, length)
+        }
     }
-}

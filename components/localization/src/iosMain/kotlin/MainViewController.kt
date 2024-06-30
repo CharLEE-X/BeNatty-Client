@@ -23,43 +23,48 @@ import util.WindowInfo
 @OptIn(ExperimentalForeignApi::class)
 @Suppress("unused", "FunctionNaming", "FunctionName")
 fun MainViewController(window: UIWindow): UIViewController {
-    val koinApplication = initKoin(
-        additionalModules = listOf(
-            module {
-                single { NotifierManager.initialize(NotificationPlatformConfiguration.Ios) }
-            },
-        ),
-    )
+    val koinApplication =
+        initKoin(
+            additionalModules =
+            listOf(
+                module {
+                    single { NotifierManager.initialize(NotificationPlatformConfiguration.Ios) }
+                },
+            ),
+        )
 
-    val uiViewController = ComposeUIViewController {
-        LaunchedEffect(window.safeAreaInsets) {
-            window.safeAreaInsets.useContents {
-                safePaddingValues = PaddingValues(
-                    top = this.top.dp,
-                    bottom = this.bottom.dp,
-                    start = this.left.dp,
-                    end = this.right.dp,
-                )
+    val uiViewController =
+        ComposeUIViewController {
+            LaunchedEffect(window.safeAreaInsets) {
+                window.safeAreaInsets.useContents {
+                    safePaddingValues =
+                        PaddingValues(
+                            top = this.top.dp,
+                            bottom = this.bottom.dp,
+                            start = this.left.dp,
+                            end = this.right.dp,
+                        )
+                }
             }
-        }
 
-        val rememberedWindowInfo by remember(window) {
-            val windowInfo = window.frame.useContents {
-                WindowInfo(this.size.width.dp, this.size.height.dp)
+            val rememberedWindowInfo by remember(window) {
+                val windowInfo =
+                    window.frame.useContents {
+                        WindowInfo(this.size.width.dp, this.size.height.dp)
+                    }
+                mutableStateOf(windowInfo)
             }
-            mutableStateOf(windowInfo)
-        }
 
-        KoinContext(koinApplication.koin) {
-            CompositionLocalProvider(
-                LocalWindow provides rememberedWindowInfo,
-            ) {
-                AppTheme {
-                    RootContent()
+            KoinContext(koinApplication.koin) {
+                CompositionLocalProvider(
+                    LocalWindow provides rememberedWindowInfo,
+                ) {
+                    AppTheme {
+                        RootContent()
+                    }
                 }
             }
         }
-    }
 
     koinApplication.koin.loadModules(
         listOf(

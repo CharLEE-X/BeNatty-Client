@@ -8,7 +8,10 @@ import android.content.Intent
 import org.koin.core.component.KoinComponent
 
 internal class NotificationPublisher : BroadcastReceiver(), KoinComponent {
-    override fun onReceive(context: Context, intent: Intent) {
+    override fun onReceive(
+        context: Context,
+        intent: Intent,
+    ) {
         val notificationsManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationId =
@@ -19,7 +22,7 @@ internal class NotificationPublisher : BroadcastReceiver(), KoinComponent {
         @Suppress("DEPRECATION")
         val notification =
             intent.getParcelableExtra<Notification>(
-                NotificationServiceAndroid.NOTIFICATION_PAYLOAD_NOTIFICATION
+                NotificationServiceAndroid.NOTIFICATION_PAYLOAD_NOTIFICATION,
             )
 
         if (notificationType == NotificationServiceAndroid.NOTIFICATION_TYPE_DISMISS) {

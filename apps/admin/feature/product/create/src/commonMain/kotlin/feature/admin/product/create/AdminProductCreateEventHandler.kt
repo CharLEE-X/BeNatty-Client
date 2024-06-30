@@ -10,14 +10,17 @@ internal class AdminProductCreateEventHandler(
 ) : EventHandler<
     AdminProductCreateContract.Inputs,
     AdminProductCreateContract.Events,
-    AdminProductCreateContract.State> {
+    AdminProductCreateContract.State,
+    > {
     override suspend fun EventHandlerScope<
         AdminProductCreateContract.Inputs,
         AdminProductCreateContract.Events,
-        AdminProductCreateContract.State>.handleEvent(event: AdminProductCreateContract.Events) =
-        when (event) {
-            is AdminProductCreateContract.Events.OnError -> onError(event.message)
-            AdminProductCreateContract.Events.GoBack -> goBack()
-            is AdminProductCreateContract.Events.GoToProduct -> goToProduct(event.id)
-        }
+        AdminProductCreateContract.State,
+        >.handleEvent(
+        event: AdminProductCreateContract.Events,
+    ) = when (event) {
+        is AdminProductCreateContract.Events.OnError -> onError(event.message)
+        AdminProductCreateContract.Events.GoBack -> goBack()
+        is AdminProductCreateContract.Events.GoToProduct -> goToProduct(event.id)
+    }
 }

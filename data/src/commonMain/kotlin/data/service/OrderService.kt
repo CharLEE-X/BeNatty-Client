@@ -32,7 +32,9 @@ interface OrderService {
     ): Either<RemoteError, GetCategoriesAsPageQuery.Data>
 
     suspend fun getById(id: String): Flow<Either<RemoteError, GetCategoryByIdQuery.Data>>
+
     suspend fun deleteById(id: String): Either<RemoteError, DeleteCategoryMutation.Data>
+
     suspend fun update(
         id: String,
         name: String?,
@@ -54,13 +56,14 @@ internal class OrderServiceImpl(private val apolloClient: ApolloClient) : OrderS
         sortBy: String?,
         sortDirection: SortDirection?,
     ): Either<RemoteError, GetCategoriesAsPageQuery.Data> {
-        val pageInput = PageInput(
-            page = page,
-            size = size,
-            query = query.skipIfNull(),
-            sortBy = sortBy.skipIfNull(),
-            sortDirection = sortDirection.skipIfNull(),
-        )
+        val pageInput =
+            PageInput(
+                page = page,
+                size = size,
+                query = query.skipIfNull(),
+                sortBy = sortBy.skipIfNull(),
+                sortDirection = sortDirection.skipIfNull(),
+            )
         return apolloClient.query(GetCategoriesAsPageQuery(pageInput))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
@@ -83,10 +86,11 @@ internal class OrderServiceImpl(private val apolloClient: ApolloClient) : OrderS
         id: String,
         name: String?,
     ): Either<RemoteError, UpdateCategoryMutation.Data> {
-        val input = CategoryUpdateInput(
-            id = id,
-            name = name.skipIfNull(),
-        )
+        val input =
+            CategoryUpdateInput(
+                id = id,
+                name = name.skipIfNull(),
+            )
         return apolloClient.mutation(UpdateCategoryMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()

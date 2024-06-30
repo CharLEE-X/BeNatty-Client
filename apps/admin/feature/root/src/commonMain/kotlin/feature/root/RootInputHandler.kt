@@ -17,7 +17,6 @@ private typealias RootInputScope =
 internal class RootInputHandler :
     KoinComponent,
     InputHandler<RootContract.Inputs, RootContract.Events, RootContract.State> {
-
     private val authService: AuthService by inject()
     private val notificationService: NotificationService by inject()
 
@@ -51,7 +50,8 @@ internal class RootInputHandler :
     private suspend fun RootInputScope.sendNotification(title: String, body: String) {
         sideJob("sendNotification") {
             notificationService.schedule(
-                notificationType = NotificationType.Immediate(
+                notificationType =
+                NotificationType.Immediate(
                     title = title,
                     body = body,
                 ),

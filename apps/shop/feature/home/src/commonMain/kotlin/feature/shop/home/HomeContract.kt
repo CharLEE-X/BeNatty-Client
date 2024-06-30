@@ -6,6 +6,7 @@ import data.GetLandingConfigQuery
 import data.GetLandingConfigQuery.SlideshowItem
 import data.type.MediaType
 
+@Suppress("MaxLineLength")
 object HomeContract {
     data class State(
         val isLoading: Boolean = true,

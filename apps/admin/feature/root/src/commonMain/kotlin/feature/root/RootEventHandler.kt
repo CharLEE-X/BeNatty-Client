@@ -10,10 +10,7 @@ private typealias RootEventHandlerScope =
 internal class RootEventHandler(
     private val onError: suspend (String) -> Unit,
 ) : KoinComponent, EventHandler<RootContract.Inputs, RootContract.Events, RootContract.State> {
-
-    override suspend fun RootEventHandlerScope.handleEvent(
-        event: RootContract.Events,
-    ) = when (event) {
+    override suspend fun RootEventHandlerScope.handleEvent(event: RootContract.Events) = when (event) {
         is RootContract.Events.OnError -> onError(event.message)
     }
 }

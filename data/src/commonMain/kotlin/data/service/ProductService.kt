@@ -46,6 +46,7 @@ import data.utils.skipIfNull
 
 interface ProductService {
     suspend fun create(name: String): Either<RemoteError, AdminCreateProductMutation.Data>
+
     suspend fun getAdminProductsAsPage(
         page: Int,
         size: Int,
@@ -63,10 +64,11 @@ interface ProductService {
         priceFrom: Double?,
         priceTo: Double?,
         sortBy: ProductsSort?,
-        traits: List<Trait>?
+        traits: List<Trait>?,
     ): Either<RemoteError, GetCatalogPageQuery.Data>
 
     suspend fun getProductById(id: String): Either<RemoteError, AdminProductGetByIdQuery.Data>
+
     suspend fun getCurrentCatalogFilterOptions(
         categories: List<String>?,
         colors: List<Color>?,
@@ -77,7 +79,9 @@ interface ProductService {
     ): Either<RemoteError, GetCurrentCatalogFilterOptionsQuery.Data>
 
     suspend fun getAllCatalogFilterOptions(): Either<RemoteError, GetAllCatalogFilterOptionsQuery.Data>
+
     suspend fun delete(id: String): Either<RemoteError, AdminDeleteProductMutation.Data>
+
     suspend fun updateProduct(
         id: String,
         name: String?,
@@ -113,24 +117,27 @@ interface ProductService {
 
     suspend fun deleteImage(
         productId: String,
-        imageId: String
+        imageId: String,
     ): Either<RemoteError, AdminDeleteProductMediaMutation.Data>
 
     suspend fun getTrendingNowProducts(): Either<RemoteError, GetTrendingNowProductsQuery.Data>
+
     suspend fun getRecommendedProducts(): Either<RemoteError, GetRecommendedProductsQuery.Data>
+
     suspend fun getSimilarProducts(): Either<RemoteError, GetSimilarProductsQuery.Data>
+
     suspend fun getTopSellingProducts(): Either<RemoteError, GetTopSellingProductsQuery.Data>
 }
 
 internal class ProductServiceImpl(private val apolloClient: ApolloClient) : ProductService {
     override suspend fun deleteImage(
         productId: String,
-        imageId: String
+        imageId: String,
     ): Either<RemoteError, AdminDeleteProductMediaMutation.Data> =
         apolloClient.mutation(
             AdminDeleteProductMediaMutation(
-                ProductMediaDeleteInput(mediaId = productId, productId = imageId)
-            )
+                ProductMediaDeleteInput(mediaId = productId, productId = imageId),
+            ),
         ).handle()
 
     override suspend fun getTrendingNowProducts(): Either<RemoteError, GetTrendingNowProductsQuery.Data> {
@@ -162,11 +169,12 @@ internal class ProductServiceImpl(private val apolloClient: ApolloClient) : Prod
         blobInput: BlobInput,
         mediaType: MediaType,
     ): Either<RemoteError, AdminProductUploadImageMutation.Data> {
-        val input = ProductMediaUploadInput(
-            productId = productId,
-            blob = blobInput,
-            mediaType = mediaType,
-        )
+        val input =
+            ProductMediaUploadInput(
+                productId = productId,
+                blob = blobInput,
+                mediaType = mediaType,
+            )
         return apolloClient.mutation(AdminProductUploadImageMutation(input)).handle()
     }
 
@@ -196,62 +204,72 @@ internal class ProductServiceImpl(private val apolloClient: ApolloClient) : Prod
         width: String?,
         variants: List<ProductUpdateVariantInput>?,
     ): Either<RemoteError, AdminProductUpdateMutation.Data> {
-        val inventory = if (
-            backorderStatus != null || lowStockThreshold != null || remainingStock != null || stockStatus != null ||
-            trackQuantity != null
-        ) {
-            Optional.present(
-                InventoryUpdateInput(
-                    backorderStatus = backorderStatus.skipIfNull(),
-                    lowStockThreshold = lowStockThreshold.skipIfNull(),
-                    remainingStock = remainingStock.skipIfNull(),
-                    trackQuantity = trackQuantity.skipIfNull(),
+        val inventory =
+            if (
+                backorderStatus != null || lowStockThreshold != null || remainingStock != null || stockStatus != null ||
+                trackQuantity != null
+            ) {
+                Optional.present(
+                    InventoryUpdateInput(
+                        backorderStatus = backorderStatus.skipIfNull(),
+                        lowStockThreshold = lowStockThreshold.skipIfNull(),
+                        remainingStock = remainingStock.skipIfNull(),
+                        trackQuantity = trackQuantity.skipIfNull(),
+                    ),
                 )
-            )
-        } else Optional.absent()
+            } else {
+                Optional.absent()
+            }
 
-        val productPrice = if (salePrice != null || regularPrice != null || chargeTax != null) {
-            Optional.present(
-                PricingUpdateInput(
-                    salePrice = salePrice.skipIfNull(),
-                    regularPrice = regularPrice.skipIfNull(),
-                    chargeTax = chargeTax.skipIfNull(),
+        val productPrice =
+            if (salePrice != null || regularPrice != null || chargeTax != null) {
+                Optional.present(
+                    PricingUpdateInput(
+                        salePrice = salePrice.skipIfNull(),
+                        regularPrice = regularPrice.skipIfNull(),
+                        chargeTax = chargeTax.skipIfNull(),
+                    ),
                 )
-            )
-        } else Optional.absent()
+            } else {
+                Optional.absent()
+            }
 
-        val shipping = if (
-            presetId != null || height != null || length != null || isPhysicalProduct != null || weight != null ||
-            width != null
-        ) {
-            Optional.present(
-                ShippingUpdateInput(
-                    presetId = presetId.skipIfNull(),
-                    height = height.skipIfNull(),
-                    length = length.skipIfNull(),
-                    isPhysicalProduct = isPhysicalProduct.skipIfNull(),
-                    weight = weight.skipIfNull(),
-                    width = width.skipIfNull(),
+        val shipping =
+            if (
+                presetId != null || height != null || length != null || isPhysicalProduct != null || weight != null ||
+                width != null
+            ) {
+                Optional.present(
+                    ShippingUpdateInput(
+                        presetId = presetId.skipIfNull(),
+                        height = height.skipIfNull(),
+                        length = length.skipIfNull(),
+                        isPhysicalProduct = isPhysicalProduct.skipIfNull(),
+                        weight = weight.skipIfNull(),
+                        width = width.skipIfNull(),
+                    ),
                 )
-            )
-        } else Optional.absent()
+            } else {
+                Optional.absent()
+            }
 
-        val input = ProductUpdateInput(
-            id = id,
-            name = name.skipIfNull(),
-            description = description.skipIfNull(),
-            isFeatured = isFeatured.skipIfNull(),
-            allowReviews = allowReviews.skipIfNull(),
-            categoryId = categoryId.skipIfNull(),
-            tags = tags.skipIfNull(),
-            postStatus = postStatus.skipIfNull(),
-            media = Optional.absent(),
-            inventory = inventory,
-            traits = traits.skipIfNull(),
-            pricing = productPrice,
-            shipping = shipping,
-            variants = variants.skipIfNull(),
-        )
+        val input =
+            ProductUpdateInput(
+                id = id,
+                name = name.skipIfNull(),
+                description = description.skipIfNull(),
+                isFeatured = isFeatured.skipIfNull(),
+                allowReviews = allowReviews.skipIfNull(),
+                categoryId = categoryId.skipIfNull(),
+                tags = tags.skipIfNull(),
+                postStatus = postStatus.skipIfNull(),
+                media = Optional.absent(),
+                inventory = inventory,
+                traits = traits.skipIfNull(),
+                pricing = productPrice,
+                shipping = shipping,
+                variants = variants.skipIfNull(),
+            )
 
         return apolloClient.mutation(AdminProductUpdateMutation(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
@@ -270,13 +288,14 @@ internal class ProductServiceImpl(private val apolloClient: ApolloClient) : Prod
         sortBy: String?,
         sortDirection: SortDirection?,
     ): Either<RemoteError, AdminGetAllProductsPageQuery.Data> {
-        val pageInput = PageInput(
-            page = page,
-            size = size,
-            query = query.skipIfNull(),
-            sortBy = sortBy.skipIfNull(),
-            sortDirection = sortDirection.skipIfNull(),
-        )
+        val pageInput =
+            PageInput(
+                page = page,
+                size = size,
+                query = query.skipIfNull(),
+                sortBy = sortBy.skipIfNull(),
+                sortDirection = sortDirection.skipIfNull(),
+            )
         return apolloClient.query(AdminGetAllProductsPageQuery(pageInput))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
@@ -291,22 +310,24 @@ internal class ProductServiceImpl(private val apolloClient: ApolloClient) : Prod
         priceFrom: Double?,
         priceTo: Double?,
         sortBy: ProductsSort?,
-        traits: List<Trait>?
+        traits: List<Trait>?,
     ): Either<RemoteError, GetCatalogPageQuery.Data> {
-        val pageInput = CatalogPageInput(
-            page = page,
-            size = Optional.present(9),
-            query = query.skipIfNull(),
-            filters = CurrentCatalogFilterInput(
-                categories = categories.skipIfNull(),
-                colors = colors.skipIfNull(),
-                sizes = sizes.skipIfNull(),
-                priceFrom = priceFrom.skipIfNull(),
-                priceTo = priceTo.skipIfNull(),
-                traits = traits.skipIfNull(),
-            ),
-            sortBy = sortBy.skipIfNull(),
-        )
+        val pageInput =
+            CatalogPageInput(
+                page = page,
+                size = Optional.present(9),
+                query = query.skipIfNull(),
+                filters =
+                CurrentCatalogFilterInput(
+                    categories = categories.skipIfNull(),
+                    colors = colors.skipIfNull(),
+                    sizes = sizes.skipIfNull(),
+                    priceFrom = priceFrom.skipIfNull(),
+                    priceTo = priceTo.skipIfNull(),
+                    traits = traits.skipIfNull(),
+                ),
+                sortBy = sortBy.skipIfNull(),
+            )
         return apolloClient.query(GetCatalogPageQuery(pageInput))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()
@@ -325,14 +346,15 @@ internal class ProductServiceImpl(private val apolloClient: ApolloClient) : Prod
         sizes: List<Size>?,
         traits: List<Trait>?,
     ): Either<RemoteError, GetCurrentCatalogFilterOptionsQuery.Data> {
-        val input = CurrentCatalogFilterInput(
-            categories = categories.skipIfNull(),
-            colors = colors.skipIfNull(),
-            priceFrom = priceFrom.skipIfNull(),
-            priceTo = priceTo.skipIfNull(),
-            sizes = sizes.skipIfNull(),
-            traits = traits.skipIfNull(),
-        )
+        val input =
+            CurrentCatalogFilterInput(
+                categories = categories.skipIfNull(),
+                colors = colors.skipIfNull(),
+                priceFrom = priceFrom.skipIfNull(),
+                priceTo = priceTo.skipIfNull(),
+                sizes = sizes.skipIfNull(),
+                traits = traits.skipIfNull(),
+            )
         return apolloClient.query(GetCurrentCatalogFilterOptionsQuery(input))
             .fetchPolicy(FetchPolicy.NetworkOnly)
             .handle()

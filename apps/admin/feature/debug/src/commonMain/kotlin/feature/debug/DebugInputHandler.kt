@@ -24,7 +24,8 @@ import org.koin.core.component.inject
 private typealias DebugInputScope =
     InputHandlerScope<DebugContract.Inputs, DebugContract.Events, DebugContract.State>
 
-internal class DebugInputHandler : KoinComponent,
+internal class DebugInputHandler :
+    KoinComponent,
     InputHandler<DebugContract.Inputs, DebugContract.Events, DebugContract.State> {
     private val debugService: DebugService by inject()
     private val locationService: LocationService by inject()
@@ -146,11 +147,12 @@ internal class DebugInputHandler : KoinComponent,
     private suspend fun DebugInputScope.sendNotificationNow() {
         val state = getCurrentState()
         sideJob("SendNotificationNow") {
-            val notificationType = NotificationType.Immediate(
-                title = state.notificationText,
-                body = state.notificationText,
-                soundType = SoundType.CRITICAL,
-            )
+            val notificationType =
+                NotificationType.Immediate(
+                    title = state.notificationText,
+                    body = state.notificationText,
+                    soundType = SoundType.CRITICAL,
+                )
             notificationService.schedule(notificationType)
         }
     }

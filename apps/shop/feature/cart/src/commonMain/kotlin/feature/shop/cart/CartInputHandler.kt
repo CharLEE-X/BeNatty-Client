@@ -14,7 +14,8 @@ import org.koin.core.component.inject
 
 private typealias InputScope = InputHandlerScope<CartContract.Inputs, CartContract.Events, CartContract.State>
 
-internal class CartInputHandler : KoinComponent,
+internal class CartInputHandler :
+    KoinComponent,
     InputHandler<CartContract.Inputs, CartContract.Events, CartContract.State> {
 
     private val productService: ProductService by inject()
@@ -23,8 +24,9 @@ internal class CartInputHandler : KoinComponent,
     override suspend fun InputHandlerScope<
         CartContract.Inputs,
         CartContract.Events,
-        CartContract.State>.handleInput(
-        input: CartContract.Inputs
+        CartContract.State,
+        >.handleInput(
+        input: CartContract.Inputs,
     ) = when (input) {
         CartContract.Inputs.Init -> handleInit()
         CartContract.Inputs.FetchCart -> handleFetchCart()
@@ -47,7 +49,7 @@ internal class CartInputHandler : KoinComponent,
         is CartContract.Inputs.UpdateCart -> handleUpdateCart(
             productId = input.productId,
             variantId = input.variantId,
-            quantity = input.quantity
+            quantity = input.quantity,
         )
 
         is CartContract.Inputs.SetCart -> updateState { it.copy(cart = input.cart) }
@@ -81,7 +83,7 @@ internal class CartInputHandler : KoinComponent,
         sideJob("removeFromCart") {
             userService.removeItemFromCart(
                 productId = productId,
-                variantId = variantId
+                variantId = variantId,
             ).fold(
                 { postEvent(CartContract.Events.OnError(it.toString())) },
                 {
@@ -98,7 +100,7 @@ internal class CartInputHandler : KoinComponent,
                                         attrs = it.attrs.map {
                                             GetUserCartQuery.Attr(
                                                 key = it.key,
-                                                value = it.value
+                                                value = it.value,
                                             )
                                         },
                                         mediaUrl = it.mediaUrl,
@@ -109,21 +111,23 @@ internal class CartInputHandler : KoinComponent,
                                     )
                                 },
                                 subtotal = it.removeItemFromUserCart.subtotal,
-                                saved = it.removeItemFromUserCart.saved
-                            )
-                        )
+                                saved = it.removeItemFromUserCart.saved,
+                            ),
+                        ),
                     )
 
-                    val totals = countTotals(it.removeItemFromUserCart.items.map {
-                        Prices(
-                            regularPrice = it.regularPrice,
-                            salePrice = it.salePrice,
-                            quantity = it.quantity
-                        )
-                    })
+                    val totals = countTotals(
+                        it.removeItemFromUserCart.items.map {
+                            Prices(
+                                regularPrice = it.regularPrice,
+                                salePrice = it.salePrice,
+                                quantity = it.quantity,
+                            )
+                        },
+                    )
                     postInput(CartContract.Inputs.SetTotals(subtotal = totals.subtotal, saved = totals.saved))
                     postInput(CartContract.Inputs.SetBasketCount(it.removeItemFromUserCart.items.size))
-                }
+                },
             )
         }
     }
@@ -147,16 +151,12 @@ internal class CartInputHandler : KoinComponent,
             ?: noOp()
     }
 
-    private suspend fun InputScope.handleUpdateCart(
-        productId: String,
-        variantId: String,
-        quantity: Int,
-    ) {
+    private suspend fun InputScope.handleUpdateCart(productId: String, variantId: String, quantity: Int) {
         sideJob("addToCart") {
             userService.addProductToCart(
                 productId = productId,
                 variantId = variantId,
-                quantity = quantity
+                quantity = quantity,
             ).fold(
                 { postEvent(CartContract.Events.OnError(it.toString())) },
                 {
@@ -173,7 +173,7 @@ internal class CartInputHandler : KoinComponent,
                                         attrs = it.attrs.map {
                                             GetUserCartQuery.Attr(
                                                 key = it.key,
-                                                value = it.value
+                                                value = it.value,
                                             )
                                         },
                                         mediaUrl = it.mediaUrl,
@@ -184,22 +184,24 @@ internal class CartInputHandler : KoinComponent,
                                     )
                                 },
                                 subtotal = it.addToCart.subtotal,
-                                saved = it.addToCart.saved
-                            )
-                        )
+                                saved = it.addToCart.saved,
+                            ),
+                        ),
                     )
 
-                    val totals = countTotals(it.addToCart.items.map {
-                        Prices(
-                            regularPrice = it.regularPrice,
-                            salePrice = it.salePrice,
-                            quantity = it.quantity
-                        )
-                    })
+                    val totals = countTotals(
+                        it.addToCart.items.map {
+                            Prices(
+                                regularPrice = it.regularPrice,
+                                salePrice = it.salePrice,
+                                quantity = it.quantity,
+                            )
+                        },
+                    )
                     postInput(CartContract.Inputs.SetTotals(subtotal = totals.subtotal, saved = totals.saved))
                     postInput(CartContract.Inputs.SetShowSidebar(true))
                     postInput(CartContract.Inputs.SetBasketCount(it.addToCart.items.size))
-                }
+                },
             )
         }
     }
@@ -210,7 +212,6 @@ internal class CartInputHandler : KoinComponent,
             userService.getCart().fold(
                 { postEvent(CartContract.Events.OnError(it.toString())) },
                 {
-
                     // TODO: This may need to go to the Config
                     val currency = Currency("£", "GBP")
                     postInput(CartContract.Inputs.SetCurrency(currency))
@@ -221,17 +222,19 @@ internal class CartInputHandler : KoinComponent,
                     val spendMoreValue = "100.00"
                     postInput(CartContract.Inputs.SetSpendMore(showSpendMore, spendMoreKey, spendMoreValue))
 
-                    val totals = countTotals(it.getUserCart.items.map {
-                        Prices(
-                            regularPrice = it.regularPrice,
-                            salePrice = it.salePrice,
-                            quantity = it.quantity
-                        )
-                    })
+                    val totals = countTotals(
+                        it.getUserCart.items.map {
+                            Prices(
+                                regularPrice = it.regularPrice,
+                                salePrice = it.salePrice,
+                                quantity = it.quantity,
+                            )
+                        },
+                    )
                     postInput(CartContract.Inputs.SetTotals(subtotal = totals.subtotal, saved = totals.saved))
                     postInput(CartContract.Inputs.SetCart(it.getUserCart))
                     postInput(CartContract.Inputs.SetBasketCount(it.getUserCart.items.size))
-                }
+                },
             )
             if (state.cartLoading) postInput(CartContract.Inputs.SetCartLoading(false))
         }
@@ -253,7 +256,7 @@ internal class CartInputHandler : KoinComponent,
             postInput(CartContract.Inputs.SetTopProductsLoading(true))
             productService.getTopSellingProducts().fold(
                 { postEvent(CartContract.Events.OnError(it.toString())) },
-                { postInput(CartContract.Inputs.SetTopProducts(it.getTopSellingProducts)) }
+                { postInput(CartContract.Inputs.SetTopProducts(it.getTopSellingProducts)) },
             )
             postInput(CartContract.Inputs.SetTopProductsLoading(false))
         }

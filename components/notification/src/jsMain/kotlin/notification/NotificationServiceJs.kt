@@ -23,5 +23,4 @@ internal class NotificationServiceJs(private val logger: Logger) : NotificationS
     override suspend fun cancelNotification(ids: List<String>) {
         logger.v { "Cancelling notification with IDs: [${ids.joinToString()}]" }
     }
-
 }

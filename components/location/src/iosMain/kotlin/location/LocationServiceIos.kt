@@ -33,36 +33,45 @@ internal class LocationServiceIos(private val logger: Logger) : LocationService 
     private var latLngContinuation: Continuation<LatLng?>? = null
 
     @OptIn(ExperimentalForeignApi::class)
-    private val clDelegate = object : CLLocationManagerDelegateProtocol, NSObject() {
-        override fun locationManager(manager: CLLocationManager, didUpdateLocations: List<*>) {
-            val updatedLatLng = didUpdateLocations.filterIsInstance<CLLocation>()
-                .takeIf { it.isNotEmpty() }
-                ?.let {
-                    it.first().coordinate.useContents {
-                        LatLng(latitude, longitude)
-                    }
-                }
+    private val clDelegate =
+        object : CLLocationManagerDelegateProtocol, NSObject() {
+            override fun locationManager(
+                manager: CLLocationManager,
+                didUpdateLocations: List<*>,
+            ) {
+                val updatedLatLng =
+                    didUpdateLocations.filterIsInstance<CLLocation>()
+                        .takeIf { it.isNotEmpty() }
+                        ?.let {
+                            it.first().coordinate.useContents {
+                                LatLng(latitude, longitude)
+                            }
+                        }
 
-            if (updatedLatLng != null) {
-                logger.v { "Updated locations $updatedLatLng" }
-                latLngContinuation?.resume(updatedLatLng)
+                if (updatedLatLng != null) {
+                    logger.v { "Updated locations $updatedLatLng" }
+                    latLngContinuation?.resume(updatedLatLng)
+                    latLngContinuation = null
+                    manager.stopUpdatingLocation()
+                }
+            }
+
+            override fun locationManager(
+                manager: CLLocationManager,
+                didFailWithError: NSError,
+            ) {
+                logger.e { "Failed $didFailWithError" }
+                latLngContinuation?.resumeWithException(Throwable(didFailWithError.description))
                 latLngContinuation = null
-                manager.stopUpdatingLocation()
             }
         }
 
-        override fun locationManager(manager: CLLocationManager, didFailWithError: NSError) {
-            logger.e { "Failed $didFailWithError" }
-            latLngContinuation?.resumeWithException(Throwable(didFailWithError.description))
-            latLngContinuation = null
+    private val clLocationManager =
+        CLLocationManager().apply {
+            desiredAccuracy = kCLLocationAccuracyBest
+            distanceFilter = kCLDistanceFilterNone
+            delegate = clDelegate
         }
-    }
-
-    private val clLocationManager = CLLocationManager().apply {
-        desiredAccuracy = kCLLocationAccuracyBest
-        distanceFilter = kCLDistanceFilterNone
-        delegate = clDelegate
-    }
 
     override suspend fun getCurrentLocation(): LatLng? {
         logger.v { "Getting location" }
@@ -77,7 +86,10 @@ internal class LocationServiceIos(private val logger: Logger) : LocationService 
         }
     }
 
-    override suspend fun getPlaceDetails(latitude: Double, longitude: Double): Location? {
+    override suspend fun getPlaceDetails(
+        latitude: Double,
+        longitude: Double,
+    ): Location? {
         val geocoder = CLGeocoder()
         val location = CLLocation(latitude = latitude, longitude = longitude)
 

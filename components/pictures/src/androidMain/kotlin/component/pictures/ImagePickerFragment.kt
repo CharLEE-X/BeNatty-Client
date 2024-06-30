@@ -52,13 +52,14 @@ class ImagePickerFragment : Fragment(), KoinComponent {
 
         codeCallbackMap[requestCode] =
             CallbackData.Gallery(
-                callback
+                callback,
             )
 
-        val intent = Intent(
-            Intent.ACTION_PICK,
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        )
+        val intent =
+            Intent(
+                Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            )
         startActivityForResult(intent, requestCode)
     }
 
@@ -69,11 +70,12 @@ class ImagePickerFragment : Fragment(), KoinComponent {
         codeCallbackMap[requestCode] =
             CallbackData.Camera(
                 callback,
-                outputUri
+                outputUri,
             )
 
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            .putExtra(MediaStore.EXTRA_OUTPUT, outputUri)
+        val intent =
+            Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                .putExtra(MediaStore.EXTRA_OUTPUT, outputUri)
         startActivityForResult(intent, requestCode)
     }
 
@@ -85,11 +87,15 @@ class ImagePickerFragment : Fragment(), KoinComponent {
         return FileProvider.getUriForFile(
             androidContext,
             androidContext.applicationContext.packageName + FILE_PROVIDER_SUFFIX,
-            tmpFile
+            tmpFile,
         )
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+    ) {
         super.onActivityResult(requestCode, resultCode, data)
 
         val callbackData = codeCallbackMap[requestCode] ?: return
@@ -125,29 +131,32 @@ class ImagePickerFragment : Fragment(), KoinComponent {
     ) {
         val contentResolver = androidContext.contentResolver
 
-        val bitmapOptions = contentResolver.openInputStream(uri)?.use {
-            BitmapUtils.getBitmapOptionsFromStream(it)
-        } ?: run {
-            callback.invoke(Result.failure(Exception("No access to the file: $uri")))
-            return
-        }
+        val bitmapOptions =
+            contentResolver.openInputStream(uri)?.use {
+                BitmapUtils.getBitmapOptionsFromStream(it)
+            } ?: run {
+                callback.invoke(Result.failure(Exception("No access to the file: $uri")))
+                return
+            }
 
         val sampleSize =
             BitmapUtils.calculateInSampleSize(bitmapOptions, maxImageWidth, maxImageHeight)
 
-        val orientation = contentResolver.openInputStream(uri)?.use {
-            BitmapUtils.getBitmapOrientation(it)
-        } ?: run {
-            callback.invoke(Result.failure(Exception("No access to the file: $uri")))
-            return
-        }
+        val orientation =
+            contentResolver.openInputStream(uri)?.use {
+                BitmapUtils.getBitmapOrientation(it)
+            } ?: run {
+                callback.invoke(Result.failure(Exception("No access to the file: $uri")))
+                return
+            }
 
-        val bitmap = contentResolver.openInputStream(uri)?.use {
-            BitmapUtils.getNormalizedBitmap(it, orientation, sampleSize)
-        } ?: run {
-            callback.invoke(Result.failure(Exception("No access to the file: $uri")))
-            return
-        }
+        val bitmap =
+            contentResolver.openInputStream(uri)?.use {
+                BitmapUtils.getNormalizedBitmap(it, orientation, sampleSize)
+            } ?: run {
+                callback.invoke(Result.failure(Exception("No access to the file: $uri")))
+                return
+            }
 
         callback.invoke(Result.success(bitmap))
     }
@@ -170,12 +179,16 @@ class ImagePickerFragment : Fragment(), KoinComponent {
         private const val ARG_IMG_MAX_WIDTH = "args_img_max_width"
         private const val ARG_IMG_MAX_HEIGHT = "args_img_max_height"
 
-        fun newInstance(maxWidth: Int, maxHeight: Int): ImagePickerFragment {
+        fun newInstance(
+            maxWidth: Int,
+            maxHeight: Int,
+        ): ImagePickerFragment {
             val pickerFragment = ImagePickerFragment()
-            pickerFragment.arguments = Bundle().apply {
-                putInt(ARG_IMG_MAX_WIDTH, maxWidth)
-                putInt(ARG_IMG_MAX_HEIGHT, maxHeight)
-            }
+            pickerFragment.arguments =
+                Bundle().apply {
+                    putInt(ARG_IMG_MAX_WIDTH, maxWidth)
+                    putInt(ARG_IMG_MAX_HEIGHT, maxHeight)
+                }
             return pickerFragment
         }
     }

@@ -27,7 +27,9 @@ actual class Bitmap constructor(
 
     interface Delegate {
         fun getAndroidBitmap(): android.graphics.Bitmap
+
         fun getByteArray(): ByteArray
+
         fun getResized(maxSize: Int): Bitmap
     }
 
@@ -41,7 +43,7 @@ actual class Bitmap constructor(
             bitmap.compress(
                 android.graphics.Bitmap.CompressFormat.PNG,
                 100,
-                byteArrayOutputStream
+                byteArrayOutputStream,
             )
             return byteArrayOutputStream.toByteArray()
         }

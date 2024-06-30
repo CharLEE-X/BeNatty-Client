@@ -17,7 +17,8 @@ class AdminDashboardViewModel(
     AdminDashboardContract.Events,
     AdminDashboardContract.State,
     >(
-    config = BallastViewModelConfiguration.Builder()
+    config =
+    BallastViewModelConfiguration.Builder()
         .apply {
 //            this += LoggingInterceptor()
             logger = { PrintlnLogger() }
@@ -34,7 +35,8 @@ class AdminDashboardViewModel(
             interceptorDispatcher = Dispatchers.Default,
         )
         .build(),
-    eventHandler = AdminDashboardEventHandler(
+    eventHandler =
+    AdminDashboardEventHandler(
         onError = onError,
     ),
     coroutineScope = scope,

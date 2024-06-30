@@ -7,7 +7,7 @@ interface CommonListState {
 
     fun setLoading(isLoading: Boolean): ListState {
         return listState.copy(
-            isLoading = isLoading
+            isLoading = isLoading,
         )
     }
 
@@ -15,13 +15,13 @@ interface CommonListState {
         return listState.copy(
             items = items,
             showList = items.isNotEmpty(),
-            showNoItems = items.isEmpty()
+            showNoItems = items.isEmpty(),
         )
     }
 
     fun setPerPage(perPage: Int): ListState {
         return listState.copy(
-            perPage = perPage
+            perPage = perPage,
         )
     }
 
@@ -31,7 +31,7 @@ interface CommonListState {
             info = info,
             pagesNumbers = pageNumbers,
             showPrevious = info.prev != null,
-            showNext = info.next != null
+            showNext = info.next != null,
         )
     }
 
@@ -47,13 +47,10 @@ interface CommonListState {
 data class ListState(
     val title: String,
     val strings: ListStrings = ListStrings(title),
-
     val isLoading: Boolean = true,
-
     val items: List<ListItem> = emptyList(),
     val showList: Boolean = items.isNotEmpty(),
     val showNoItems: Boolean = items.isEmpty(),
-
     val info: PageInfo = PageInfo(0, 0, null, null),
     val pagesNumbers: List<Int> = emptyList(),
     val perPage: Int = 1,
@@ -63,7 +60,7 @@ data class ListState(
 
 data class ListItem(
     val id: String,
-    val name: String
+    val name: String,
 )
 
 data class PageInfo(
@@ -75,7 +72,7 @@ data class PageInfo(
 
 data class PageInput(
     val page: Int,
-    val size: Int
+    val size: Int,
 )
 
 open class ListStrings(

@@ -14,12 +14,16 @@ import org.koin.core.component.inject
 private typealias InputScope = InputHandlerScope<
     AdminProductCreateContract.Inputs,
     AdminProductCreateContract.Events,
-    AdminProductCreateContract.State>
+    AdminProductCreateContract.State,
+    >
 
-internal class AdminProductCreateInputHandler : KoinComponent, InputHandler<
-    AdminProductCreateContract.Inputs,
-    AdminProductCreateContract.Events,
-    AdminProductCreateContract.State> {
+internal class AdminProductCreateInputHandler :
+    KoinComponent,
+    InputHandler<
+        AdminProductCreateContract.Inputs,
+        AdminProductCreateContract.Events,
+        AdminProductCreateContract.State,
+        > {
 
     private val productService by inject<ProductService>()
     private val inputValidator by inject<InputValidator>()

@@ -16,8 +16,10 @@ internal class LocationServiceJs(private val logger: Logger) : LocationService {
         return null
     }
 
-    override suspend fun getPlaceDetails(latitude: Double, longitude: Double): Location? {
-
+    override suspend fun getPlaceDetails(
+        latitude: Double,
+        longitude: Double,
+    ): Location? {
         return null
     }
 

@@ -6,7 +6,9 @@ import com.copperleaf.ballast.build
 import com.copperleaf.ballast.core.LoggingInterceptor
 import com.copperleaf.ballast.core.PrintlnLogger
 import com.copperleaf.ballast.navigation.routing.Route
-import com.copperleaf.ballast.navigation.routing.RouterContract
+import com.copperleaf.ballast.navigation.routing.RouterContract.Events
+import com.copperleaf.ballast.navigation.routing.RouterContract.Inputs
+import com.copperleaf.ballast.navigation.routing.RouterContract.State
 import com.copperleaf.ballast.navigation.routing.RoutingTable
 import com.copperleaf.ballast.navigation.routing.build
 import com.copperleaf.ballast.navigation.routing.directions
@@ -17,7 +19,7 @@ import com.copperleaf.ballast.navigation.vm.withRouter
 import com.copperleaf.ballast.plusAssign
 import kotlinx.coroutines.CoroutineScope
 
-typealias RouterInterceptor = BallastInterceptor<RouterContract.Inputs<Screen>, RouterContract.Events<Screen>, RouterContract.State<Screen>>
+typealias RouterInterceptor = BallastInterceptor<Inputs<Screen>, Events<Screen>, State<Screen>>
 
 class RouterViewModel(
     viewModelScope: CoroutineScope,
@@ -39,7 +41,6 @@ class RouterViewModel(
     coroutineScope = viewModelScope,
 )
 
-fun RouterViewModel.goHome() =
-    trySend(RouterContract.Inputs.GoToDestination(Screen.AdminHome.matcher.routeFormat))
+fun RouterViewModel.goHome() = trySend(Inputs.GoToDestination(Screen.AdminHome.matcher.routeFormat))
 
 fun <T : Route> T.idPath(id: String): String = this.directions().pathParameter("id", id).build()

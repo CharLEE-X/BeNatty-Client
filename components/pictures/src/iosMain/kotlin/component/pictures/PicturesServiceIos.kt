@@ -58,11 +58,15 @@ internal class PicturesServiceIos(
         when (val status: AVAuthorizationStatus = currentCameraAuthorizationStatus()) {
             AVAuthorizationStatusAuthorized -> return
             AVAuthorizationStatusNotDetermined -> {
-                val isGranted: Boolean = suspendCoroutine { continuation ->
-                    AVCaptureDevice.requestAccessForMediaType(avMediaType) { continuation.resume(it) }
+                val isGranted: Boolean =
+                    suspendCoroutine { continuation ->
+                        AVCaptureDevice.requestAccessForMediaType(avMediaType) { continuation.resume(it) }
+                    }
+                if (isGranted) {
+                    return
+                } else {
+                    throw Exception("Permission Camera denied")
                 }
-                if (isGranted) return
-                else throw Exception("Permission Camera denied")
             }
 
             AVAuthorizationStatusDenied -> throw Exception("Permission Camera denied /';[p-=0-ol, l")
@@ -95,9 +99,10 @@ internal class PicturesServiceIos(
         return when (status) {
             PHAuthorizationStatusAuthorized -> return
             PHAuthorizationStatusNotDetermined -> {
-                val newStatus = suspendCoroutine { continuation ->
-                    requestGalleryAccess { continuation.resume(it) }
-                }
+                val newStatus =
+                    suspendCoroutine { continuation ->
+                        requestGalleryAccess { continuation.resume(it) }
+                    }
                 provideGalleryPermission(newStatus)
             }
 
@@ -108,7 +113,7 @@ internal class PicturesServiceIos(
 
     private fun requestGalleryAccess(callback: (PHAuthorizationStatus) -> Unit) {
         PHPhotoLibrary.requestAuthorization(
-            mainContinuation { status: PHAuthorizationStatus -> callback(status) }
+            mainContinuation { status: PHAuthorizationStatus -> callback(status) },
         )
     }
 

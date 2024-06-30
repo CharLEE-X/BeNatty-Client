@@ -40,7 +40,6 @@ class RouterViewModel(
     coroutineScope = viewModelScope,
 )
 
-fun RouterViewModel.goHome() =
-    trySend(RouterContract.Inputs.GoToDestination(Screen.Home.matcher.routeFormat))
+fun RouterViewModel.goHome() = trySend(RouterContract.Inputs.GoToDestination(Screen.Home.matcher.routeFormat))
 
 fun <T : Route> T.idPath(id: String): String = this.directions().pathParameter("id", id).build()

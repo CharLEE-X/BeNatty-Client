@@ -17,7 +17,8 @@ import kotlin.math.roundToInt
 private typealias InputScope =
     InputHandlerScope<CheckoutContract.Inputs, CheckoutContract.Events, CheckoutContract.State>
 
-internal class CheckoutInputHandler : KoinComponent,
+internal class CheckoutInputHandler :
+    KoinComponent,
     InputHandler<CheckoutContract.Inputs, CheckoutContract.Events, CheckoutContract.State> {
 
     private val userService: UserService by inject()
@@ -38,7 +39,7 @@ internal class CheckoutInputHandler : KoinComponent,
                     input.price == 0.0 -> getString(Strings.FreeShipping)
                     input.price > 0.0 -> input.price.toString()
                     else -> getString(Strings.EnterShippingAddress)
-                }
+                },
             )
         }
 
@@ -64,7 +65,7 @@ internal class CheckoutInputHandler : KoinComponent,
             val platforms = listOf(Platform.APPLE)
             paymentService.getPaymentMethods(platforms).fold(
                 { postEvent(CheckoutContract.Events.OnError(it.toString())) },
-                { postInput(CheckoutContract.Inputs.SetPaymentMethods(it.getPaymentMethods)) }
+                { postInput(CheckoutContract.Inputs.SetPaymentMethods(it.getPaymentMethods)) },
             )
         }
     }
@@ -73,7 +74,7 @@ internal class CheckoutInputHandler : KoinComponent,
         val state = getCurrentState()
         sideJob("FetchCart") {
             userService.getCart().fold(
-                { postEvent(CheckoutContract.Events.OnError(it.toString())) }
+                { postEvent(CheckoutContract.Events.OnError(it.toString())) },
             ) {
                 // TODO: This may need to go to the Config
                 val currency = Currency("£", "GBP")
@@ -92,7 +93,7 @@ internal class CheckoutInputHandler : KoinComponent,
                         },
                         subtotal = it.getUserCart.subtotal,
                         currency = currency,
-                    )
+                    ),
                 )
                 postInput(CheckoutContract.Inputs.SetShippingPrice(null))
 
@@ -107,14 +108,14 @@ internal class CheckoutInputHandler : KoinComponent,
         val integerDigits = this.toInt()
         val floatDigits = ((this - integerDigits) * 10f.pow(numOfDec)).roundToInt()
         val floatDigitsString = floatDigits.toString().padStart(numOfDec, '0')
-        return "${integerDigits}.${floatDigitsString}"
+        return "$integerDigits.$floatDigitsString"
     }
 
     private suspend fun InputScope.handleInit() {
         sideJob("InitCheckout") {
             postInput(CheckoutContract.Inputs.FetchCart)
             postInput(CheckoutContract.Inputs.FetchPaymentMethods)
-            postInput(CheckoutContract.Inputs.SetShippingPrice(null)) //FIXME: This should be fetched from the API
+            postInput(CheckoutContract.Inputs.SetShippingPrice(null)) // FIXME: This should be fetched from the API
         }
     }
 }

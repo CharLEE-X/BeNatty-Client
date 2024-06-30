@@ -33,7 +33,9 @@ internal class NotificationServiceAndroid(
     private val localNotificationPermissions: List<String> =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             listOf(Manifest.permission.POST_NOTIFICATIONS)
-        } else emptyList()
+        } else {
+            emptyList()
+        }
 
     init {
         val importance = NotificationManager.IMPORTANCE_DEFAULT
@@ -64,7 +66,6 @@ internal class NotificationServiceAndroid(
         context.openAppSettingsPage(Permission.LOCAL_NOTIFICATIONS)
     }
 
-
     @SuppressLint("MissingPermission")
     override suspend fun schedule(notificationType: NotificationType) {
         if (checkPermission().isNotGranted()) {
@@ -75,10 +76,11 @@ internal class NotificationServiceAndroid(
         when (notificationType) {
             is NotificationType.Immediate -> {
                 val id = Random.nextInt()
-                val notification = sendNotification(
-                    title = notificationType.title,
-                    body = notificationType.body,
-                )
+                val notification =
+                    sendNotification(
+                        title = notificationType.title,
+                        body = notificationType.body,
+                    )
                 notificationManager.notify(id, notification)
             }
 
@@ -106,20 +108,21 @@ internal class NotificationServiceAndroid(
         title: String,
         body: String?,
     ): Notification {
-        val builder = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID).apply {
-            setSmallIcon(R.drawable.ic_baseline_directions_car_24)
-            setContentTitle(title)
-            setContentText(body)
-            priority = NotificationManagerCompat.IMPORTANCE_HIGH
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                setCategory(Notification.CATEGORY_NAVIGATION) // shows the notification immediately
-            } else {
-                setCategory(Notification.CATEGORY_SERVICE)
+        val builder =
+            NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID).apply {
+                setSmallIcon(R.drawable.ic_baseline_directions_car_24)
+                setContentTitle(title)
+                setContentText(body)
+                priority = NotificationManagerCompat.IMPORTANCE_HIGH
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    setCategory(Notification.CATEGORY_NAVIGATION) // shows the notification immediately
+                } else {
+                    setCategory(Notification.CATEGORY_SERVICE)
+                }
+                setOngoing(true)
+                setOnlyAlertOnce(true)
+                setWhen(currentTimeMillis())
             }
-            setOngoing(true)
-            setOnlyAlertOnce(true)
-            setWhen(currentTimeMillis())
-        }
 
         logger.v { "Scheduling local notification." }
         return builder.build()
@@ -129,9 +132,10 @@ internal class NotificationServiceAndroid(
         id: Int,
         intentTransform: Intent.() -> Unit = {},
     ): PendingIntent {
-        val intent = IdentifiableIntent("$id", context, NotificationPublisher::class.java).apply(
-            intentTransform,
-        )
+        val intent =
+            IdentifiableIntent("$id", context, NotificationPublisher::class.java).apply(
+                intentTransform,
+            )
         return PendingIntent.getBroadcast(
             context,
             id,

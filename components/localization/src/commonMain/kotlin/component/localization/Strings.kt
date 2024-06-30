@@ -450,5 +450,5 @@ enum class Strings {
     ViewOurFavorites,
     YouAlsoViewed,
     Learn,
-    Availability
+    Availability,
 }

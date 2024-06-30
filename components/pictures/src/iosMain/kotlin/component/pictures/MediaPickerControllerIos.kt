@@ -20,42 +20,45 @@ internal class MediaPickerControllerIos(
     private val logger: Logger,
     private val getViewController: () -> UIViewController,
 ) : MediaPickerController {
-    override suspend fun pickImage(source: MediaSource): Bitmap = try {
-        withContext(Dispatchers.Main.immediate) {
-            logger.d { "Picking image from $source." }
-            @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-            var delegatePtr: ImagePickerDelegateToContinuation? // strong reference to delegate (view controller have weak ref)
+    override suspend fun pickImage(source: MediaSource): Bitmap =
+        try {
+            withContext(Dispatchers.Main.immediate) {
+                logger.d { "Picking image from $source." }
+                // strong reference to delegate (view controller have weak ref)
+                @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+                var delegatePtr: ImagePickerDelegateToContinuation?
 
-            @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-            var presentationDelegate: AdaptivePresentationDelegateToContinuation?
+                @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+                var presentationDelegate: AdaptivePresentationDelegateToContinuation?
 
-            val media = suspendCoroutine { continuation ->
-                val localDelegatePtr = ImagePickerDelegateToContinuation(continuation)
-                delegatePtr = localDelegatePtr
-                val localPresentationDelegatePtr = AdaptivePresentationDelegateToContinuation(continuation)
-                presentationDelegate = localPresentationDelegatePtr
+                val media =
+                    suspendCoroutine { continuation ->
+                        val localDelegatePtr = ImagePickerDelegateToContinuation(continuation)
+                        delegatePtr = localDelegatePtr
+                        val localPresentationDelegatePtr = AdaptivePresentationDelegateToContinuation(continuation)
+                        presentationDelegate = localPresentationDelegatePtr
 
-                val controller = UIImagePickerController()
-                controller.sourceType = source.toSourceType()
-                controller.mediaTypes = listOf(kImageType)
-                controller.delegate = localDelegatePtr
-                getViewController().presentViewController(
-                    controller,
-                    animated = true,
-                    completion = null
-                )
-                controller.presentationController?.delegate = localPresentationDelegatePtr
+                        val controller = UIImagePickerController()
+                        controller.sourceType = source.toSourceType()
+                        controller.mediaTypes = listOf(kImageType)
+                        controller.delegate = localDelegatePtr
+                        getViewController().presentViewController(
+                            controller,
+                            animated = true,
+                            completion = null,
+                        )
+                        controller.presentationController?.delegate = localPresentationDelegatePtr
+                    }
+                delegatePtr = null
+                presentationDelegate = null
+
+                logger.d { "Picked image from $source." }
+                media.preview
             }
-            delegatePtr = null
-            presentationDelegate = null
-
-            logger.d { "Picked image from $source." }
-            media.preview
+        } catch (e: Exception) {
+            logger.e(e) { "Failed to pick image from $source." }
+            throw e
         }
-    } catch (e: Exception) {
-        logger.e(e) { "Failed to pick image from $source." }
-        throw e
-    }
 
     private fun MediaSource.toSourceType(): UIImagePickerControllerSourceType =
         when (this) {
