@@ -17,7 +17,7 @@ internal actual val platformModule: Module =
         single<NormalizedCacheFactory>(named(NormalizedCacheType.SQL)) {
             SqlNormalizedCacheFactory(
                 context = get(),
-                name = BuildKonfig.dbName,
+                name = "benatty.db",
             )
         }
         single<Settings>(named(SettingsType.SETTINGS_NON_ENCRYPTED.name)) {

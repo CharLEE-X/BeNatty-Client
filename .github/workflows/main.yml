@@ -38,16 +38,9 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
+          RUNNER_ROLE: ${{ secrets.RUNNER_ROLE }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-      - name: Update App Runner image in AWS
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-          IMAGE_TAG: ${{ github.sha }}
-          RUNNER_ROLE: ${{ secrets.RUNNER_ROLE }}
-        run: |
-          echo $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo Update App Runner image in AWS
           aws apprunner create-service --service-name *** --source-configuration '{"AuthenticationConfiguration": {"AccessRoleArn": "'"$RUNNER_ROLE"'"}, "ImageRepository": {"ImageIdentifier": "'"$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"'", "ImageRepositoryType": "ECR"}}'

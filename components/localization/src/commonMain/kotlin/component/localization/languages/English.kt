@@ -5,13 +5,12 @@ import core.util.enumCapitalized
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
-import localization.BuildKonfig
 
 @Suppress("CyclomaticComplexMethod", "LongMethod")
 internal fun englishLanguage(
     key: Strings,
-    appName: String = BuildKonfig.appName,
-    companyName: String = BuildKonfig.orgName,
+    appName: String = "BeNatty",
+    companyName: String = "CharLEE X",
     currentYear: Int = Clock.System.todayIn(TimeZone.currentSystemDefault()).year,
 ): String =
     when (key) {
