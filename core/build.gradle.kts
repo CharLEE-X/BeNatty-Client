@@ -44,7 +44,7 @@ kotlin {
 }
 
 android {
-    namespace = "${libs.versions.projectName.get()}$group"
+    namespace = "${libs.versions.packageName.get()}$group"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
