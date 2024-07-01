@@ -34,8 +34,8 @@ kotlin {
     sourceSets {
         jsMain.dependencies {
             with(projects) {
-                implementation(data)
                 implementation(core)
+                implementation(data)
 //                implementation(components.theme)
                 implementation(components.localization)
 

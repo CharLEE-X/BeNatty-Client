@@ -6,8 +6,6 @@ import data.service.AuthService
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import notification.NotificationService
-import notification.NotificationType
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -19,7 +17,7 @@ internal class RootInputHandler :
     InputHandler<RootContract.Inputs, RootContract.Events, RootContract.State> {
 
     private val authService: AuthService by inject()
-    private val notificationService: NotificationService by inject()
+//    private val notificationService: NotificationService by inject()
 
     override suspend fun InputHandlerScope<RootContract.Inputs, RootContract.Events, RootContract.State>.handleInput(
         input: RootContract.Inputs,
@@ -49,14 +47,15 @@ internal class RootInputHandler :
     }
 
     private suspend fun RootInputScope.sendNotification(title: String, body: String) {
-        sideJob("sendNotification") {
-            notificationService.schedule(
-                notificationType = NotificationType.Immediate(
-                    title = title,
-                    body = body,
-                ),
-            )
-        }
+        noOp()
+//        sideJob("sendNotification") {
+//            notificationService.schedule(
+//                notificationType = NotificationType.Immediate(
+//                    title = title,
+//                    body = body,
+//                ),
+//            )
+//        }
     }
 
     private suspend fun RootInputScope.logOut() {

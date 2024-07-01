@@ -7,7 +7,7 @@ group = FEATURE + project.name
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.components.notification)
+//            implementation(projects.components.notification)
         }
     }
 }
