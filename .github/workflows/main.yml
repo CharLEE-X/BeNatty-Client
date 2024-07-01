@@ -21,8 +21,8 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      #      - name: Build with Gradle
+      #        run: ./gradlew build
 
       - name: Configure AWS credentials
         id: aws-credentials
