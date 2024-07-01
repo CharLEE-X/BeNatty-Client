@@ -9,10 +9,10 @@ import kotlin.js.Promise
 
 actual typealias ImageFile = File
 
-actual fun ImageFile.toByteArray(): ByteArray {
-    return ByteArray(0)
+//actual fun ImageFile.toByteArray(): ByteArray {
+//    return ByteArray(0)
 //    readAsByteArray(this).await()
-}
+//}
 
 fun readAsByteArray(file: File): Promise<ByteArray> =
     Promise { resolve, reject ->
