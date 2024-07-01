@@ -47,7 +47,6 @@ fun FreeSection() {
                     leftRight = 24.px
                 )
         ) {
-            Spa
             AddItem(
                 title = getString(Strings.FreeShipping),
                 description = getString(Strings.OnAllOrdersOver),

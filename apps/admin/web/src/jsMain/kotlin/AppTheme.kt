@@ -1,5 +1,3 @@
-package web
-
 import androidx.compose.runtime.Composable
 import com.varabyte.kobweb.compose.ui.graphics.Color
 import com.varabyte.kobweb.compose.ui.graphics.Colors
